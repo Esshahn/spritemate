@@ -1,0 +1,79 @@
+
+
+body
+{
+  background-color: #111111;
+  color: #444444;
+  font-size: 100%;
+  font-family: 'Quicksand', sans-serif;
+}
+
+
+#editor
+{
+  cursor: crosshair;
+}
+
+#palette
+{
+  cursor: pointer;
+}
+
+.sprite
+{
+ background-color: red;
+}
+
+.sprite.ui-dialog-content
+{
+  padding: 0px;
+}
+
+.colors
+{
+ 
+}
+
+
+
+.ui-dialog-titlebar
+{
+  
+  padding: 4px;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 60%;
+  text-align: center;
+  background-color: #ff8800;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.no-close .ui-dialog-titlebar-close 
+{
+  display: none;
+}
+
+.ui-widget.ui-widget-content
+{
+  border: 0px;
+  box-shadow: 0px 5px 10px 2px rgba(0,0,0,.5);
+}
+
+.ui-widget-header
+{
+  border: 0px;
+}
+
+.ui-dialog 
+{
+  padding: 0px;
+}
+
+.ui-dialog :active 
+{
+  border: 0px;
+}
+
+
+

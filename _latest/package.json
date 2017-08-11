@@ -1,0 +1,17 @@
+{
+  "name": "spritejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel babel --out-dir js -w"
+  },
+  "author": "",
+  "license": "ISC"
+}
