@@ -37,25 +37,32 @@ class Editor
   draw_sprite(sprite_data)
   {
 
-    for (var i=0; i<this.pixels_x; i++)
+    var x_grid_step = 1;
+    if (sprite_data.multicolor) x_grid_step = 2;
+
+    for (var i=0; i<this.pixels_x; i=i+x_grid_step)
     {
       for (var j=0; j<this.pixels_y; j++)
       {
-        this.canvas.fillStyle = sprite_data[j][i];
-        this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x, this.pixels_y);  
+        this.canvas.fillStyle = sprite_data.pixels[j][i];
+        this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  
       }
     }
 
-    if (this.config.display_grid) this.display_grid();
+    if (this.config.display_grid) this.display_grid(sprite_data);
 
   }
 
-  display_grid()
+  display_grid(sprite_data)
   {
     // show a grid
-    this.canvas.strokeStyle = "#aaaaaa";
+    this.canvas.strokeStyle = "#666666";
     this.canvas.setLineDash([1, 1]);
-    for (var i=0; i<=this.pixels_x; i++)
+    var x_grid_step = 1;
+   
+    if (sprite_data.multicolor) x_grid_step = 2;
+
+    for (var i=0; i<=this.pixels_x; i=i+x_grid_step)
     {
         this.canvas.beginPath();
         this.canvas.moveTo(i*this.zoom,0);

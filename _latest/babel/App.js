@@ -40,6 +40,7 @@ class App
 
   $('#editor').mousedown(function(e)
     {
+        // draw pixels
         var pos = that.get_pos(this,e); // returns the x,y position of the mouse in the window in pixels
         var gridpos = that.editor.get_pixel(pos.x,pos.y); // returns the pixel grid position of the clicked pixel
         that.sprite.set_pixel(gridpos.x,gridpos.y,that.palette.get_color()); // updates the sprite array at the grid position with the color chosen on the palette
@@ -51,6 +52,7 @@ class App
     {
       if (that.is_drawing)
       {
+        // draw pixels
         var pos = that.get_pos(this,e);
         var gridpos = that.editor.get_pixel(pos.x,pos.y);
         that.sprite.set_pixel(gridpos.x,gridpos.y,that.palette.get_color());
@@ -62,7 +64,8 @@ class App
 
   $('#editor').mouseup(function(e)
     {
-       that.is_drawing = false;
+        // stop drawing pixels
+        that.is_drawing = false;
 
     });
   }

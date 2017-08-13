@@ -15,7 +15,7 @@ class Sprite
     this.pixels = [];
     this.stretch_x = 0;
     this.stretch_y = 0;
-    this.multicolor = false;
+    this.multicolor = true;
     this.colors = [0,1,2];
 
     // generate a bitmap array
@@ -36,14 +36,25 @@ class Sprite
     return this.pixels[y][x];
   }
 
+
   set_pixel(x,y,color)
   {
-    this.pixels[y][x] = color;
+    // writes a pixel to the sprite pixel array
+    
+    if(this.multicolor && x%2 != 0)
+    {
+      // in multicolor the pixels are wider, so we have to substract 1 to make it work
+      this.pixels[y][x-1] = color; 
+    }else{
+      // normal 1 pixel singlecolor mode
+      this.pixels[y][x] = color;  
+    }
+    
   }
 
   get_current_sprite()
   {
-    return this.pixels;
+    return this;
   }
 
   
