@@ -60,7 +60,6 @@ var Color = function () {
   }, {
     key: "get_color",
     value: function get_color() {
-      console.log(this.active_color);
       return this.active_color;
     }
   }, {

@@ -32,17 +32,8 @@ var Window = function () {
                 height: this.height,
                 dialogClass: "no-close",
                 position: this.position,
-                resizable: this.resizable
-                /*
-                buttons: [
-                    {
-                        text: 'Create',
-                        click: function() {
-                            alert('Yay, clicked the button')
-                        }
-                    }
-                ]
-                */
+                resizable: this.resizable,
+                buttons: this.buttons
             });
         }
     }]);
@@ -50,34 +41,36 @@ var Window = function () {
     return Window;
 }();
 
-var WindowEditor = function (_Window) {
-    _inherits(WindowEditor, _Window);
+var WindowPreview = function (_Window) {
+    _inherits(WindowPreview, _Window);
 
-    function WindowEditor(title, zoomFactor) {
-        _classCallCheck(this, WindowEditor);
+    function WindowPreview(title, zoomFactor, left, top) {
+        _classCallCheck(this, WindowPreview);
 
-        var _this = _possibleConstructorReturn(this, (WindowEditor.__proto__ || Object.getPrototypeOf(WindowEditor)).call(this, title));
+        var _this = _possibleConstructorReturn(this, (WindowPreview.__proto__ || Object.getPrototypeOf(WindowPreview)).call(this, title));
 
-        _this.type = "sprite";
+        _this.type = "preview";
         _this.zoomFactor = zoomFactor;
         _this.width = "auto"; //24 * this.zoomFactor;
         _this.height = "auto"; //21 * this.zoomFactor;
         _this.resizable = false;
-        _this.position = { at: "left+100 top+150" };
+        _this.position = { at: "left+" + left + " top+" + top };
+
         _this.create_window();
+
         return _this;
     }
 
-    return WindowEditor;
+    return WindowPreview;
 }(Window);
 
-var WindowColors = function (_Window2) {
-    _inherits(WindowColors, _Window2);
+var WindowPalette = function (_Window2) {
+    _inherits(WindowPalette, _Window2);
 
-    function WindowColors(title) {
-        _classCallCheck(this, WindowColors);
+    function WindowPalette(title) {
+        _classCallCheck(this, WindowPalette);
 
-        var _this2 = _possibleConstructorReturn(this, (WindowColors.__proto__ || Object.getPrototypeOf(WindowColors)).call(this, title));
+        var _this2 = _possibleConstructorReturn(this, (WindowPalette.__proto__ || Object.getPrototypeOf(WindowPalette)).call(this, title));
 
         _this2.type = "colors";
         _this2.width = "auto";
@@ -88,5 +81,5 @@ var WindowColors = function (_Window2) {
         return _this2;
     }
 
-    return WindowColors;
+    return WindowPalette;
 }(Window);

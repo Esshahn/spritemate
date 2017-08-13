@@ -59,7 +59,6 @@ class Color
 
   get_color()
   {
-    console.log(this.active_color);
     return this.active_color;
   }
 

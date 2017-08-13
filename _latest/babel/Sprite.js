@@ -41,15 +41,10 @@ class Sprite
   {
     // writes a pixel to the sprite pixel array
     
-    if(this.multicolor && x%2 != 0)
-    {
-      // in multicolor the pixels are wider, so we have to substract 1 to make it work
-      this.pixels[y][x-1] = color; 
-    }else{
-      // normal 1 pixel singlecolor mode
-      this.pixels[y][x] = color;  
-    }
-    
+    // multicolor check
+    if(this.multicolor && x%2 !== 0) x=x-1;
+
+    this.pixels[y][x] = color;  
   }
 
   get_current_sprite()

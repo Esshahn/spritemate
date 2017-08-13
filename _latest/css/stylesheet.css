@@ -14,6 +14,13 @@ body
   cursor: crosshair;
 }
 
+.editor_ui
+{
+  height: 40px;
+  color: #ffbb00;
+  padding: 6px;
+}
+
 #palette
 {
   cursor: pointer;
