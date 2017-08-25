@@ -20,7 +20,7 @@ class Window_Editor
         this.resizable = false;
         this.position = { at: "left+"+this.left+" top+"+this.top }; 
         this.create_window();
-        $("#" + this.id).append( "<div class='editor_ui'>moin</div>" ); 
+        //$("#" + this.id).append( "<div class='editor_ui'>moin</div>" ); 
     }
              
        
