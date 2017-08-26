@@ -45,7 +45,7 @@ var Preview = function () {
 
       for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
         for (var j = 0; j < this.pixels_y; j++) {
-          this.canvas.fillStyle = sprite_data.pixels[j][i];
+          this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
           this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step, this.pixels_y);
         }
       }

@@ -45,7 +45,7 @@ var Editor = function () {
 
       for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
         for (var j = 0; j < this.pixels_y; j++) {
-          this.canvas.fillStyle = sprite_data.pixels[j][i];
+          this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
           this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step, this.pixels_y);
         }
       }
@@ -78,10 +78,13 @@ var Editor = function () {
     }
   }, {
     key: "get_pixel",
-    value: function get_pixel(x, y)
+    value: function get_pixel(e)
     // input: x,y position of the mouse inside the editor window in pixels
     // output: x,y position in the sprite grid
     {
+      var obj = this.canvas_element.getBoundingClientRect();
+      var x = e.clientX - obj.left;
+      var y = e.clientY - obj.top;
       var x_grid = Math.floor(x / (this.width / this.config.sprite_x));
       var y_grid = Math.floor(y / (this.height / this.config.sprite_y));
       return { x: x_grid, y: y_grid };

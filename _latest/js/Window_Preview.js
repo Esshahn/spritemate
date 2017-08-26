@@ -16,7 +16,6 @@ var Window_Preview = function () {
 
         this.id = "window-" + $('div[id^="window-"]').length;
         this.title = config.title;
-        this.resizable = false;
         this.type = "preview";
         this.left = config.left;
         this.top = config.top;
@@ -24,7 +23,6 @@ var Window_Preview = function () {
         this.height = "auto"; //21 * this.zoomFactor;
         this.resizable = true;
         this.position = { at: "left+" + this.left + " top+" + this.top };
-
         this.create_window();
     }
 

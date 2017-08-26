@@ -5,11 +5,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Palette = function () {
-  function Palette(window, config) {
+  function Palette(window, config, spritecolors) {
     _classCallCheck(this, Palette);
 
+    this.spritecolors = spritecolors; // contains the colors of the first sprite
     this.colors = config.colors;
-    this.active_color = config.colors[1]; // 1 = white on the c64
+    this.active_color = this.spritecolors[1]; // 1 = white on the c64
     this.window = window;
     this.canvas_element = document.createElement('canvas');
     this.colorsquare_width = 40;
@@ -54,7 +55,7 @@ var Palette = function () {
       // draws the selected/active color
       // under the color palette
 
-      this.canvas.fillStyle = this.active_color;
+      this.canvas.fillStyle = this.colors[this.active_color];
       this.canvas.fillRect(0, this.colors.length / 2 * this.colorsquare_height + 10, this.colorsquare_width * 2, this.colorsquare_height);
     }
   }, {
@@ -78,7 +79,7 @@ var Palette = function () {
         var p = c.getImageData(x, y, 1, 1).data;
         that.hex = "#" + ("000000" + that.rgbToHex(p[0], p[1], p[2])).slice(-6);
         //console.log(coord + " : " + that.hex);
-        that.active_color = that.hex;
+        that.active_color = that.colors.indexOf(that.hex);
         that.draw_active_color();
       });
     }

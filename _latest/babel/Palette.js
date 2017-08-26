@@ -1,17 +1,18 @@
 
 
-class Color
+class Palette
 {
   
 
-  constructor(window,config)
+  constructor(window,config,spritecolors)
   {
+    this.spritecolors = spritecolors // contains the colors of the first sprite
     this.colors = config.colors;
-    this.active_color = config.colors[1]; // 1 = white on the c64
+    this.active_color = this.spritecolors[1]; // 1 = white on the c64
     this.window = window;
     this.canvas_element = document.createElement('canvas');
-    this.colorsquare_width = 50;
-    this.colorsquare_height = 30;
+    this.colorsquare_width = 40;
+    this.colorsquare_height = 20;
     this.width = this.colorsquare_width * 2;
     this.height = this.colors.length/2 * this.colorsquare_height + this.colorsquare_height+10;
     
@@ -52,7 +53,7 @@ class Color
     // draws the selected/active color
     // under the color palette
     
-    this.canvas.fillStyle = this.active_color;
+    this.canvas.fillStyle = this.colors[this.active_color];
     this.canvas.fillRect(0, (this.colors.length/2)*this.colorsquare_height + 10, this.colorsquare_width * 2, this.colorsquare_height);
      
   }
@@ -81,7 +82,7 @@ class Color
       var p = c.getImageData(x, y, 1, 1).data; 
       that.hex = "#" + ("000000" + that.rgbToHex(p[0], p[1], p[2])).slice(-6);
       //console.log(coord + " : " + that.hex);
-      that.active_color = that.hex;
+      that.active_color = that.colors.indexOf(that.hex);
       that.draw_active_color();
     });
   }

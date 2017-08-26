@@ -9,14 +9,15 @@ class Sprite
 
     // basic sprite setup
     // has to become more flexible later on
+    this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
    
     this.pixels = [];
-    this.stretch_x = 0;
-    this.stretch_y = 0;
-    this.multicolor = true;
-    this.colors = [0,1,2];
+    this.double_x = false;
+    this.double_y = false;
+    this.multicolor = false;
+    this.colors = [5,7,2];
 
     // generate a bitmap array
     var line = [];
@@ -25,15 +26,45 @@ class Sprite
       line = [];
       for(var j=0; j<this.width; j++)
       {
-        line.push("#000000");
+        line.push(this.colors[0]);
       }
       this.pixels.push(line);
     }
+
+    // TODO: delete these below
+    this.pixels[3][3] = this.colors[1];
+    this.pixels[4][3] = this.colors[1];
+    this.pixels[3][5] = this.colors[2];
+
   }
 
   get_pixel(x,y)
   {
     return this.pixels[y][x];
+  }
+
+  get_colors()
+  {
+    return this.colors;
+  }
+
+  get_delete_color()
+  {
+    return this.colors[0];
+  }
+
+  is_multicolor(){
+    return this.multicolor;
+  }
+
+  is_double_x()
+  {
+    return this.double_x;
+  }
+
+  is_double_y()
+  {
+    return this.double_y;
   }
 
 

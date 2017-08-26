@@ -10,8 +10,7 @@ class Window_Preview
     constructor(config)
     {
         this.id = "window-" + $('div[id^="window-"]').length;
-        this.title = config.title; 
-        this.resizable = false; 
+        this.title = config.title;  
         this.type = "preview";
         this.left = config.left;
         this.top = config.top;
@@ -19,7 +18,6 @@ class Window_Preview
         this.height = "auto"; //21 * this.zoomFactor;
         this.resizable = true;
         this.position = { at: "left+"+this.left+" top+"+this.top };
-        
         this.create_window();  
     }
              

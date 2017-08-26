@@ -16,7 +16,6 @@ var Window_Editor = function () {
 
         this.id = "window-" + $('div[id^="window-"]').length;
         this.title = config.title;
-        this.resizable = false;
         this.type = "sprite";
         this.left = config.left;
         this.top = config.top;

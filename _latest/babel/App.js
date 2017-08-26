@@ -9,6 +9,7 @@ class App
   {
 
     this.config = config;
+    this.sprite = new Sprite(this.config);
 
 // init the base windows
     var window_config = 
@@ -23,12 +24,12 @@ class App
 // create the color palette for the color window
     window_config =
     {
-      title: "Color palette",
+      title: "Palette",
       left: 100,
       top: 150
     };
     this.window_colors = new Window_Palette(window_config);
-    this.palette = new Color(1,this.config);
+    this.palette = new Palette(1,this.config,this.sprite.get_colors());
 
     window_config = 
     {
@@ -38,9 +39,6 @@ class App
     };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
-
-
-    this.sprite = new Sprite(this.config);
     
     this.editor.draw_sprite(this.sprite.get_current_sprite());
     this.preview.draw_sprite(this.sprite.get_current_sprite());
@@ -60,11 +58,11 @@ class App
       
       if (e.shiftKey)
       {
-        color = "#000000";
+        color = that.sprite.get_delete_color();
       }
+
       // draw pixels
-      var pos = that.get_pos(this,e); // returns the x,y position of the mouse in the window in pixels
-      var gridpos = that.editor.get_pixel(pos.x,pos.y); // returns the pixel grid position of the clicked pixel
+      var gridpos = that.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
       that.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
       that.editor.draw_sprite(that.sprite.get_current_sprite()); // redraws the sprite in the editor window
       that.preview.draw_sprite(that.sprite.get_current_sprite());
@@ -76,16 +74,15 @@ class App
       if (that.is_drawing)
       {
 
-      var color = that.palette.get_color();
-      
-      if (e.shiftKey)
-      {
-        color = "#000000";
-      }
+        var color = that.palette.get_color();
+        
+        if (e.shiftKey)
+        {
+          color = that.sprite.get_delete_color();
+        }
 
       // draw pixels
-        var pos = that.get_pos(this,e);
-        var gridpos = that.editor.get_pixel(pos.x,pos.y);
+        var gridpos = that.editor.get_pixel(e);
         that.sprite.set_pixel(gridpos.x,gridpos.y,color);
         that.editor.draw_sprite(that.sprite.get_current_sprite());
         that.preview.draw_sprite(that.sprite.get_current_sprite());     
@@ -102,10 +99,9 @@ class App
   }
 
 
-  get_pos(obj,e)
+  get_pos_window(obj,e)
   // returns the x and y position in pixels of the clicked window
   {
-
     var curleft = 0, curtop = 0;
     if (obj.offsetParent)
     {

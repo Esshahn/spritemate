@@ -16,14 +16,13 @@ var Window_Palette = function () {
 
         this.id = "window-" + $('div[id^="window-"]').length;
         this.title = config.title;
-        this.resizable = false;
         this.type = "colors";
         this.left = config.left;
         this.top = config.top;
         this.width = "auto";
         this.height = "auto";
         this.position = { at: "left+" + this.left + " top+" + this.top };
-        this.resizable = true;
+        this.resizable = false;
         this.create_window();
     }
 
