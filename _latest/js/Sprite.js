@@ -13,22 +13,11 @@ var Sprite = function () {
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-
-    this.pixels = [];
     this.double_x = false;
     this.double_y = false;
     this.multicolor = false;
     this.colors = [5, 7, 2];
-
-    // generate a bitmap array
-    var line = [];
-    for (var i = 0; i < this.height; i++) {
-      line = [];
-      for (var j = 0; j < this.width; j++) {
-        line.push(this.colors[0]);
-      }
-      this.pixels.push(line);
-    }
+    this.clear();
 
     // TODO: delete these below
     this.pixels[3][3] = this.colors[1];
@@ -37,6 +26,36 @@ var Sprite = function () {
   }
 
   _createClass(Sprite, [{
+    key: "clear",
+    value: function clear() {
+      // fills the sprite data with the default color
+      // generate a bitmap array
+      this.pixels = [];
+      var line = [];
+      for (var i = 0; i < this.height; i++) {
+        line = [];
+        for (var j = 0; j < this.width; j++) {
+          line.push(this.colors[0]);
+        }
+        this.pixels.push(line);
+      }
+    }
+  }, {
+    key: "fill",
+    value: function fill(color) {
+      // fills the sprite data with the default color
+      // generate a bitmap array
+      this.pixels = [];
+      var line = [];
+      for (var i = 0; i < this.height; i++) {
+        line = [];
+        for (var j = 0; j < this.width; j++) {
+          line.push(color);
+        }
+        this.pixels.push(line);
+      }
+    }
+  }, {
     key: "get_pixel",
     value: function get_pixel(x, y) {
       return this.pixels[y][x];
@@ -65,6 +84,15 @@ var Sprite = function () {
     key: "is_double_y",
     value: function is_double_y() {
       return this.double_y;
+    }
+  }, {
+    key: "toggle_multicolor",
+    value: function toggle_multicolor() {
+      if (this.multicolor) {
+        this.multicolor = false;
+      } else {
+        this.multicolor = true;
+      }
     }
   }, {
     key: "set_pixel",

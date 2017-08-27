@@ -34,7 +34,7 @@ class Preview
     return this.height;
   }
 
-  draw_sprite(sprite_data)
+  update(sprite_data)
   {
 
     let x_grid_step = 1;

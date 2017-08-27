@@ -1,6 +1,4 @@
 
-"use stict"
-
 
 class App
 {
@@ -41,7 +39,7 @@ class App
     this.preview = new Preview(2,this.config);
     
     this.editor.update(this.sprite.get_current_sprite());
-    this.preview.draw_sprite(this.sprite.get_current_sprite());
+    this.preview.update(this.sprite.get_current_sprite());
     this.is_drawing = false;
     this.user_interaction();
   }
@@ -59,7 +57,7 @@ class App
     let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
     this.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
     this.editor.update(this.sprite.get_current_sprite()); // redraws the sprite in the editor window
-    this.preview.draw_sprite(this.sprite.get_current_sprite());
+    this.preview.update(this.sprite.get_current_sprite());
     this.is_drawing = true; // needed for mousemove drawing
   }
 
@@ -70,11 +68,36 @@ class App
     $(document).keydown((e) =>
     {
   
+      if (e.key == "c")
+      {
+        // clear sprite
+        this.sprite.clear();
+        this.editor.update(this.sprite.get_current_sprite());
+        this.preview.update(this.sprite.get_current_sprite());
+      }
+
+      if (e.key == "f")
+      {
+        // fill sprite with active color
+        let color = this.palette.get_color();
+        this.sprite.fill(color);
+        this.editor.update(this.sprite.get_current_sprite());
+        this.preview.update(this.sprite.get_current_sprite());
+      }
+
       if (e.key == "g")
       {
         // toggle grid display
         this.editor.toggle_grid();
         this.editor.update(this.sprite.get_current_sprite());
+      }
+
+      if (e.key == "m")
+      {
+        // toggle hires or multicolor
+        this.sprite.toggle_multicolor();
+        this.editor.update(this.sprite.get_current_sprite());
+        this.preview.update(this.sprite.get_current_sprite());
       }
 
     });

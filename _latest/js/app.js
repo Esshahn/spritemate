@@ -1,7 +1,5 @@
 "use strict";
 
-"use stict";
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -40,7 +38,7 @@ var App = function () {
     this.preview = new Preview(2, this.config);
 
     this.editor.update(this.sprite.get_current_sprite());
-    this.preview.draw_sprite(this.sprite.get_current_sprite());
+    this.preview.update(this.sprite.get_current_sprite());
     this.is_drawing = false;
     this.user_interaction();
   }
@@ -58,7 +56,7 @@ var App = function () {
       var gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
       this.sprite.set_pixel(gridpos.x, gridpos.y, color); // updates the sprite array at the grid position with the color chosen on the palette
       this.editor.update(this.sprite.get_current_sprite()); // redraws the sprite in the editor window
-      this.preview.draw_sprite(this.sprite.get_current_sprite());
+      this.preview.update(this.sprite.get_current_sprite());
       this.is_drawing = true; // needed for mousemove drawing
     }
   }, {
@@ -68,10 +66,32 @@ var App = function () {
 
       $(document).keydown(function (e) {
 
+        if (e.key == "c") {
+          // clear sprite
+          _this.sprite.clear();
+          _this.editor.update(_this.sprite.get_current_sprite());
+          _this.preview.update(_this.sprite.get_current_sprite());
+        }
+
+        if (e.key == "f") {
+          // fill sprite with active color
+          var color = _this.palette.get_color();
+          _this.sprite.fill(color);
+          _this.editor.update(_this.sprite.get_current_sprite());
+          _this.preview.update(_this.sprite.get_current_sprite());
+        }
+
         if (e.key == "g") {
           // toggle grid display
           _this.editor.toggle_grid();
           _this.editor.update(_this.sprite.get_current_sprite());
+        }
+
+        if (e.key == "m") {
+          // toggle hires or multicolor
+          _this.sprite.toggle_multicolor();
+          _this.editor.update(_this.sprite.get_current_sprite());
+          _this.preview.update(_this.sprite.get_current_sprite());
         }
       });
 

@@ -12,14 +12,24 @@ class Sprite
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-   
-    this.pixels = [];
     this.double_x = false;
     this.double_y = false;
     this.multicolor = false;
     this.colors = [5,7,2];
+    this.clear();
 
+    // TODO: delete these below
+    this.pixels[3][3] = this.colors[1];
+    this.pixels[4][3] = this.colors[1];
+    this.pixels[3][5] = this.colors[2];
+
+  }
+
+  clear()
+  {
+    // fills the sprite data with the default color
     // generate a bitmap array
+    this.pixels = [];
     let line = [];
     for(let i=0; i<this.height; i++)
     {
@@ -30,12 +40,24 @@ class Sprite
       }
       this.pixels.push(line);
     }
+  }
 
-    // TODO: delete these below
-    this.pixels[3][3] = this.colors[1];
-    this.pixels[4][3] = this.colors[1];
-    this.pixels[3][5] = this.colors[2];
 
+  fill(color)
+  {
+    // fills the sprite data with the default color
+    // generate a bitmap array
+    this.pixels = [];
+    let line = [];
+    for(let i=0; i<this.height; i++)
+    {
+      line = [];
+      for(let j=0; j<this.width; j++)
+      {
+        line.push(color);
+      }
+      this.pixels.push(line);
+    }
   }
 
   get_pixel(x,y)
@@ -65,6 +87,15 @@ class Sprite
   is_double_y()
   {
     return this.double_y;
+  }
+
+  toggle_multicolor()
+  {
+    if (this.multicolor){
+      this.multicolor = false;
+    }else{
+      this.multicolor = true;
+    }
   }
 
 

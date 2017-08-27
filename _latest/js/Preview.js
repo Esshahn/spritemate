@@ -37,8 +37,8 @@ var Preview = function () {
       return this.height;
     }
   }, {
-    key: "draw_sprite",
-    value: function draw_sprite(sprite_data) {
+    key: "update",
+    value: function update(sprite_data) {
 
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
