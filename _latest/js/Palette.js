@@ -28,7 +28,6 @@ var Palette = function () {
 
     this.draw_colors();
     this.draw_active_color();
-    this.mouse();
   }
 
   _createClass(Palette, [{
@@ -59,29 +58,21 @@ var Palette = function () {
       this.canvas.fillRect(0, this.colors.length / 2 * this.colorsquare_height + 10, this.colorsquare_width * 2, this.colorsquare_height);
     }
   }, {
+    key: "set_active_color",
+    value: function set_active_color(e) {
+      var pos = this.findPos(this.canvas_element);
+      var x = e.pageX - pos.x,
+          y = e.pageY - pos.y;
+      var c = this.canvas;
+      var p = c.getImageData(x, y, 1, 1).data;
+      var hex = "#" + ("000000" + this.rgbToHex(p[0], p[1], p[2])).slice(-6);
+      this.active_color = this.colors.indexOf(hex);
+      this.draw_active_color();
+    }
+  }, {
     key: "get_color",
     value: function get_color() {
       return this.active_color;
-    }
-  }, {
-    key: "mouse",
-    value: function mouse() {
-      var that = this;
-
-      $('#palette').mousemove(function (e) {});
-
-      $('#palette').mouseup(function (e) {
-        var pos = that.findPos(this);
-        var x = e.pageX - pos.x;
-        var y = e.pageY - pos.y;
-        var coord = "x=" + x + ", y=" + y;
-        var c = this.getContext('2d');
-        var p = c.getImageData(x, y, 1, 1).data;
-        that.hex = "#" + ("000000" + that.rgbToHex(p[0], p[1], p[2])).slice(-6);
-        //console.log(coord + " : " + that.hex);
-        that.active_color = that.colors.indexOf(that.hex);
-        that.draw_active_color();
-      });
     }
   }, {
     key: "findPos",

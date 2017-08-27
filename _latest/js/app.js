@@ -1,5 +1,7 @@
 "use strict";
 
+"use stict";
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37,52 +39,59 @@ var App = function () {
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2, this.config);
 
-    this.editor.draw_sprite(this.sprite.get_current_sprite());
+    this.editor.update(this.sprite.get_current_sprite());
     this.preview.draw_sprite(this.sprite.get_current_sprite());
     this.is_drawing = false;
-    this.mouse();
+    this.user_interaction();
   }
 
   _createClass(App, [{
-    key: "mouse",
-    value: function mouse() {
-      var that = this;
+    key: "draw_pixel",
+    value: function draw_pixel(e) {
+      var color = this.palette.get_color();
+
+      if (e.shiftKey) {
+        color = this.sprite.get_delete_color();
+      }
+
+      // draw pixels
+      var gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
+      this.sprite.set_pixel(gridpos.x, gridpos.y, color); // updates the sprite array at the grid position with the color chosen on the palette
+      this.editor.update(this.sprite.get_current_sprite()); // redraws the sprite in the editor window
+      this.preview.draw_sprite(this.sprite.get_current_sprite());
+      this.is_drawing = true; // needed for mousemove drawing
+    }
+  }, {
+    key: "user_interaction",
+    value: function user_interaction() {
+      var _this = this;
+
+      $(document).keydown(function (e) {
+
+        if (e.key == "g") {
+          // toggle grid display
+          _this.editor.toggle_grid();
+          _this.editor.update(_this.sprite.get_current_sprite());
+        }
+      });
 
       $('#editor').mousedown(function (e) {
-        var color = that.palette.get_color();
-
-        if (e.shiftKey) {
-          color = that.sprite.get_delete_color();
-        }
-
-        // draw pixels
-        var gridpos = that.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
-        that.sprite.set_pixel(gridpos.x, gridpos.y, color); // updates the sprite array at the grid position with the color chosen on the palette
-        that.editor.draw_sprite(that.sprite.get_current_sprite()); // redraws the sprite in the editor window
-        that.preview.draw_sprite(that.sprite.get_current_sprite());
-        that.is_drawing = true; // needed for mousemove drawing
+        _this.draw_pixel(e);
       });
 
       $('#editor').mousemove(function (e) {
-        if (that.is_drawing) {
-
-          var color = that.palette.get_color();
-
-          if (e.shiftKey) {
-            color = that.sprite.get_delete_color();
-          }
-
-          // draw pixels
-          var gridpos = that.editor.get_pixel(e);
-          that.sprite.set_pixel(gridpos.x, gridpos.y, color);
-          that.editor.draw_sprite(that.sprite.get_current_sprite());
-          that.preview.draw_sprite(that.sprite.get_current_sprite());
+        if (_this.is_drawing) {
+          _this.draw_pixel(e);
         }
       });
 
       $('#editor').mouseup(function (e) {
         // stop drawing pixels
-        that.is_drawing = false;
+        _this.is_drawing = false;
+      });
+
+      $('#palette').mouseup(function (e) {
+        _this.palette.set_active_color(e);
       });
     }
   }, {

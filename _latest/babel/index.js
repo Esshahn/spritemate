@@ -1,7 +1,7 @@
 function init() 
 {    
 
-    var config = 
+    let config = 
     {
       setting: "c64",
       sprite_x: 24,
@@ -16,5 +16,5 @@ function init()
       display_grid: true
     };
 
-    var sprite_app = new App(config);
+    let sprite_app = new App(config);
 }

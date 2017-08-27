@@ -1,5 +1,5 @@
 
-
+"use stict"
 
 
 class App
@@ -11,8 +11,8 @@ class App
     this.config = config;
     this.sprite = new Sprite(this.config);
 
-// init the base windows
-    var window_config = 
+    // init the base windows
+    let window_config = 
     {
       title: "Edit Sprite",
       left: 250,
@@ -21,7 +21,7 @@ class App
     this.window_editor = new Window_Editor(window_config);
     this.editor = new Editor(0,this.config);
 
-// create the color palette for the color window
+    // create the color palette for the color window
     window_config =
     {
       title: "Palette",
@@ -40,69 +40,79 @@ class App
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
     
-    this.editor.draw_sprite(this.sprite.get_current_sprite());
+    this.editor.update(this.sprite.get_current_sprite());
     this.preview.draw_sprite(this.sprite.get_current_sprite());
     this.is_drawing = false;
-    this.mouse();
+    this.user_interaction();
   }
 
-
-
-  mouse()
+  draw_pixel(e)
   {
-  var that = this;
-
-  $('#editor').mousedown(function(e)
-    {
-      var color = that.palette.get_color();
+    let color = this.palette.get_color();
       
-      if (e.shiftKey)
-      {
-        color = that.sprite.get_delete_color();
-      }
-
-      // draw pixels
-      var gridpos = that.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
-      that.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
-      that.editor.draw_sprite(that.sprite.get_current_sprite()); // redraws the sprite in the editor window
-      that.preview.draw_sprite(that.sprite.get_current_sprite());
-      that.is_drawing = true; // needed for mousemove drawing
-    });
-
-  $('#editor').mousemove(function(e)
+    if (e.shiftKey)
     {
-      if (that.is_drawing)
-      {
+      color = this.sprite.get_delete_color();
+    }
 
-        var color = that.palette.get_color();
-        
-        if (e.shiftKey)
-        {
-          color = that.sprite.get_delete_color();
-        }
-
-      // draw pixels
-        var gridpos = that.editor.get_pixel(e);
-        that.sprite.set_pixel(gridpos.x,gridpos.y,color);
-        that.editor.draw_sprite(that.sprite.get_current_sprite());
-        that.preview.draw_sprite(that.sprite.get_current_sprite());     
-      }
-
-    });
-
-
-  $('#editor').mouseup(function(e)
-    {
-        // stop drawing pixels
-        that.is_drawing = false;
-    });
+    // draw pixels
+    let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
+    this.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
+    this.editor.update(this.sprite.get_current_sprite()); // redraws the sprite in the editor window
+    this.preview.draw_sprite(this.sprite.get_current_sprite());
+    this.is_drawing = true; // needed for mousemove drawing
   }
+
+
+  user_interaction()
+  {
+
+    $(document).keydown((e) =>
+    {
+  
+      if (e.key == "g")
+      {
+        // toggle grid display
+        this.editor.toggle_grid();
+        this.editor.update(this.sprite.get_current_sprite());
+      }
+
+    });
+
+    $('#editor').mousedown((e) =>
+    {
+     this.draw_pixel(e);
+    });
+
+    $('#editor').mousemove((e) =>
+    {
+      if (this.is_drawing)
+      {
+        this.draw_pixel(e);   
+      }
+    });
+
+
+    $('#editor').mouseup((e) =>
+    {
+      // stop drawing pixels
+      this.is_drawing = false;
+    });
+
+    $('#palette').mouseup((e) =>
+    {
+      this.palette.set_active_color(e);
+    });
+
+  }
+
+
 
 
   get_pos_window(obj,e)
   // returns the x and y position in pixels of the clicked window
   {
-    var curleft = 0, curtop = 0;
+    let curleft = 0, curtop = 0;
     if (obj.offsetParent)
     {
       do 
@@ -111,8 +121,8 @@ class App
         curtop += obj.offsetTop;
       } while (obj = obj.offsetParent);
 
-      var x = e.pageX - curleft;
-      var y = e.pageY - curtop; // TODO: the -2 is a hack, no idea why is isn't exact otherwise
+      let x = e.pageX - curleft;
+      let y = e.pageY - curtop; // TODO: the -2 is a hack, no idea why is isn't exact otherwise
       
       return { x: x, y: y }; 
     }

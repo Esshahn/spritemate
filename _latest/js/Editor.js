@@ -9,6 +9,7 @@ var Editor = function () {
     _classCallCheck(this, Editor);
 
     this.config = config;
+    this.grid = this.config.display_grid;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
     this.zoom = this.config.zoom;
@@ -37,8 +38,17 @@ var Editor = function () {
       return this.height;
     }
   }, {
-    key: "draw_sprite",
-    value: function draw_sprite(sprite_data) {
+    key: "toggle_grid",
+    value: function toggle_grid() {
+      if (this.grid) {
+        this.grid = false;
+      } else {
+        this.grid = true;
+      }
+    }
+  }, {
+    key: "update",
+    value: function update(sprite_data) {
 
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -50,7 +60,7 @@ var Editor = function () {
         }
       }
 
-      if (this.config.display_grid) this.display_grid(sprite_data);
+      if (this.grid) this.display_grid(sprite_data);
     }
   }, {
     key: "display_grid",
@@ -69,10 +79,10 @@ var Editor = function () {
         this.canvas.stroke();
       }
 
-      for (var i = 0; i <= this.pixels_y; i++) {
+      for (var _i = 0; _i <= this.pixels_y; _i++) {
         this.canvas.beginPath();
-        this.canvas.moveTo(0, i * this.zoom);
-        this.canvas.lineTo(this.width, i * this.zoom);
+        this.canvas.moveTo(0, _i * this.zoom);
+        this.canvas.lineTo(this.width, _i * this.zoom);
         this.canvas.stroke();
       }
     }

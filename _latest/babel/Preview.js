@@ -37,12 +37,12 @@ class Preview
   draw_sprite(sprite_data)
   {
 
-    var x_grid_step = 1;
+    let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
-    for (var i=0; i<this.pixels_x; i=i+x_grid_step)
+    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
-      for (var j=0; j<this.pixels_y; j++)
+      for (let j=0; j<this.pixels_y; j++)
       {
         this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
         this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  

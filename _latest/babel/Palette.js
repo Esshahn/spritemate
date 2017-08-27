@@ -26,16 +26,16 @@ class Palette
  
     this.draw_colors();
     this.draw_active_color();
-    this.mouse();
+
   }
 
   draw_colors()
   {
    
-    var x = 0;
-    var y = 0;
+    let x = 0;
+    let y = 0;
 
-    for (var i=0; i<this.colors.length; i++)
+    for (let i=0; i<this.colors.length; i++)
     {
       this.canvas.fillStyle = this.colors[i];
       this.canvas.fillRect(x*this.colorsquare_width, y*this.colorsquare_height, this.colorsquare_width, this.colorsquare_height);
@@ -58,38 +58,26 @@ class Palette
      
   }
 
+  set_active_color(e)
+  {
+    let pos = this.findPos(this.canvas_element);
+    let x = e.pageX - pos.x , y = e.pageY - pos.y;
+    let c = this.canvas;
+    let p = c.getImageData(x, y, 1, 1).data; 
+    let hex = "#" + ("000000" + this.rgbToHex(p[0], p[1], p[2])).slice(-6);
+    this.active_color = this.colors.indexOf(hex);
+    this.draw_active_color();
+  }
+
   get_color()
   {
     return this.active_color;
   }
 
-  mouse()
-  {
-    var that = this;
-    
-    $('#palette').mousemove(function(e)
-    {
-        
-    });
-
-    $('#palette').mouseup(function(e)
-    {
-      var pos = that.findPos(this);
-      var x = e.pageX - pos.x;
-      var y = e.pageY - pos.y;
-      var coord = "x=" + x + ", y=" + y;
-      var c = this.getContext('2d');
-      var p = c.getImageData(x, y, 1, 1).data; 
-      that.hex = "#" + ("000000" + that.rgbToHex(p[0], p[1], p[2])).slice(-6);
-      //console.log(coord + " : " + that.hex);
-      that.active_color = that.colors.indexOf(that.hex);
-      that.draw_active_color();
-    });
-  }
 
   findPos(obj)
   {
-    var curleft = 0, curtop = 0;
+    let curleft = 0, curtop = 0;
     if (obj.offsetParent) {
         do {
             curleft += obj.offsetLeft;

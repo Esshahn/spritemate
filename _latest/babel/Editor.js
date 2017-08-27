@@ -6,6 +6,7 @@ class Editor
   constructor(window,config)
   {
     this.config = config;
+    this.grid = this.config.display_grid;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
     this.zoom = this.config.zoom;
@@ -34,22 +35,31 @@ class Editor
     return this.height;
   }
 
-  draw_sprite(sprite_data)
+  toggle_grid()
+  {
+    if (this.grid){
+      this.grid = false;
+    }else{
+      this.grid = true;
+    }
+  }
+
+  update(sprite_data)
   {
 
-    var x_grid_step = 1;
+    let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
-    for (var i=0; i<this.pixels_x; i=i+x_grid_step)
+    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
-      for (var j=0; j<this.pixels_y; j++)
+      for (let j=0; j<this.pixels_y; j++)
       {
         this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
         this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  
       }
     }
 
-    if (this.config.display_grid) this.display_grid(sprite_data);
+    if (this.grid) this.display_grid(sprite_data);
 
   }
 
@@ -58,11 +68,11 @@ class Editor
     // show a grid
     this.canvas.strokeStyle = "#666666";
     this.canvas.setLineDash([1, 1]);
-    var x_grid_step = 1;
+    let x_grid_step = 1;
    
     if (sprite_data.multicolor) x_grid_step = 2;
 
-    for (var i=0; i<=this.pixels_x; i=i+x_grid_step)
+    for (let i=0; i<=this.pixels_x; i=i+x_grid_step)
     {
         this.canvas.beginPath();
         this.canvas.moveTo(i*this.zoom,0);
@@ -70,7 +80,7 @@ class Editor
         this.canvas.stroke();
     }
 
-    for (var i=0; i<=this.pixels_y; i++)
+    for (let i=0; i<=this.pixels_y; i++)
     {
         this.canvas.beginPath();
         this.canvas.moveTo(0,i*this.zoom);
@@ -84,11 +94,11 @@ class Editor
   // input: x,y position of the mouse inside the editor window in pixels
   // output: x,y position in the sprite grid
   {
-    var obj = this.canvas_element.getBoundingClientRect();
-    var x = e.clientX - obj.left;
-    var y = e.clientY - obj.top;
-    var x_grid = Math.floor(x/(this.width/this.config.sprite_x));
-    var y_grid = Math.floor(y/(this.height/this.config.sprite_y));
+    let obj = this.canvas_element.getBoundingClientRect();
+    let x = e.clientX - obj.left;
+    let y = e.clientY - obj.top;
+    let x_grid = Math.floor(x/(this.width/this.config.sprite_x));
+    let y_grid = Math.floor(y/(this.height/this.config.sprite_y));
     return {x: x_grid, y: y_grid};
   }
 

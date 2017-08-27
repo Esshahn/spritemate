@@ -20,11 +20,11 @@ class Sprite
     this.colors = [5,7,2];
 
     // generate a bitmap array
-    var line = [];
-    for(var i=0; i<this.height; i++)
+    let line = [];
+    for(let i=0; i<this.height; i++)
     {
       line = [];
-      for(var j=0; j<this.width; j++)
+      for(let j=0; j<this.width; j++)
       {
         line.push(this.colors[0]);
       }
