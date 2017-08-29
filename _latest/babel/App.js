@@ -37,9 +37,17 @@ class App
     };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
+
+    window_config = 
+    {
+      title: "Tools",
+      left: 750,
+      top: 150
+    };
+    this.window_tools = new Window_Tools(window_config);
+    this.tools = new Tools(3,this.config);
     
-    this.editor.update(this.sprite.get_current_sprite());
-    this.preview.update(this.sprite.get_current_sprite());
+    this.update_ui();
     this.is_drawing = false;
     this.user_interaction();
   }
@@ -168,6 +176,13 @@ class App
     $('#palette').mouseup((e) =>
     {
       this.palette.set_active_color(e);
+    });
+
+
+    $('#icon-shift-right').mouseup((e) =>
+    {
+      this.sprite.shift_horizontal("right");
+      this.update_ui();
     });
 
   }
