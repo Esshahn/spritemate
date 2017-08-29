@@ -51,8 +51,8 @@ canvas
 
 .icon
 {
-  width: 64px;
-  height: 64px;
+  width: 66px;
+  height: 66px;
   cursor: pointer;
 
     image-rendering: optimizeSpeed;             /* Older versions of FF          */
@@ -94,7 +94,6 @@ canvas
 .ui-dialog-titlebar
 {
   font-family: 'Quicksand', sans-serif;
-  padding: 4px;
   font-weight: normal;
   text-transform: uppercase;
   font-size: 60%;
@@ -103,6 +102,8 @@ canvas
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+
+
 
 .no-close .ui-dialog-titlebar-close 
 {
@@ -129,6 +130,13 @@ canvas
 {
   border: 0px;
 }
+
+.ui-dialog .ui-dialog-titlebar 
+{
+    padding: 0px;
+}
+
+
 
 
 

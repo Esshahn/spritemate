@@ -14,8 +14,8 @@ var App = function () {
     // init the base windows
     var window_config = {
       title: "Edit Sprite",
-      left: 250,
-      top: 150
+      left: 150,
+      top: 120
     };
     this.window_editor = new Window_Editor(window_config);
     this.editor = new Editor(0, this.config);
@@ -23,24 +23,24 @@ var App = function () {
     // create the color palette for the color window
     window_config = {
       title: "Palette",
-      left: 100,
-      top: 150
+      left: 50,
+      top: 120
     };
     this.window_colors = new Window_Palette(window_config);
     this.palette = new Palette(1, this.config, this.sprite.get_colors());
 
     window_config = {
       title: "Preview",
-      left: 750,
-      top: 150
+      left: 650,
+      top: 320
     };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2, this.config);
 
     window_config = {
       title: "Tools",
-      left: 750,
-      top: 150
+      left: 650,
+      top: 120
     };
     this.window_tools = new Window_Tools(window_config);
     this.tools = new Tools(3, this.config);
@@ -98,19 +98,18 @@ var App = function () {
         }
 
         if (e.key == "d") {
-          _this.sprite.mirror_horizontal();
+          _this.sprite.flip_horizontal();
           _this.update_ui();
         }
 
         if (e.key == "D") {
-          _this.sprite.mirror_vertical();
+          _this.sprite.flip_vertical();
           _this.update_ui();
         }
 
         if (e.key == "f") {
           // fill sprite with active color
-          var color = _this.palette.get_color();
-          _this.sprite.fill(color);
+          _this.sprite.fill(_this.palette.get_color());
           _this.update_ui();
         }
 
@@ -160,6 +159,41 @@ var App = function () {
 
       $('#icon-shift-right').mouseup(function (e) {
         _this.sprite.shift_horizontal("right");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-left').mouseup(function (e) {
+        _this.sprite.shift_horizontal("left");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-up').mouseup(function (e) {
+        _this.sprite.shift_vertical("up");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-down').mouseup(function (e) {
+        _this.sprite.shift_vertical("down");
+        _this.update_ui();
+      });
+
+      $('#icon-flip-horizontal').mouseup(function (e) {
+        _this.sprite.flip_horizontal();
+        _this.update_ui();
+      });
+
+      $('#icon-flip-vertical').mouseup(function (e) {
+        _this.sprite.flip_vertical();
+        _this.update_ui();
+      });
+
+      $('#icon-grid').mouseup(function (e) {
+        _this.editor.toggle_grid();
+        _this.update_ui();
+      });
+
+      $('#icon-fill').mouseup(function (e) {
+        _this.sprite.fill(_this.palette.get_color());
         _this.update_ui();
       });
     }

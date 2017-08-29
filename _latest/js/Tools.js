@@ -16,7 +16,7 @@ var Tools = function () {
     key: "setup_icons",
     value: function setup_icons() {
 
-      var template = "\n\n    <img src=\"img/icon-shift-left.png\" class=\"icon\" id=\"icon-shift-left\"><img src=\"img/icon-shift-right.png\" class=\"icon\" id=\"icon-shift-right\"><img src=\"img/icon-shift-up.png\" class=\"icon\" id=\"icon-shift-up\"><img src=\"img/icon-shift-down.png\" class=\"icon\" id=\"icon-shift-down\"><img src=\"img/icon-flip-horizontal.png\" class=\"icon\" id=\"icon-flip-horizontal\"><img src=\"img/icon-flip-vertical.png\" class=\"icon\" id=\"icon-flip-vertical\">\n\n    ";
+      var template = "\n    <img src=\"img/icon-shift-left.png\" class=\"icon\" id=\"icon-shift-left\">\n    <img src=\"img/icon-shift-right.png\" class=\"icon\" id=\"icon-shift-right\">\n    <img src=\"img/icon-shift-up.png\" class=\"icon\" id=\"icon-shift-up\">\n    <img src=\"img/icon-shift-down.png\" class=\"icon\" id=\"icon-shift-down\">\n    <img src=\"img/icon-flip-horizontal.png\" class=\"icon\" id=\"icon-flip-horizontal\">\n    <img src=\"img/icon-flip-vertical.png\" class=\"icon\" id=\"icon-flip-vertical\"><br>\n    <img src=\"img/icon-trash.png\" class=\"icon\" id=\"icon-trash\">\n    <img src=\"img/icon-undo.png\" class=\"icon\" id=\"icon-undo\">\n    <img src=\"img/icon-fill.png\" class=\"icon\" id=\"icon-fill\">\n    <img src=\"img/icon-grid.png\" class=\"icon\" id=\"icon-grid\">\n    ";
       $("#window-" + this.window).append(template);
     }
   }]);

@@ -56,13 +56,13 @@ var Sprite = function () {
       }
     }
   }, {
-    key: "mirror_vertical",
-    value: function mirror_vertical() {
+    key: "flip_vertical",
+    value: function flip_vertical() {
       this.pixels.reverse();
     }
   }, {
-    key: "mirror_horizontal",
-    value: function mirror_horizontal() {
+    key: "flip_horizontal",
+    value: function flip_horizontal() {
       for (var i = 0; i < this.height; i++) {
         this.pixels[i].reverse();
       }

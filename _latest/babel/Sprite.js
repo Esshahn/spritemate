@@ -60,12 +60,12 @@ class Sprite
     }
   }
 
-  mirror_vertical()
+  flip_vertical()
   {
     this.pixels.reverse();
   }
 
-  mirror_horizontal()
+  flip_horizontal()
   {
     for(let i=0; i<this.height; i++)
     {
