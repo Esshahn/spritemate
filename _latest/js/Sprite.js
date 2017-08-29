@@ -56,6 +56,50 @@ var Sprite = function () {
       }
     }
   }, {
+    key: "mirror_vertical",
+    value: function mirror_vertical() {
+      this.pixels.reverse();
+    }
+  }, {
+    key: "mirror_horizontal",
+    value: function mirror_horizontal() {
+      for (var i = 0; i < this.height; i++) {
+        this.pixels[i].reverse();
+      }
+    }
+  }, {
+    key: "shift_vertical",
+    value: function shift_vertical(direction) {
+      if (direction == "down") {
+        this.pixels.unshift(this.pixels.pop());
+      } else {
+        this.pixels.push(this.pixels.shift());
+      }
+    }
+  }, {
+    key: "shift_horizontal",
+    value: function shift_horizontal(direction) {
+      for (var i = 0; i < this.height; i++) {
+        if (direction == "right") {
+
+          if (this.multicolor) {
+            this.pixels[i].unshift(this.pixels[i].pop());
+            this.pixels[i].unshift(this.pixels[i].pop());
+          } else {
+            this.pixels[i].unshift(this.pixels[i].pop());
+          }
+        } else {
+
+          if (this.multicolor) {
+            this.pixels[i].push(this.pixels[i].shift());
+            this.pixels[i].push(this.pixels[i].shift());
+          } else {
+            this.pixels[i].push(this.pixels[i].shift());
+          }
+        }
+      }
+    }
+  }, {
     key: "get_pixel",
     value: function get_pixel(x, y) {
       return this.pixels[y][x];

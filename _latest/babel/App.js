@@ -61,19 +61,50 @@ class App
     this.is_drawing = true; // needed for mousemove drawing
   }
 
+  update_ui()
+  {
+    this.editor.update(this.sprite.get_current_sprite());
+    this.preview.update(this.sprite.get_current_sprite());
+  }
+
 
   user_interaction()
   {
 
     $(document).keydown((e) =>
     {
-  
+ 
+      if (e.key == "a")
+      {
+        // toggle hires or multicolor
+        this.sprite.shift_horizontal("right");
+        this.update_ui();
+      }
+
+      if (e.key == "A")
+      {
+        // toggle hires or multicolor
+        this.sprite.shift_horizontal("left");
+        this.update_ui();
+      }
+
       if (e.key == "c")
       {
         // clear sprite
         this.sprite.clear();
-        this.editor.update(this.sprite.get_current_sprite());
-        this.preview.update(this.sprite.get_current_sprite());
+        this.update_ui();
+      }
+
+      if (e.key == "d")
+      {
+        this.sprite.mirror_horizontal();
+        this.update_ui();
+      }
+
+      if (e.key == "D")
+      {
+        this.sprite.mirror_vertical();
+        this.update_ui();
       }
 
       if (e.key == "f")
@@ -81,23 +112,35 @@ class App
         // fill sprite with active color
         let color = this.palette.get_color();
         this.sprite.fill(color);
-        this.editor.update(this.sprite.get_current_sprite());
-        this.preview.update(this.sprite.get_current_sprite());
+        this.update_ui();
       }
 
       if (e.key == "g")
       {
         // toggle grid display
         this.editor.toggle_grid();
-        this.editor.update(this.sprite.get_current_sprite());
+        this.update_ui();
       }
 
       if (e.key == "m")
       {
         // toggle hires or multicolor
         this.sprite.toggle_multicolor();
-        this.editor.update(this.sprite.get_current_sprite());
-        this.preview.update(this.sprite.get_current_sprite());
+        this.update_ui();
+      }
+
+      if (e.key == "s")
+      {
+        // toggle hires or multicolor
+        this.sprite.shift_vertical("down");
+        this.update_ui();
+      }
+
+      if (e.key == "S")
+      {
+        // toggle hires or multicolor
+        this.sprite.shift_vertical("up");
+        this.update_ui();
       }
 
     });

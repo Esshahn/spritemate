@@ -60,6 +60,59 @@ class Sprite
     }
   }
 
+  mirror_vertical()
+  {
+    this.pixels.reverse();
+  }
+
+  mirror_horizontal()
+  {
+    for(let i=0; i<this.height; i++)
+    {
+      this.pixels[i].reverse();
+    } 
+  }
+
+  shift_vertical(direction)
+  {
+    if (direction == "down")
+     {
+       this.pixels.unshift(this.pixels.pop());
+     }else{
+       this.pixels.push(this.pixels.shift());
+     }  
+  }
+
+
+  shift_horizontal(direction)
+  {
+    for(let i=0; i<this.height; i++)
+    {
+      if (direction == "right")
+      {
+        
+        if (this.multicolor)
+        {
+          this.pixels[i].unshift(this.pixels[i].pop());
+          this.pixels[i].unshift(this.pixels[i].pop());
+        }else{
+          this.pixels[i].unshift(this.pixels[i].pop());
+        }
+        
+      }else{
+
+        if (this.multicolor)
+        {
+          this.pixels[i].push(this.pixels[i].shift());
+          this.pixels[i].push(this.pixels[i].shift());
+        }else{
+          this.pixels[i].push(this.pixels[i].shift());
+        }
+        
+      }
+    } 
+  }
+
   get_pixel(x,y)
   {
     return this.pixels[y][x];

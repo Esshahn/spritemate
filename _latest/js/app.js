@@ -60,38 +60,75 @@ var App = function () {
       this.is_drawing = true; // needed for mousemove drawing
     }
   }, {
+    key: "update_ui",
+    value: function update_ui() {
+      this.editor.update(this.sprite.get_current_sprite());
+      this.preview.update(this.sprite.get_current_sprite());
+    }
+  }, {
     key: "user_interaction",
     value: function user_interaction() {
       var _this = this;
 
       $(document).keydown(function (e) {
 
+        if (e.key == "a") {
+          // toggle hires or multicolor
+          _this.sprite.shift_horizontal("right");
+          _this.update_ui();
+        }
+
+        if (e.key == "A") {
+          // toggle hires or multicolor
+          _this.sprite.shift_horizontal("left");
+          _this.update_ui();
+        }
+
         if (e.key == "c") {
           // clear sprite
           _this.sprite.clear();
-          _this.editor.update(_this.sprite.get_current_sprite());
-          _this.preview.update(_this.sprite.get_current_sprite());
+          _this.update_ui();
+        }
+
+        if (e.key == "d") {
+          _this.sprite.mirror_horizontal();
+          _this.update_ui();
+        }
+
+        if (e.key == "D") {
+          _this.sprite.mirror_vertical();
+          _this.update_ui();
         }
 
         if (e.key == "f") {
           // fill sprite with active color
           var color = _this.palette.get_color();
           _this.sprite.fill(color);
-          _this.editor.update(_this.sprite.get_current_sprite());
-          _this.preview.update(_this.sprite.get_current_sprite());
+          _this.update_ui();
         }
 
         if (e.key == "g") {
           // toggle grid display
           _this.editor.toggle_grid();
-          _this.editor.update(_this.sprite.get_current_sprite());
+          _this.update_ui();
         }
 
         if (e.key == "m") {
           // toggle hires or multicolor
           _this.sprite.toggle_multicolor();
-          _this.editor.update(_this.sprite.get_current_sprite());
-          _this.preview.update(_this.sprite.get_current_sprite());
+          _this.update_ui();
+        }
+
+        if (e.key == "s") {
+          // toggle hires or multicolor
+          _this.sprite.shift_vertical("down");
+          _this.update_ui();
+        }
+
+        if (e.key == "S") {
+          // toggle hires or multicolor
+          _this.sprite.shift_vertical("up");
+          _this.update_ui();
         }
       });
 
