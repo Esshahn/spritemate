@@ -8,11 +8,11 @@ class List
     this.config = config;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
-    this.zoom = 5; // this.config.zoom;
+    this.zoom = 2; // this.config.zoom;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * 2;
-    this.height = this.pixels_y * 2;
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
     
     this.canvas_element.id = "list";
     this.canvas_element.width = this.width;

@@ -14,8 +14,8 @@ class Window_List
         this.type = "list";
         this.left = config.left;
         this.top = config.top;
-        this.width = "auto"; //24 * this.zoomFactor;
-        this.height = "auto"; //21 * this.zoomFactor;
+        this.width = 400; //24 * this.zoomFactor;
+        this.height = 180; //21 * this.zoomFactor;
         this.resizable = true;
         this.position = { at: "left+"+this.left+" top+"+this.top };
         this.create_window();  

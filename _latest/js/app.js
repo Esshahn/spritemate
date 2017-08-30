@@ -39,7 +39,7 @@ var App = function () {
 
     window_config = {
       title: "Sprite List",
-      left: 650,
+      left: 820,
       top: 360
     };
     this.window_preview = new Window_List(window_config);
