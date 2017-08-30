@@ -14,7 +14,7 @@ class App
     {
       title: "Edit Sprite",
       left: 150,
-      top: 120
+      top: 180
     };
     this.window_editor = new Window_Editor(window_config);
     this.editor = new Editor(0,this.config);
@@ -24,7 +24,7 @@ class App
     {
       title: "Palette",
       left: 50,
-      top: 120
+      top: 180
     };
     this.window_colors = new Window_Palette(window_config);
     this.palette = new Palette(1,this.config,this.sprite.get_colors());
@@ -33,11 +33,11 @@ class App
     {
       title: "Preview",
       left: 650,
-      top: 320
+      top: 180
     };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
-
+/*
     window_config = 
     {
       title: "Tools",
@@ -46,7 +46,7 @@ class App
     };
     this.window_tools = new Window_Tools(window_config);
     this.tools = new Tools(3,this.config);
-    
+*/
     this.update_ui();
     this.is_drawing = false;
     this.user_interaction();
