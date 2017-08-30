@@ -202,7 +202,7 @@ var App = function () {
         _this.update_ui();
       });
 
-      $('#icon-undo').mouseup(function (e) {
+      $('#icon-multicolor').mouseup(function (e) {
         _this.sprite.toggle_multicolor();
         _this.update_ui();
       });

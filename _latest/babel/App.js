@@ -232,7 +232,7 @@ class App
       this.update_ui();
     });
 
-    $('#icon-undo').mouseup((e) =>
+    $('#icon-multicolor').mouseup((e) =>
     {
       this.sprite.toggle_multicolor();
       this.update_ui();
