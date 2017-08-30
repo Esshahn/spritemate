@@ -37,16 +37,16 @@ class App
     };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
-/*
+
     window_config = 
     {
-      title: "Tools",
+      title: "Sprite List",
       left: 650,
-      top: 120
+      top: 360
     };
-    this.window_tools = new Window_Tools(window_config);
-    this.tools = new Tools(3,this.config);
-*/
+    this.window_preview = new Window_List(window_config);
+    this.list = new List(3,this.config);
+
     this.update_ui();
     this.is_drawing = false;
     this.user_interaction();
@@ -64,8 +64,7 @@ class App
     // draw pixels
     let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
     this.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
-    this.editor.update(this.sprite.get_current_sprite()); // redraws the sprite in the editor window
-    this.preview.update(this.sprite.get_current_sprite());
+    this.update_ui();
     this.is_drawing = true; // needed for mousemove drawing
   }
 
@@ -73,6 +72,7 @@ class App
   {
     this.editor.update(this.sprite.get_current_sprite());
     this.preview.update(this.sprite.get_current_sprite());
+    this.list.update(this.sprite.get_current_sprite());
   }
 
 
@@ -223,6 +223,18 @@ class App
     $('#icon-fill').mouseup((e) =>
     {
       this.sprite.fill(this.palette.get_color());
+      this.update_ui();
+    });
+
+    $('#icon-trash').mouseup((e) =>
+    {
+      this.sprite.set_current_sprite();
+      this.update_ui();
+    });
+
+    $('#icon-undo').mouseup((e) =>
+    {
+      this.sprite.toggle_multicolor();
       this.update_ui();
     });
   }

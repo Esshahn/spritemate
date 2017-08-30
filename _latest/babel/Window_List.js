@@ -1,24 +1,24 @@
 
 /*
 
-    Class Window_Tools
+    Class Window
 
  */
 
-class Window_Tools
+class Window_List
 {
     constructor(config)
     {
         this.id = "window-" + $('div[id^="window-"]').length;
-        this.title = config.title; 
-        this.type = "tools";
+        this.title = config.title;  
+        this.type = "list";
         this.left = config.left;
         this.top = config.top;
         this.width = "auto"; //24 * this.zoomFactor;
         this.height = "auto"; //21 * this.zoomFactor;
-        this.resizable = false;
-        this.position = { at: "left+"+this.left+" top+"+this.top }; 
-        this.create_window();
+        this.resizable = true;
+        this.position = { at: "left+"+this.left+" top+"+this.top };
+        this.create_window();  
     }
              
        

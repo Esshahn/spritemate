@@ -12,24 +12,48 @@ class Sprite
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-    this.double_x = false;
-    this.double_y = false;
-    this.multicolor = false;
-    this.colors = [5,7,2];
-    this.clear();
-
+    this.colors = [5,7];
+    this.spritelist = [];
+    
+    this.new(6,true);
+    this.new(3,true);
+    this.current_sprite = 0;
+    
     // TODO: delete these below
-    this.pixels[3][3] = this.colors[1];
-    this.pixels[4][3] = this.colors[1];
-    this.pixels[3][5] = this.colors[2];
+    this.spritelist[this.current_sprite].pixels[4][0] = this.colors[1];
+    this.spritelist[this.current_sprite].pixels[3][1] = this.colors[2];
+    console.log(this.spritelist[this.current_sprite].pixels);
+  }
 
+  new(color,multicolor)
+  {
+    let sprite =
+    {
+      "color" : color,      
+      "multicolor" : multicolor,
+      "double_x" : false,
+      "double_y" : false
+    };
+
+    sprite.pixels = [];
+    let line = [];
+    for(let i=0; i<this.height; i++)
+    {
+      line = [];
+      for(let j=0; j<this.width; j++)
+      {
+        line.push(sprite.color);
+      }
+      sprite.pixels.push(line);
+    }
+    this.spritelist.push(sprite);
   }
 
   clear()
   {
     // fills the sprite data with the default color
     // generate a bitmap array
-    this.pixels = [];
+    let pixels = [];
     let line = [];
     for(let i=0; i<this.height; i++)
     {
@@ -38,8 +62,9 @@ class Sprite
       {
         line.push(this.colors[0]);
       }
-      this.pixels.push(line);
+      pixels.push(line);
     }
+    this.spritelist[this.current_sprite].pixels = pixels;
   }
 
 
@@ -47,7 +72,7 @@ class Sprite
   {
     // fills the sprite data with the default color
     // generate a bitmap array
-    this.pixels = [];
+    let pixels = [];
     let line = [];
     for(let i=0; i<this.height; i++)
     {
@@ -56,66 +81,71 @@ class Sprite
       {
         line.push(color);
       }
-      this.pixels.push(line);
+      pixels.push(line);
     }
+    this.spritelist[this.current_sprite].pixels = pixels;
   }
 
   flip_vertical()
   {
-    this.pixels.reverse();
+    this.spritelist[this.current_sprite].pixels.reverse();
   }
 
   flip_horizontal()
   {
     for(let i=0; i<this.height; i++)
     {
-      this.pixels[i].reverse();
+      this.spritelist[this.current_sprite].pixels[i].reverse();
     } 
   }
 
   shift_vertical(direction)
   {
+    let s = this.spritelist[this.current_sprite];
     if (direction == "down")
      {
-       this.pixels.unshift(this.pixels.pop());
+       s.pixels.unshift(s.pixels.pop());
      }else{
-       this.pixels.push(this.pixels.shift());
-     }  
+       s.pixels.push(s.pixels.shift());
+     }
+    this.spritelist[this.current_sprite] = s;
   }
 
 
   shift_horizontal(direction)
   {
+    let s = this.spritelist[this.current_sprite];
     for(let i=0; i<this.height; i++)
     {
       if (direction == "right")
       {
         
-        if (this.multicolor)
+        if (s.multicolor)
         {
-          this.pixels[i].unshift(this.pixels[i].pop());
-          this.pixels[i].unshift(this.pixels[i].pop());
+          s.pixels[i].unshift(s.pixels[i].pop());
+          s.pixels[i].unshift(s.pixels[i].pop());
         }else{
-          this.pixels[i].unshift(this.pixels[i].pop());
+          s.pixels[i].unshift(s.pixels[i].pop());
         }
         
       }else{
 
-        if (this.multicolor)
+        if (s.multicolor)
         {
-          this.pixels[i].push(this.pixels[i].shift());
-          this.pixels[i].push(this.pixels[i].shift());
+          s.pixels[i].push(s.pixels[i].shift());
+          s.pixels[i].push(s.pixels[i].shift());
         }else{
-          this.pixels[i].push(this.pixels[i].shift());
+          s.pixels[i].push(s.pixels[i].shift());
         }
         
       }
-    } 
+    }
+    this.spritelist[this.current_sprite] = s;
   }
 
   get_pixel(x,y)
   {
-    return this.pixels[y][x];
+    return this.spritelist[this.current_sprite].pixels[y][x];
   }
 
   get_colors()
@@ -129,25 +159,25 @@ class Sprite
   }
 
   is_multicolor(){
-    return this.multicolor;
+    return this.spritelist[this.current_sprite].multicolor;
   }
 
   is_double_x()
   {
-    return this.double_x;
+    return this.spritelist[this.current_sprite].double_x;
   }
 
   is_double_y()
   {
-    return this.double_y;
+    return this.spritelist[this.current_sprite].double_y;
   }
 
   toggle_multicolor()
   {
-    if (this.multicolor){
-      this.multicolor = false;
+    if (this.spritelist[this.current_sprite].multicolor){
+      this.spritelist[this.current_sprite].multicolor = false;
     }else{
-      this.multicolor = true;
+      this.spritelist[this.current_sprite].multicolor = true;
     }
   }
 
@@ -157,14 +187,24 @@ class Sprite
     // writes a pixel to the sprite pixel array
     
     // multicolor check
-    if(this.multicolor && x%2 !== 0) x=x-1;
+    if(this.spritelist[this.current_sprite].multicolor && x%2 !== 0) x=x-1;
 
-    this.pixels[y][x] = color;  
+    this.spritelist[this.current_sprite].pixels[y][x] = color;  
   }
 
   get_current_sprite()
   {
-    return this;
+    return this.spritelist[this.current_sprite];
+  }
+
+  set_current_sprite()
+  {
+    if (this.current_sprite == 0)
+    {
+      this.current_sprite = 1;
+    }else{
+      this.current_sprite = 0;
+    }
   }
 
   

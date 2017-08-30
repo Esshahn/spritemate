@@ -13,96 +13,124 @@ var Sprite = function () {
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-    this.double_x = false;
-    this.double_y = false;
-    this.multicolor = false;
-    this.colors = [5, 7, 2];
-    this.clear();
+    this.colors = [5, 7];
+    this.spritelist = [];
+
+    this.new(6, true);
+    this.new(3, true);
+    this.current_sprite = 0;
 
     // TODO: delete these below
-    this.pixels[3][3] = this.colors[1];
-    this.pixels[4][3] = this.colors[1];
-    this.pixels[3][5] = this.colors[2];
+    this.spritelist[this.current_sprite].pixels[4][0] = this.colors[1];
+    this.spritelist[this.current_sprite].pixels[3][1] = this.colors[2];
+    console.log(this.spritelist[this.current_sprite].pixels);
   }
 
   _createClass(Sprite, [{
+    key: "new",
+    value: function _new(color, multicolor) {
+      var sprite = {
+        "color": color,
+        "multicolor": multicolor,
+        "double_x": false,
+        "double_y": false
+      };
+
+      sprite.pixels = [];
+      var line = [];
+      for (var i = 0; i < this.height; i++) {
+        line = [];
+        for (var j = 0; j < this.width; j++) {
+          line.push(sprite.color);
+        }
+        sprite.pixels.push(line);
+      }
+      this.spritelist.push(sprite);
+    }
+  }, {
     key: "clear",
     value: function clear() {
       // fills the sprite data with the default color
       // generate a bitmap array
-      this.pixels = [];
+      var pixels = [];
       var line = [];
       for (var i = 0; i < this.height; i++) {
         line = [];
         for (var j = 0; j < this.width; j++) {
           line.push(this.colors[0]);
         }
-        this.pixels.push(line);
+        pixels.push(line);
       }
+      this.spritelist[this.current_sprite].pixels = pixels;
     }
   }, {
     key: "fill",
     value: function fill(color) {
       // fills the sprite data with the default color
       // generate a bitmap array
-      this.pixels = [];
+      var pixels = [];
       var line = [];
       for (var i = 0; i < this.height; i++) {
         line = [];
         for (var j = 0; j < this.width; j++) {
           line.push(color);
         }
-        this.pixels.push(line);
+        pixels.push(line);
       }
+      this.spritelist[this.current_sprite].pixels = pixels;
     }
   }, {
     key: "flip_vertical",
     value: function flip_vertical() {
-      this.pixels.reverse();
+      this.spritelist[this.current_sprite].pixels.reverse();
     }
   }, {
     key: "flip_horizontal",
     value: function flip_horizontal() {
       for (var i = 0; i < this.height; i++) {
-        this.pixels[i].reverse();
+        this.spritelist[this.current_sprite].pixels[i].reverse();
       }
     }
   }, {
     key: "shift_vertical",
     value: function shift_vertical(direction) {
+      var s = this.spritelist[this.current_sprite];
       if (direction == "down") {
-        this.pixels.unshift(this.pixels.pop());
+        s.pixels.unshift(s.pixels.pop());
       } else {
-        this.pixels.push(this.pixels.shift());
+        s.pixels.push(s.pixels.shift());
       }
+      this.spritelist[this.current_sprite] = s;
     }
   }, {
     key: "shift_horizontal",
     value: function shift_horizontal(direction) {
+      var s = this.spritelist[this.current_sprite];
       for (var i = 0; i < this.height; i++) {
         if (direction == "right") {
 
-          if (this.multicolor) {
-            this.pixels[i].unshift(this.pixels[i].pop());
-            this.pixels[i].unshift(this.pixels[i].pop());
+          if (s.multicolor) {
+            s.pixels[i].unshift(s.pixels[i].pop());
+            s.pixels[i].unshift(s.pixels[i].pop());
           } else {
-            this.pixels[i].unshift(this.pixels[i].pop());
+            s.pixels[i].unshift(s.pixels[i].pop());
           }
         } else {
 
-          if (this.multicolor) {
-            this.pixels[i].push(this.pixels[i].shift());
-            this.pixels[i].push(this.pixels[i].shift());
+          if (s.multicolor) {
+            s.pixels[i].push(s.pixels[i].shift());
+            s.pixels[i].push(s.pixels[i].shift());
           } else {
-            this.pixels[i].push(this.pixels[i].shift());
+            s.pixels[i].push(s.pixels[i].shift());
           }
         }
       }
+      this.spritelist[this.current_sprite] = s;
     }
   }, {
     key: "get_pixel",
     value: function get_pixel(x, y) {
-      return this.pixels[y][x];
+      return this.spritelist[this.current_sprite].pixels[y][x];
     }
   }, {
     key: "get_colors",
@@ -117,25 +145,25 @@ var Sprite = function () {
   }, {
     key: "is_multicolor",
     value: function is_multicolor() {
-      return this.multicolor;
+      return this.spritelist[this.current_sprite].multicolor;
     }
   }, {
     key: "is_double_x",
     value: function is_double_x() {
-      return this.double_x;
+      return this.spritelist[this.current_sprite].double_x;
     }
   }, {
     key: "is_double_y",
     value: function is_double_y() {
-      return this.double_y;
+      return this.spritelist[this.current_sprite].double_y;
     }
   }, {
     key: "toggle_multicolor",
     value: function toggle_multicolor() {
-      if (this.multicolor) {
-        this.multicolor = false;
+      if (this.spritelist[this.current_sprite].multicolor) {
+        this.spritelist[this.current_sprite].multicolor = false;
       } else {
-        this.multicolor = true;
+        this.spritelist[this.current_sprite].multicolor = true;
       }
     }
   }, {
@@ -144,14 +172,23 @@ var Sprite = function () {
       // writes a pixel to the sprite pixel array
 
       // multicolor check
-      if (this.multicolor && x % 2 !== 0) x = x - 1;
+      if (this.spritelist[this.current_sprite].multicolor && x % 2 !== 0) x = x - 1;
 
-      this.pixels[y][x] = color;
+      this.spritelist[this.current_sprite].pixels[y][x] = color;
     }
   }, {
     key: "get_current_sprite",
     value: function get_current_sprite() {
-      return this;
+      return this.spritelist[this.current_sprite];
+    }
+  }, {
+    key: "set_current_sprite",
+    value: function set_current_sprite() {
+      if (this.current_sprite == 0) {
+        this.current_sprite = 1;
+      } else {
+        this.current_sprite = 0;
+      }
     }
   }]);
 
