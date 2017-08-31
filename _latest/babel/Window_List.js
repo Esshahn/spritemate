@@ -18,7 +18,7 @@ class Window_List
         this.height = 180; //21 * this.zoomFactor;
         this.resizable = true;
         this.position = { at: "left+"+this.left+" top+"+this.top };
-        this.create_window();  
+        this.create_window(); 
     }
              
        

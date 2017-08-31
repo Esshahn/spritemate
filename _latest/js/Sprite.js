@@ -15,15 +15,17 @@ var Sprite = function () {
     this.height = config.sprite_y;
     this.colors = [5, 7];
     this.spritelist = [];
-
-    this.new(6, true);
-    this.new(3, true);
     this.current_sprite = 0;
-
-    // TODO: delete these below
-    this.spritelist[this.current_sprite].pixels[4][0] = this.colors[1];
-    this.spritelist[this.current_sprite].pixels[3][1] = this.colors[2];
-    console.log(this.spritelist[this.current_sprite].pixels);
+    this.new(6, false);
+    this.new(3, true);
+    this.new(2, false);
+    this.new(5, false);
+    this.new(9, true);
+    this.new(11, true);
+    this.new(2, false);
+    this.new(5, false);
+    this.new(9, true);
+    this.new(11, true);
   }
 
   _createClass(Sprite, [{
@@ -180,6 +182,15 @@ var Sprite = function () {
     key: "get_current_sprite",
     value: function get_current_sprite() {
       return this.spritelist[this.current_sprite];
+    }
+  }, {
+    key: "get_all_sprites",
+    value: function get_all_sprites() {
+      if (this.spritelist) {
+        return this.spritelist;
+      } else {
+        return false;
+      }
     }
   }, {
     key: "set_current_sprite",

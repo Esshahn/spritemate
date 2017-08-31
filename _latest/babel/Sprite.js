@@ -14,15 +14,18 @@ class Sprite
     this.height = config.sprite_y;
     this.colors = [5,7];
     this.spritelist = [];
-    
-    this.new(6,true);
-    this.new(3,true);
     this.current_sprite = 0;
+    this.new(6,false);
+    this.new(3,true);
+    this.new(2,false);
+    this.new(5,false);
+    this.new(9,true);
+    this.new(11,true);
+    this.new(2,false);
+    this.new(5,false);
+    this.new(9,true);
+    this.new(11,true);
     
-    // TODO: delete these below
-    this.spritelist[this.current_sprite].pixels[4][0] = this.colors[1];
-    this.spritelist[this.current_sprite].pixels[3][1] = this.colors[2];
-    console.log(this.spritelist[this.current_sprite].pixels);
   }
 
   new(color,multicolor)
@@ -195,6 +198,16 @@ class Sprite
   get_current_sprite()
   {
     return this.spritelist[this.current_sprite];
+  }
+
+  get_all_sprites()
+  {
+    if (this.spritelist)
+    {
+      return this.spritelist;
+    }else{
+      return false;
+    }
   }
 
   set_current_sprite()
