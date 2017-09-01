@@ -100,6 +100,7 @@ var App = function () {
       this.init_ui_fade("icon-flip-vertical");
       this.init_ui_fade("icon-multicolor");
       this.init_ui_fade("icon-fill");
+      this.init_ui_fade("icon-list-new");
 
       // trash can is a bit different
       $('#icon-trash').css({ opacity: 0.33 });
