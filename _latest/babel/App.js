@@ -228,7 +228,7 @@ class App
 
     $('#icon-trash').mouseup((e) =>
     {
-      this.sprite.set_current_sprite();
+      this.sprite.new(1,false);
       this.update_ui();
     });
 
@@ -237,6 +237,19 @@ class App
       this.sprite.toggle_multicolor();
       this.update_ui();
     });
+
+    $('#window-3').mouseup((e) =>
+    {
+      this.sprite.set_current_sprite(this.list.get_clicked_sprite());
+      this.update_ui();
+    });
+
+   $('#icon-list-new').mouseup((e) =>
+    {    
+      this.sprite.new(1,false);
+      this.update_ui();
+    });
+
   }
 
 

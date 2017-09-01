@@ -198,12 +198,22 @@ var App = function () {
       });
 
       $('#icon-trash').mouseup(function (e) {
-        _this.sprite.set_current_sprite();
+        _this.sprite.new(1, false);
         _this.update_ui();
       });
 
       $('#icon-multicolor').mouseup(function (e) {
         _this.sprite.toggle_multicolor();
+        _this.update_ui();
+      });
+
+      $('#window-3').mouseup(function (e) {
+        _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
+        _this.update_ui();
+      });
+
+      $('#icon-list-new').mouseup(function (e) {
+        _this.sprite.new(1, false);
         _this.update_ui();
       });
     }

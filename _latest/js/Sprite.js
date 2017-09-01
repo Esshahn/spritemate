@@ -19,13 +19,6 @@ var Sprite = function () {
     this.new(6, false);
     this.new(3, true);
     this.new(2, false);
-    this.new(5, false);
-    this.new(9, true);
-    this.new(11, true);
-    this.new(2, false);
-    this.new(5, false);
-    this.new(9, true);
-    this.new(11, true);
   }
 
   _createClass(Sprite, [{
@@ -194,12 +187,8 @@ var Sprite = function () {
     }
   }, {
     key: "set_current_sprite",
-    value: function set_current_sprite() {
-      if (this.current_sprite == 0) {
-        this.current_sprite = 1;
-      } else {
-        this.current_sprite = 0;
-      }
+    value: function set_current_sprite(spritenumber) {
+      this.current_sprite = spritenumber;
     }
   }]);
 

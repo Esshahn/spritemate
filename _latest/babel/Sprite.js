@@ -18,13 +18,7 @@ class Sprite
     this.new(6,false);
     this.new(3,true);
     this.new(2,false);
-    this.new(5,false);
-    this.new(9,true);
-    this.new(11,true);
-    this.new(2,false);
-    this.new(5,false);
-    this.new(9,true);
-    this.new(11,true);
+
     
   }
 
@@ -210,14 +204,9 @@ class Sprite
     }
   }
 
-  set_current_sprite()
+  set_current_sprite(spritenumber)
   {
-    if (this.current_sprite == 0)
-    {
-      this.current_sprite = 1;
-    }else{
-      this.current_sprite = 0;
-    }
+    this.current_sprite = spritenumber;
   }
 
   

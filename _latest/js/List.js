@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -15,27 +15,46 @@ var List = function () {
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
+    this.clicked_sprite = 0;
+    $("#window-" + this.window).append('<img src="img/icon3/icon-list-new.png" id="icon-list-new">');
   }
 
   _createClass(List, [{
-    key: "create_canvas",
+    key: 'create_canvas',
     value: function create_canvas(id) {
+      var _this = this;
+
       var canvas_element = document.createElement('canvas');
-      canvas_element.id = "#list-" + id;
+      canvas_element.id = "list-" + id;
       canvas_element.width = this.pixels_x * this.zoom;
       canvas_element.height = this.pixels_y * this.zoom;
 
       $("#window-" + this.window).append(canvas_element);
+      $(canvas_element).addClass("sprite_in_list");
+
+      if (this.clicked_sprite == id) {
+        $(canvas_element).addClass("sprite_in_list_selected");
+      }
+
+      $(canvas_element).mouseup(function (e) {
+        _this.clicked_sprite = id;
+      });
     }
   }, {
-    key: "update",
+    key: 'get_clicked_sprite',
+    value: function get_clicked_sprite() {
+      return this.clicked_sprite;
+    }
+  }, {
+    key: 'update',
     value: function update(spritelist) {
-      $("#window-" + this.window).empty();
+
+      $(".sprite_in_list").remove();
 
       for (var i = 0; i < spritelist.length; i++) {
         this.create_canvas(i);
 
-        var canvas = document.getElementById("#list-" + i).getContext('2d');
+        var canvas = document.getElementById("list-" + i).getContext('2d');
         var sprite_data = spritelist[i];
         var x_grid_step = 1;
         if (sprite_data.multicolor) x_grid_step = 2;
@@ -47,8 +66,6 @@ var List = function () {
           }
         }
       }
-
-      $("#window-" + this.window).append('<img src="img/icon3/icon-list-new.png">');
     }
   }]);
 

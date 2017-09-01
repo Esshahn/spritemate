@@ -134,7 +134,21 @@ canvas
   padding: 0px;
 }
 
+.sprite_in_list
+{
+  margin: 2px;
+}
 
+.sprite_in_list_selected
+{
+  border: 2px solid #e6007e;
+  margin: 0px;
+}
+
+#icon-list-new
+{
+  margin: 2px;
+}
 
 .ui-dialog-titlebar
 {
