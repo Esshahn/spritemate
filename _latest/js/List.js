@@ -16,12 +16,13 @@ var List = function () {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
+
     $("#window-" + this.window).append('<img src="img/icon3/icon-list-new.png" id="icon-list-new">');
   }
 
   _createClass(List, [{
     key: 'create_canvas',
-    value: function create_canvas(id) {
+    value: function create_canvas(id, current_sprite) {
       var _this = this;
 
       var canvas_element = document.createElement('canvas');
@@ -31,8 +32,8 @@ var List = function () {
 
       $("#window-" + this.window).append(canvas_element);
       $(canvas_element).addClass("sprite_in_list");
-
-      if (this.clicked_sprite == id) {
+      console.log(current_sprite + ":" + id);
+      if (current_sprite == id) {
         $(canvas_element).addClass("sprite_in_list_selected");
       }
 
@@ -47,12 +48,12 @@ var List = function () {
     }
   }, {
     key: 'update',
-    value: function update(spritelist) {
+    value: function update(spritelist, current_sprite) {
 
       $(".sprite_in_list").remove();
 
       for (var i = 0; i < spritelist.length; i++) {
-        this.create_canvas(i);
+        this.create_canvas(i, current_sprite);
 
         var canvas = document.getElementById("list-" + i).getContext('2d');
         var sprite_data = spritelist[i];

@@ -70,7 +70,7 @@ var App = function () {
     value: function update_ui() {
       this.editor.update(this.sprite.get_current_sprite());
       this.preview.update(this.sprite.get_current_sprite());
-      this.list.update(this.sprite.get_all_sprites());
+      this.list.update(this.sprite.get_all_sprites(), this.sprite.get_current_sprite_number());
     }
   }, {
     key: "user_interaction",

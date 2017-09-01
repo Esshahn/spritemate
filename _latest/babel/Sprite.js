@@ -90,10 +90,21 @@ class Sprite
 
   flip_horizontal()
   {
+    let s = this.spritelist[this.current_sprite];
     for(let i=0; i<this.height; i++)
     {
       this.spritelist[this.current_sprite].pixels[i].reverse();
     } 
+
+    if(s.multicolor)
+    {
+      for(let i=0; i<this.height; i++)
+      {
+       s.pixels[i].push(s.pixels[i].shift());
+      }
+    }
+
+    this.spritelist[this.current_sprite] = s; 
   }
 
   shift_vertical(direction)
@@ -194,6 +205,11 @@ class Sprite
     return this.spritelist[this.current_sprite];
   }
 
+  get_current_sprite_number()
+  {
+    return this.current_sprite;
+  }
+
   get_all_sprites()
   {
     if (this.spritelist)
@@ -211,7 +227,15 @@ class Sprite
 
   delete()
   {
-    this.spritelist.splice(this.current_sprite,1);
+    if (this.spritelist.length != 1)
+    {
+      this.spritelist.splice(this.current_sprite,1);
+
+      if (this.current_sprite == this.spritelist.length){
+        this.current_sprite --;
+      } 
+
+    }
   }
 
   

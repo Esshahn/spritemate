@@ -82,9 +82,18 @@ var Sprite = function () {
   }, {
     key: "flip_horizontal",
     value: function flip_horizontal() {
+      var s = this.spritelist[this.current_sprite];
       for (var i = 0; i < this.height; i++) {
         this.spritelist[this.current_sprite].pixels[i].reverse();
       }
+
+      if (s.multicolor) {
+        for (var _i = 0; _i < this.height; _i++) {
+          s.pixels[_i].push(s.pixels[_i].shift());
+        }
+      }
+
+      this.spritelist[this.current_sprite] = s;
     }
   }, {
     key: "shift_vertical",
@@ -177,6 +186,11 @@ var Sprite = function () {
       return this.spritelist[this.current_sprite];
     }
   }, {
+    key: "get_current_sprite_number",
+    value: function get_current_sprite_number() {
+      return this.current_sprite;
+    }
+  }, {
     key: "get_all_sprites",
     value: function get_all_sprites() {
       if (this.spritelist) {
@@ -193,7 +207,13 @@ var Sprite = function () {
   }, {
     key: "delete",
     value: function _delete() {
-      this.spritelist.splice(this.current_sprite, 1);
+      if (this.spritelist.length != 1) {
+        this.spritelist.splice(this.current_sprite, 1);
+
+        if (this.current_sprite == this.spritelist.length) {
+          this.current_sprite--;
+        }
+      }
     }
   }]);
 
