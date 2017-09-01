@@ -73,9 +73,42 @@ var App = function () {
       this.list.update(this.sprite.get_all_sprites(), this.sprite.get_current_sprite_number());
     }
   }, {
+    key: "init_ui_fade",
+    value: function init_ui_fade(element) {
+      $("#" + element).css({ opacity: 0.7 });
+      $('#' + element).mouseenter(function (e) {
+        $('#' + element).fadeTo("fast", 1);
+      });
+      $('#' + element).mouseleave(function (e) {
+        $('#' + element).fadeTo("fast", 0.70);
+      });
+    }
+  }, {
     key: "user_interaction",
     value: function user_interaction() {
       var _this = this;
+
+      // init hover effects for all menu items
+      $('#icon-floppy').css({ opacity: 0.33 });
+      $('#icon-undo').css({ opacity: 0.33 });
+      this.init_ui_fade("icon-grid");
+      this.init_ui_fade("icon-shift-left");
+      this.init_ui_fade("icon-shift-right");
+      this.init_ui_fade("icon-shift-up");
+      this.init_ui_fade("icon-shift-down");
+      this.init_ui_fade("icon-flip-horizontal");
+      this.init_ui_fade("icon-flip-vertical");
+      this.init_ui_fade("icon-multicolor");
+      this.init_ui_fade("icon-fill");
+
+      // trash can is a bit different
+      $('#icon-trash').css({ opacity: 0.33 });
+      $('#icon-trash').mouseenter(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("fast", 1);
+      });
+      $('#icon-trash').mouseleave(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("fast", 0.70);
+      });
 
       $(document).keydown(function (e) {
 
@@ -199,6 +232,7 @@ var App = function () {
 
       $('#icon-trash').mouseup(function (e) {
         _this.sprite.delete();
+        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
         _this.update_ui();
       });
 
@@ -215,6 +249,7 @@ var App = function () {
 
       $('#icon-list-new').mouseup(function (e) {
         _this.sprite.new(1, false);
+        $('#icon-trash').fadeTo("slow", 0.75);
         _this.update_ui();
       });
     }

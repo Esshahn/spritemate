@@ -17,8 +17,6 @@ var Sprite = function () {
     this.spritelist = [];
     this.current_sprite = 0;
     this.new(6, false);
-    this.new(3, true);
-    this.new(2, false);
   }
 
   _createClass(Sprite, [{
@@ -189,6 +187,11 @@ var Sprite = function () {
     key: "get_current_sprite_number",
     value: function get_current_sprite_number() {
       return this.current_sprite;
+    }
+  }, {
+    key: "only_one_sprite",
+    value: function only_one_sprite() {
+      if (this.spritelist.length == 1) return true;
     }
   }, {
     key: "get_all_sprites",

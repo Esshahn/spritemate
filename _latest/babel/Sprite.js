@@ -16,8 +16,6 @@ class Sprite
     this.spritelist = [];
     this.current_sprite = 0;
     this.new(6,false);
-    this.new(3,true);
-    this.new(2,false);
 
     
   }
@@ -208,6 +206,11 @@ class Sprite
   get_current_sprite_number()
   {
     return this.current_sprite;
+  }
+
+  only_one_sprite()
+  {
+    if (this.spritelist.length == 1) return true;
   }
 
   get_all_sprites()

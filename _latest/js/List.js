@@ -32,7 +32,6 @@ var List = function () {
 
       $("#window-" + this.window).append(canvas_element);
       $(canvas_element).addClass("sprite_in_list");
-      console.log(current_sprite + ":" + id);
       if (current_sprite == id) {
         $(canvas_element).addClass("sprite_in_list_selected");
       }

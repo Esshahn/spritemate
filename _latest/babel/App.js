@@ -50,6 +50,7 @@ class App
     this.update_ui();
     this.is_drawing = false;
     this.user_interaction();
+
   }
 
   draw_pixel(e)
@@ -75,9 +76,34 @@ class App
     this.list.update(this.sprite.get_all_sprites(),this.sprite.get_current_sprite_number());
   }
 
+  init_ui_fade(element)
+  {
+    $("#" + element).css({ opacity: 0.7 });
+    $('#' + element).mouseenter((e) => {$('#' + element).fadeTo( "fast", 1 );});
+    $('#' + element).mouseleave((e) => {$('#' + element).fadeTo( "fast", 0.70 );});
+  }
 
   user_interaction()
   {
+
+
+    // init hover effects for all menu items
+    $('#icon-floppy').css({ opacity: 0.33 });
+    $('#icon-undo').css({ opacity: 0.33 });
+    this.init_ui_fade("icon-grid");
+    this.init_ui_fade("icon-shift-left");
+    this.init_ui_fade("icon-shift-right");
+    this.init_ui_fade("icon-shift-up");
+    this.init_ui_fade("icon-shift-down");
+    this.init_ui_fade("icon-flip-horizontal");
+    this.init_ui_fade("icon-flip-vertical");
+    this.init_ui_fade("icon-multicolor");
+    this.init_ui_fade("icon-fill");
+
+    // trash can is a bit different
+    $('#icon-trash').css({ opacity: 0.33 });
+    $('#icon-trash').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 1 );});
+    $('#icon-trash').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 0.70 );});
 
     $(document).keydown((e) =>
     {
@@ -220,6 +246,7 @@ class App
       this.update_ui();
     });
 
+
     $('#icon-fill').mouseup((e) =>
     {
       this.sprite.fill(this.palette.get_color());
@@ -229,7 +256,8 @@ class App
     $('#icon-trash').mouseup((e) =>
     {
       this.sprite.delete();
-      this.update_ui();
+      if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );
+      this.update_ui();  
     });
 
     $('#icon-multicolor').mouseup((e) =>
@@ -248,6 +276,7 @@ class App
    $('#icon-list-new').mouseup((e) =>
     {    
       this.sprite.new(1,false);
+      $('#icon-trash').fadeTo( "slow", 0.75 );
       this.update_ui();
     });
 
