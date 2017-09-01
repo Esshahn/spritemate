@@ -8,12 +8,13 @@ spritemate is a browser based sprite editor for the Commodore 64. This is a very
 * choose one of 16 C64 colors from the color palette
 * draw pixels on a 24x21 pixel (hires) or 12x21 pixel (multicolor) canvas
 * delete pixels
-* fill, clear
+* fill
 * shift left, right, up, down
-* mirror horizontal, vertical
+* flip horizontal, vertical
 * check your sprite in the preview window
 * multicolor and hires mode support
 * grid mode on/off in editor
+* multiple sprites
 * window based GUI
 
 ## What it does not yet
@@ -21,7 +22,7 @@ spritemate is a browser based sprite editor for the Commodore 64. This is a very
 * loading & saving as image (PNG), internal format, native C64 binary, SpritePad SPR
 * pixel tools like: rotate, copy & paste
 * save window layout
-* multiple sprites and sprite sorting
+* sprite sorting
 * C64 mode restrictions (number of colors per sprite, global sprite colors)
 * double width & height sprites
 * animation
