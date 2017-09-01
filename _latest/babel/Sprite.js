@@ -209,5 +209,10 @@ class Sprite
     this.current_sprite = spritenumber;
   }
 
+  delete()
+  {
+    this.spritelist.splice(this.current_sprite,1);
+  }
+
   
 }

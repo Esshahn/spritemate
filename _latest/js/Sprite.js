@@ -190,6 +190,11 @@ var Sprite = function () {
     value: function set_current_sprite(spritenumber) {
       this.current_sprite = spritenumber;
     }
+  }, {
+    key: "delete",
+    value: function _delete() {
+      this.spritelist.splice(this.current_sprite, 1);
+    }
   }]);
 
   return Sprite;

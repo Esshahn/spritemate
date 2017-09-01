@@ -198,7 +198,7 @@ var App = function () {
       });
 
       $('#icon-trash').mouseup(function (e) {
-        _this.sprite.new(1, false);
+        _this.sprite.delete();
         _this.update_ui();
       });
 
@@ -208,6 +208,7 @@ var App = function () {
       });
 
       $('#window-3').mouseup(function (e) {
+        // sprite list window
         _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
         _this.update_ui();
       });
