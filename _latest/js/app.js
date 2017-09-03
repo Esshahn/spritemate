@@ -55,9 +55,7 @@ var App = function () {
     value: function draw_pixel(e) {
       var color = this.palette.get_color();
 
-      if (e.shiftKey) {
-        color = this.sprite.get_delete_color();
-      }
+      if (e.shiftKey) color = this.sprite.get_delete_color();
 
       // draw pixels
       var gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
@@ -89,8 +87,6 @@ var App = function () {
       var _this = this;
 
       // init hover effects for all menu items
-      $('#icon-floppy').css({ opacity: 0.33 });
-      //$('#icon-undo').css({ opacity: 0.33 });
       this.init_ui_fade("icon-grid");
       this.init_ui_fade("icon-shift-left");
       this.init_ui_fade("icon-shift-right");
@@ -102,8 +98,13 @@ var App = function () {
       this.init_ui_fade("icon-fill");
       this.init_ui_fade("icon-list-new");
 
+      this.init_ui_fade("icon-undo");
+
+      // floppy is inactive
+      $('#icon-floppy').css({ opacity: 0.20 });
+
       // trash can is a bit different
-      $('#icon-trash').css({ opacity: 0.33 });
+      $('#icon-trash').css({ opacity: 0.20 });
       $('#icon-trash').mouseenter(function (e) {
         if (!_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("fast", 1);
       });

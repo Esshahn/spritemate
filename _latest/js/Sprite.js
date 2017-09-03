@@ -227,7 +227,6 @@ var Sprite = function () {
   }, {
     key: "save_backup",
     value: function save_backup() {
-
       this.backup_position++;
       this.backup[this.backup_position] = jQuery.extend(true, {}, this.all);
     }

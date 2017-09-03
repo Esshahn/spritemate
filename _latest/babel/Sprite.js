@@ -211,6 +211,7 @@ class Sprite
     if (this.all.sprites.length == 1) return true;
   }
 
+
   get_all_sprites()
   {
     if (this.all.sprites)
@@ -239,10 +240,8 @@ class Sprite
 
   save_backup()
   {
-
     this.backup_position ++;
     this.backup[this.backup_position] = jQuery.extend(true, {}, this.all); 
-
   }
 
 

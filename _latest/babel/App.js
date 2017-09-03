@@ -57,10 +57,7 @@ class App
   {
     let color = this.palette.get_color();
       
-    if (e.shiftKey)
-    {
-      color = this.sprite.get_delete_color();
-    }
+    if (e.shiftKey) color = this.sprite.get_delete_color();
 
     // draw pixels
     let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
@@ -86,10 +83,7 @@ class App
   user_interaction()
   {
 
-
     // init hover effects for all menu items
-    $('#icon-floppy').css({ opacity: 0.33 });
-    //$('#icon-undo').css({ opacity: 0.33 });
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
     this.init_ui_fade("icon-shift-right");
@@ -101,8 +95,13 @@ class App
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-list-new");
 
+    this.init_ui_fade("icon-undo");
+
+    // floppy is inactive
+    $('#icon-floppy').css({ opacity: 0.20 });
+
     // trash can is a bit different
-    $('#icon-trash').css({ opacity: 0.33 });
+    $('#icon-trash').css({ opacity: 0.20 });
     $('#icon-trash').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 1 );});
     $('#icon-trash').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 0.70 );});
 
