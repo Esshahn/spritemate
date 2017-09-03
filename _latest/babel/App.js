@@ -89,7 +89,7 @@ class App
 
     // init hover effects for all menu items
     $('#icon-floppy').css({ opacity: 0.33 });
-    $('#icon-undo').css({ opacity: 0.33 });
+    //$('#icon-undo').css({ opacity: 0.33 });
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
     this.init_ui_fade("icon-shift-right");
@@ -197,6 +197,7 @@ class App
     {
       // stop drawing pixels
       this.is_drawing = false;
+      this.sprite.save_backup();
     });
 
     $('#palette').mouseup((e) =>
@@ -267,6 +268,12 @@ class App
       this.update_ui();
     });
 
+    $('#icon-undo').mouseup((e) =>
+    {
+      this.sprite.undo();
+      this.update_ui();
+    });
+
     $('#window-3').mouseup((e) =>
     {
       // sprite list window
@@ -276,7 +283,8 @@ class App
 
    $('#icon-list-new').mouseup((e) =>
     {    
-      this.sprite.new(1,false);
+      e.stopPropagation();
+      this.sprite.new(0,false);
       $('#icon-trash').fadeTo( "slow", 0.75 );
       this.update_ui();
     });

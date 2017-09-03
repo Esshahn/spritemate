@@ -90,7 +90,7 @@ var App = function () {
 
       // init hover effects for all menu items
       $('#icon-floppy').css({ opacity: 0.33 });
-      $('#icon-undo').css({ opacity: 0.33 });
+      //$('#icon-undo').css({ opacity: 0.33 });
       this.init_ui_fade("icon-grid");
       this.init_ui_fade("icon-shift-left");
       this.init_ui_fade("icon-shift-right");
@@ -185,6 +185,7 @@ var App = function () {
       $('#editor').mouseup(function (e) {
         // stop drawing pixels
         _this.is_drawing = false;
+        _this.sprite.save_backup();
       });
 
       $('#palette').mouseup(function (e) {
@@ -242,6 +243,11 @@ var App = function () {
         _this.update_ui();
       });
 
+      $('#icon-undo').mouseup(function (e) {
+        _this.sprite.undo();
+        _this.update_ui();
+      });
+
       $('#window-3').mouseup(function (e) {
         // sprite list window
         _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
@@ -249,7 +255,8 @@ var App = function () {
       });
 
       $('#icon-list-new').mouseup(function (e) {
-        _this.sprite.new(1, false);
+        e.stopPropagation();
+        _this.sprite.new(0, false);
         $('#icon-trash').fadeTo("slow", 0.75);
         _this.update_ui();
       });

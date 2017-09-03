@@ -8,37 +8,42 @@ var Sprite = function () {
   function Sprite(config) {
     _classCallCheck(this, Sprite);
 
-    // basic sprite setup
-    // has to become more flexible later on
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-    this.colors = [5, 7];
-    this.spritelist = [];
-    this.current_sprite = 0;
+
+    this.all = {};
+    this.all.colors = [5, 7];
+    this.all.sprites = [];
+    this.all.current_sprite = 0;
+
+    this.backup = [];
+    this.backup_position = -1;
+
     this.new(6, false);
   }
 
   _createClass(Sprite, [{
     key: "new",
     value: function _new(color, multicolor) {
+      color = Math.floor(Math.random() * 15);
+
       var sprite = {
         "color": color,
         "multicolor": multicolor,
         "double_x": false,
-        "double_y": false
+        "double_y": false,
+        "pixels": []
       };
 
-      sprite.pixels = [];
-      var line = [];
       for (var i = 0; i < this.height; i++) {
-        line = [];
+        var line = [];
         for (var j = 0; j < this.width; j++) {
           line.push(sprite.color);
-        }
-        sprite.pixels.push(line);
+        }sprite.pixels.push(line);
       }
-      this.spritelist.push(sprite);
+      this.all.sprites.push(sprite);
+      this.save_backup();
     }
   }, {
     key: "clear",
@@ -46,15 +51,15 @@ var Sprite = function () {
       // fills the sprite data with the default color
       // generate a bitmap array
       var pixels = [];
-      var line = [];
+
       for (var i = 0; i < this.height; i++) {
-        line = [];
+        var line = [];
         for (var j = 0; j < this.width; j++) {
-          line.push(this.colors[0]);
-        }
-        pixels.push(line);
+          line.push(this.all.colors[0]);
+        }pixels.push(line);
       }
-      this.spritelist[this.current_sprite].pixels = pixels;
+      this.all.sprites[this.all.current_sprite].pixels = pixels;
+      this.save_backup();
     }
   }, {
     key: "fill",
@@ -62,52 +67,53 @@ var Sprite = function () {
       // fills the sprite data with the default color
       // generate a bitmap array
       var pixels = [];
-      var line = [];
+
       for (var i = 0; i < this.height; i++) {
-        line = [];
+        var line = [];
         for (var j = 0; j < this.width; j++) {
           line.push(color);
-        }
-        pixels.push(line);
+        }pixels.push(line);
       }
-      this.spritelist[this.current_sprite].pixels = pixels;
+      this.all.sprites[this.all.current_sprite].pixels = pixels;
+      this.save_backup();
     }
   }, {
     key: "flip_vertical",
     value: function flip_vertical() {
-      this.spritelist[this.current_sprite].pixels.reverse();
+      this.all.sprites[this.all.current_sprite].pixels.reverse();
+      this.save_backup();
     }
   }, {
     key: "flip_horizontal",
     value: function flip_horizontal() {
-      var s = this.spritelist[this.current_sprite];
+      var s = this.all.sprites[this.all.current_sprite];
       for (var i = 0; i < this.height; i++) {
-        this.spritelist[this.current_sprite].pixels[i].reverse();
-      }
-
-      if (s.multicolor) {
+        s.pixels[i].reverse();
+      }if (s.multicolor) {
         for (var _i = 0; _i < this.height; _i++) {
           s.pixels[_i].push(s.pixels[_i].shift());
         }
       }
 
-      this.spritelist[this.current_sprite] = s;
+      this.all.sprites[this.all.current_sprite] = s;
+      this.save_backup();
     }
   }, {
     key: "shift_vertical",
     value: function shift_vertical(direction) {
-      var s = this.spritelist[this.current_sprite];
+      var s = this.all.sprites[this.all.current_sprite];
       if (direction == "down") {
         s.pixels.unshift(s.pixels.pop());
       } else {
         s.pixels.push(s.pixels.shift());
       }
-      this.spritelist[this.current_sprite] = s;
+      this.all.sprites[this.all.current_sprite] = s;
+      this.save_backup();
     }
   }, {
     key: "shift_horizontal",
     value: function shift_horizontal(direction) {
-      var s = this.spritelist[this.current_sprite];
+      var s = this.all.sprites[this.all.current_sprite];
       for (var i = 0; i < this.height; i++) {
         if (direction == "right") {
 
@@ -127,46 +133,48 @@ var Sprite = function () {
           }
         }
       }
-      this.spritelist[this.current_sprite] = s;
+      this.all.sprites[this.all.current_sprite] = s;
+      this.save_backup();
     }
   }, {
     key: "get_pixel",
     value: function get_pixel(x, y) {
-      return this.spritelist[this.current_sprite].pixels[y][x];
+      return this.all.sprites[this.all.current_sprite].pixels[y][x];
     }
   }, {
     key: "get_colors",
     value: function get_colors() {
-      return this.colors;
+      return this.all.colors;
     }
   }, {
     key: "get_delete_color",
     value: function get_delete_color() {
-      return this.colors[0];
+      return this.all.colors[0];
     }
   }, {
     key: "is_multicolor",
     value: function is_multicolor() {
-      return this.spritelist[this.current_sprite].multicolor;
+      return this.all.sprites[this.all.current_sprite].multicolor;
     }
   }, {
     key: "is_double_x",
     value: function is_double_x() {
-      return this.spritelist[this.current_sprite].double_x;
+      return this.all.sprites[this.all.current_sprite].double_x;
     }
   }, {
     key: "is_double_y",
     value: function is_double_y() {
-      return this.spritelist[this.current_sprite].double_y;
+      return this.all.sprites[this.all.current_sprite].double_y;
     }
   }, {
     key: "toggle_multicolor",
     value: function toggle_multicolor() {
-      if (this.spritelist[this.current_sprite].multicolor) {
-        this.spritelist[this.current_sprite].multicolor = false;
+      if (this.all.sprites[this.all.current_sprite].multicolor) {
+        this.all.sprites[this.all.current_sprite].multicolor = false;
       } else {
-        this.spritelist[this.current_sprite].multicolor = true;
+        this.all.sprites[this.all.current_sprite].multicolor = true;
       }
+      this.save_backup();
     }
   }, {
     key: "set_pixel",
@@ -174,30 +182,30 @@ var Sprite = function () {
       // writes a pixel to the sprite pixel array
 
       // multicolor check
-      if (this.spritelist[this.current_sprite].multicolor && x % 2 !== 0) x = x - 1;
+      if (this.all.sprites[this.all.current_sprite].multicolor && x % 2 !== 0) x = x - 1;
 
-      this.spritelist[this.current_sprite].pixels[y][x] = color;
+      this.all.sprites[this.all.current_sprite].pixels[y][x] = color;
     }
   }, {
     key: "get_current_sprite",
     value: function get_current_sprite() {
-      return this.spritelist[this.current_sprite];
+      return this.all.sprites[this.all.current_sprite];
     }
   }, {
     key: "get_current_sprite_number",
     value: function get_current_sprite_number() {
-      return this.current_sprite;
+      return this.all.current_sprite;
     }
   }, {
     key: "only_one_sprite",
     value: function only_one_sprite() {
-      if (this.spritelist.length == 1) return true;
+      if (this.all.sprites.length == 1) return true;
     }
   }, {
     key: "get_all_sprites",
     value: function get_all_sprites() {
-      if (this.spritelist) {
-        return this.spritelist;
+      if (this.all.sprites) {
+        return this.all.sprites;
       } else {
         return false;
       }
@@ -205,17 +213,31 @@ var Sprite = function () {
   }, {
     key: "set_current_sprite",
     value: function set_current_sprite(spritenumber) {
-      this.current_sprite = spritenumber;
+      this.all.current_sprite = spritenumber;
     }
   }, {
     key: "delete",
     value: function _delete() {
-      if (this.spritelist.length != 1) {
-        this.spritelist.splice(this.current_sprite, 1);
+      if (this.all.sprites.length > 1) {
+        this.all.sprites.splice(this.all.current_sprite, 1);
+        if (this.all.current_sprite == this.all.sprites.length) this.all.current_sprite--;
+        this.save_backup();
+      }
+    }
+  }, {
+    key: "save_backup",
+    value: function save_backup() {
 
-        if (this.current_sprite == this.spritelist.length) {
-          this.current_sprite--;
-        }
+      this.backup_position++;
+      this.backup[this.backup_position] = jQuery.extend(true, {}, this.all);
+    }
+  }, {
+    key: "undo",
+    value: function undo() {
+
+      if (this.backup_position > 0) {
+        this.backup_position--;
+        this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
       }
     }
   }]);

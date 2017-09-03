@@ -6,42 +6,45 @@ class Sprite
 
   constructor(config)
   {
-
-    // basic sprite setup
-    // has to become more flexible later on
+    
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-    this.colors = [5,7];
-    this.spritelist = [];
-    this.current_sprite = 0;
-    this.new(6,false);
 
+    this.all = {};
+    this.all.colors = [5,7];
+    this.all.sprites = [];
+    this.all.current_sprite = 0;
+
+
+    this.backup = [];
+    this.backup_position = -1;
+    
+    this.new(6,false);
     
   }
 
   new(color,multicolor)
   {
-    let sprite =
+    color = Math.floor(Math.random()*15);
+
+    const sprite =
     {
       "color" : color,      
       "multicolor" : multicolor,
       "double_x" : false,
-      "double_y" : false
+      "double_y" : false,
+      "pixels": []
     };
 
-    sprite.pixels = [];
-    let line = [];
     for(let i=0; i<this.height; i++)
     {
-      line = [];
-      for(let j=0; j<this.width; j++)
-      {
-        line.push(sprite.color);
-      }
+      let line = [];
+      for(let j=0; j<this.width; j++) line.push(sprite.color);
       sprite.pixels.push(line);
     }
-    this.spritelist.push(sprite);
+    this.all.sprites.push(sprite);
+    this.save_backup();
   }
 
   clear()
@@ -49,17 +52,15 @@ class Sprite
     // fills the sprite data with the default color
     // generate a bitmap array
     let pixels = [];
-    let line = [];
+
     for(let i=0; i<this.height; i++)
     {
-      line = [];
-      for(let j=0; j<this.width; j++)
-      {
-        line.push(this.colors[0]);
-      }
+      let line = [];
+      for(let j=0; j<this.width; j++) line.push(this.all.colors[0]);
       pixels.push(line);
     }
-    this.spritelist[this.current_sprite].pixels = pixels;
+    this.all.sprites[this.all.current_sprite].pixels = pixels;
+    this.save_backup();
   }
 
 
@@ -68,59 +69,54 @@ class Sprite
     // fills the sprite data with the default color
     // generate a bitmap array
     let pixels = [];
-    let line = [];
+
     for(let i=0; i<this.height; i++)
     {
-      line = [];
-      for(let j=0; j<this.width; j++)
-      {
-        line.push(color);
-      }
+      let line = [];
+      for(let j=0; j<this.width; j++) line.push(color);
       pixels.push(line);
     }
-    this.spritelist[this.current_sprite].pixels = pixels;
+    this.all.sprites[this.all.current_sprite].pixels = pixels;
+    this.save_backup();
   }
 
   flip_vertical()
   {
-    this.spritelist[this.current_sprite].pixels.reverse();
+    this.all.sprites[this.all.current_sprite].pixels.reverse();
+    this.save_backup();
   }
 
   flip_horizontal()
   {
-    let s = this.spritelist[this.current_sprite];
-    for(let i=0; i<this.height; i++)
-    {
-      this.spritelist[this.current_sprite].pixels[i].reverse();
-    } 
+    const s = this.all.sprites[this.all.current_sprite];
+    for(let i=0; i<this.height; i++) s.pixels[i].reverse(); 
 
     if(s.multicolor)
     {
-      for(let i=0; i<this.height; i++)
-      {
-       s.pixels[i].push(s.pixels[i].shift());
-      }
+      for(let i=0; i<this.height; i++) s.pixels[i].push(s.pixels[i].shift());
     }
 
-    this.spritelist[this.current_sprite] = s; 
+    this.all.sprites[this.all.current_sprite] = s; 
+    this.save_backup();
   }
 
   shift_vertical(direction)
   {
-    let s = this.spritelist[this.current_sprite];
+    const s = this.all.sprites[this.all.current_sprite];
     if (direction == "down")
      {
        s.pixels.unshift(s.pixels.pop());
      }else{
        s.pixels.push(s.pixels.shift());
      }
-    this.spritelist[this.current_sprite] = s;
+    this.all.sprites[this.all.current_sprite] = s;
+    this.save_backup();
   }
 
 
   shift_horizontal(direction)
   {
-    let s = this.spritelist[this.current_sprite];
+    const s = this.all.sprites[this.all.current_sprite];
     for(let i=0; i<this.height; i++)
     {
       if (direction == "right")
@@ -146,45 +142,47 @@ class Sprite
         
       }
     }
-    this.spritelist[this.current_sprite] = s;
+    this.all.sprites[this.all.current_sprite] = s;
+    this.save_backup();
   }
 
   get_pixel(x,y)
   {
-    return this.spritelist[this.current_sprite].pixels[y][x];
+    return this.all.sprites[this.all.current_sprite].pixels[y][x];
   }
 
   get_colors()
   {
-    return this.colors;
+    return this.all.colors;
   }
 
   get_delete_color()
   {
-    return this.colors[0];
+    return this.all.colors[0];
   }
 
   is_multicolor(){
-    return this.spritelist[this.current_sprite].multicolor;
+    return this.all.sprites[this.all.current_sprite].multicolor;
   }
 
   is_double_x()
   {
-    return this.spritelist[this.current_sprite].double_x;
+    return this.all.sprites[this.all.current_sprite].double_x;
   }
 
   is_double_y()
   {
-    return this.spritelist[this.current_sprite].double_y;
+    return this.all.sprites[this.all.current_sprite].double_y;
   }
 
   toggle_multicolor()
   {
-    if (this.spritelist[this.current_sprite].multicolor){
-      this.spritelist[this.current_sprite].multicolor = false;
+    if (this.all.sprites[this.all.current_sprite].multicolor){
+      this.all.sprites[this.all.current_sprite].multicolor = false;
     }else{
-      this.spritelist[this.current_sprite].multicolor = true;
+      this.all.sprites[this.all.current_sprite].multicolor = true;
     }
+    this.save_backup();
   }
 
 
@@ -193,31 +191,31 @@ class Sprite
     // writes a pixel to the sprite pixel array
     
     // multicolor check
-    if(this.spritelist[this.current_sprite].multicolor && x%2 !== 0) x=x-1;
+    if(this.all.sprites[this.all.current_sprite].multicolor && x%2 !== 0) x=x-1;
 
-    this.spritelist[this.current_sprite].pixels[y][x] = color;  
+    this.all.sprites[this.all.current_sprite].pixels[y][x] = color;  
   }
 
   get_current_sprite()
   {
-    return this.spritelist[this.current_sprite];
+    return this.all.sprites[this.all.current_sprite];
   }
 
   get_current_sprite_number()
   {
-    return this.current_sprite;
+    return this.all.current_sprite;
   }
 
   only_one_sprite()
   {
-    if (this.spritelist.length == 1) return true;
+    if (this.all.sprites.length == 1) return true;
   }
 
   get_all_sprites()
   {
-    if (this.spritelist)
+    if (this.all.sprites)
     {
-      return this.spritelist;
+      return this.all.sprites;
     }else{
       return false;
     }
@@ -225,21 +223,41 @@ class Sprite
 
   set_current_sprite(spritenumber)
   {
-    this.current_sprite = spritenumber;
+    this.all.current_sprite = spritenumber;
   }
 
   delete()
   {
-    if (this.spritelist.length != 1)
+    if (this.all.sprites.length > 1)
     {
-      this.spritelist.splice(this.current_sprite,1);
-
-      if (this.current_sprite == this.spritelist.length){
-        this.current_sprite --;
-      } 
-
+      this.all.sprites.splice(this.all.current_sprite,1);
+      if (this.all.current_sprite == this.all.sprites.length) this.all.current_sprite --; 
+      this.save_backup();
     }
+   
   }
+
+  save_backup()
+  {
+
+    this.backup_position ++;
+    this.backup[this.backup_position] = jQuery.extend(true, {}, this.all); 
+
+  }
+
+
+
+  undo()
+  {
+
+    if (this.backup_position > 0)
+    {
+      this.backup_position --;
+      this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
+    }
+
+  }
+
 
   
 }
