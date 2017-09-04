@@ -39,6 +39,14 @@ var List = function () {
       $(canvas_element).mouseup(function (e) {
         _this.clicked_sprite = id;
       });
+
+      $(canvas_element).mouseenter(function (e) {
+        $(canvas_element).addClass("sprite_in_list_hover");
+      });
+
+      $(canvas_element).mouseleave(function (e) {
+        $(canvas_element).removeClass("sprite_in_list_hover");
+      });
     }
   }, {
     key: 'get_clicked_sprite',

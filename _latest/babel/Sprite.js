@@ -44,6 +44,7 @@ class Sprite
       sprite.pixels.push(line);
     }
     this.all.sprites.push(sprite);
+    this.all.current_sprite = this.all.sprites.length -1;
     this.save_backup();
   }
 
@@ -225,6 +226,11 @@ class Sprite
   set_current_sprite(spritenumber)
   {
     this.all.current_sprite = spritenumber;
+  }
+
+  get_last_sprite()
+  {
+    return this.all.sprites.length - 1;
   }
 
   delete()

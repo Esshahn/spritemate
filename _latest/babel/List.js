@@ -35,6 +35,16 @@ class List
     {
       this.clicked_sprite = id;
     });
+
+    $(canvas_element).mouseenter((e) =>
+    {
+      $(canvas_element).addClass("sprite_in_list_hover");
+    });
+
+    $(canvas_element).mouseleave((e) =>
+    {
+      $(canvas_element).removeClass("sprite_in_list_hover");
+    });
   }
 
 

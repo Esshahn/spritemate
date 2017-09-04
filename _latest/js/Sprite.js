@@ -43,6 +43,7 @@ var Sprite = function () {
         }sprite.pixels.push(line);
       }
       this.all.sprites.push(sprite);
+      this.all.current_sprite = this.all.sprites.length - 1;
       this.save_backup();
     }
   }, {
@@ -214,6 +215,11 @@ var Sprite = function () {
     key: "set_current_sprite",
     value: function set_current_sprite(spritenumber) {
       this.all.current_sprite = spritenumber;
+    }
+  }, {
+    key: "get_last_sprite",
+    value: function get_last_sprite() {
+      return this.all.sprites.length - 1;
     }
   }, {
     key: "delete",

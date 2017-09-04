@@ -97,7 +97,7 @@ var App = function () {
       this.init_ui_fade("icon-multicolor");
       this.init_ui_fade("icon-fill");
       this.init_ui_fade("icon-list-new");
-
+      this.init_ui_fade("icon-info");
       this.init_ui_fade("icon-undo");
 
       // floppy is inactive
