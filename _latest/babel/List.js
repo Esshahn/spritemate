@@ -14,7 +14,8 @@ class List
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
     
-    $("#window-"+this.window).append( '<img src="img/icon3/icon-list-new.png" id="icon-list-new">' );
+    // $("#spritelist").sortable();
+    // $("#spritelist").disableSelection();
   }
 
   create_canvas(id,current_sprite)
@@ -24,27 +25,15 @@ class List
     canvas_element.width = this.pixels_x * this.zoom;
     canvas_element.height = this.pixels_y * this.zoom;
  
-    $("#window-"+this.window).append(canvas_element);
+    $("#spritelist").append(canvas_element);
     $(canvas_element).addClass("sprite_in_list");
-    if (current_sprite == id)
-    {
-      $(canvas_element).addClass("sprite_in_list_selected");
-    }
     
-    $(canvas_element).mouseup((e) =>
-    {
-      this.clicked_sprite = id;
-    });
+    if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");    
 
-    $(canvas_element).mouseenter((e) =>
-    {
-      $(canvas_element).addClass("sprite_in_list_hover");
-    });
+    $(canvas_element).mouseup((e) => this.clicked_sprite = id);
+    $(canvas_element).mouseenter((e) => $(canvas_element).addClass("sprite_in_list_hover"));
+    $(canvas_element).mouseleave((e) => $(canvas_element).removeClass("sprite_in_list_hover"));
 
-    $(canvas_element).mouseleave((e) =>
-    {
-      $(canvas_element).removeClass("sprite_in_list_hover");
-    });
   }
 
 

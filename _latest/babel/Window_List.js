@@ -24,7 +24,7 @@ class Window_List
        
     create_window()
     {
-        $( "#app" ).append( "<div id='"+this.id+"' class='"+this.type+"' title='"+this.title+"'></div>" );
+        $( "#app" ).append( `<div id='${this.id}' class='${this.type}' title='${this.title}'></div>`);
         $("#" + this.id).dialog({
             width: this.width,
             height: this.height,
@@ -33,6 +33,9 @@ class Window_List
             resizable: this.resizable,
             buttons: this.buttons
         });
+        $("#" + this.id).append( '<img src="img/icon3/icon-list-new.png" id="icon-list-new">' );
+       // $("#" + this.id).append(`<div class="iconset" id="icon-trash"><img src="img/icon3/icon-trash.png" class="icon" title="clear"></div>`);
+        $("#" + this.id).append(`<div id="spritelist"></div>`);
 
     }
 }
