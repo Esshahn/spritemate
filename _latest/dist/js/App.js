@@ -262,17 +262,16 @@ var App = function () {
       });
 
       $('#spritelist').mouseup(function (e) {
-        _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
-        if (!_this.dragging) _this.update_ui();
+        if (!_this.dragging) {
+          _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
+          _this.update_ui();
+        }
       });
 
-      // TODO: sprite sortlist methode schreiben
-      // danach sollte auch der fehler nach dragging behoben sein
-      // 
       $("#spritelist").sortable({ stop: function stop(e, ui) {
-          console.log("1");
           _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
           _this.dragging = false;
+          _this.update_ui();
         }
       });
 
@@ -282,7 +281,6 @@ var App = function () {
       });
 
       $('#icon-list-new').mouseup(function (e) {
-
         _this.sprite.new(0, false);
         $('#icon-trash').fadeTo("slow", 0.75);
         $('#icon-list-delete').fadeTo("slow", 0.75);
@@ -290,7 +288,6 @@ var App = function () {
       });
 
       $('#icon-list-delete').mouseup(function (e) {
-
         _this.sprite.delete();
         if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
         if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);

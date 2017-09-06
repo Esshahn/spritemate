@@ -285,18 +285,19 @@ class App
 
     $('#spritelist').mouseup((e) =>
     {
-      this.sprite.set_current_sprite(this.list.get_clicked_sprite());
-      if (!this.dragging) this.update_ui();
+      if (!this.dragging)
+      {
+        this.sprite.set_current_sprite(this.list.get_clicked_sprite());
+        this.update_ui();
+      } 
     });
 
-    // TODO: sprite sortlist methode schreiben
-    // danach sollte auch der fehler nach dragging behoben sein
-    // 
+
     $( "#spritelist" ).sortable({stop: ( e, ui ) => 
       {
-        console.log("1");
         this.sprite.sort_spritelist($( "#spritelist" ).sortable( "toArray" ));
         this.dragging = false;
+        this.update_ui();
       }
     });
 
@@ -307,8 +308,7 @@ class App
     });
 
    $('#icon-list-new').mouseup((e) =>
-    {    
-      
+    {      
       this.sprite.new(0,false);
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
@@ -316,8 +316,7 @@ class App
     });
 
    $('#icon-list-delete').mouseup((e) =>
-    {    
-     
+    {     
       this.sprite.delete();
       if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
       if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );

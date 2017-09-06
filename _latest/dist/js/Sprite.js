@@ -95,7 +95,6 @@ var Sprite = function () {
           s.pixels[_i].push(s.pixels[_i].shift());
         }
       }
-
       this.all.sprites[this.all.current_sprite] = s;
       this.save_backup();
     }
@@ -117,7 +116,6 @@ var Sprite = function () {
       var s = this.all.sprites[this.all.current_sprite];
       for (var i = 0; i < this.height; i++) {
         if (direction == "right") {
-
           if (s.multicolor) {
             s.pixels[i].unshift(s.pixels[i].pop());
             s.pixels[i].unshift(s.pixels[i].pop());
@@ -125,7 +123,6 @@ var Sprite = function () {
             s.pixels[i].unshift(s.pixels[i].pop());
           }
         } else {
-
           if (s.multicolor) {
             s.pixels[i].push(s.pixels[i].shift());
             s.pixels[i].push(s.pixels[i].shift());
@@ -181,10 +178,8 @@ var Sprite = function () {
     key: "set_pixel",
     value: function set_pixel(x, y, color) {
       // writes a pixel to the sprite pixel array
-
       // multicolor check
       if (this.all.sprites[this.all.current_sprite].multicolor && x % 2 !== 0) x = x - 1;
-
       this.all.sprites[this.all.current_sprite].pixels[y][x] = color;
     }
   }, {
@@ -217,7 +212,19 @@ var Sprite = function () {
       var sorted_list = sprite_order_from_dom.map(function (x) {
         return parseInt(x);
       });
-      console.log(sorted_list);
+      var new_sprite_list = [];
+      console.log("--" + Math.floor(Math.random() * 10));
+      for (var i = 0; i < sorted_list.length; i++) {
+
+        console.log("sprite " + sorted_list[i] + " will be sprite " + i);
+        new_sprite_list.push(this.all.sprites[sorted_list[i]]);
+        if (sorted_list[i] == this.all.current_sprite) {
+          var temp_current_sprite = i;
+        }
+      }
+      this.all.sprites = new_sprite_list;
+      this.all.current_sprite = temp_current_sprite;
+      this.save_backup();
     }
   }, {
     key: "set_current_sprite",
@@ -247,7 +254,6 @@ var Sprite = function () {
   }, {
     key: "undo",
     value: function undo() {
-
       if (this.backup_position > 0) {
         this.backup_position--;
         this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);

@@ -16,7 +16,6 @@ class Sprite
     this.all.sprites = [];
     this.all.current_sprite = 0;
 
-
     this.backup = [];
     this.backup_position = -1;
     
@@ -91,12 +90,10 @@ class Sprite
   {
     const s = this.all.sprites[this.all.current_sprite];
     for(let i=0; i<this.height; i++) s.pixels[i].reverse(); 
-
     if(s.multicolor)
     {
       for(let i=0; i<this.height; i++) s.pixels[i].push(s.pixels[i].shift());
     }
-
     this.all.sprites[this.all.current_sprite] = s; 
     this.save_backup();
   }
@@ -121,26 +118,22 @@ class Sprite
     for(let i=0; i<this.height; i++)
     {
       if (direction == "right")
-      {
-        
+      {      
         if (s.multicolor)
         {
           s.pixels[i].unshift(s.pixels[i].pop());
           s.pixels[i].unshift(s.pixels[i].pop());
         }else{
           s.pixels[i].unshift(s.pixels[i].pop());
-        }
-        
+        }  
       }else{
-
         if (s.multicolor)
         {
           s.pixels[i].push(s.pixels[i].shift());
           s.pixels[i].push(s.pixels[i].shift());
         }else{
           s.pixels[i].push(s.pixels[i].shift());
-        }
-        
+        }  
       }
     }
     this.all.sprites[this.all.current_sprite] = s;
@@ -190,10 +183,8 @@ class Sprite
   set_pixel(x,y,color)
   {
     // writes a pixel to the sprite pixel array
-    
     // multicolor check
     if(this.all.sprites[this.all.current_sprite].multicolor && x%2 !== 0) x=x-1;
-
     this.all.sprites[this.all.current_sprite].pixels[y][x] = color;  
   }
 
@@ -226,7 +217,21 @@ class Sprite
   sort_spritelist(sprite_order_from_dom)
   {
     let sorted_list = sprite_order_from_dom.map(function(x){ return parseInt(x); });
-    console.log(sorted_list);
+    let new_sprite_list = [];
+    console.log("--" + Math.floor(Math.random()*10));
+    for(let i=0; i<sorted_list.length;i++)
+    {
+
+      console.log("sprite "+sorted_list[i]+" will be sprite "+i);
+      new_sprite_list.push(this.all.sprites[sorted_list[i]]);
+      if (sorted_list[i]==this.all.current_sprite)
+      {
+        var temp_current_sprite = i;
+      } 
+    }
+    this.all.sprites = new_sprite_list;
+    this.all.current_sprite = temp_current_sprite;
+    this.save_backup();
   }
 
 
@@ -248,8 +253,7 @@ class Sprite
       this.all.sprites.splice(this.all.current_sprite,1);
       if (this.all.current_sprite == this.all.sprites.length) this.all.current_sprite --; 
       this.save_backup();
-    }
-   
+    } 
   }
 
   save_backup()
@@ -258,17 +262,13 @@ class Sprite
     this.backup[this.backup_position] = jQuery.extend(true, {}, this.all); 
   }
 
-
-
   undo()
   {
-
     if (this.backup_position > 0)
     {
       this.backup_position --;
       this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
     }
-
   }
 
 
