@@ -286,15 +286,23 @@ class App
     $('#spritelist').mouseup((e) =>
     {
       this.sprite.set_current_sprite(this.list.get_clicked_sprite());
-      //this.update_ui();
+      if (!this.dragging) this.update_ui();
     });
 
     // TODO: sprite sortlist methode schreiben
     // danach sollte auch der fehler nach dragging behoben sein
     // 
-    $( "#spritelist" ).sortable({stop: ( event, ui ) => 
+    $( "#spritelist" ).sortable({stop: ( e, ui ) => 
       {
+        console.log("1");
         this.sprite.sort_spritelist($( "#spritelist" ).sortable( "toArray" ));
+        this.dragging = false;
+      }
+    });
+
+    $( "#spritelist" ).sortable({start: ( e, ui ) => 
+      {
+        this.dragging = true;
       }
     });
 
