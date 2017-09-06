@@ -40,7 +40,6 @@ var Window_List = function () {
             });
             $("#" + this.id).append('<img src="img/icon3/icon-list-new.png" id="icon-list-new">');
             $("#" + this.id).append('<img src="img/icon3/icon-list-delete.png" id="icon-list-delete">');
-            // $("#" + this.id).append(`<div class="iconset" id="icon-trash"><img src="img/icon3/icon-trash.png" class="icon" title="clear"></div>`);
             $("#" + this.id).append("<div id=\"spritelist\"></div>");
         }
     }]);

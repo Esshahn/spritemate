@@ -278,16 +278,29 @@ class App
       this.update_ui();
     });
 
-    $('#window-3').mouseup((e) =>
+    $('#icon-info').mouseup((e) =>
     {
-      // sprite list window
+      alert("Spritemate version 0.01");
+    });
+
+    $('#spritelist').mouseup((e) =>
+    {
       this.sprite.set_current_sprite(this.list.get_clicked_sprite());
-      this.update_ui();
+      //this.update_ui();
+    });
+
+    // TODO: sprite sortlist methode schreiben
+    // danach sollte auch der fehler nach dragging behoben sein
+    // 
+    $( "#spritelist" ).sortable({stop: ( event, ui ) => 
+      {
+        this.sprite.sort_spritelist($( "#spritelist" ).sortable( "toArray" ));
+      }
     });
 
    $('#icon-list-new').mouseup((e) =>
     {    
-      e.stopPropagation();
+      
       this.sprite.new(0,false);
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
@@ -296,7 +309,7 @@ class App
 
    $('#icon-list-delete').mouseup((e) =>
     {    
-      e.stopPropagation();
+     
       this.sprite.delete();
       if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
       if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );

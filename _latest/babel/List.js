@@ -13,15 +13,22 @@ class List
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
+    this.sorted_array = [];
     
-    // $("#spritelist").sortable();
-    // $("#spritelist").disableSelection();
+    $("#spritelist").sortable({
+      cursor:"move",
+      tolerance: "pointer"
+    });
+
+
+
+    $("#spritelist").disableSelection();
   }
 
   create_canvas(id,current_sprite)
   {
     let canvas_element = document.createElement('canvas');
-    canvas_element.id = "list-" + id;
+    canvas_element.id =  id;
     canvas_element.width = this.pixels_x * this.zoom;
     canvas_element.height = this.pixels_y * this.zoom;
  
@@ -30,16 +37,24 @@ class List
     
     if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");    
 
-    $(canvas_element).mouseup((e) => this.clicked_sprite = id);
+    $(canvas_element).mouseup((e) => {
+      this.clicked_sprite = id;
+    });
+
     $(canvas_element).mouseenter((e) => $(canvas_element).addClass("sprite_in_list_hover"));
     $(canvas_element).mouseleave((e) => $(canvas_element).removeClass("sprite_in_list_hover"));
-
   }
 
 
   get_clicked_sprite()
   {
     return this.clicked_sprite;
+  }
+
+
+  get_sorted_array()
+  {
+    return this.sorted_array;
   }
 
 
@@ -52,7 +67,7 @@ class List
     for (let i=0; i<spritelist.length; i++){
       this.create_canvas(i,current_sprite);
 
-      let canvas = document.getElementById("list-" + i).getContext('2d');
+      let canvas = document.getElementById( i).getContext('2d');
       let sprite_data = spritelist[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;

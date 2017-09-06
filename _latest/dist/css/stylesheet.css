@@ -1,3 +1,8 @@
+/*
+
+red: e6007e
+blue: 00b9ee
+ */ 
 
 
 body
@@ -14,6 +19,12 @@ body
   radial-gradient(rgba(255,255,255,.1) 25%, transparent 20%) 8px 9px;
   background-color:#282828;
   background-size:16px 16px;
+
+  /* prevent text selection on page when double clicking anywhere */
+  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+  moz-user-select: none; /* mozilla browsers */
+  khtml-user-select: none; /* webkit (konqueror) browsers */
+  -ms-user-select: none; /* IE10+ */
 }
 
 canvas
@@ -153,12 +164,23 @@ canvas
 
 .sprite_in_list_selected
 {
-
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #00b9ee;
 }
 
 .sprite_in_list_hover
 {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #e6007e;
+}
 
+.sprite_in_list_dragging
+{
+  border: 20px solid red;
 }
 
 #icon-list-new

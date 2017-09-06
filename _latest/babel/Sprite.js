@@ -26,7 +26,7 @@ class Sprite
 
   new(color,multicolor)
   {
-    color = Math.floor(Math.random()*15);
+    color = Math.floor(Math.random()*14)+1;
 
     const sprite =
     {
@@ -159,7 +159,7 @@ class Sprite
 
   get_delete_color()
   {
-    return this.all.colors[0];
+    return this.all.sprites[this.all.current_sprite].color;
   }
 
   is_multicolor(){
@@ -223,6 +223,13 @@ class Sprite
     }
   }
 
+  sort_spritelist(sprite_order_from_dom)
+  {
+    let sorted_list = sprite_order_from_dom.map(function(x){ return parseInt(x); });
+    console.log(sorted_list);
+  }
+
+
   set_current_sprite(spritenumber)
   {
     this.all.current_sprite = spritenumber;
@@ -232,6 +239,7 @@ class Sprite
   {
     return this.all.sprites.length - 1;
   }
+
 
   delete()
   {

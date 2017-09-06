@@ -257,14 +257,25 @@ var App = function () {
         _this.update_ui();
       });
 
-      $('#window-3').mouseup(function (e) {
-        // sprite list window
+      $('#icon-info').mouseup(function (e) {
+        alert("Spritemate version 0.01");
+      });
+
+      $('#spritelist').mouseup(function (e) {
         _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
-        _this.update_ui();
+        //this.update_ui();
+      });
+
+      // TODO: sprite sortlist methode schreiben
+      // danach sollte auch der fehler nach dragging behoben sein
+      // 
+      $("#spritelist").sortable({ stop: function stop(event, ui) {
+          _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
+        }
       });
 
       $('#icon-list-new').mouseup(function (e) {
-        e.stopPropagation();
+
         _this.sprite.new(0, false);
         $('#icon-trash').fadeTo("slow", 0.75);
         $('#icon-list-delete').fadeTo("slow", 0.75);
@@ -272,7 +283,7 @@ var App = function () {
       });
 
       $('#icon-list-delete').mouseup(function (e) {
-        e.stopPropagation();
+
         _this.sprite.delete();
         if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
         if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);

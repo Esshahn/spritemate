@@ -16,9 +16,14 @@ var List = function () {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
+    this.sorted_array = [];
 
-    // $("#spritelist").sortable();
-    // $("#spritelist").disableSelection();
+    $("#spritelist").sortable({
+      cursor: "move",
+      tolerance: "pointer"
+    });
+
+    $("#spritelist").disableSelection();
   }
 
   _createClass(List, [{
@@ -27,7 +32,7 @@ var List = function () {
       var _this = this;
 
       var canvas_element = document.createElement('canvas');
-      canvas_element.id = "list-" + id;
+      canvas_element.id = id;
       canvas_element.width = this.pixels_x * this.zoom;
       canvas_element.height = this.pixels_y * this.zoom;
 
@@ -37,8 +42,9 @@ var List = function () {
       if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");
 
       $(canvas_element).mouseup(function (e) {
-        return _this.clicked_sprite = id;
+        _this.clicked_sprite = id;
       });
+
       $(canvas_element).mouseenter(function (e) {
         return $(canvas_element).addClass("sprite_in_list_hover");
       });
@@ -52,6 +58,11 @@ var List = function () {
       return this.clicked_sprite;
     }
   }, {
+    key: "get_sorted_array",
+    value: function get_sorted_array() {
+      return this.sorted_array;
+    }
+  }, {
     key: "update",
     value: function update(spritelist, current_sprite) {
 
@@ -60,7 +71,7 @@ var List = function () {
       for (var i = 0; i < spritelist.length; i++) {
         this.create_canvas(i, current_sprite);
 
-        var canvas = document.getElementById("list-" + i).getContext('2d');
+        var canvas = document.getElementById(i).getContext('2d');
         var sprite_data = spritelist[i];
         var x_grid_step = 1;
         if (sprite_data.multicolor) x_grid_step = 2;

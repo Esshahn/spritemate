@@ -26,7 +26,7 @@ var Sprite = function () {
   _createClass(Sprite, [{
     key: "new",
     value: function _new(color, multicolor) {
-      color = Math.floor(Math.random() * 15);
+      color = Math.floor(Math.random() * 14) + 1;
 
       var sprite = {
         "color": color,
@@ -150,7 +150,7 @@ var Sprite = function () {
   }, {
     key: "get_delete_color",
     value: function get_delete_color() {
-      return this.all.colors[0];
+      return this.all.sprites[this.all.current_sprite].color;
     }
   }, {
     key: "is_multicolor",
@@ -210,6 +210,14 @@ var Sprite = function () {
       } else {
         return false;
       }
+    }
+  }, {
+    key: "sort_spritelist",
+    value: function sort_spritelist(sprite_order_from_dom) {
+      var sorted_list = sprite_order_from_dom.map(function (x) {
+        return parseInt(x);
+      });
+      console.log(sorted_list);
     }
   }, {
     key: "set_current_sprite",
