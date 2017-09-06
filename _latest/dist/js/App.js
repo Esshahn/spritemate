@@ -111,6 +111,13 @@ var App = function () {
       $('#icon-trash').mouseleave(function (e) {
         if (!_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("fast", 0.70);
       });
+      $('#icon-list-delete').css({ opacity: 0.20 });
+      $('#icon-list-delete').mouseenter(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("fast", 1);
+      });
+      $('#icon-list-delete').mouseleave(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("fast", 0.70);
+      });
 
       $(document).keydown(function (e) {
 
@@ -236,6 +243,7 @@ var App = function () {
       $('#icon-trash').mouseup(function (e) {
         _this.sprite.delete();
         if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
+        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
         _this.update_ui();
       });
 
@@ -259,6 +267,15 @@ var App = function () {
         e.stopPropagation();
         _this.sprite.new(0, false);
         $('#icon-trash').fadeTo("slow", 0.75);
+        $('#icon-list-delete').fadeTo("slow", 0.75);
+        _this.update_ui();
+      });
+
+      $('#icon-list-delete').mouseup(function (e) {
+        e.stopPropagation();
+        _this.sprite.delete();
+        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
+        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
         _this.update_ui();
       });
     }

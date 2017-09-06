@@ -104,6 +104,10 @@ class App
     $('#icon-trash').css({ opacity: 0.20 });
     $('#icon-trash').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 1 );});
     $('#icon-trash').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 0.70 );});
+    $('#icon-list-delete').css({ opacity: 0.20 });
+    $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 1 );});
+    $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 0.70 );});
+
 
     $(document).keydown((e) =>
     {
@@ -258,6 +262,7 @@ class App
     {
       this.sprite.delete();
       if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );
+      if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
       this.update_ui();  
     });
 
@@ -285,7 +290,17 @@ class App
       e.stopPropagation();
       this.sprite.new(0,false);
       $('#icon-trash').fadeTo( "slow", 0.75 );
+      $('#icon-list-delete').fadeTo( "slow", 0.75 );
       this.update_ui();
+    });
+
+   $('#icon-list-delete').mouseup((e) =>
+    {    
+      e.stopPropagation();
+      this.sprite.delete();
+      if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
+      if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );
+      this.update_ui(); 
     });
 
   }
