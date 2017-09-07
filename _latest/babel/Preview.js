@@ -49,14 +49,27 @@ class Preview
       }
     }
 
-    var double_x = 1;
-    var double_y = 1;
+    // set the preview window x and y stretch
+    if(sprite_data.double_x){
+      var double_x = 2;
+      $('#icon-preview-x').addClass('icon-preview-x2-hi');
+    }else{
+      var double_x = 1;
+      $('#icon-preview-x').removeClass('icon-preview-x2-hi');
+    }
 
-    if(sprite_data.double_x) double_x = 2;
-    if(sprite_data.double_y) double_y = 2;
-
+    if(sprite_data.double_y){
+      var double_y = 2;
+      $('#icon-preview-y').addClass('icon-preview-y2-hi');
+    }else{
+      var double_y = 1;
+      $('#icon-preview-y').removeClass('icon-preview-y2-hi');
+    }
+    
     $('#preview').css('width',this.width * double_x);
     $('#preview').css('height',this.height * double_y);
+
+    
   }
 
 
