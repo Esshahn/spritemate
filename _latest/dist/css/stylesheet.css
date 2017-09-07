@@ -27,6 +27,12 @@ body
   -ms-user-select: none; /* IE10+ */
 }
 
+.ui-widget-content a
+{
+  color: #00b9ee;
+}
+
+
 canvas
 {
   margin: 0px;
@@ -37,6 +43,37 @@ canvas
   image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
   image-rendering: pixelated;                 /* Awesome future-browsers       */
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+
+.ui-widget button
+{
+  border: 1px solid #00b9ee;
+  background-color: black;
+  color: #e6007e;
+  font-size: 80%;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: normal;
+  border-radius: 32px;
+  margin: 12px;
+  padding: 8px 16px 8px 16px;
+}
+
+.ui-widget button:hover
+{
+  background-color: rgba(0,120,180,0.4);
+  cursor: pointer;
+}
+
+#info
+{
+  padding: 12px;
+  text-align: center;
+}
+
+#info p
+{
+  font-size: 70%;
+  font-family: 'Quicksand', sans-serif;
 }
 
 #editor
@@ -63,9 +100,7 @@ canvas
 
 .editor_ui
 {
-  height: 40px;
-  color: #ffbb00;
-  padding: 6px;
+
 }
 
 #palette
@@ -154,34 +189,28 @@ canvas
 
 .sprite_in_list
 {
-   height: 42px;
-   width: 48px;
    margin: 0px;
    padding: 0px;
-   line-height: 0px;
    float: left;
+   opacity: 0.9;
 }
+
 
 .sprite_in_list_selected
 {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border: 1px solid #00b9ee;
+    opacity: 1;
 }
 
 .sprite_in_list_hover
 {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border: 1px solid #e6007e;
+    opacity: 1;
 }
 
 .sprite_in_list_dragging
 {
-  border: 20px solid red;
+
 }
+
 
 #icon-list-new
 {

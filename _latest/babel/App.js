@@ -42,10 +42,18 @@ class App
     {
       title: "Sprite List",
       left: 820,
-      top: 360
+      top: 400
     };
     this.window_preview = new Window_List(window_config);
     this.list = new List(3,this.config);
+
+    window_config = 
+    {
+      title: "Spritemate",
+      left: 300,
+      top: 380
+    };
+    this.window_info = new Window_Info(window_config);
 
     this.update_ui();
     this.is_drawing = false;
@@ -280,7 +288,8 @@ class App
 
     $('#icon-info').mouseup((e) =>
     {
-      alert("Spritemate version 0.01");
+      
+      $("#window-4").dialog( "open");
     });
 
     $('#spritelist').mouseup((e) =>

@@ -10,7 +10,7 @@ var List = function () {
 
     this.config = config;
     this.window = window;
-    this.zoom = 2; // this.config.zoom;
+    this.zoom = this.config.zoom_list; // this.config.zoom;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -20,8 +20,12 @@ var List = function () {
 
     $("#spritelist").sortable({
       cursor: "move",
-      tolerance: "pointer"
+      tolerance: "pointer",
+      revert: 'invalid'
     });
+
+    // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
+    $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
 
     $("#spritelist").disableSelection();
   }
@@ -33,11 +37,12 @@ var List = function () {
 
       var canvas_element = document.createElement('canvas');
       canvas_element.id = id;
-      canvas_element.width = this.pixels_x * this.zoom;
-      canvas_element.height = this.pixels_y * this.zoom;
+      canvas_element.width = this.width;
+      canvas_element.height = this.height;
 
       $("#spritelist").append(canvas_element);
       $(canvas_element).addClass("sprite_in_list");
+      $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
 
       if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");
 

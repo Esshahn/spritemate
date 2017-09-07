@@ -9,7 +9,7 @@ class Editor
     this.grid = this.config.display_grid;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
-    this.zoom = this.config.zoom;
+    this.zoom = this.config.zoom_editor;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
