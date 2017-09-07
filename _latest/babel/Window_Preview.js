@@ -16,7 +16,7 @@ class Window_Preview
         this.top = config.top;
         this.width = "auto"; //24 * this.zoomFactor;
         this.height = "auto"; //21 * this.zoomFactor;
-        this.resizable = true;
+        this.resizable = false;
         this.position = { at: "left+"+this.left+" top+"+this.top };
         this.create_window();  
     }
@@ -34,5 +34,13 @@ class Window_Preview
             buttons: this.buttons
         });
 
+        let template = `
+        <div id="preview_menu">
+        <div class="icon-preview-x2" id="icon-preview-x"></div>
+        <div class="icon-preview-y2" id="icon-preview-y"></div>
+        </div>
+        `;
+
+        $("#" + this.id).append(template);
     }
 }

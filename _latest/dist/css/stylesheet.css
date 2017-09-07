@@ -95,7 +95,7 @@ canvas
 
 #preview
 {
-  width: 100%;
+ 
 }
 
 .editor_ui
@@ -177,7 +177,19 @@ canvas
 
 .preview.ui-dialog-content
 {
-  padding: 0px;
+ 
+}
+
+#preview_menu
+{
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+#list_menu
+{
+  text-align: center;
+
 }
 
 #spritelist
@@ -206,10 +218,42 @@ canvas
     opacity: 1;
 }
 
-.sprite_in_list_dragging
+.icon-preview-x2
 {
-
+  background-image: url("../img/icon3/icon-preview-x2.png");
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+.icon-preview-x2-hi
+{
+  background-image: url("../img/icon3/icon-preview-x2-hi.png");
+}
+
+.icon-preview-y2
+{
+  background-image: url("../img/icon3/icon-preview-y2.png");
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.icon-preview-y2-hi
+{
+  background-image: url("../img/icon3/icon-preview-y2-hi.png");
+}
+
+.icon-preview-highlight
+{
+  border: 2px solid #e6007e;
+  opacity: 1.0;
+}
+
 
 
 #icon-list-new

@@ -155,14 +155,24 @@ var Sprite = function () {
       return this.all.sprites[this.all.current_sprite].multicolor;
     }
   }, {
-    key: "is_double_x",
-    value: function is_double_x() {
-      return this.all.sprites[this.all.current_sprite].double_x;
+    key: "toggle_double_x",
+    value: function toggle_double_x() {
+      if (this.all.sprites[this.all.current_sprite].double_x) {
+        this.all.sprites[this.all.current_sprite].double_x = false;
+      } else {
+        this.all.sprites[this.all.current_sprite].double_x = true;
+      }
+      this.save_backup();
     }
   }, {
-    key: "is_double_y",
-    value: function is_double_y() {
-      return this.all.sprites[this.all.current_sprite].double_y;
+    key: "toggle_double_y",
+    value: function toggle_double_y() {
+      if (this.all.sprites[this.all.current_sprite].double_y) {
+        this.all.sprites[this.all.current_sprite].double_y = false;
+      } else {
+        this.all.sprites[this.all.current_sprite].double_y = true;
+      }
+      this.save_backup();
     }
   }, {
     key: "toggle_multicolor",

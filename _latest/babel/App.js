@@ -104,7 +104,8 @@ class App
     this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-info");
     this.init_ui_fade("icon-undo");
-
+    this.init_ui_fade("icon-preview-x");
+    this.init_ui_fade("icon-preview-y");
     // floppy is inactive
     $('#icon-floppy').css({ opacity: 0.20 });
 
@@ -123,14 +124,14 @@ class App
       if (e.key == "a")
       {
         // toggle hires or multicolor
-        this.sprite.shift_horizontal("right");
+        this.sprite.toggle_double_x();
         this.update_ui();
       }
 
       if (e.key == "A")
       {
         // toggle hires or multicolor
-        this.sprite.shift_horizontal("left");
+        this.sprite.toggle_double_y();
         this.update_ui();
       }
 
@@ -332,6 +333,20 @@ class App
       this.update_ui(); 
     });
 
+   $('#icon-preview-x').mouseup((e) =>
+    {     
+      this.sprite.toggle_double_x();
+      $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
+      this.update_ui();
+    });
+
+   $('#icon-preview-y').mouseup((e) =>
+    {     
+      this.sprite.toggle_double_y();
+      $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+      this.update_ui();
+    });
+        
   }
 
 

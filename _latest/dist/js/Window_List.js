@@ -38,9 +38,10 @@ var Window_List = function () {
                 resizable: this.resizable,
                 buttons: this.buttons
             });
-            $("#" + this.id).append('<img src="img/icon3/icon-list-new.png" id="icon-list-new">');
-            $("#" + this.id).append('<img src="img/icon3/icon-list-delete.png" id="icon-list-delete">');
-            $("#" + this.id).append("<div id=\"spritelist\"></div>");
+
+            var template = "\n        <div id=\"list_menu\">\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\">\n        <div id=\"spritelist\"></div>\n        </div>\n        ";
+
+            $("#" + this.id).append(template);
         }
     }]);
 

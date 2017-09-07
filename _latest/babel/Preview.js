@@ -49,6 +49,14 @@ class Preview
       }
     }
 
+    var double_x = 1;
+    var double_y = 1;
+
+    if(sprite_data.double_x) double_x = 2;
+    if(sprite_data.double_y) double_y = 2;
+
+    $('#preview').css('width',this.width * double_x);
+    $('#preview').css('height',this.height * double_y);
   }
 
 

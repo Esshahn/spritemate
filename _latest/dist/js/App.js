@@ -106,7 +106,8 @@ var App = function () {
       this.init_ui_fade("icon-list-new");
       this.init_ui_fade("icon-info");
       this.init_ui_fade("icon-undo");
-
+      this.init_ui_fade("icon-preview-x");
+      this.init_ui_fade("icon-preview-y");
       // floppy is inactive
       $('#icon-floppy').css({ opacity: 0.20 });
 
@@ -130,13 +131,13 @@ var App = function () {
 
         if (e.key == "a") {
           // toggle hires or multicolor
-          _this.sprite.shift_horizontal("right");
+          _this.sprite.toggle_double_x();
           _this.update_ui();
         }
 
         if (e.key == "A") {
           // toggle hires or multicolor
-          _this.sprite.shift_horizontal("left");
+          _this.sprite.toggle_double_y();
           _this.update_ui();
         }
 
@@ -299,6 +300,18 @@ var App = function () {
         _this.sprite.delete();
         if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
         if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
+        _this.update_ui();
+      });
+
+      $('#icon-preview-x').mouseup(function (e) {
+        _this.sprite.toggle_double_x();
+        $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
+        _this.update_ui();
+      });
+
+      $('#icon-preview-y').mouseup(function (e) {
+        _this.sprite.toggle_double_y();
+        $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
         _this.update_ui();
       });
     }

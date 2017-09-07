@@ -21,7 +21,7 @@ var Window_Preview = function () {
         this.top = config.top;
         this.width = "auto"; //24 * this.zoomFactor;
         this.height = "auto"; //21 * this.zoomFactor;
-        this.resizable = true;
+        this.resizable = false;
         this.position = { at: "left+" + this.left + " top+" + this.top };
         this.create_window();
     }
@@ -38,6 +38,10 @@ var Window_Preview = function () {
                 resizable: this.resizable,
                 buttons: this.buttons
             });
+
+            var template = "\n        <div id=\"preview_menu\">\n        <div class=\"icon-preview-x2\" id=\"icon-preview-x\"></div>\n        <div class=\"icon-preview-y2\" id=\"icon-preview-y\"></div>\n        </div>\n        ";
+
+            $("#" + this.id).append(template);
         }
     }]);
 
