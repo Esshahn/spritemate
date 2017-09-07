@@ -30,4 +30,19 @@ spritemate is a browser based sprite editor for the Commodore 64. This is a very
 * stacked sprite layers (onion skinning)
 * and tons of other stuff
 
+## History
+
+2017-09-07
+* Zoom levels for editor, preview and list view can be set in the config
+* Sprites in list view are sortable correctly when size is changing
+* Info button has a new modal with version info and links
+
+2017-09-06
+* Sorting in list view finally works
+
+2017-09-04
+* Undo implemented
+
+
+
 If you're interested to contribute let me know - happy to team up!
