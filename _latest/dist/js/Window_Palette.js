@@ -19,8 +19,8 @@ var Window_Palette = function () {
         this.type = "colors";
         this.left = config.left;
         this.top = config.top;
-        this.width = "auto";
-        this.height = "auto";
+        this.width = config.width;
+        this.height = config.height;
         this.position = { at: "left+" + this.left + " top+" + this.top };
         this.resizable = false;
         this.create_window();
@@ -38,6 +38,10 @@ var Window_Palette = function () {
                 resizable: this.resizable,
                 buttons: this.buttons
             });
+
+            var template = "\n        <div id=\"palette_all_colors\"></div>\n        <div id=\"palette_spritecolors\">\n            <div id=\"palette_spritecolor\">\n                <p>Individual</p>\n                <div class=\"palette_color_item\" id=\"color_spritecolor\"></div>\n            </div>\n            <div id=\"palette_transparent\">\n                <p>Transparent</p>\n                <div class=\"palette_color_item\" id=\"color_transparent\"></div>\n            </div>\n            <div id=\"palette_multicolor_1\">\n                <p>Multicolor 1</p>\n                <div class=\"palette_color_item\" id=\"color_multicolor_1\"></div>\n            </div>\n            <div id=\"palette_multicolor_2\">\n                <p>Multicolor 2</p>\n                <div class=\"palette_color_item\" id=\"color_multicolor_2\"></div>\n            </div>\n        </div>\n\n        ";
+
+            $("#" + this.id).append(template);
         }
     }]);
 

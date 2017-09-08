@@ -13,20 +13,22 @@ var Sprite = function () {
     this.height = config.sprite_y;
 
     this.all = {};
-    this.all.colors = [5, 7];
+    this.all.colors = { "transparent": 0, "multicolor_1": 4, "multicolor_2": 3 };
     this.all.sprites = [];
     this.all.current_sprite = 0;
 
     this.backup = [];
     this.backup_position = -1;
 
-    this.new(6, false);
+    this.new(5);
   }
 
   _createClass(Sprite, [{
     key: "new",
-    value: function _new(color, multicolor) {
-      color = Math.floor(Math.random() * 14) + 1;
+    value: function _new() {
+      var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      var multicolor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
 
       var sprite = {
         "color": color,
@@ -39,7 +41,7 @@ var Sprite = function () {
       for (var i = 0; i < this.height; i++) {
         var line = [];
         for (var j = 0; j < this.width; j++) {
-          line.push(sprite.color);
+          line.push(this.all.colors.transparent);
         }sprite.pixels.push(line);
       }
       this.all.sprites.push(sprite);
@@ -141,8 +143,16 @@ var Sprite = function () {
     }
   }, {
     key: "get_colors",
-    value: function get_colors() {
-      return this.all.colors;
+    value: function get_colors()
+    // used to update the palette with the right colors
+    {
+      var sprite_colors = {
+        "transparent": this.all.colors.transparent,
+        "spritecolor": this.all.sprites[this.all.current_sprite].color,
+        "multicolor_1": this.all.colors.multicolor_1,
+        "multicolor_2": this.all.colors.multicolor_2
+      };
+      return sprite_colors;
     }
   }, {
     key: "get_delete_color",
@@ -223,15 +233,12 @@ var Sprite = function () {
         return parseInt(x);
       });
       var new_sprite_list = [];
-      console.log("--" + Math.floor(Math.random() * 10));
-      for (var i = 0; i < sorted_list.length; i++) {
 
-        console.log("sprite " + sorted_list[i] + " will be sprite " + i);
+      for (var i = 0; i < sorted_list.length; i++) {
         new_sprite_list.push(this.all.sprites[sorted_list[i]]);
-        if (sorted_list[i] == this.all.current_sprite) {
-          var temp_current_sprite = i;
-        }
+        if (sorted_list[i] == this.all.current_sprite) var temp_current_sprite = i;
       }
+
       this.all.sprites = new_sprite_list;
       this.all.current_sprite = temp_current_sprite;
       this.save_backup();

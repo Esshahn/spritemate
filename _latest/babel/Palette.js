@@ -4,32 +4,41 @@ class Palette
 {
   
 
-  constructor(window,config,spritecolors)
+  constructor(window,config)
   {
-    this.spritecolors = spritecolors // contains the colors of the first sprite
+
     this.colors = config.colors;
-    this.active_color = this.spritecolors[1]; // 1 = white on the c64
+    this.active_color = 1; // 1 = white on the c64
     this.window = window;
+  
     this.canvas_element = document.createElement('canvas');
     this.colorsquare_width = 40;
     this.colorsquare_height = 20;
     this.width = this.colorsquare_width * 2;
-    this.height = this.colors.length/2 * this.colorsquare_height + this.colorsquare_height+10;
+    this.height = this.colors.length/2 * this.colorsquare_height ;
     
     this.canvas_element.id = "palette";
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    $("#window-"+this.window).append(this.canvas_element);
+    $("#palette_all_colors").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
  
-    this.draw_colors();
-    this.draw_active_color();
+    this.draw_palette();
 
   }
 
-  draw_colors()
+
+  update(spritecolors)
+  {
+    $("#color_transparent").css("background-color",this.colors[spritecolors.transparent]);
+    $("#color_spritecolor").css("background-color",this.colors[spritecolors.spritecolor]);
+    $("#color_multicolor_1").css("background-color",this.colors[spritecolors.multicolor_1]);
+    $("#color_multicolor_2").css("background-color",this.colors[spritecolors.multicolor_2]);
+  }
+
+  draw_palette()
   {
    
     let x = 0;
@@ -48,15 +57,6 @@ class Palette
     } 
   }
 
-  draw_active_color()
-  {
-    // draws the selected/active color
-    // under the color palette
-    
-    this.canvas.fillStyle = this.colors[this.active_color];
-    this.canvas.fillRect(0, (this.colors.length/2)*this.colorsquare_height + 10, this.colorsquare_width * 2, this.colorsquare_height);
-     
-  }
 
   set_active_color(e)
   {
@@ -66,7 +66,7 @@ class Palette
     let p = c.getImageData(x, y, 1, 1).data; 
     let hex = "#" + ("000000" + this.rgbToHex(p[0], p[1], p[2])).slice(-6);
     this.active_color = this.colors.indexOf(hex);
-    this.draw_active_color();
+    
   }
 
   get_color()

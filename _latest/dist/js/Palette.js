@@ -5,34 +5,41 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Palette = function () {
-  function Palette(window, config, spritecolors) {
+  function Palette(window, config) {
     _classCallCheck(this, Palette);
 
-    this.spritecolors = spritecolors; // contains the colors of the first sprite
     this.colors = config.colors;
-    this.active_color = this.spritecolors[1]; // 1 = white on the c64
+    this.active_color = 1; // 1 = white on the c64
     this.window = window;
+
     this.canvas_element = document.createElement('canvas');
     this.colorsquare_width = 40;
     this.colorsquare_height = 20;
     this.width = this.colorsquare_width * 2;
-    this.height = this.colors.length / 2 * this.colorsquare_height + this.colorsquare_height + 10;
+    this.height = this.colors.length / 2 * this.colorsquare_height;
 
     this.canvas_element.id = "palette";
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    $("#window-" + this.window).append(this.canvas_element);
+    $("#palette_all_colors").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
 
-    this.draw_colors();
-    this.draw_active_color();
+    this.draw_palette();
   }
 
   _createClass(Palette, [{
-    key: "draw_colors",
-    value: function draw_colors() {
+    key: "update",
+    value: function update(spritecolors) {
+      $("#color_transparent").css("background-color", this.colors[spritecolors.transparent]);
+      $("#color_spritecolor").css("background-color", this.colors[spritecolors.spritecolor]);
+      $("#color_multicolor_1").css("background-color", this.colors[spritecolors.multicolor_1]);
+      $("#color_multicolor_2").css("background-color", this.colors[spritecolors.multicolor_2]);
+    }
+  }, {
+    key: "draw_palette",
+    value: function draw_palette() {
 
       var x = 0;
       var y = 0;
@@ -49,15 +56,6 @@ var Palette = function () {
       }
     }
   }, {
-    key: "draw_active_color",
-    value: function draw_active_color() {
-      // draws the selected/active color
-      // under the color palette
-
-      this.canvas.fillStyle = this.colors[this.active_color];
-      this.canvas.fillRect(0, this.colors.length / 2 * this.colorsquare_height + 10, this.colorsquare_width * 2, this.colorsquare_height);
-    }
-  }, {
     key: "set_active_color",
     value: function set_active_color(e) {
       var pos = this.findPos(this.canvas_element);
@@ -67,7 +65,6 @@ var Palette = function () {
       var p = c.getImageData(x, y, 1, 1).data;
       var hex = "#" + ("000000" + this.rgbToHex(p[0], p[1], p[2])).slice(-6);
       this.active_color = this.colors.indexOf(hex);
-      this.draw_active_color();
     }
   }, {
     key: "get_color",

@@ -108,6 +108,42 @@ canvas
   cursor: pointer;
 }
 
+.colors
+{
+  font-size: 60%;
+  font-family: 'Quicksand', sans-serif;
+  text-transform: uppercase;
+  text-align: center
+  ;
+}
+
+.colors p
+{
+  margin: 0px;
+  padding: 0px;
+}
+
+.palette_color_item
+{
+  width: 90%;
+  height: 20px;
+  background-color: red;
+  margin-bottom: 10px;
+  margin: auto;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border: 2px solid black;
+}
+
+.palette_color_item_selected
+{
+  border: 2px solid #00b9ee;
+}
+
+#color_transparent
+{
+  background-color: white;
+}
 
 .icon
 {

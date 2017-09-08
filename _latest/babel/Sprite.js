@@ -12,21 +12,20 @@ class Sprite
     this.height = config.sprite_y;
 
     this.all = {};
-    this.all.colors = [5,7];
+    this.all.colors = {"transparent":0, "multicolor_1": 4, "multicolor_2": 3};
     this.all.sprites = [];
     this.all.current_sprite = 0;
 
     this.backup = [];
     this.backup_position = -1;
     
-    this.new(6,false);
+    this.new(5);
     
   }
 
-  new(color,multicolor)
+  new(color = 1,multicolor = false)
   {
-    color = Math.floor(Math.random()*14)+1;
-
+    
     const sprite =
     {
       "color" : color,      
@@ -39,7 +38,7 @@ class Sprite
     for(let i=0; i<this.height; i++)
     {
       let line = [];
-      for(let j=0; j<this.width; j++) line.push(sprite.color);
+      for(let j=0; j<this.width; j++) line.push(this.all.colors.transparent);
       sprite.pixels.push(line);
     }
     this.all.sprites.push(sprite);
@@ -146,8 +145,15 @@ class Sprite
   }
 
   get_colors()
+  // used to update the palette with the right colors
   {
-    return this.all.colors;
+    let sprite_colors = {
+      "transparent": this.all.colors.transparent,
+      "spritecolor": this.all.sprites[this.all.current_sprite].color,
+      "multicolor_1": this.all.colors.multicolor_1,
+      "multicolor_2": this.all.colors.multicolor_2
+    }
+    return sprite_colors;
   }
 
   get_delete_color()
@@ -229,17 +235,13 @@ class Sprite
   {
     let sorted_list = sprite_order_from_dom.map(function(x){ return parseInt(x); });
     let new_sprite_list = [];
-    console.log("--" + Math.floor(Math.random()*10));
+
     for(let i=0; i<sorted_list.length;i++)
     {
-
-      console.log("sprite "+sorted_list[i]+" will be sprite "+i);
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
-      if (sorted_list[i]==this.all.current_sprite)
-      {
-        var temp_current_sprite = i;
-      } 
+      if (sorted_list[i]==this.all.current_sprite) var temp_current_sprite = i; 
     }
+
     this.all.sprites = new_sprite_list;
     this.all.current_sprite = temp_current_sprite;
     this.save_backup();

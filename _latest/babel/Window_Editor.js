@@ -14,12 +14,11 @@ class Window_Editor
         this.type = "sprite";
         this.left = config.left;
         this.top = config.top;
-        this.width = "auto"; //24 * this.zoomFactor;
-        this.height = "auto"; //21 * this.zoomFactor;
+        this.width = config.width; 
+        this.height = config.height; 
         this.resizable = false;
         this.position = { at: "left+"+this.left+" top+"+this.top }; 
         this.create_window();
-        //$("#" + this.id).append( "<div class='editor_ui'>moin</div>" ); 
     }
              
        

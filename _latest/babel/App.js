@@ -10,56 +10,53 @@ class App
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = 
-    {
-      title: "Edit Sprite",
-      left: 150,
-      top: 180
-    };
+    let window_config = { title: "Edit Sprite", left: 150, top: 180, width: "auto", height: "auto" };
     this.window_editor = new Window_Editor(window_config);
     this.editor = new Editor(0,this.config);
 
     // create the color palette for the color window
-    window_config =
-    {
-      title: "Palette",
-      left: 50,
-      top: 180
-    };
+    window_config = { title: "Palette", left: 50, top: 180, width: "auto", height: "auto" };
     this.window_colors = new Window_Palette(window_config);
-    this.palette = new Palette(1,this.config,this.sprite.get_colors());
+    this.palette = new Palette(1,this.config);
 
-    window_config = 
-    {
-      title: "Preview",
-      left: 650,
-      top: 180
-    };
+    window_config = { title: "Preview", left: 650, top: 180, width: "auto", height: "auto" };
     this.window_preview = new Window_Preview(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = 
-    {
-      title: "Sprite List",
-      left: 820,
-      top: 400
-    };
+    window_config = { title: "Sprite List", left: 880, top: 420, width: 520, height: "240" };
     this.window_preview = new Window_List(window_config);
     this.list = new List(3,this.config);
 
-    window_config = 
-    {
-      title: "Spritemate",
-      left: 300,
-      top: 380
-    };
+    window_config = { title: "Spritemate", left: 300, top: 380, width: "auto", height: "auto" };
     this.window_info = new Window_Info(window_config);
 
-    this.update_ui();
     this.is_drawing = false;
+    this.update_ui();
     this.user_interaction();
 
   }
+
+
+
+
+
+
+
+
+
+  update_ui()
+  {
+    this.editor.update(   this.sprite.get_current_sprite());
+    this.preview.update(  this.sprite.get_current_sprite());
+    this.list.update(     this.sprite.get_all_sprites(), this.sprite.get_current_sprite_number());
+    this.palette.update(  this.sprite.get_colors());
+    console.log("ui refresh: " + Date());
+  }
+
+
+
+
+
 
   draw_pixel(e)
   {
@@ -70,16 +67,13 @@ class App
     // draw pixels
     let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
     this.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
-    this.update_ui();
     this.is_drawing = true; // needed for mousemove drawing
   }
 
-  update_ui()
-  {
-    this.editor.update(this.sprite.get_current_sprite());
-    this.preview.update(this.sprite.get_current_sprite());
-    this.list.update(this.sprite.get_all_sprites(),this.sprite.get_current_sprite_number());
-  }
+
+
+
+
 
   init_ui_fade(element)
   {
@@ -88,10 +82,16 @@ class App
     $('#' + element).mouseleave((e) => {$('#' + element).fadeTo( "fast", 0.70 );});
   }
 
+
+
+
+
+
   user_interaction()
   {
 
     // init hover effects for all menu items
+    this.init_ui_fade("icon-undo");
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
     this.init_ui_fade("icon-shift-right");
@@ -101,11 +101,13 @@ class App
     this.init_ui_fade("icon-flip-vertical");
     this.init_ui_fade("icon-multicolor");
     this.init_ui_fade("icon-fill");
-    this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-info");
-    this.init_ui_fade("icon-undo");
+    
+    // init hover effect for list and preview
+    this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-preview-x");
     this.init_ui_fade("icon-preview-y");
+    
     // floppy is inactive
     $('#icon-floppy').css({ opacity: 0.20 });
 
@@ -116,6 +118,18 @@ class App
     $('#icon-list-delete').css({ opacity: 0.20 });
     $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 1 );});
     $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 0.70 );});
+
+
+
+/*
+
+
+
+  //////////////////  KEYBOARD COMMANDS
+
+
+
+*/
 
 
     $(document).keydown((e) =>
@@ -135,75 +149,31 @@ class App
         this.update_ui();
       }
 
-      if (e.key == "c")
-      {
-        // clear sprite
-        this.sprite.clear();
-        this.update_ui();
-      }
-
-      if (e.key == "d")
-      {
-        this.sprite.flip_horizontal();
-        this.update_ui();
-      }
-
-      if (e.key == "D")
-      {
-        this.sprite.flip_vertical();
-        this.update_ui();
-      }
-
-      if (e.key == "f")
-      {
-        // fill sprite with active color
-        this.sprite.fill(this.palette.get_color());
-        this.update_ui();
-      }
-
-      if (e.key == "g")
-      {
-        // toggle grid display
-        this.editor.toggle_grid();
-        this.update_ui();
-      }
-
-      if (e.key == "m")
-      {
-        // toggle hires or multicolor
-        this.sprite.toggle_multicolor();
-        this.update_ui();
-      }
-
-      if (e.key == "s")
-      {
-        // toggle hires or multicolor
-        this.sprite.shift_vertical("down");
-        this.update_ui();
-      }
-
-      if (e.key == "S")
-      {
-        // toggle hires or multicolor
-        this.sprite.shift_vertical("up");
-        this.update_ui();
-      }
-
     });
 
-    $('#editor').mousedown((e) =>
-    {
-     this.draw_pixel(e);
+
+/* 
+
+
+
+  //////////////////  EDITOR WINDOW
+
+
+
+*/
+
+    $('#editor').mousedown((e) => {
+      this.draw_pixel(e);
+      this.update_ui();
     });
 
-    $('#editor').mousemove((e) =>
-    {
-      if (this.is_drawing)
-      {
-        this.draw_pixel(e);   
-      }
+    $('#editor').mousemove((e) => {
+      if (this.is_drawing){
+        this.draw_pixel(e);
+        this.update_ui(); 
+      }  
+       
     });
-
 
     $('#editor').mouseup((e) =>
     {
@@ -212,21 +182,38 @@ class App
       this.sprite.save_backup();
     });
 
-    $('#palette').mouseup((e) =>
+
+/*
+
+
+
+  //////////////////  TOP MENU
+
+
+
+*/
+
+    $('#icon-undo').mouseup((e) =>
     {
-      this.palette.set_active_color(e);
+      this.sprite.undo();
+      this.update_ui();
     });
 
-
-    $('#icon-shift-right').mouseup((e) =>
+    $('#icon-grid').mouseup((e) =>
     {
-      this.sprite.shift_horizontal("right");
+      this.editor.toggle_grid();
       this.update_ui();
     });
 
     $('#icon-shift-left').mouseup((e) =>
     {
       this.sprite.shift_horizontal("left");
+      this.update_ui();
+    });
+
+    $('#icon-shift-right').mouseup((e) =>
+    {
+      this.sprite.shift_horizontal("right");
       this.update_ui();
     });
 
@@ -254,16 +241,9 @@ class App
       this.update_ui();
     });
 
-    $('#icon-grid').mouseup((e) =>
+    $('#icon-multicolor').mouseup((e) =>
     {
-      this.editor.toggle_grid();
-      this.update_ui();
-    });
-
-
-    $('#icon-fill').mouseup((e) =>
-    {
-      this.sprite.fill(this.palette.get_color());
+      this.sprite.toggle_multicolor();
       this.update_ui();
     });
 
@@ -275,23 +255,26 @@ class App
       this.update_ui();  
     });
 
-    $('#icon-multicolor').mouseup((e) =>
+    $('#icon-fill').mouseup((e) =>
     {
-      this.sprite.toggle_multicolor();
-      this.update_ui();
-    });
-
-    $('#icon-undo').mouseup((e) =>
-    {
-      this.sprite.undo();
+      this.sprite.fill(this.palette.get_color());
       this.update_ui();
     });
 
     $('#icon-info').mouseup((e) =>
     {
-      
       $("#window-4").dialog( "open");
     });
+
+/*
+
+
+
+  //////////////////  LIST WINDOW
+
+
+
+*/
 
     $('#spritelist').mouseup((e) =>
     {
@@ -301,7 +284,6 @@ class App
         this.update_ui();
       } 
     });
-
 
     $( "#spritelist" ).sortable({stop: ( e, ui ) => 
       {
@@ -333,6 +315,16 @@ class App
       this.update_ui(); 
     });
 
+/*
+
+
+
+  //////////////////  PREVIEW WINDOW
+
+
+
+*/
+
    $('#icon-preview-x').mouseup((e) =>
     {     
       this.sprite.toggle_double_x();
@@ -346,31 +338,48 @@ class App
       $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
       this.update_ui();
     });
+
+/*
+
+
+
+  //////////////////  PALETTE WINDOW
+
+
+
+*/
+
+    $('#palette').mouseup((e) =>
+    {
+      this.palette.set_active_color(e);
+    });
+
+    $('#palette_spritecolor').mouseup((e) =>
+    {     
+      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+      $('#color_spritecolor').addClass("palette_color_item_selected");
+    });
+
+    $('#palette_transparent').mouseup((e) =>
+    {     
+      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+      $('#color_transparent').addClass("palette_color_item_selected");
+    });
+
+    $('#palette_multicolor_1').mouseup((e) =>
+    {     
+      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+      $('#color_multicolor_1').addClass("palette_color_item_selected");
+    });
+
+    $('#palette_multicolor_2').mouseup((e) =>
+    {     
+      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+      $('#color_multicolor_2').addClass("palette_color_item_selected");
+    });
         
   }
 
-
-
-
-  get_pos_window(obj,e)
-  // returns the x and y position in pixels of the clicked window
-  {
-    let curleft = 0, curtop = 0;
-    if (obj.offsetParent)
-    {
-      do 
-      {
-        curleft += obj.offsetLeft;
-        curtop += obj.offsetTop;
-      } while (obj = obj.offsetParent);
-
-      let x = e.pageX - curleft;
-      let y = e.pageY - curtop; // TODO: the -2 is a hack, no idea why is isn't exact otherwise
-      
-      return { x: x, y: y }; 
-    }
-  return undefined;
-  }
 
 
 }

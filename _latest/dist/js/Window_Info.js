@@ -19,8 +19,8 @@ var Window_Info = function () {
         this.type = "info";
         this.left = config.left;
         this.top = config.top;
-        this.width = 400; //24 * this.zoomFactor;
-        this.height = 420; //21 * this.zoomFactor;
+        this.width = config.width;
+        this.height = config.height;
         this.resizable = false;
         this.position = { at: "left+" + this.left + " top+" + this.top };
         this.create_window();

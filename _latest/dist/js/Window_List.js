@@ -19,8 +19,8 @@ var Window_List = function () {
         this.type = "list";
         this.left = config.left;
         this.top = config.top;
-        this.width = 400; //24 * this.zoomFactor;
-        this.height = 280; //21 * this.zoomFactor;
+        this.width = config.width;
+        this.height = config.height;
         this.resizable = true;
         this.position = { at: "left+" + this.left + " top+" + this.top };
         this.create_window();
