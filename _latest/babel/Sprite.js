@@ -158,7 +158,7 @@ class Sprite
 
   get_delete_color()
   {
-    return this.all.sprites[this.all.current_sprite].color;
+    return this.all.colors.transparent;
   }
 
   is_multicolor(){

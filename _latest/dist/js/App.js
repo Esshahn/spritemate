@@ -316,22 +316,30 @@ var App = function () {
 
       $('#palette_spritecolor').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_spritecolor').addClass("palette_color_item_selected");
+        $('#palette_spritecolor p').addClass("palette_highlight_text");
       });
 
       $('#palette_transparent').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_transparent').addClass("palette_color_item_selected");
+        $('#palette_transparent p').addClass("palette_highlight_text");
       });
 
       $('#palette_multicolor_1').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_multicolor_1').addClass("palette_color_item_selected");
+        $('#palette_multicolor_1 p').addClass("palette_highlight_text");
       });
 
       $('#palette_multicolor_2').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_multicolor_2').addClass("palette_color_item_selected");
+        $('#palette_multicolor_2 p').addClass("palette_highlight_text");
       });
     }
   }]);

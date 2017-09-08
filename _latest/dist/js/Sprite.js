@@ -157,7 +157,7 @@ var Sprite = function () {
   }, {
     key: "get_delete_color",
     value: function get_delete_color() {
-      return this.all.sprites[this.all.current_sprite].color;
+      return this.all.colors.transparent;
     }
   }, {
     key: "is_multicolor",

@@ -108,6 +108,11 @@ canvas
   cursor: pointer;
 }
 
+#palette_spritecolors
+{
+  margin-top: 12px;
+}
+
 .colors
 {
   font-size: 60%;
@@ -120,24 +125,31 @@ canvas
 .colors p
 {
   margin: 0px;
+  margin-bottom: 2px;
   padding: 0px;
+
 }
 
 .palette_color_item
 {
-  width: 90%;
+  width: 40px;
   height: 20px;
   background-color: red;
-  margin-bottom: 10px;
   margin: auto;
   margin-bottom: 8px;
-  cursor: pointer;
-  border: 2px solid black;
+  cursor: pointer;  
+}
+
+.palette_highlight_text
+{
+  color: #e6007e;
 }
 
 .palette_color_item_selected
 {
-  border: 2px solid #00b9ee;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: #00b9ee;
 }
 
 #color_transparent
