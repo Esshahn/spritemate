@@ -33,67 +33,68 @@
 </head>
 
 <body onLoad="init();">
-<div id="menu">
-    <div class ="iconset" id="icon-floppy">
-        <img src="img/icon3/icon-floppy.png" class="icon"  title="load & save">
-        <div class="icontext">load/save</div>
+<div id="container">
+    <div id="menu">
+        <div class ="iconset" id="icon-floppy">
+            <img src="img/icon3/icon-floppy.png" class="icon"  title="load & save">
+            <div class="icontext">load/save</div>
+        </div>
+        <div class ="iconset"  id="icon-undo">
+            <img src="img/icon3/icon-undo.png" class="icon" title="undo">
+            <div class="icontext">undo</div>
+        </div>
+        <div class ="iconset" id="icon-grid">
+            <img src="img/icon3/icon-grid.png" class="icon"  title="toggle grid on/off">
+            <div class="icontext">grid</div>
+        </div>
+        <div class ="iconset">
+            <img src="img/icon3/icon-spacer.png" class="icon-spacer">
+        </div>
+        <div class ="iconset" id="icon-shift-left">
+            <img src="img/icon3/icon-shift-left.png" class="icon"  title="shift left">
+            <div class="icontext">move left</div>
+        </div>
+        <div class ="iconset" id="icon-shift-right">
+            <img src="img/icon3/icon-shift-right.png" class="icon"  title="shift right">
+            <div class="icontext">move right</div>
+        </div>
+        <div class ="iconset" id="icon-shift-up">
+            <img src="img/icon3/icon-shift-up.png" class="icon"  title="shift up">
+            <div class="icontext">move up</div>
+        </div>
+        <div class ="iconset" id="icon-shift-down">
+            <img src="img/icon3/icon-shift-down.png" class="icon"  title="shift down">
+            <div class="icontext">move down</div>
+        </div>
+        <div class ="iconset" id="icon-flip-horizontal">
+            <img src="img/icon3/icon-flip-horizontal.png" class="icon"  title="flip horizontal">
+            <div class="icontext">flip h</div>
+        </div>
+        <div class ="iconset" id="icon-flip-vertical">
+            <img src="img/icon3/icon-flip-vertical.png" class="icon"  title="flip vertical">
+            <div class="icontext">flip v</div>
+        </div>
+        <div class ="iconset" id="icon-multicolor">
+            <img src="img/icon3/icon-multicolor.png" class="icon"  title="toggle single- & multicolor">
+            <div class="icontext">colormode</div>
+        </div>
+        <div class ="iconset">
+            <img src="img/icon3/icon-spacer.png" class="icon-spacer">
+        </div>
+        <div class ="iconset" id="icon-trash">
+            <img src="img/icon3/icon-trash.png" class="icon"  title="clear">
+            <div class="icontext">delete</div>
+        </div>
+        <div class ="iconset" id="icon-fill">
+            <img src="img/icon3/icon-fill.png" class="icon"  title="fill with selected color">  
+            <div class="icontext">fill</div>
+        </div>
+         <div class ="iconset" id="icon-info">
+            <img src="img/icon3/icon-info.png" class="icon"  title="info">  
+            <div class="icontext">info</div>
+        </div>   
     </div>
-    <div class ="iconset"  id="icon-undo">
-        <img src="img/icon3/icon-undo.png" class="icon" title="undo">
-        <div class="icontext">undo</div>
-    </div>
-    <div class ="iconset" id="icon-grid">
-        <img src="img/icon3/icon-grid.png" class="icon"  title="toggle grid on/off">
-        <div class="icontext">grid</div>
-    </div>
-    <div class ="iconset">
-        <img src="img/icon3/icon-spacer.png" class="icon-spacer">
-    </div>
-    <div class ="iconset" id="icon-shift-left">
-        <img src="img/icon3/icon-shift-left.png" class="icon"  title="shift left">
-        <div class="icontext">move left</div>
-    </div>
-    <div class ="iconset" id="icon-shift-right">
-        <img src="img/icon3/icon-shift-right.png" class="icon"  title="shift right">
-        <div class="icontext">move right</div>
-    </div>
-    <div class ="iconset" id="icon-shift-up">
-        <img src="img/icon3/icon-shift-up.png" class="icon"  title="shift up">
-        <div class="icontext">move up</div>
-    </div>
-    <div class ="iconset" id="icon-shift-down">
-        <img src="img/icon3/icon-shift-down.png" class="icon"  title="shift down">
-        <div class="icontext">move down</div>
-    </div>
-    <div class ="iconset" id="icon-flip-horizontal">
-        <img src="img/icon3/icon-flip-horizontal.png" class="icon"  title="flip horizontal">
-        <div class="icontext">flip h</div>
-    </div>
-    <div class ="iconset" id="icon-flip-vertical">
-        <img src="img/icon3/icon-flip-vertical.png" class="icon"  title="flip vertical">
-        <div class="icontext">flip v</div>
-    </div>
-    <div class ="iconset" id="icon-multicolor">
-        <img src="img/icon3/icon-multicolor.png" class="icon"  title="toggle single- & multicolor">
-        <div class="icontext">colormode</div>
-    </div>
-    <div class ="iconset">
-        <img src="img/icon3/icon-spacer.png" class="icon-spacer">
-    </div>
-    <div class ="iconset" id="icon-trash">
-        <img src="img/icon3/icon-trash.png" class="icon"  title="clear">
-        <div class="icontext">delete</div>
-    </div>
-    <div class ="iconset" id="icon-fill">
-        <img src="img/icon3/icon-fill.png" class="icon"  title="fill with selected color">  
-        <div class="icontext">fill</div>
-    </div>
-     <div class ="iconset" id="icon-info">
-        <img src="img/icon3/icon-info.png" class="icon"  title="info">  
-        <div class="icontext">info</div>
-    </div>   
+    <div id="app"></div>
 </div>
-<div id="app"></div>
-
 </body>
 </html>
