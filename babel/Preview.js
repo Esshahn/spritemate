@@ -17,10 +17,18 @@ class Preview
     this.canvas_element.id = "preview";
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
+    this.canvas = this.canvas_element.getContext('2d');
+
+    let template = `
+      <div id="preview_menu">
+      <div class="icon-preview-x2" id="icon-preview-x"></div>
+      <div class="icon-preview-y2" id="icon-preview-y"></div>
+      </div>
+    `;
+
+    $("#window-"+this.window).append(template);
 
     $("#window-"+this.window).append(this.canvas_element);
-
-    this.canvas = this.canvas_element.getContext('2d');
    
   }
 

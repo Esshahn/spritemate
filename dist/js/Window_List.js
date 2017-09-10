@@ -5,26 +5,22 @@
 
  */
 
-class Window_List
-{
-    constructor(config)
-    {
+class Window_List {
+    constructor(config) {
         this.id = "window-" + $('div[id^="window-"]').length;
-        this.title = config.title;  
+        this.title = config.title;
         this.type = "list";
         this.left = config.left;
         this.top = config.top;
-        this.width = config.width; 
-        this.height = config.height; 
+        this.width = config.width;
+        this.height = config.height;
         this.resizable = true;
-        this.position = { at: "left+"+this.left+" top+"+this.top };
-        this.create_window(); 
+        this.position = { at: "left+" + this.left + " top+" + this.top };
+        this.create_window();
     }
-             
-       
-    create_window()
-    {
-        $( "#app" ).append( `<div id='${this.id}' class='${this.type}' title='${this.title}'></div>`);
+
+    create_window() {
+        $("#app").append(`<div id='${this.id}' class='${this.type}' title='${this.title}'></div>`);
         $("#" + this.id).dialog({
             width: this.width,
             height: this.height,
@@ -43,6 +39,5 @@ class Window_List
         `;
 
         $("#" + this.id).append(template);
-
     }
 }

@@ -14,6 +14,16 @@ class List
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
     this.sorted_array = [];
+
+    let template = `
+      <div id="list_menu">
+      <img src="img/icon3/icon-list-new.png" id="icon-list-new">
+      <img src="img/icon3/icon-list-delete.png" id="icon-list-delete">
+      <div id="spritelist"></div>
+      </div>
+    `;
+
+    $("#window-"+this.window).append(template);
     
     $("#spritelist").sortable({
       cursor:"move",

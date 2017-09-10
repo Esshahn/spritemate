@@ -5,30 +5,31 @@ class App
   
   constructor(config)
   { 
-
+    
     this.config = config;
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = { title: "Edit Sprite", left: 150, top: 180, width: "auto", height: "auto" };
-    this.window_editor = new Window_Editor(window_config);
+    let window_config = { title: "Edit Sprite", type: "sprite", resizable: "false", left: 150, top: 180, width: "auto", height: "auto" };
+    this.window_editor = new Window(window_config);
     this.editor = new Editor(0,this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", left: 50, top: 180, width: "auto", height: "auto" };
-    this.window_colors = new Window_Palette(window_config);
+    window_config = { title: "Palette", type: "colors", resizable: "false", left: 50, top: 180, width: "auto", height: "auto" };
+    this.window_colors = new Window(window_config);
     this.palette = new Palette(1,this.config);
 
-    window_config = { title: "Preview", left: 650, top: 180, width: "auto", height: "auto" };
-    this.window_preview = new Window_Preview(window_config);
+    window_config = { title: "Preview", type: "preview", resizable: "false", left: 650, top: 180, width: "auto", height: "auto" };
+    this.window_preview = new Window(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = { title: "Sprite List", left: 880, top: 420, width: 520, height: "240" };
-    this.window_preview = new Window_List(window_config);
+    window_config = { title: "Sprite List", type: "list", resizable: "true", left: 880, top: 420, width: 520, height: "240" };
+    this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
-    window_config = { title: "Spritemate", left: 300, top: 380, width: "auto", height: "auto" };
-    this.window_info = new Window_Info(window_config);
+    window_config = { title: "Spritemate", type: "info", resizable: "false", autoOpen: "false", left: 300, top: 380, width: "auto", height: "auto" };
+    this.window_info = new Window(window_config);
+    this.info = new Info(4,this.config);
 
     this.is_drawing = false;
     this.update_ui();
