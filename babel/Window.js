@@ -9,34 +9,21 @@ class Window
 {
     constructor(config)
     {
-
-        this.id = "window-" + $('div[id^="window-"]').length;
-        this.title = config.title; 
-        this.type = config.type;
-        this.left = config.left;
-        this.top = config.top;
-        this.width = config.width; 
-        this.height = config.height; 
-        this.resizable = config.resizable;
-        this.position = { at: "left+"+this.left+" top+"+this.top }; 
-        this.autoOpen = true;
-        if (config.autoOpen == "false") this.autoOpen = false;
-        this.create_window();
-    }
-             
-       
-    create_window()
-    {
-        $( "#app" ).append( "<div id='"+this.id+"' class='"+this.type+"' title='"+this.title+"'></div>" );
-        $("#" + this.id).dialog({
-            width: this.width,
-            height: this.height,
+        config.id = "window-" + $('div[id^="window-"]').length;
+        config.position = { at: "left+"+config.left+" top+"+config.top }; 
+        if (config.top == undefined) config.position = undefined;
+        if (config.autoOpen == "false") config.autoOpen = false;
+        
+        $( "#app" ).append( "<div id='"+config.id+"' class='"+config.type+"' title='"+config.title+"'></div>" );
+        $("#" + config.id).dialog({
+            width: config.width,
+            height: config.height,
             dialogClass: "no-close",
-            autoOpen: this.autoOpen,
-            position: this.position,
-            resizable: this.resizable,
-            buttons: this.buttons
+            autoOpen: config.autoOpen,
+            position: config.position,
+            resizable: config.resizable,
+            buttons: config.buttons
         });
-
-    }
+    }         
+    
 }

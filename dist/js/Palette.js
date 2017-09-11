@@ -78,6 +78,16 @@ class Palette {
     }
   }
 
+  set_multicolor(is_multicolor) {
+    if (is_multicolor) {
+      $('#palette_multicolor_1').fadeTo("fast", 1);
+      $('#palette_multicolor_2').fadeTo("fast", 1);
+    } else {
+      $('#palette_multicolor_1').fadeTo("fast", 0.1);
+      $('#palette_multicolor_2').fadeTo("fast", 0.1);
+    }
+  }
+
   set_active_color(e) {
     let pos = this.findPos(this.canvas_element);
     let x = e.pageX - pos.x,

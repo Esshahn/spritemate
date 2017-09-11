@@ -51,7 +51,6 @@ class Palette
     $('#color_individual').addClass("palette_color_item_selected");
     $('#palette_individual p').addClass("palette_highlight_text");
 
-
     $("#palette_all_colors").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
@@ -86,6 +85,17 @@ class Palette
         y ++;
       }
     } 
+  }
+
+  set_multicolor(is_multicolor)
+  {
+    if (is_multicolor){
+      $('#palette_multicolor_1').fadeTo( "fast", 1 ); 
+      $('#palette_multicolor_2').fadeTo( "fast", 1 );  
+    } else {
+      $('#palette_multicolor_1').fadeTo( "fast", 0.1 ); 
+      $('#palette_multicolor_2').fadeTo( "fast", 0.1 );  
+    }
   }
 
 

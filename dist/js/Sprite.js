@@ -46,22 +46,23 @@ class Sprite {
 
     for (let i = 0; i < this.height; i++) {
       let line = [];
-      for (let j = 0; j < this.width; j++) line.push(this.all.colors[0]);
+      for (let j = 0; j < this.width; j++) line.push("transparent");
       pixels.push(line);
     }
     this.all.sprites[this.all.current_sprite].pixels = pixels;
     this.save_backup();
   }
 
-  fill(color) {
+  fill() {
 
     // fills the sprite data with the default color
     // generate a bitmap array
+
     let pixels = [];
 
     for (let i = 0; i < this.height; i++) {
       let line = [];
-      for (let j = 0; j < this.width; j++) line.push(color);
+      for (let j = 0; j < this.width; j++) line.push(this.all.pen);
       pixels.push(line);
     }
     this.all.sprites[this.all.current_sprite].pixels = pixels;

@@ -25,7 +25,7 @@ class App {
     this.window_preview = new Window(window_config);
     this.list = new List(3, this.config);
 
-    window_config = { title: "Spritemate", type: "info", resizable: "false", autoOpen: "false", left: 300, top: 380, width: "auto", height: "auto" };
+    window_config = { title: "Spritemate", type: "info", resizable: "false", autoOpen: "false", width: "auto", height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4, this.config);
 
@@ -101,6 +101,8 @@ class App {
     $('#icon-list-delete').mouseleave(e => {
       if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("fast", 0.70);
     });
+
+    this.palette.set_multicolor(this.sprite.is_multicolor());
 
     /*
     
@@ -207,6 +209,7 @@ class App {
 
     $('#icon-multicolor').mouseup(e => {
       this.sprite.toggle_multicolor();
+      this.palette.set_multicolor(this.sprite.is_multicolor());
       this.update_ui();
     });
 
@@ -218,7 +221,7 @@ class App {
     });
 
     $('#icon-fill').mouseup(e => {
-      this.sprite.fill(this.palette.get_color());
+      this.sprite.fill();
       this.update_ui();
     });
 
@@ -324,19 +327,23 @@ class App {
     });
 
     $('#palette_multicolor_1').mouseup(e => {
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_multicolor_1').addClass("palette_color_item_selected");
-      $('#palette_multicolor_1 p').addClass("palette_highlight_text");
-      this.sprite.set_pen("multicolor_1");
+      if (this.sprite.is_multicolor()) {
+        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
+        $('#color_multicolor_1').addClass("palette_color_item_selected");
+        $('#palette_multicolor_1 p').addClass("palette_highlight_text");
+        this.sprite.set_pen("multicolor_1");
+      }
     });
 
     $('#palette_multicolor_2').mouseup(e => {
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_multicolor_2').addClass("palette_color_item_selected");
-      $('#palette_multicolor_2 p').addClass("palette_highlight_text");
-      this.sprite.set_pen("multicolor_2");
+      if (this.sprite.is_multicolor()) {
+        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
+        $('#color_multicolor_2').addClass("palette_color_item_selected");
+        $('#palette_multicolor_2 p').addClass("palette_highlight_text");
+        this.sprite.set_pen("multicolor_2");
+      }
     });
   }
 
