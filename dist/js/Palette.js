@@ -21,9 +21,9 @@ class Palette {
     let template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
-          <div id="palette_spritecolor">
+          <div id="palette_individual">
               <p>Individual</p>
-              <div class="palette_color_item" id="color_spritecolor"></div>
+              <div class="palette_color_item" id="color_individual"></div>
           </div>
           <div id="palette_transparent">
               <p>Transparent</p>
@@ -43,6 +43,10 @@ class Palette {
 
     $("#window-" + this.window).append(template);
 
+    // when init, set the individual color pen as selected
+    $('#color_individual').addClass("palette_color_item_selected");
+    $('#palette_individual p').addClass("palette_highlight_text");
+
     $("#palette_all_colors").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
@@ -52,7 +56,7 @@ class Palette {
 
   update(spritecolors) {
     $("#color_transparent").css("background-color", this.colors[spritecolors.transparent]);
-    $("#color_spritecolor").css("background-color", this.colors[spritecolors.spritecolor]);
+    $("#color_individual").css("background-color", this.colors[spritecolors.individual]);
     $("#color_multicolor_1").css("background-color", this.colors[spritecolors.multicolor_1]);
     $("#color_multicolor_2").css("background-color", this.colors[spritecolors.multicolor_2]);
   }

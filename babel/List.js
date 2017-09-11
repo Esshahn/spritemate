@@ -72,16 +72,16 @@ class List
 
 
 
-  update(spritelist,current_sprite)
+  update(all_data)
   {
-
+    
     $(".sprite_in_list").remove();
 
-    for (let i=0; i<spritelist.length; i++){
-      this.create_canvas(i,current_sprite);
+    for (let i=0; i<all_data.sprites.length; i++){
+      this.create_canvas(i,all_data.current_sprite);
 
       let canvas = document.getElementById( i).getContext('2d');
-      let sprite_data = spritelist[i];
+      let sprite_data = all_data.sprites[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
 
@@ -89,7 +89,15 @@ class List
       {
         for (let j=0; j<this.pixels_y; j++)
         {
-          canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
+
+          let pen = sprite_data.pixels[j][i];
+          if (pen == "individual"){
+            var color = sprite_data.color;
+          }else{
+            var color = all_data.colors[pen];
+          }
+
+          canvas.fillStyle = this.config.colors[color] ;
           canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  
         }
       }

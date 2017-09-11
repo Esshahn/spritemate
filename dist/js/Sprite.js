@@ -9,14 +9,14 @@ class Sprite {
     this.height = config.sprite_y;
 
     this.all = {};
-    this.all.colors = { "transparent": 0, "multicolor_1": 4, "multicolor_2": 3 };
+    this.all.colors = { "transparent": 0, "multicolor_1": 8, "multicolor_2": 3 };
     this.all.sprites = [];
     this.all.current_sprite = 0;
-
+    this.all.pen = "individual"; // can be individual =0, transparent=1, multicolor_1=2, multicolor_2=3
     this.backup = [];
     this.backup_position = -1;
 
-    this.new(5);
+    this.new(11);
   }
 
   new(color = 1, multicolor = false) {
@@ -31,7 +31,7 @@ class Sprite {
 
     for (let i = 0; i < this.height; i++) {
       let line = [];
-      for (let j = 0; j < this.width; j++) line.push(this.all.colors.transparent);
+      for (let j = 0; j < this.width; j++) line.push("transparent");
       sprite.pixels.push(line);
     }
     this.all.sprites.push(sprite);
@@ -124,8 +124,8 @@ class Sprite {
   // used to update the palette with the right colors
   {
     let sprite_colors = {
+      "individual": this.all.sprites[this.all.current_sprite].color,
       "transparent": this.all.colors.transparent,
-      "spritecolor": this.all.sprites[this.all.current_sprite].color,
       "multicolor_1": this.all.colors.multicolor_1,
       "multicolor_2": this.all.colors.multicolor_2
     };
@@ -171,7 +171,7 @@ class Sprite {
     // writes a pixel to the sprite pixel array
     // multicolor check
     if (this.all.sprites[this.all.current_sprite].multicolor && x % 2 !== 0) x = x - 1;
-    this.all.sprites[this.all.current_sprite].pixels[y][x] = color;
+    this.all.sprites[this.all.current_sprite].pixels[y][x] = this.all.pen;
   }
 
   get_current_sprite() {
@@ -184,6 +184,26 @@ class Sprite {
 
   only_one_sprite() {
     if (this.all.sprites.length == 1) return true;
+  }
+
+  get_pen() {
+    return this.all.pen;
+  }
+
+  set_pen(pen) {
+    this.all.pen = pen;
+  }
+
+  set_pen_color(pencolor) {
+    if (this.all.pen == "individual") {
+      this.all.sprites[this.all.current_sprite].color = pencolor;
+    } else {
+      this.all.colors[this.all.pen] = pencolor;
+    }
+  }
+
+  get_all() {
+    return this.all;
   }
 
   get_all_sprites() {

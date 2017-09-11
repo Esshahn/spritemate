@@ -38,19 +38,24 @@ class Editor {
     }
   }
 
-  update(sprite_data) {
-
+  update(all_data) {
+    let s = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
-
+    if (s.multicolor) x_grid_step = 2;
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
+        let pen = s.pixels[j][i];
+        if (pen == "individual") {
+          var color = s.color;
+        } else {
+          var color = all_data.colors[pen];
+        }
+        this.canvas.fillStyle = this.config.colors[color];
         this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step, this.pixels_y);
       }
     }
 
-    if (this.grid) this.display_grid(sprite_data);
+    if (this.grid) this.display_grid(s);
   }
 
   display_grid(sprite_data) {

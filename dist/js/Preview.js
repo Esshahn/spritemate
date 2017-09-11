@@ -37,14 +37,21 @@ class Preview {
     return this.height;
   }
 
-  update(sprite_data) {
-
+  update(all_data) {
+    let sprite_data = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        this.canvas.fillStyle = this.config.colors[sprite_data.pixels[j][i]];
+
+        let pen = sprite_data.pixels[j][i];
+        if (pen == "individual") {
+          var color = sprite_data.color;
+        } else {
+          var color = all_data.colors[pen];
+        }
+        this.canvas.fillStyle = this.config.colors[color];
         this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step, this.pixels_y);
       }
     }

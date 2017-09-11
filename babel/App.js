@@ -47,9 +47,9 @@ class App
 
   update_ui()
   {
-    this.editor.update(   this.sprite.get_current_sprite());
-    this.preview.update(  this.sprite.get_current_sprite());
-    this.list.update(     this.sprite.get_all_sprites(), this.sprite.get_current_sprite_number());
+    this.editor.update(   this.sprite.get_all());
+    this.preview.update(  this.sprite.get_all());
+    this.list.update(     this.sprite.get_all());
     this.palette.update(  this.sprite.get_colors());
     console.log("ui refresh: " + Date());
   }
@@ -353,14 +353,18 @@ class App
     $('#palette').mouseup((e) =>
     {
       this.palette.set_active_color(e);
+      this.sprite.set_pen_color(this.palette.get_color());
+      this.update_ui(); 
     });
 
-    $('#palette_spritecolor').mouseup((e) =>
+    $('#palette_individual').mouseup((e) =>
     {     
       $('#palette_spritecolors div').removeClass("palette_color_item_selected");
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_spritecolor').addClass("palette_color_item_selected");
-      $('#palette_spritecolor p').addClass("palette_highlight_text");
+      $('#color_individual').addClass("palette_color_item_selected");
+      $('#palette_individual p').addClass("palette_highlight_text");
+      this.sprite.set_pen("individual");
+
     });
 
     $('#palette_transparent').mouseup((e) =>
@@ -369,6 +373,8 @@ class App
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
       $('#color_transparent').addClass("palette_color_item_selected");
       $('#palette_transparent p').addClass("palette_highlight_text");
+      this.sprite.set_pen("transparent");
+
     });
 
     $('#palette_multicolor_1').mouseup((e) =>
@@ -377,6 +383,8 @@ class App
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
       $('#color_multicolor_1').addClass("palette_color_item_selected");
       $('#palette_multicolor_1 p').addClass("palette_highlight_text");
+      this.sprite.set_pen("multicolor_1");
+
     });
 
     $('#palette_multicolor_2').mouseup((e) =>
@@ -385,6 +393,8 @@ class App
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
       $('#color_multicolor_2').addClass("palette_color_item_selected");
       $('#palette_multicolor_2 p').addClass("palette_highlight_text");
+      this.sprite.set_pen("multicolor_2");
+
     });
         
   }
