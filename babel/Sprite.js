@@ -65,6 +65,7 @@ class Sprite
 
   fill(color)
   {
+
     // fills the sprite data with the default color
     // generate a bitmap array
     let pixels = [];
