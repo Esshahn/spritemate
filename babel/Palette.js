@@ -60,12 +60,14 @@ class Palette
   }
 
 
-  update(spritecolors)
+  update(spritecolors, is_multicolor)
   {
     $("#color_transparent").css("background-color",this.colors[spritecolors.transparent]);
     $("#color_individual").css("background-color",this.colors[spritecolors.individual]);
     $("#color_multicolor_1").css("background-color",this.colors[spritecolors.multicolor_1]);
     $("#color_multicolor_2").css("background-color",this.colors[spritecolors.multicolor_2]);
+    this.set_multicolor(is_multicolor);
+    console.log(this.active_color);
   }
 
   draw_palette()
@@ -90,11 +92,11 @@ class Palette
   set_multicolor(is_multicolor)
   {
     if (is_multicolor){
-      $('#palette_multicolor_1').fadeTo( "fast", 1 ); 
-      $('#palette_multicolor_2').fadeTo( "fast", 1 );  
+      $('#palette_multicolor_1').show(); 
+      $('#palette_multicolor_2').show();  
     } else {
-      $('#palette_multicolor_1').fadeTo( "fast", 0.1 ); 
-      $('#palette_multicolor_2').fadeTo( "fast", 0.1 );  
+      $('#palette_multicolor_1').hide(); 
+      $('#palette_multicolor_2').hide();  
     }
   }
 

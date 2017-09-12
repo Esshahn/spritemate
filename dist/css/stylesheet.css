@@ -154,7 +154,7 @@ canvas
 
 #color_transparent
 {
-  background-color: white;
+  background-color: yellow;
 }
 
 .icon
@@ -177,6 +177,7 @@ canvas
   float: left;
   padding: 0px 4px 0px 4px;
   cursor: pointer;
+  margin-top: 4px;
 }
 
 .icontext
@@ -359,6 +360,10 @@ canvas
     padding: 0px;
 }
 
+.ui-dialog .ui-resizable-se, .ui-dialog .ui-resizable-sw, .ui-dialog .ui-resizable-ne, .ui-dialog .ui-resizable-nw 
+{
+    width: 12px;
+    height: 12px;
 
 
 

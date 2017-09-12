@@ -10,17 +10,13 @@ class Sprite
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
-
     this.all = {};
     this.all.colors = {"transparent": 0, "multicolor_1": 8, "multicolor_2": 3};
     this.all.sprites = [];
     this.all.current_sprite = 0;
     this.all.pen = "individual"; // can be individual =0, transparent=1, multicolor_1=2, multicolor_2=3
     this.backup = [];
-    this.backup_position = -1;
-    
-    this.new(11);
-    
+    this.backup_position = -1;    
   }
 
   new(color = 1,multicolor = false)
@@ -141,11 +137,6 @@ class Sprite
     this.save_backup();
   }
 
-  get_pixel(x,y)
-  {
-    return this.all.sprites[this.all.current_sprite].pixels[y][x];
-  }
-
   get_colors()
   // used to update the palette with the right colors
   {
@@ -163,7 +154,8 @@ class Sprite
     return this.all.colors.transparent;
   }
 
-  is_multicolor(){
+  is_multicolor()
+  {
     return this.all.sprites[this.all.current_sprite].multicolor;
   }
 
@@ -212,11 +204,6 @@ class Sprite
     return this.all.sprites[this.all.current_sprite];
   }
 
-  get_current_sprite_number()
-  {
-    return this.all.current_sprite;
-  }
-
   only_one_sprite()
   {
     if (this.all.sprites.length == 1) return true;
@@ -247,16 +234,6 @@ class Sprite
     return this.all;
   }
 
-  get_all_sprites()
-  {
-    if (this.all.sprites)
-    {
-      return this.all.sprites;
-    }else{
-      return false;
-    }
-  }
-
   sort_spritelist(sprite_order_from_dom)
   {
     let sorted_list = sprite_order_from_dom.map(function(x){ return parseInt(x); });
@@ -278,12 +255,6 @@ class Sprite
   {
     this.all.current_sprite = spritenumber;
   }
-
-  get_last_sprite()
-  {
-    return this.all.sprites.length - 1;
-  }
-
 
   delete()
   {
@@ -310,6 +281,40 @@ class Sprite
     }
   }
 
+/*
+  get_pixel(x,y)
+  {
 
-  
+    return this.all.sprites[this.all.current_sprite].pixels[y][x];
+
+  }
+*/
+
+/*
+  get_last_sprite()
+  {
+    return this.all.sprites.length - 1;
+  }
+*/
+
+/*
+  get_all_sprites()
+  {
+    if (this.all.sprites)
+    {
+      return this.all.sprites;
+    }else{
+      return false;
+    }
+  }
+*/
+
+/*
+  get_current_sprite_number()
+  {
+    console.log("woppo");
+    return this.all.current_sprite;
+  }
+*/
+
 }

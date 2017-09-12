@@ -10,20 +10,20 @@ class App
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = { title: "Edit Sprite", type: "sprite", resizable: "false", left: 150, top: 180, width: "auto", height: "auto" };
+    let window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 150, top: 180, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0,this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", type: "colors", resizable: "false", left: 50, top: 180, width: "auto", height: "auto" };
+    window_config = { title: "Palette", type: "colors", resizable: false, left: 50, top: 180, width: "auto", height: "auto" };
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1,this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: "false", left: 650, top: 180, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: 650, top: 180, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: "true", left: 880, top: 420, width: 520, height: "240" };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: 880, top: 420, width: 520, height: 240 };
     this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
@@ -32,6 +32,8 @@ class App
     this.info = new Info(4,this.config);
 
     this.is_drawing = false;
+
+    this.sprite.new(this.palette.get_color());
     this.update_ui();
     this.user_interaction();
 
@@ -50,7 +52,7 @@ class App
     this.editor.update(   this.sprite.get_all());
     this.preview.update(  this.sprite.get_all());
     this.list.update(     this.sprite.get_all());
-    this.palette.update(  this.sprite.get_colors());
+    this.palette.update(  this.sprite.get_colors(), this.sprite.is_multicolor());
     console.log("ui refresh: " + Date());
   }
 
@@ -78,9 +80,9 @@ class App
 
   init_ui_fade(element)
   {
-    $("#" + element).css({ opacity: 0.7 });
-    $('#' + element).mouseenter((e) => {$('#' + element).fadeTo( "fast", 1 );});
-    $('#' + element).mouseleave((e) => {$('#' + element).fadeTo( "fast", 0.70 );});
+    //$("#" + element).css({ opacity: 0.7 });
+    $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
+    $('#' + element).mouseleave((e) => {$('#' + element).animate({backgroundColor: 'transparent'}, 'fast');});
   }
 
 
@@ -111,11 +113,11 @@ class App
 
     // trash can is a bit different
     $('#icon-trash').css({ opacity: 0.20 });
-    $('#icon-trash').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 1 );});
-    $('#icon-trash').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "fast", 0.70 );});
+    $('#icon-trash').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
+    $('#icon-trash').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-trash').animate({backgroundColor: 'transparent'}, 'fast');});
     $('#icon-list-delete').css({ opacity: 0.20 });
-    $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 1 );});
-    $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "fast", 0.70 );});
+    $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
+    $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'transparent'}, 'fast');});
     
     this.palette.set_multicolor(this.sprite.is_multicolor());
 
@@ -243,7 +245,6 @@ class App
     $('#icon-multicolor').mouseup((e) =>
     {
       this.sprite.toggle_multicolor();
-      this.palette.set_multicolor(this.sprite.is_multicolor());
       this.update_ui();
     });
 
@@ -301,7 +302,7 @@ class App
 
    $('#icon-list-new').mouseup((e) =>
     {      
-      this.sprite.new(0,false);
+      this.sprite.new(this.palette.get_color());
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
       this.update_ui();
