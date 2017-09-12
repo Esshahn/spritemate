@@ -63,13 +63,8 @@ class App
 
   draw_pixel(e)
   {
-    let color = this.palette.get_color();
-      
-    if (e.shiftKey) color = this.sprite.get_delete_color();
-
-    // draw pixels
-    let gridpos = this.editor.get_pixel(e); // returns the pixel grid position of the clicked pixel
-    this.sprite.set_pixel(gridpos.x,gridpos.y,color); // updates the sprite array at the grid position with the color chosen on the palette
+   // if (e.shiftKey) console.log("shift key");
+    this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
     this.is_drawing = true; // needed for mousemove drawing
   }
 

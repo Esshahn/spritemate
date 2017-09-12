@@ -191,12 +191,22 @@ class Sprite
   }
 
 
-  set_pixel(x,y,color)
+  set_pixel(pos,shiftkey)
   {
     // writes a pixel to the sprite pixel array
+    
     // multicolor check
-    if(this.all.sprites[this.all.current_sprite].multicolor && x%2 !== 0) x=x-1;
-    this.all.sprites[this.all.current_sprite].pixels[y][x] = this.all.pen; 
+    if(this.all.sprites[this.all.current_sprite].multicolor && pos.x%2 !== 0) pos.x=pos.x-1;
+    
+    if (!shiftkey)
+    {
+      // draw with selected pen
+      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = this.all.pen; 
+    } else {
+      // shift is hold down, so we delete with transparent color
+      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = "transparent";
+    }
+    
   }
 
   get_current_sprite()
