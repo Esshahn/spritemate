@@ -240,6 +240,15 @@ class App
     $('#icon-multicolor').mouseup((e) =>
     {
       this.sprite.toggle_multicolor();
+      if (!this.sprite.is_multicolor())
+      {
+        // set the active pen to the individual one when switching to singlecolor
+        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
+        $('#color_individual').addClass("palette_color_item_selected");
+        $('#palette_individual p').addClass("palette_highlight_text");
+        this.sprite.set_pen("individual");
+      }
       this.update_ui();
     });
 

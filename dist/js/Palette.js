@@ -60,7 +60,6 @@ class Palette {
     $("#color_multicolor_1").css("background-color", this.colors[spritecolors.multicolor_1]);
     $("#color_multicolor_2").css("background-color", this.colors[spritecolors.multicolor_2]);
     this.set_multicolor(is_multicolor);
-    console.log(this.active_color);
   }
 
   draw_palette() {

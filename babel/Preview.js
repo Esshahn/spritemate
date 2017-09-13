@@ -53,12 +53,16 @@ class Preview
       for (let j=0; j<this.pixels_y; j++)
       {
 
-         let pen = sprite_data.pixels[j][i];
-        if (pen == "individual"){
+        let array_entry = sprite_data.pixels[j][i];
+        if (array_entry == "individual"){
           var color = sprite_data.color;
         }else{
-          var color = all_data.colors[pen];
+          var color = all_data.colors[array_entry];
+          
+          // if singlecolor only, replace the multicolor pixels with the individual color
+          if (!sprite_data.multicolor && (array_entry == "multicolor_1" || array_entry == "multicolor_2")) color = sprite_data.color;
         }
+
         this.canvas.fillStyle = this.config.colors[color] ;
         this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y); 
       }
