@@ -5,7 +5,7 @@ class App
   
   constructor(config)
   { 
-    
+  
     this.config = config;
     this.sprite = new Sprite(this.config);
 
@@ -23,11 +23,11 @@ class App
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 880, top: 420, width: 520, height: 240 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: 880, top: 420, width: 330, height: 200 };
     this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
-    window_config = { title: "Spritemate", type: "info", resizable: "false", autoOpen: "false", width: "auto", height: "auto" };
+    window_config = { title: "Spritemate", type: "info", resizable: false, autoOpen: false, width: "auto", height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
@@ -55,20 +55,6 @@ class App
     this.palette.update(  this.sprite.get_colors(), this.sprite.is_multicolor());
     console.log("ui refresh: " + Date());
   }
-
-
-
-
-
-
-  draw_pixel(e)
-  {
-   // if (e.shiftKey) console.log("shift key");
-    this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-    this.is_drawing = true; // needed for mousemove drawing
-  }
-
-
 
 
 
@@ -159,16 +145,16 @@ class App
 */
 
     $('#editor').mousedown((e) => {
-      this.draw_pixel(e);
+      this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+      this.is_drawing = true; // needed for mousemove drawing
       this.update_ui();
     });
 
     $('#editor').mousemove((e) => {
       if (this.is_drawing){
-        this.draw_pixel(e);
+        this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
         this.update_ui(); 
-      }  
-       
+      }    
     });
 
     $('#editor').mouseup((e) =>
