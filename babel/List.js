@@ -91,14 +91,14 @@ class List
         {
 
           let array_entry = sprite_data.pixels[j][i];
-          if (array_entry == "individual"){
+          if (array_entry == "i"){
             var color = sprite_data.color;
           }else{
             var color = all_data.colors[array_entry];
           }
 
            // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "multicolor_1" || array_entry == "multicolor_2")) color = sprite_data.color;
+          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
 
           canvas.fillStyle = this.config.colors[color] ;
           canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  

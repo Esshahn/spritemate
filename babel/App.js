@@ -233,7 +233,7 @@ class App
         $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_individual').addClass("palette_color_item_selected");
         $('#palette_individual p').addClass("palette_highlight_text");
-        this.sprite.set_pen("individual");
+        this.sprite.set_pen("i");
       }
       this.update_ui();
     });
@@ -295,6 +295,15 @@ class App
       this.sprite.new(this.palette.get_color());
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
+      if (!this.sprite.is_multicolor())
+      {
+        // set the active pen to the individual one when switching to singlecolor
+        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+        $('#palette_spritecolors p').removeClass("palette_highlight_text");
+        $('#color_individual').addClass("palette_color_item_selected");
+        $('#palette_individual p').addClass("palette_highlight_text");
+        this.sprite.set_pen("i");
+      }  
       this.update_ui();
     });
 
@@ -353,7 +362,7 @@ class App
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
       $('#color_individual').addClass("palette_color_item_selected");
       $('#palette_individual p').addClass("palette_highlight_text");
-      this.sprite.set_pen("individual");
+      this.sprite.set_pen("i");
 
     });
 
@@ -363,7 +372,7 @@ class App
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
       $('#color_transparent').addClass("palette_color_item_selected");
       $('#palette_transparent p').addClass("palette_highlight_text");
-      this.sprite.set_pen("transparent");
+      this.sprite.set_pen("t");
 
     });
 
@@ -375,7 +384,7 @@ class App
         $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_multicolor_1').addClass("palette_color_item_selected");
         $('#palette_multicolor_1 p').addClass("palette_highlight_text");
-        this.sprite.set_pen("multicolor_1");
+        this.sprite.set_pen("m1");
       }
     });
 
@@ -387,7 +396,7 @@ class App
         $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_multicolor_2').addClass("palette_color_item_selected");
         $('#palette_multicolor_2 p').addClass("palette_highlight_text");
-        this.sprite.set_pen("multicolor_2");
+        this.sprite.set_pen("m2");
       }
     });
         

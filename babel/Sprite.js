@@ -11,10 +11,12 @@ class Sprite
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    this.all.colors = {"transparent": 0, "multicolor_1": 8, "multicolor_2": 3};
+    //this.all.colors = {"transparent": 0, "multicolor_1": 8, "multicolor_2": 3};
+    this.all.colors = {"t": 0, "m1": 8, "m2": 3};
+
     this.all.sprites = [];
     this.all.current_sprite = 0;
-    this.all.pen = "individual"; // can be individual =0, transparent=1, multicolor_1=2, multicolor_2=3
+    this.all.pen = "i"; // can be individual =0, transparent=1, multicolor_1=2, multicolor_2=3
     this.backup = [];
     this.backup_position = -1;    
   }
@@ -34,7 +36,7 @@ class Sprite
     for(let i=0; i<this.height; i++)
     {
       let line = [];
-      for(let j=0; j<this.width; j++) line.push("transparent");
+      for(let j=0; j<this.width; j++) line.push("t");
       sprite.pixels.push(line);
     }
     this.all.sprites.push(sprite);
@@ -51,7 +53,7 @@ class Sprite
     for(let i=0; i<this.height; i++)
     {
       let line = [];
-      for(let j=0; j<this.width; j++) line.push("transparent");
+      for(let j=0; j<this.width; j++) line.push("t");
       pixels.push(line);
     }
     this.all.sprites[this.all.current_sprite].pixels = pixels;
@@ -141,10 +143,10 @@ class Sprite
   // used to update the palette with the right colors
   {
     let sprite_colors = {
-      "individual": this.all.sprites[this.all.current_sprite].color,
-      "transparent": this.all.colors.transparent,
-      "multicolor_1": this.all.colors.multicolor_1,
-      "multicolor_2": this.all.colors.multicolor_2
+      "i": this.all.sprites[this.all.current_sprite].color,
+      "t": this.all.colors.t,
+      "m1": this.all.colors.m1,
+      "m2": this.all.colors.m2
     }
     return sprite_colors;
   }
@@ -204,9 +206,9 @@ class Sprite
       this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = this.all.pen; 
     } else {
       // shift is hold down, so we delete with transparent color
-      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = "transparent";
+      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = "t";
     }
-    
+    console.log(this.all.sprites[0].pixels);
   }
 
   get_current_sprite()
@@ -231,7 +233,7 @@ class Sprite
 
   set_pen_color(pencolor)
   {
-    if (this.all.pen == "individual")
+    if (this.all.pen == "i")
     {
       this.all.sprites[this.all.current_sprite].color = pencolor;
     } else {

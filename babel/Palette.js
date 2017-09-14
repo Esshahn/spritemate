@@ -62,10 +62,11 @@ class Palette
 
   update(spritecolors, is_multicolor)
   {
-    $("#color_transparent").css("background-color",this.colors[spritecolors.transparent]);
-    $("#color_individual").css("background-color",this.colors[spritecolors.individual]);
-    $("#color_multicolor_1").css("background-color",this.colors[spritecolors.multicolor_1]);
-    $("#color_multicolor_2").css("background-color",this.colors[spritecolors.multicolor_2]);
+    console.log("--: "+spritecolors);
+    $("#color_transparent").css("background-color",this.colors[spritecolors.t]);
+    $("#color_individual").css("background-color",this.colors[spritecolors.i]);
+    $("#color_multicolor_1").css("background-color",this.colors[spritecolors.m1]);
+    $("#color_multicolor_2").css("background-color",this.colors[spritecolors.m2]);
     this.set_multicolor(is_multicolor);
   }
 
