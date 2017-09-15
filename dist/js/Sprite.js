@@ -177,7 +177,6 @@ class Sprite {
       // shift is hold down, so we delete with transparent color
       this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = "t";
     }
-    console.log(this.all.sprites[0].pixels);
   }
 
   get_current_sprite() {

@@ -256,6 +256,12 @@ canvas
    opacity: 0.9;
 }
 
+.sprite_in_list_border
+{
+  border: 1px dotted #555555;
+  box-sizing: border-box;
+}
+
 
 .sprite_in_list_selected
 {
@@ -264,7 +270,10 @@ canvas
 
 .sprite_in_list_hover
 {
-    opacity: 1;
+  border: 1px dotted #00b9ee;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .icon-preview-x2

@@ -7,18 +7,20 @@ class List
   {
     this.config = config;
     this.window = window;
-    this.zoom = this.config.zoom_list; // this.config.zoom;
+    this.zoom = this.config.zoom_list; 
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
     this.clicked_sprite = 0;
     this.sorted_array = [];
+    this.grid = true;
 
     let template = `
       <div id="list_menu">
-      <img src="img/icon3/icon-list-new.png" id="icon-list-new">
-      <img src="img/icon3/icon-list-delete.png" id="icon-list-delete">
+      <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
+      <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
+      <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
       <div id="spritelist"></div>
       </div>
     `;
@@ -48,7 +50,8 @@ class List
     $(canvas_element).addClass("sprite_in_list");
     $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
     
-    if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");    
+    if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");  
+    if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   
 
     $(canvas_element).mouseup((e) => {
       this.clicked_sprite = id;
@@ -65,11 +68,15 @@ class List
   }
 
 
-  get_sorted_array()
+  toggle_grid()
   {
-    return this.sorted_array;
+    if (this.grid)
+    {
+      this.grid = false;
+    } else {
+      this.grid = true;
+    }
   }
-
 
 
   update(all_data)

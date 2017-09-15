@@ -62,7 +62,6 @@ class Palette
 
   update(spritecolors, is_multicolor)
   {
-    console.log("--: "+spritecolors);
     $("#color_transparent").css("background-color",this.colors[spritecolors.t]);
     $("#color_individual").css("background-color",this.colors[spritecolors.i]);
     $("#color_multicolor_1").css("background-color",this.colors[spritecolors.m1]);

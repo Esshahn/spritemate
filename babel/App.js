@@ -61,7 +61,6 @@ class App
 
   init_ui_fade(element)
   {
-    //$("#" + element).css({ opacity: 0.7 });
     $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
     $('#' + element).mouseleave((e) => {$('#' + element).animate({backgroundColor: 'transparent'}, 'fast');});
   }
@@ -86,6 +85,7 @@ class App
     
     // init hover effect for list and preview
     this.init_ui_fade("icon-list-new");
+    this.init_ui_fade("icon-list-grid");
     this.init_ui_fade("icon-preview-x");
     this.init_ui_fade("icon-preview-y");
     
@@ -313,6 +313,12 @@ class App
       if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
       if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );
       this.update_ui(); 
+    });
+
+   $('#icon-list-grid').mouseup((e) =>
+    {     
+      this.list.toggle_grid();
+      this.update_ui();
     });
 
 /*
