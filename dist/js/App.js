@@ -1,14 +1,18 @@
+"use strict";
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-class App {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  constructor(config) {
+var App = function () {
+  function App(config) {
+    _classCallCheck(this, App);
 
     this.config = config;
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 150, top: 180, width: "auto", height: "auto" };
+    var window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 150, top: 180, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0, this.config);
 
@@ -29,6 +33,10 @@ class App {
     this.window_info = new Window(window_config);
     this.info = new Info(4, this.config);
 
+    window_config = { title: "Load & Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
+    this.window_info = new Window(window_config);
+    this.info = new File(5, this.config);
+
     this.is_drawing = false;
 
     this.sprite.new(this.palette.get_color());
@@ -36,330 +44,339 @@ class App {
     this.user_interaction();
   }
 
-  update_ui() {
-    this.editor.update(this.sprite.get_all());
-    this.preview.update(this.sprite.get_all());
-    this.list.update(this.sprite.get_all());
-    this.palette.update(this.sprite.get_colors(), this.sprite.is_multicolor());
-    console.log("ui refresh: " + Date());
-  }
+  _createClass(App, [{
+    key: "update_ui",
+    value: function update_ui() {
+      this.editor.update(this.sprite.get_all());
+      this.preview.update(this.sprite.get_all());
+      this.list.update(this.sprite.get_all());
+      this.palette.update(this.sprite.get_colors(), this.sprite.is_multicolor());
+      console.log("ui refresh: " + Date());
+    }
+  }, {
+    key: "init_ui_fade",
+    value: function init_ui_fade(element) {
+      $('#' + element).mouseenter(function (e) {
+        $('#' + element).animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
+      });
+      $('#' + element).mouseleave(function (e) {
+        $('#' + element).animate({ backgroundColor: 'transparent' }, 'fast');
+      });
+    }
+  }, {
+    key: "user_interaction",
+    value: function user_interaction() {
+      var _this = this;
 
-  init_ui_fade(element) {
-    $('#' + element).mouseenter(e => {
-      $('#' + element).animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
-    });
-    $('#' + element).mouseleave(e => {
-      $('#' + element).animate({ backgroundColor: 'transparent' }, 'fast');
-    });
-  }
+      // init hover effects for all menu items
+      this.init_ui_fade("icon-file");
+      this.init_ui_fade("icon-undo");
+      this.init_ui_fade("icon-grid");
+      this.init_ui_fade("icon-shift-left");
+      this.init_ui_fade("icon-shift-right");
+      this.init_ui_fade("icon-shift-up");
+      this.init_ui_fade("icon-shift-down");
+      this.init_ui_fade("icon-flip-horizontal");
+      this.init_ui_fade("icon-flip-vertical");
+      this.init_ui_fade("icon-multicolor");
+      this.init_ui_fade("icon-fill");
+      this.init_ui_fade("icon-info");
 
-  user_interaction() {
+      // init hover effect for list and preview
+      this.init_ui_fade("icon-list-new");
+      this.init_ui_fade("icon-list-grid");
+      this.init_ui_fade("icon-preview-x");
+      this.init_ui_fade("icon-preview-y");
 
-    // init hover effects for all menu items
-    this.init_ui_fade("icon-undo");
-    this.init_ui_fade("icon-grid");
-    this.init_ui_fade("icon-shift-left");
-    this.init_ui_fade("icon-shift-right");
-    this.init_ui_fade("icon-shift-up");
-    this.init_ui_fade("icon-shift-down");
-    this.init_ui_fade("icon-flip-horizontal");
-    this.init_ui_fade("icon-flip-vertical");
-    this.init_ui_fade("icon-multicolor");
-    this.init_ui_fade("icon-fill");
-    this.init_ui_fade("icon-info");
+      // trash can is a bit different
+      $('#icon-trash').css({ opacity: 0.20 });
+      $('#icon-trash').mouseenter(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-trash').animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
+      });
+      $('#icon-trash').mouseleave(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-trash').animate({ backgroundColor: 'transparent' }, 'fast');
+      });
+      $('#icon-list-delete').css({ opacity: 0.20 });
+      $('#icon-list-delete').mouseenter(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
+      });
+      $('#icon-list-delete').mouseleave(function (e) {
+        if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'transparent' }, 'fast');
+      });
 
-    // init hover effect for list and preview
-    this.init_ui_fade("icon-list-new");
-    this.init_ui_fade("icon-list-grid");
-    this.init_ui_fade("icon-preview-x");
-    this.init_ui_fade("icon-preview-y");
+      this.palette.set_multicolor(this.sprite.is_multicolor());
 
-    // floppy is inactive
-    $('#icon-floppy').css({ opacity: 0.20 });
+      /*
+      
+      
+      
+        //////////////////  KEYBOARD COMMANDS
+      
+      
+      
+      */
 
-    // trash can is a bit different
-    $('#icon-trash').css({ opacity: 0.20 });
-    $('#icon-trash').mouseenter(e => {
-      if (!this.sprite.only_one_sprite()) $('#icon-trash').animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
-    });
-    $('#icon-trash').mouseleave(e => {
-      if (!this.sprite.only_one_sprite()) $('#icon-trash').animate({ backgroundColor: 'transparent' }, 'fast');
-    });
-    $('#icon-list-delete').css({ opacity: 0.20 });
-    $('#icon-list-delete').mouseenter(e => {
-      if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
-    });
-    $('#icon-list-delete').mouseleave(e => {
-      if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'transparent' }, 'fast');
-    });
+      $(document).keydown(function (e) {
 
-    this.palette.set_multicolor(this.sprite.is_multicolor());
+        if (e.key == "a") {
+          // toggle hires or multicolor
+          _this.sprite.toggle_double_x();
+          _this.update_ui();
+        }
 
-    /*
-    
-    
-    
-      //////////////////  KEYBOARD COMMANDS
-    
-    
-    
-    */
+        if (e.key == "A") {
+          // toggle hires or multicolor
+          _this.sprite.toggle_double_y();
+          _this.update_ui();
+        }
+      });
 
-    $(document).keydown(e => {
+      /* 
+      
+      
+      
+        //////////////////  EDITOR WINDOW
+      
+      
+      
+      */
 
-      if (e.key == "a") {
-        // toggle hires or multicolor
-        this.sprite.toggle_double_x();
-        this.update_ui();
-      }
+      $('#editor').mousedown(function (e) {
+        _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        _this.is_drawing = true; // needed for mousemove drawing
+        _this.update_ui();
+      });
 
-      if (e.key == "A") {
-        // toggle hires or multicolor
-        this.sprite.toggle_double_y();
-        this.update_ui();
-      }
-    });
+      $('#editor').mousemove(function (e) {
+        if (_this.is_drawing) {
+          _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+          _this.update_ui();
+        }
+      });
 
-    /* 
-    
-    
-    
-      //////////////////  EDITOR WINDOW
-    
-    
-    
-    */
+      $('#editor').mouseup(function (e) {
+        // stop drawing pixels
+        _this.is_drawing = false;
+        _this.sprite.save_backup();
+      });
 
-    $('#editor').mousedown(e => {
-      this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-      this.is_drawing = true; // needed for mousemove drawing
-      this.update_ui();
-    });
+      /*
+      
+      
+      
+        //////////////////  TOP MENU
+      
+      
+      
+      */
 
-    $('#editor').mousemove(e => {
-      if (this.is_drawing) {
-        this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-        this.update_ui();
-      }
-    });
+      $('#icon-file').mouseup(function (e) {
+        $("#window-5").dialog("open");
+      });
 
-    $('#editor').mouseup(e => {
-      // stop drawing pixels
-      this.is_drawing = false;
-      this.sprite.save_backup();
-    });
+      $('#icon-undo').mouseup(function (e) {
+        _this.sprite.undo();
+        _this.update_ui();
+      });
 
-    /*
-    
-    
-    
-      //////////////////  TOP MENU
-    
-    
-    
-    */
+      $('#icon-grid').mouseup(function (e) {
+        _this.editor.toggle_grid();
+        _this.update_ui();
+      });
 
-    $('#icon-undo').mouseup(e => {
-      this.sprite.undo();
-      this.update_ui();
-    });
+      $('#icon-shift-left').mouseup(function (e) {
+        _this.sprite.shift_horizontal("left");
+        _this.update_ui();
+      });
 
-    $('#icon-grid').mouseup(e => {
-      this.editor.toggle_grid();
-      this.update_ui();
-    });
+      $('#icon-shift-right').mouseup(function (e) {
+        _this.sprite.shift_horizontal("right");
+        _this.update_ui();
+      });
 
-    $('#icon-shift-left').mouseup(e => {
-      this.sprite.shift_horizontal("left");
-      this.update_ui();
-    });
+      $('#icon-shift-up').mouseup(function (e) {
+        _this.sprite.shift_vertical("up");
+        _this.update_ui();
+      });
 
-    $('#icon-shift-right').mouseup(e => {
-      this.sprite.shift_horizontal("right");
-      this.update_ui();
-    });
+      $('#icon-shift-down').mouseup(function (e) {
+        _this.sprite.shift_vertical("down");
+        _this.update_ui();
+      });
 
-    $('#icon-shift-up').mouseup(e => {
-      this.sprite.shift_vertical("up");
-      this.update_ui();
-    });
+      $('#icon-flip-horizontal').mouseup(function (e) {
+        _this.sprite.flip_horizontal();
+        _this.update_ui();
+      });
 
-    $('#icon-shift-down').mouseup(e => {
-      this.sprite.shift_vertical("down");
-      this.update_ui();
-    });
+      $('#icon-flip-vertical').mouseup(function (e) {
+        _this.sprite.flip_vertical();
+        _this.update_ui();
+      });
 
-    $('#icon-flip-horizontal').mouseup(e => {
-      this.sprite.flip_horizontal();
-      this.update_ui();
-    });
+      $('#icon-multicolor').mouseup(function (e) {
+        _this.sprite.toggle_multicolor();
+        if (!_this.sprite.is_multicolor()) {
+          // set the active pen to the individual one when switching to singlecolor
+          $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+          $('#palette_spritecolors p').removeClass("palette_highlight_text");
+          $('#color_individual').addClass("palette_color_item_selected");
+          $('#palette_individual p').addClass("palette_highlight_text");
+          _this.sprite.set_pen("i");
+        }
+        _this.update_ui();
+      });
 
-    $('#icon-flip-vertical').mouseup(e => {
-      this.sprite.flip_vertical();
-      this.update_ui();
-    });
+      $('#icon-trash').mouseup(function (e) {
+        _this.sprite.delete();
+        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
+        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
+        _this.update_ui();
+      });
 
-    $('#icon-multicolor').mouseup(e => {
-      this.sprite.toggle_multicolor();
-      if (!this.sprite.is_multicolor()) {
-        // set the active pen to the individual one when switching to singlecolor
+      $('#icon-fill').mouseup(function (e) {
+        _this.sprite.fill();
+        _this.update_ui();
+      });
+
+      $('#icon-info').mouseup(function (e) {
+        $("#window-4").dialog("open");
+      });
+
+      /*
+      
+      
+      
+        //////////////////  LIST WINDOW
+      
+      
+      
+      */
+
+      $('#spritelist').mouseup(function (e) {
+        if (!_this.dragging) {
+          _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
+          _this.update_ui();
+        }
+      });
+
+      $("#spritelist").sortable({ stop: function stop(e, ui) {
+          _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
+          _this.dragging = false;
+          _this.update_ui();
+        }
+      });
+
+      $("#spritelist").sortable({ start: function start(e, ui) {
+          _this.dragging = true;
+        }
+      });
+
+      $('#icon-list-new').mouseup(function (e) {
+        _this.sprite.new(_this.palette.get_color());
+        $('#icon-trash').fadeTo("slow", 0.75);
+        $('#icon-list-delete').fadeTo("slow", 0.75);
+        if (!_this.sprite.is_multicolor()) {
+          // set the active pen to the individual one when switching to singlecolor
+          $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+          $('#palette_spritecolors p').removeClass("palette_highlight_text");
+          $('#color_individual').addClass("palette_color_item_selected");
+          $('#palette_individual p').addClass("palette_highlight_text");
+          _this.sprite.set_pen("i");
+        }
+        _this.update_ui();
+      });
+
+      $('#icon-list-delete').mouseup(function (e) {
+        _this.sprite.delete();
+        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
+        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
+        _this.update_ui();
+      });
+
+      $('#icon-list-grid').mouseup(function (e) {
+        _this.list.toggle_grid();
+        _this.update_ui();
+      });
+
+      /*
+      
+      
+      
+        //////////////////  PREVIEW WINDOW
+      
+      
+      
+      */
+
+      $('#icon-preview-x').mouseup(function (e) {
+        _this.sprite.toggle_double_x();
+        $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
+        _this.update_ui();
+      });
+
+      $('#icon-preview-y').mouseup(function (e) {
+        _this.sprite.toggle_double_y();
+        $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+        _this.update_ui();
+      });
+
+      /*
+      
+      
+      
+        //////////////////  PALETTE WINDOW
+      
+      
+      
+      */
+
+      $('#palette').mouseup(function (e) {
+        _this.palette.set_active_color(e);
+        _this.sprite.set_pen_color(_this.palette.get_color());
+        _this.update_ui();
+      });
+
+      $('#palette_individual').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
         $('#palette_spritecolors p').removeClass("palette_highlight_text");
         $('#color_individual').addClass("palette_color_item_selected");
         $('#palette_individual p').addClass("palette_highlight_text");
-        this.sprite.set_pen("i");
-      }
-      this.update_ui();
-    });
+        _this.sprite.set_pen("i");
+      });
 
-    $('#icon-trash').mouseup(e => {
-      this.sprite.delete();
-      if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
-      if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
-      this.update_ui();
-    });
-
-    $('#icon-fill').mouseup(e => {
-      this.sprite.fill();
-      this.update_ui();
-    });
-
-    $('#icon-info').mouseup(e => {
-      $("#window-4").dialog("open");
-    });
-
-    /*
-    
-    
-    
-      //////////////////  LIST WINDOW
-    
-    
-    
-    */
-
-    $('#spritelist').mouseup(e => {
-      if (!this.dragging) {
-        this.sprite.set_current_sprite(this.list.get_clicked_sprite());
-        this.update_ui();
-      }
-    });
-
-    $("#spritelist").sortable({ stop: (e, ui) => {
-        this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
-        this.dragging = false;
-        this.update_ui();
-      }
-    });
-
-    $("#spritelist").sortable({ start: (e, ui) => {
-        this.dragging = true;
-      }
-    });
-
-    $('#icon-list-new').mouseup(e => {
-      this.sprite.new(this.palette.get_color());
-      $('#icon-trash').fadeTo("slow", 0.75);
-      $('#icon-list-delete').fadeTo("slow", 0.75);
-      if (!this.sprite.is_multicolor()) {
-        // set the active pen to the individual one when switching to singlecolor
+      $('#palette_transparent').mouseup(function (e) {
         $('#palette_spritecolors div').removeClass("palette_color_item_selected");
         $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_individual').addClass("palette_color_item_selected");
-        $('#palette_individual p').addClass("palette_highlight_text");
-        this.sprite.set_pen("i");
-      }
-      this.update_ui();
-    });
+        $('#color_transparent').addClass("palette_color_item_selected");
+        $('#palette_transparent p').addClass("palette_highlight_text");
+        _this.sprite.set_pen("t");
+      });
 
-    $('#icon-list-delete').mouseup(e => {
-      this.sprite.delete();
-      if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
-      if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
-      this.update_ui();
-    });
+      $('#palette_multicolor_1').mouseup(function (e) {
+        if (_this.sprite.is_multicolor()) {
+          $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+          $('#palette_spritecolors p').removeClass("palette_highlight_text");
+          $('#color_multicolor_1').addClass("palette_color_item_selected");
+          $('#palette_multicolor_1 p').addClass("palette_highlight_text");
+          _this.sprite.set_pen("m1");
+        }
+      });
 
-    $('#icon-list-grid').mouseup(e => {
-      this.list.toggle_grid();
-      this.update_ui();
-    });
+      $('#palette_multicolor_2').mouseup(function (e) {
+        if (_this.sprite.is_multicolor()) {
+          $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+          $('#palette_spritecolors p').removeClass("palette_highlight_text");
+          $('#color_multicolor_2').addClass("palette_color_item_selected");
+          $('#palette_multicolor_2 p').addClass("palette_highlight_text");
+          _this.sprite.set_pen("m2");
+        }
+      });
+    }
+  }]);
 
-    /*
-    
-    
-    
-      //////////////////  PREVIEW WINDOW
-    
-    
-    
-    */
-
-    $('#icon-preview-x').mouseup(e => {
-      this.sprite.toggle_double_x();
-      $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
-      this.update_ui();
-    });
-
-    $('#icon-preview-y').mouseup(e => {
-      this.sprite.toggle_double_y();
-      $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-      this.update_ui();
-    });
-
-    /*
-    
-    
-    
-      //////////////////  PALETTE WINDOW
-    
-    
-    
-    */
-
-    $('#palette').mouseup(e => {
-      this.palette.set_active_color(e);
-      this.sprite.set_pen_color(this.palette.get_color());
-      this.update_ui();
-    });
-
-    $('#palette_individual').mouseup(e => {
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_individual').addClass("palette_color_item_selected");
-      $('#palette_individual p').addClass("palette_highlight_text");
-      this.sprite.set_pen("i");
-    });
-
-    $('#palette_transparent').mouseup(e => {
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_transparent').addClass("palette_color_item_selected");
-      $('#palette_transparent p').addClass("palette_highlight_text");
-      this.sprite.set_pen("t");
-    });
-
-    $('#palette_multicolor_1').mouseup(e => {
-      if (this.sprite.is_multicolor()) {
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_multicolor_1').addClass("palette_color_item_selected");
-        $('#palette_multicolor_1 p').addClass("palette_highlight_text");
-        this.sprite.set_pen("m1");
-      }
-    });
-
-    $('#palette_multicolor_2').mouseup(e => {
-      if (this.sprite.is_multicolor()) {
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_multicolor_2').addClass("palette_color_item_selected");
-        $('#palette_multicolor_2 p').addClass("palette_highlight_text");
-        this.sprite.set_pen("m2");
-      }
-    });
-  }
-
-}
+  return App;
+}();
 
 /*
 function toggleFullScreen() {

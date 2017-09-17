@@ -4,13 +4,17 @@ red: e6007e
 blue: 00b9ee
  */ 
 
+body, html, p, div
+{
+  font-size: 96%;
+  font-family: 'Quicksand', sans-serif;
+}
 
-body
+body, html
 {
   background-color: #111111;
   color: #33bb33;
-  font-size: 100%;
-  font-family: 'Quicksand', sans-serif;
+  
 
   background:
   radial-gradient(black 25%, transparent 16%) 0 0,
@@ -26,6 +30,49 @@ body
   khtml-user-select: none; /* webkit (konqueror) browsers */
   -ms-user-select: none; /* IE10+ */
 }
+
+h1
+{
+  font-size: 160%;
+  color: #00b9ee;
+  text-align:center;
+  margin-bottom: 0px;
+}
+
+h2
+{
+  font-size: 100%;
+  color: #00b9ee;
+  text-align:center;
+  margin: 0px 0px 12px 0px; 
+}
+
+legend
+{
+  font-size: 100%;
+  color: #00b9ee;
+  padding: 0px 20px 0px 20px;
+}
+
+fieldset
+{
+  margin-bottom: 12px;
+  border-color: rgba(50,50,50,1);
+  background-color: rgba(0,0,0,0.5);
+}
+
+fieldset button
+{
+  float:right;
+}
+
+fieldset p
+{
+  margin: 0px;
+  padding: 0px;
+  
+}
+
 
 .ui-widget-content a
 {
@@ -47,22 +94,34 @@ canvas
 
 .ui-widget button
 {
-  border: 1px solid #00b9ee;
+  border: 2px solid #00b9ee;
   background-color: black;
-  color: #e6007e;
+  color: white;
   font-size: 80%;
   font-family: 'Quicksand', sans-serif;
   font-weight: normal;
   border-radius: 32px;
-  margin: 12px;
+  margin: 4px;
   padding: 8px 16px 8px 16px;
+  min-width: 200px;
 }
 
 .ui-widget button:hover
 {
-  background-color: rgba(0,120,180,0.4);
+  background-color: #00b9ee;
   cursor: pointer;
 }
+
+.ui-widget .button-cancel
+{
+  border-color: #e6007e;
+}
+
+.ui-widget .button-cancel:hover
+{
+  background-color: #e6007e;
+}
+
 
 #info
 {
@@ -70,11 +129,6 @@ canvas
   text-align: center;
 }
 
-#info p
-{
-  font-size: 70%;
-  font-family: 'Quicksand', sans-serif;
-}
 
 #editor
 {
@@ -91,6 +145,11 @@ canvas
   background: -moz-linear-gradient(#444444, #111111); /* For Firefox 3.6 to 15 */
   background: linear-gradient(#444444, #111111); /* Standard syntax */
   background: #121212 url(images/ui-bg_gloss-wave_16_121212_500x100.png) 50% -20px repeat-x;
+}
+
+#button-row
+{
+  text-align:center;
 }
 
 #preview

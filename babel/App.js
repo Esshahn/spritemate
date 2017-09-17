@@ -31,6 +31,10 @@ class App
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
+    window_config = { title: "Load & Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
+    this.window_info = new Window(window_config);
+    this.info = new File(5,this.config);
+
     this.is_drawing = false;
 
     this.sprite.new(this.palette.get_color());
@@ -71,6 +75,7 @@ class App
   {
 
     // init hover effects for all menu items
+    this.init_ui_fade("icon-file");
     this.init_ui_fade("icon-undo");
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
@@ -89,8 +94,6 @@ class App
     this.init_ui_fade("icon-preview-x");
     this.init_ui_fade("icon-preview-y");
     
-    // floppy is inactive
-    $('#icon-floppy').css({ opacity: 0.20 });
 
     // trash can is a bit different
     $('#icon-trash').css({ opacity: 0.20 });
@@ -174,6 +177,12 @@ class App
 
 
 */
+
+    $('#icon-file').mouseup((e) =>
+    {
+      $("#window-5").dialog( "open");
+    });
+
 
     $('#icon-undo').mouseup((e) =>
     {
