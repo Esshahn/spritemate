@@ -14,7 +14,6 @@ body, html
 {
   background-color: #111111;
   color: #33bb33;
-  
 
   background:
   radial-gradient(black 25%, transparent 16%) 0 0,
@@ -69,8 +68,7 @@ fieldset button
 fieldset p
 {
   margin: 0px;
-  padding: 0px;
-  
+  padding: 0px; 
 }
 
 
@@ -112,6 +110,11 @@ canvas
   cursor: pointer;
 }
 
+.ui-widget button:focus
+{
+  outline: none;
+}
+
 .ui-widget .button-cancel
 {
   border-color: #e6007e;
@@ -139,6 +142,7 @@ canvas
 {
   height: 70px;
   margin: 8px;
+  padding: 0px 20px 0px 20px;
   box-shadow: 0px 5px 6px 2px rgba(0,0,0,.3);
   background: -webkit-linear-gradient(#444444, #111111); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#444444, #111111); /* For Opera 11.1 to 12.0 */
@@ -174,11 +178,10 @@ canvas
 
 .colors
 {
-  font-size: 60%;
+  font-size: 70%;
   font-family: 'Quicksand', sans-serif;
   text-transform: uppercase;
-  text-align: center
-  ;
+  text-align: center;
 }
 
 .colors p
@@ -234,6 +237,14 @@ canvas
 .iconset
 {
   float: left;
+  padding: 0px 2px 0px 2px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.iconset_right
+{
+  float: right;
   padding: 0px 4px 0px 4px;
   cursor: pointer;
   margin-top: 4px;
@@ -242,7 +253,7 @@ canvas
 .icontext
 {
   color: rgba(255,255,255,1);
-  font-size: 60%;
+  font-size: 70%;
   text-transform: uppercase;
   text-align: center;
   margin: 0px;
@@ -312,7 +323,6 @@ canvas
    margin: 0px;
    padding: 0px;
    float: left;
-   opacity: 0.9;
 }
 
 .sprite_in_list_border
@@ -324,12 +334,13 @@ canvas
 
 .sprite_in_list_selected
 {
-    opacity: 1;
+  border: 1px dotted #00b9ee;
+  box-sizing: border-box;
 }
 
 .sprite_in_list_hover
 {
-  border: 1px dotted #00b9ee;
+  border: 1px dotted #e6007e;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;

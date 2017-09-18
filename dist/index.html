@@ -24,7 +24,8 @@
     <script type="text/javascript" src="js/Preview.js"></script>
     <script type="text/javascript" src="js/Palette.js"></script>
     <script type="text/javascript" src="js/List.js"></script>
-    <script type="text/javascript" src="js/File.js"></script>
+    <script type="text/javascript" src="js/Save.js"></script>
+    <script type="text/javascript" src="js/Load.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/App.js"></script>
 </head>
@@ -32,11 +33,15 @@
 <body onLoad="init();">
 <div id="container">
     <div id="menu">
-        <div class ="iconset" id="icon-file">
-            <img src="img/icon3/icon-floppy.png" class="icon"  title="load & save">
-            <div class="icontext">load/save</div>
+        <div class ="iconset" id="icon-load">
+            <img src="img/icon3/icon-load.png" class="icon"  title="load">
+            <div class="icontext">load</div>
         </div>
-        <div class ="iconset"  id="icon-undo">
+        <div class ="iconset" id="icon-save">
+            <img src="img/icon3/icon-save.png" class="icon"  title="save">
+            <div class="icontext">save</div>
+        </div>
+        <div class ="iconset" id="icon-undo">
             <img src="img/icon3/icon-undo.png" class="icon" title="undo">
             <div class="icontext">undo</div>
         </div>
@@ -44,24 +49,26 @@
             <img src="img/icon3/icon-grid.png" class="icon"  title="toggle grid on/off">
             <div class="icontext">grid</div>
         </div>
+        <!--
         <div class ="iconset">
             <img src="img/icon3/icon-spacer.png" class="icon-spacer">
         </div>
+        -->
         <div class ="iconset" id="icon-shift-left">
             <img src="img/icon3/icon-shift-left.png" class="icon"  title="shift left">
-            <div class="icontext">move left</div>
+            <div class="icontext">left</div>
         </div>
         <div class ="iconset" id="icon-shift-right">
             <img src="img/icon3/icon-shift-right.png" class="icon"  title="shift right">
-            <div class="icontext">move right</div>
+            <div class="icontext">right</div>
         </div>
         <div class ="iconset" id="icon-shift-up">
             <img src="img/icon3/icon-shift-up.png" class="icon"  title="shift up">
-            <div class="icontext">move up</div>
+            <div class="icontext">up</div>
         </div>
         <div class ="iconset" id="icon-shift-down">
             <img src="img/icon3/icon-shift-down.png" class="icon"  title="shift down">
-            <div class="icontext">move down</div>
+            <div class="icontext">down</div>
         </div>
         <div class ="iconset" id="icon-flip-horizontal">
             <img src="img/icon3/icon-flip-horizontal.png" class="icon"  title="flip horizontal">
@@ -73,25 +80,29 @@
         </div>
         <div class ="iconset" id="icon-multicolor">
             <img src="img/icon3/icon-multicolor.png" class="icon"  title="toggle single- & multicolor">
-            <div class="icontext">colormode</div>
+            <div class="icontext">color mode</div>
         </div>
+        <!--
         <div class ="iconset">
             <img src="img/icon3/icon-spacer.png" class="icon-spacer">
         </div>
+        
         <div class ="iconset" id="icon-trash">
             <img src="img/icon3/icon-trash.png" class="icon"  title="clear">
             <div class="icontext">delete</div>
         </div>
+        -->
         <div class ="iconset" id="icon-fill">
             <img src="img/icon3/icon-fill.png" class="icon"  title="fill with selected color">  
             <div class="icontext">fill</div>
         </div>
-         <div class ="iconset" id="icon-info">
+         <div class ="iconset_right" id="icon-info">
             <img src="img/icon3/icon-info.png" class="icon"  title="info">  
             <div class="icontext">info</div>
         </div>   
     </div>
     <div id="app"></div>
+    <input type="file" id="input-load" style="display: none" onchange="console.log(this.files[0])"/>
 </div>
 </body>
 </html>

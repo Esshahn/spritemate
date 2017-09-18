@@ -33,9 +33,9 @@ var App = function () {
     this.window_info = new Window(window_config);
     this.info = new Info(4, this.config);
 
-    window_config = { title: "Load & Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
+    window_config = { title: "Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_info = new Window(window_config);
-    this.info = new File(5, this.config);
+    this.save = new Save(5, this.config);
 
     this.is_drawing = false;
 
@@ -69,7 +69,8 @@ var App = function () {
       var _this = this;
 
       // init hover effects for all menu items
-      this.init_ui_fade("icon-file");
+      this.init_ui_fade("icon-load");
+      this.init_ui_fade("icon-save");
       this.init_ui_fade("icon-undo");
       this.init_ui_fade("icon-grid");
       this.init_ui_fade("icon-shift-left");
@@ -170,8 +171,13 @@ var App = function () {
       
       */
 
-      $('#icon-file').mouseup(function (e) {
+      $('#icon-load').mouseup(function (e) {
+        $("#input-load").trigger("click");
+      });
+
+      $('#icon-save').mouseup(function (e) {
         $("#window-5").dialog("open");
+        _this.save.set_save_data(_this.sprite.get_all());
       });
 
       $('#icon-undo').mouseup(function (e) {

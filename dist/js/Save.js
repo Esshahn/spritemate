@@ -4,11 +4,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var File = function () {
-  function File(window, config) {
+var Save = function () {
+  function Save(window, config) {
     var _this = this;
 
-    _classCallCheck(this, File);
+    _classCallCheck(this, Save);
 
     this.config = config;
     this.window = window;
@@ -27,7 +27,7 @@ var File = function () {
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
 
-  _createClass(File, [{
+  _createClass(Save, [{
     key: "save_spm",
     value: function save_spm(data, filename, type) {
 
@@ -54,5 +54,5 @@ var File = function () {
     }
   }]);
 
-  return File;
+  return Save;
 }();

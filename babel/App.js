@@ -31,9 +31,9 @@ class App
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
-    window_config = { title: "Load & Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
+    window_config = { title: "Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_info = new Window(window_config);
-    this.info = new File(5,this.config);
+    this.save = new Save(5,this.config);
 
     this.is_drawing = false;
 
@@ -75,7 +75,8 @@ class App
   {
 
     // init hover effects for all menu items
-    this.init_ui_fade("icon-file");
+    this.init_ui_fade("icon-load");
+    this.init_ui_fade("icon-save");
     this.init_ui_fade("icon-undo");
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
@@ -178,9 +179,15 @@ class App
 
 */
 
-    $('#icon-file').mouseup((e) =>
+    $('#icon-load').mouseup((e) =>
+    {
+      $("#input-load").trigger("click");
+    });
+
+    $('#icon-save').mouseup((e) =>
     {
       $("#window-5").dialog( "open");
+      this.save.set_save_data(this.sprite.get_all());
     });
 
 

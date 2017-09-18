@@ -12,12 +12,11 @@ var Sprite = function () {
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    //this.all.colors = {"transparent": 0, "multicolor_1": 8, "multicolor_2": 3};
     this.all.colors = { "t": 0, "m1": 8, "m2": 3 };
 
     this.all.sprites = [];
     this.all.current_sprite = 0;
-    this.all.pen = "i"; // can be individual =0, transparent=1, multicolor_1=2, multicolor_2=3
+    this.all.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
     this.backup_position = -1;
   }
