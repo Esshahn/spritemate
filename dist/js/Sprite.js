@@ -240,6 +240,11 @@ var Sprite = function () {
       return this.all;
     }
   }, {
+    key: "set_all",
+    value: function set_all(all) {
+      this.all = all;
+    }
+  }, {
     key: "sort_spritelist",
     value: function sort_spritelist(sprite_order_from_dom) {
       var sorted_list = sprite_order_from_dom.map(function (x) {

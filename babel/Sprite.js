@@ -244,6 +244,11 @@ class Sprite
     return this.all;
   }
 
+  set_all(all)
+  {
+    this.all = all;
+  }
+
   sort_spritelist(sprite_order_from_dom)
   {
     let sorted_list = sprite_order_from_dom.map(function(x){ return parseInt(x); });

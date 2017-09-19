@@ -37,6 +37,8 @@ var App = function () {
     this.window_info = new Window(window_config);
     this.save = new Save(5, this.config);
 
+    this.load = new Load(this.config);
+
     this.is_drawing = false;
 
     this.sprite.new(this.palette.get_color());
@@ -120,8 +122,7 @@ var App = function () {
       $(document).keydown(function (e) {
 
         if (e.key == "a") {
-          // toggle hires or multicolor
-          _this.sprite.toggle_double_x();
+          _this.sprite.set_all(_this.load.get_imported_file());
           _this.update_ui();
         }
 

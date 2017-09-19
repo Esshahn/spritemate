@@ -69,6 +69,8 @@ class Save
               window.URL.revokeObjectURL(url);  
           }, 0); 
       }
+
+      $("#window-"+this.window).dialog( "close" );
   }
 
   set_save_data(savedata)

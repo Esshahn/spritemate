@@ -1,56 +1,55 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Load = function () {
-  function Load(window, config) {
-    var _this = this;
-
+  function Load(config) {
     _classCallCheck(this, Load);
 
     this.config = config;
-    this.window = window;
-
-    var template = "\n    <div id=\"window-save\">\n      <h1 autofocus>Load Data</h1>\n\n      <fieldset>\n        <legend>Spritemate // *.spm</legend>\n        <button id=\"button-save-spm\">Save as Spritemate *.spm</button>\n        <p>The natural format for Spritemate. Recommended as long as you are not done working on the sprites.</p>\n      </fieldset>\n\n      <div id=\"button-row\">\n        <button id=\"button-save-cancel\" class=\"button-cancel\">Cancel</button>\n      </div>\n    </div> \n    ";
-
-    $("#window-" + this.window).append(template);
-    $("#window-" + this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-save-cancel').mouseup(function (e) {
-      return $("#window-" + _this.window).dialog("close");
-    });
-    $('#button-save-spm').mouseup(function (e) {
-      return _this.save_spm(_this.savedata, 'myfilename.spm', 'text/plain');
-    });
+    this.setup_load_input();
   }
 
-  // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
-
   _createClass(Load, [{
-    key: "save_spm",
-    value: function save_spm(data, filename, type) {
+    key: 'setup_load_input',
+    value: function setup_load_input() {
+      var element = document.createElement('div');
+      element.innerHTML = '<input type="file" id="input-load" style="display: none">';
+      var fileInput = element.firstChild;
+      document.body.append(fileInput);
+      var that = this;
+      fileInput.addEventListener('change', function () {
+        that.read_file_data(fileInput);
+      });
+    }
+  }, {
+    key: 'read_file_data',
+    value: function read_file_data(fileInput) {
+      var _this = this;
 
-      var file = new Blob([JSON.stringify(data)], { type: type });
-      if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);else {
-        // Others
-        var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 0);
+      var file = fileInput.files[0];
+
+      if (file.name.match(/\.(spm|json)$/)) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          _this.parse_file(reader.result);
+        };
+        reader.readAsText(file);
+      } else {
+        alert("File not supported, .spm or .json files only");
       }
     }
   }, {
-    key: "set_save_data",
-    value: function set_save_data(savedata) {
-      this.savedata = savedata;
+    key: 'parse_file',
+    value: function parse_file(file) {
+      this.imported_file = JSON.parse(file);
+    }
+  }, {
+    key: 'get_imported_file',
+    value: function get_imported_file() {
+      return this.imported_file;
     }
   }]);
 

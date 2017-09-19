@@ -46,6 +46,8 @@ var Save = function () {
           window.URL.revokeObjectURL(url);
         }, 0);
       }
+
+      $("#window-" + this.window).dialog("close");
     }
   }, {
     key: "set_save_data",

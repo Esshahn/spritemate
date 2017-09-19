@@ -21,6 +21,8 @@ class List
       <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
       <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
       <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
+      <img src="img/icon3/icon-zoom-in.png" id="icon-zoom-in" title="zoom in">
+      <img src="img/icon3/icon-zoom-out.png" id="icon-zoom-out" title="zoom out">
       <div id="spritelist"></div>
       </div>
     `;

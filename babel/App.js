@@ -35,6 +35,8 @@ class App
     this.window_info = new Window(window_config);
     this.save = new Save(5,this.config);
 
+    this.load = new Load(this.config);
+
     this.is_drawing = false;
 
     this.sprite.new(this.palette.get_color());
@@ -123,8 +125,7 @@ class App
  
       if (e.key == "a")
       {
-        // toggle hires or multicolor
-        this.sprite.toggle_double_x();
+        this.sprite.set_all(this.load.get_imported_file());
         this.update_ui();
       }
 
