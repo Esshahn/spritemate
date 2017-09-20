@@ -23,10 +23,12 @@ You can check out a version from 2017-09-08: http://spritemate.com/170913/
 * sprite sorting
 * undo
 * window based GUI
+* loading and saving to internal format
 
 ## What it does not yet
 
-* loading & saving as image (PNG), internal format, native C64 binary, SpritePad SPR
+* loading & saving as image (PNG), native C64 binary, SpritePad SPR
+* redo
 * pixel tools like: rotate, copy & paste
 * save window layout
 * animation
@@ -34,6 +36,11 @@ You can check out a version from 2017-09-08: http://spritemate.com/170913/
 * and tons of other stuff
 
 ## History
+
+2017-09-20
+* basic loading and saving is now working (finally!)
+* lots of reworked UI
+* lots of cleaned up code
 
 2017-09-13
 * proper C64 color restrictions are now implemented
