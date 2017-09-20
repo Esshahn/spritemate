@@ -5,10 +5,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Load = function () {
-  function Load(config) {
+  function Load(config, eventhandler) {
     _classCallCheck(this, Load);
 
     this.config = config;
+    this.eventhandler = eventhandler;
     this.setup_load_input();
   }
 
@@ -35,6 +36,7 @@ var Load = function () {
         var reader = new FileReader();
         reader.onload = function () {
           _this.parse_file(reader.result);
+          _this.eventhandler.onLoad();
         };
         reader.readAsText(file);
       } else {

@@ -35,7 +35,7 @@ class App
     this.window_info = new Window(window_config);
     this.save = new Save(5,this.config);
 
-    this.load = new Load(this.config);
+    this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
 
@@ -58,11 +58,18 @@ class App
     this.editor.update(   this.sprite.get_all());
     this.preview.update(  this.sprite.get_all());
     this.list.update(     this.sprite.get_all());
-    this.palette.update(  this.sprite.get_colors(), this.sprite.is_multicolor());
+    this.palette.update(  this.sprite.get_all());
     console.log("ui refresh: " + Date());
   }
 
 
+  update_loaded_file()
+  {
+    // called as a callback event from the load class
+    // after a file got loaded in completely
+    this.sprite.set_all(this.load.get_imported_file());
+    this.update_ui();
+  }
 
 
   init_ui_fade(element)
@@ -125,7 +132,6 @@ class App
  
       if (e.key == "a")
       {
-        this.sprite.set_all(this.load.get_imported_file());
         this.update_ui();
       }
 
@@ -289,6 +295,10 @@ class App
       if (!this.dragging)
       {
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
+        if (!this.sprite.is_multicolor() &&  this.sprite.is_pen_multicolor())
+        {
+          this.sprite.set_pen("i");
+        }
         this.update_ui();
       } 
     });
@@ -312,15 +322,7 @@ class App
       this.sprite.new(this.palette.get_color());
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
-      if (!this.sprite.is_multicolor())
-      {
-        // set the active pen to the individual one when switching to singlecolor
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_individual').addClass("palette_color_item_selected");
-        $('#palette_individual p').addClass("palette_highlight_text");
-        this.sprite.set_pen("i");
-      }  
+      this.sprite.set_pen("i");
       this.update_ui();
     });
 
@@ -379,48 +381,28 @@ class App
       this.update_ui(); 
     });
 
-    $('#palette_individual').mouseup((e) =>
+    $('#palette_i').mouseup((e) =>
     {     
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_individual').addClass("palette_color_item_selected");
-      $('#palette_individual p').addClass("palette_highlight_text");
       this.sprite.set_pen("i");
-
+      this.update_ui();
     });
 
-    $('#palette_transparent').mouseup((e) =>
+    $('#palette_t').mouseup((e) =>
     {     
-      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-      $('#palette_spritecolors p').removeClass("palette_highlight_text");
-      $('#color_transparent').addClass("palette_color_item_selected");
-      $('#palette_transparent p').addClass("palette_highlight_text");
       this.sprite.set_pen("t");
-
+      this.update_ui();
     });
 
-    $('#palette_multicolor_1').mouseup((e) =>
-    { 
-      if (this.sprite.is_multicolor())
-      {    
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_multicolor_1').addClass("palette_color_item_selected");
-        $('#palette_multicolor_1 p').addClass("palette_highlight_text");
+    $('#palette_m1').mouseup((e) =>
+    {  
         this.sprite.set_pen("m1");
-      }
+        this.update_ui();
     });
 
-    $('#palette_multicolor_2').mouseup((e) =>
-    {   
-      if (this.sprite.is_multicolor())
-      {  
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_multicolor_2').addClass("palette_color_item_selected");
-        $('#palette_multicolor_2 p').addClass("palette_highlight_text");
+    $('#palette_m2').mouseup((e) =>
+    {    
         this.sprite.set_pen("m2");
-      }
+        this.update_ui();
     });
         
   }

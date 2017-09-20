@@ -25,31 +25,27 @@ class Palette
     let template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
-          <div id="palette_individual">
+          <div id="palette_i">
               <p>Individual</p>
-              <div class="palette_color_item" id="color_individual"></div>
+              <div class="palette_color_item" id="color_i"></div>
           </div>
-          <div id="palette_transparent">
+          <div id="palette_t">
               <p>Transparent</p>
-              <div class="palette_color_item" id="color_transparent"></div>
+              <div class="palette_color_item" id="color_t"></div>
           </div>
-          <div id="palette_multicolor_1">
+          <div id="palette_m1">
               <p>Multicolor 1</p>
-              <div class="palette_color_item" id="color_multicolor_1"></div>
+              <div class="palette_color_item" id="color_m1"></div>
           </div>
-          <div id="palette_multicolor_2">
+          <div id="palette_m2">
               <p>Multicolor 2</p>
-              <div class="palette_color_item" id="color_multicolor_2"></div>
+              <div class="palette_color_item" id="color_m2"></div>
           </div>
       </div>
 
     `;
 
     $("#window-"+this.window).append(template);
-
-    // when init, set the individual color pen as selected
-    $('#color_individual').addClass("palette_color_item_selected");
-    $('#palette_individual p').addClass("palette_highlight_text");
 
     $("#palette_all_colors").append(this.canvas_element);
 
@@ -60,14 +56,36 @@ class Palette
   }
 
 
-  update(spritecolors, is_multicolor)
+  update(all_data)
   {
-    $("#color_transparent").css("background-color",this.colors[spritecolors.t]);
-    $("#color_individual").css("background-color",this.colors[spritecolors.i]);
-    $("#color_multicolor_1").css("background-color",this.colors[spritecolors.m1]);
-    $("#color_multicolor_2").css("background-color",this.colors[spritecolors.m2]);
-    this.set_multicolor(is_multicolor);
+    let sprite_is_multicolor = all_data.sprites[all_data.current_sprite].multicolor;
+
+    // set the colors of the pens
+    $("#color_t").css("background-color",this.colors[all_data.colors.t]);
+    $("#color_i").css("background-color",this.colors[all_data.sprites[all_data.current_sprite].color]);
+    $("#color_m1").css("background-color",this.colors[all_data.colors.m1]);
+    $("#color_m2").css("background-color",this.colors[all_data.colors.m2]);
+
+    // now set the rigt pen active
+    $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+    $('#palette_spritecolors p').removeClass("palette_highlight_text");
+
+    $('#color_'+all_data.pen).addClass("palette_color_item_selected");
+    $('#palette_'+all_data.pen +' p').addClass("palette_highlight_text");
+
+/*
+    if (!sprite_is_multicolor && (all_data.pen != "m1" && all_data.pen != "m2"))
+    {
+      // set the active pen to the individual one when switching to singlecolor
+      $('#palette_spritecolors div').removeClass("palette_color_item_selected");
+      $('#palette_spritecolors p').removeClass("palette_highlight_text");
+      $('#color_individual').addClass("palette_color_item_selected");
+      $('#palette_individual p').addClass("palette_highlight_text");
+    }
+*/
+    this.set_multicolor(sprite_is_multicolor);
   }
+
 
   draw_palette()
   {
@@ -91,11 +109,11 @@ class Palette
   set_multicolor(is_multicolor)
   {
     if (is_multicolor){
-      $('#palette_multicolor_1').show(); 
-      $('#palette_multicolor_2').show();  
+      $('#palette_m1').show(); 
+      $('#palette_m2').show();  
     } else {
-      $('#palette_multicolor_1').hide(); 
-      $('#palette_multicolor_2').hide();  
+      $('#palette_m1').hide(); 
+      $('#palette_m2').hide();  
     }
   }
 

@@ -3,9 +3,10 @@
 class Load
 {
 
-  constructor(config)
+  constructor(config,eventhandler)
   {
     this.config = config;
+    this.eventhandler = eventhandler;
     this.setup_load_input();
   }
 
@@ -29,6 +30,7 @@ class Load
         reader.onload = () => 
         {
           this.parse_file(reader.result);
+          this.eventhandler.onLoad();
         };
         reader.readAsText(file);    
       } else {

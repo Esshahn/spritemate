@@ -224,6 +224,16 @@ class Sprite
     return this.all.pen;
   }
 
+  is_pen_multicolor()
+  {
+    if (this.all.pen === "m1" || this.all.pen === "m2")
+    {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   set_pen(pen)
   {
     this.all.pen = pen;
