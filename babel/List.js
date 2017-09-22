@@ -21,8 +21,8 @@ class List
       <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
       <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
       <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
-      <img src="img/icon3/icon-zoom-in.png" id="icon-zoom-in" title="zoom in">
-      <img src="img/icon3/icon-zoom-out.png" id="icon-zoom-out" title="zoom out">
+      <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
+      <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
       <div id="spritelist"></div>
       </div>
     `;
@@ -80,6 +80,33 @@ class List
     }
   }
 
+
+  zoom_in()
+  {
+    console.log("zooming in");
+    if (this.zoom <= 8)
+    {
+      this.zoom ++;
+      this.update_zoom();
+    } 
+  }
+
+  zoom_out()
+  {
+    if (this.zoom >= 2)
+    {
+     this.zoom --;
+     this.update_zoom();
+    }
+  }
+
+  update_zoom()
+  {
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
+    $('head style:last').remove();
+    $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
+  }
 
   update(all_data)
   {

@@ -101,6 +101,8 @@ class App
     // init hover effect for list and preview
     this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-list-grid");
+    this.init_ui_fade("icon-list-zoom-in");
+    this.init_ui_fade("icon-list-zoom-out");
     this.init_ui_fade("icon-preview-x");
     this.init_ui_fade("icon-preview-y");
     
@@ -112,8 +114,6 @@ class App
     $('#icon-list-delete').css({ opacity: 0.20 });
     $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
     $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'transparent'}, 'fast');});
-    
-    this.palette.set_multicolor(this.sprite.is_multicolor());
 
 
 /*
@@ -249,15 +249,6 @@ class App
     $('#icon-multicolor').mouseup((e) =>
     {
       this.sprite.toggle_multicolor();
-      if (!this.sprite.is_multicolor())
-      {
-        // set the active pen to the individual one when switching to singlecolor
-        $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-        $('#palette_spritecolors p').removeClass("palette_highlight_text");
-        $('#color_individual').addClass("palette_color_item_selected");
-        $('#palette_individual p').addClass("palette_highlight_text");
-        this.sprite.set_pen("i");
-      }
       this.update_ui();
     });
 
@@ -322,7 +313,6 @@ class App
       this.sprite.new(this.palette.get_color());
       $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
-      this.sprite.set_pen("i");
       this.update_ui();
     });
 
@@ -337,6 +327,18 @@ class App
    $('#icon-list-grid').mouseup((e) =>
     {     
       this.list.toggle_grid();
+      this.update_ui();
+    });
+
+    $('#icon-list-zoom-in').mouseup((e) =>
+    {     
+      this.list.zoom_in();
+      this.update_ui();
+    });
+
+    $('#icon-list-zoom-out').mouseup((e) =>
+    {     
+      this.list.zoom_out();
       this.update_ui();
     });
 

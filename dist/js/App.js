@@ -96,6 +96,8 @@ var App = function () {
       // init hover effect for list and preview
       this.init_ui_fade("icon-list-new");
       this.init_ui_fade("icon-list-grid");
+      this.init_ui_fade("icon-list-zoom-in");
+      this.init_ui_fade("icon-list-zoom-out");
       this.init_ui_fade("icon-preview-x");
       this.init_ui_fade("icon-preview-y");
 
@@ -114,8 +116,6 @@ var App = function () {
       $('#icon-list-delete').mouseleave(function (e) {
         if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'transparent' }, 'fast');
       });
-
-      this.palette.set_multicolor(this.sprite.is_multicolor());
 
       /*
       
@@ -230,14 +230,6 @@ var App = function () {
 
       $('#icon-multicolor').mouseup(function (e) {
         _this.sprite.toggle_multicolor();
-        if (!_this.sprite.is_multicolor()) {
-          // set the active pen to the individual one when switching to singlecolor
-          $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-          $('#palette_spritecolors p').removeClass("palette_highlight_text");
-          $('#color_individual').addClass("palette_color_item_selected");
-          $('#palette_individual p').addClass("palette_highlight_text");
-          _this.sprite.set_pen("i");
-        }
         _this.update_ui();
       });
 
@@ -293,7 +285,6 @@ var App = function () {
         _this.sprite.new(_this.palette.get_color());
         $('#icon-trash').fadeTo("slow", 0.75);
         $('#icon-list-delete').fadeTo("slow", 0.75);
-        _this.sprite.set_pen("i");
         _this.update_ui();
       });
 
@@ -306,6 +297,16 @@ var App = function () {
 
       $('#icon-list-grid').mouseup(function (e) {
         _this.list.toggle_grid();
+        _this.update_ui();
+      });
+
+      $('#icon-list-zoom-in').mouseup(function (e) {
+        _this.list.zoom_in();
+        _this.update_ui();
+      });
+
+      $('#icon-list-zoom-out').mouseup(function (e) {
+        _this.list.zoom_out();
         _this.update_ui();
       });
 

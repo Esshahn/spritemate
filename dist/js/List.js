@@ -19,7 +19,7 @@ var List = function () {
     this.sorted_array = [];
     this.grid = true;
 
-    var template = "\n      <div id=\"list_menu\">\n      <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n      <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"kill sprite\">\n      <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n      <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-zoom-in\" title=\"zoom in\">\n      <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-zoom-out\" title=\"zoom out\">\n      <div id=\"spritelist\"></div>\n      </div>\n    ";
+    var template = "\n      <div id=\"list_menu\">\n      <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n      <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"kill sprite\">\n      <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n      <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n      <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n      <div id=\"spritelist\"></div>\n      </div>\n    ";
 
     $("#window-" + this.window).append(template);
 
@@ -76,6 +76,31 @@ var List = function () {
       } else {
         this.grid = true;
       }
+    }
+  }, {
+    key: "zoom_in",
+    value: function zoom_in() {
+      console.log("zooming in");
+      if (this.zoom <= 8) {
+        this.zoom++;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: "zoom_out",
+    value: function zoom_out() {
+      if (this.zoom >= 2) {
+        this.zoom--;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: "update_zoom",
+    value: function update_zoom() {
+      this.width = this.pixels_x * this.zoom;
+      this.height = this.pixels_y * this.zoom;
+      $('head style:last').remove();
+      $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
     }
   }, {
     key: "update",

@@ -37,6 +37,8 @@ var Load = function () {
         reader.onload = function () {
           _this.parse_file(reader.result);
           _this.eventhandler.onLoad();
+          $('#input-load').remove(); // by removing the input field and reassigning it, reloading the same file will work
+          _this.setup_load_input();
         };
         reader.readAsText(file);
       } else {

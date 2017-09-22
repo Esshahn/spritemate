@@ -44,6 +44,9 @@ var Sprite = function () {
       }
       this.all.sprites.push(sprite);
       this.all.current_sprite = this.all.sprites.length - 1;
+
+      if (!multicolor && this.is_pen_multicolor()) this.set_pen("i");
+
       this.save_backup();
     }
   }, {
@@ -184,6 +187,7 @@ var Sprite = function () {
     value: function toggle_multicolor() {
       if (this.all.sprites[this.all.current_sprite].multicolor) {
         this.all.sprites[this.all.current_sprite].multicolor = false;
+        if (this.is_pen_multicolor()) this.set_pen("i");
       } else {
         this.all.sprites[this.all.current_sprite].multicolor = true;
       }

@@ -13,8 +13,8 @@ class Info
         <img autofocus src="img/logo.png" id="logo">
         
         <p>A tool to draw sprites for the Commodore 64<br/>
-        v0.10 - 2017-09-13</p>
-        <p>Created by Ingo Hinterding // <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a> of <a target="_blank" href="http://csdb.dk/group/?id=7228">Mayday!</a></p>
+        v0.20 - 2017-09-22</p>
+        <p>Ingo Hinterding // <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a> of <a target="_blank" href="http://csdb.dk/group/?id=7228">Mayday!</a></p>
         <p>This software is free.<br/>Everything happens in your browser locally.<br/>No data of any kind is leaving your computer.</p>
         <p>Documentation on Github:<br/><a target="_blank" href="https://github.com/Esshahn/spritemate">https://github.com/Esshahn/spritemate</a></p>
         <p>Follow me on Twitter<br/><a target="_blank" href="http://www.twitter.com/awsm9000/">http://www.twitter.com/awsm9000/</a><p>
