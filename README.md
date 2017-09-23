@@ -37,6 +37,11 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 ## History
 
+2017-09-22
+* Zoom in/out in the sprite list window
+* fixed an issue where the same file could not be reloaded
+* more reliable behaviour of palette window
+
 2017-09-20
 * basic loading and saving is now working (finally!)
 * lots of reworked UI
