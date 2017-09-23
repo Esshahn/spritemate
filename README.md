@@ -20,14 +20,13 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 * multiple sprites
 * double width & height sprites
 * sprite sorting
-* undo
+* undo & redo
 * window based GUI
 * loading and saving to internal format
 
 ## What it does not yet
 
 * loading & saving as image (PNG), native C64 binary, SpritePad SPR
-* redo
 * pixel tools like: rotate, copy & paste
 * save window layout
 * animation
