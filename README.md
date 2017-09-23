@@ -1,7 +1,7 @@
 # spritemate
 spritemate is a browser based sprite editor for the Commodore 64. This is a very early version of the spritemate tool and is not functional yet. Feel free to download the dist and play around with it, but there's really not much to see yet.
 
-You can check out a version from 2017-09-08: http://spritemate.com/170913/
+You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 ![spritemate](https://user-images.githubusercontent.com/434355/29740898-0212147a-8a62-11e7-879f-f938bd009718.png)
                  Screenshot of the very first commit
