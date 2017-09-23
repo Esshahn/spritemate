@@ -3,7 +3,7 @@ spritemate is a browser based sprite editor for the Commodore 64. This is a very
 
 You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
-<img src="https://user-images.githubusercontent.com/434355/29740898-0212147a-8a62-11e7-879f-f938bd009718.png" style="width: 50%;"/>
+<img src="https://user-images.githubusercontent.com/434355/30771674-a15113be-a04d-11e7-9f9f-e29d3582e4fe.png" width= "50%"/>
 
 ## What it currently does
 
