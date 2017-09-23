@@ -87,6 +87,7 @@ class App
     this.init_ui_fade("icon-load");
     this.init_ui_fade("icon-save");
     this.init_ui_fade("icon-undo");
+    this.init_ui_fade("icon-redo");
     this.init_ui_fade("icon-grid");
     this.init_ui_fade("icon-shift-left");
     this.init_ui_fade("icon-shift-right");
@@ -201,6 +202,12 @@ class App
     $('#icon-undo').mouseup((e) =>
     {
       this.sprite.undo();
+      this.update_ui();
+    });
+
+    $('#icon-redo').mouseup((e) =>
+    {
+      this.sprite.redo();
       this.update_ui();
     });
 

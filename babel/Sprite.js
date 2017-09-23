@@ -311,6 +311,16 @@ class Sprite
     }
   }
 
+  redo()
+  {
+
+    if (this.backup_position < this.backup.length -1)
+    {
+      this.backup_position ++;
+      this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
+    }
+  }
+
 /*
   get_pixel(x,y)
   {

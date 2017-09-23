@@ -82,6 +82,7 @@ var App = function () {
       this.init_ui_fade("icon-load");
       this.init_ui_fade("icon-save");
       this.init_ui_fade("icon-undo");
+      this.init_ui_fade("icon-redo");
       this.init_ui_fade("icon-grid");
       this.init_ui_fade("icon-shift-left");
       this.init_ui_fade("icon-shift-right");
@@ -190,6 +191,11 @@ var App = function () {
 
       $('#icon-undo').mouseup(function (e) {
         _this.sprite.undo();
+        _this.update_ui();
+      });
+
+      $('#icon-redo').mouseup(function (e) {
+        _this.sprite.redo();
         _this.update_ui();
       });
 
