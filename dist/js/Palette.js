@@ -9,7 +9,7 @@ var Palette = function () {
     _classCallCheck(this, Palette);
 
     this.colors = config.colors;
-    this.active_color = 1; // 1 = white on the c64
+    this.active_color = 3; // 1 = white on the c64
     this.window = window;
 
     this.canvas_element = document.createElement('canvas');

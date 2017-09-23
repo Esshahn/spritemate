@@ -12,7 +12,7 @@ var Sprite = function () {
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    this.all.colors = { "t": 0, "m1": 8, "m2": 3 };
+    this.all.colors = { "t": 11, "m1": 8, "m2": 3 };
 
     this.all.sprites = [];
     this.all.current_sprite = 0;

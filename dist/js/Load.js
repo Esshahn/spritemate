@@ -68,7 +68,9 @@ var Load = function () {
       var file_array = [];
 
       for (var i = 0; i < file.length; i++) {
-        file_array.push(("0" + file.charCodeAt(i).toString(16)).slice(-2));
+        // convert data in SPR file into binary
+        var binary = ("0000000" + file.charCodeAt(i).toString(2)).slice(-8);
+        file_array.push(binary);
       }
 
       console.log(file_array);
