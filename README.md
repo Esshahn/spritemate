@@ -5,8 +5,6 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 <img src="https://user-images.githubusercontent.com/434355/29740898-0212147a-8a62-11e7-879f-f938bd009718.png" style="width: 50%;"/>
 
-<center>Screenshot of the very first commit</center>
-
 ## What it currently does
 
 * choose one of 16 C64 colors from the color palette
@@ -63,3 +61,4 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 2017-09-04
 * Undo implemented
+
