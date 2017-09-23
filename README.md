@@ -3,8 +3,9 @@ spritemate is a browser based sprite editor for the Commodore 64. This is a very
 
 You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
-![spritemate](https://user-images.githubusercontent.com/434355/29740898-0212147a-8a62-11e7-879f-f938bd009718.png)
-                 Screenshot of the very first commit
+<img src="https://user-images.githubusercontent.com/434355/29740898-0212147a-8a62-11e7-879f-f938bd009718.png" style="width: 50%;"/>
+
+<center>Screenshot of the very first commit</center>
 
 ## What it currently does
 
