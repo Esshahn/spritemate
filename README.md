@@ -1,25 +1,8 @@
 # spritemate
-spritemate is a browser based sprite editor for the Commodore 64. This is a very early version of the spritemate tool and is not functional yet. Feel free to download the dist and play around with it, but there's really not much to see yet.
-
-You can check out a version from 2017-09-22: http://spritemate.com/170922/
+spritemate is a browser based sprite editor for the Commodore 64.
+There's no official release yet, but you can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 <img src="https://user-images.githubusercontent.com/434355/30771674-a15113be-a04d-11e7-9f9f-e29d3582e4fe.png" width= "50%"/>
-
-| Symbol        | Shortcut      | Function  |
-| :-------------: | ------------- | --------------- |
-| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" width="200%"> | - | Loads a file. Supported formats: Spritemate (SPR) |
-| <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" width="200%"> | - | Saves a file. Supported formats: Spritemate (SPR) |
-| <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" width="200%"> | - | Undo. For when you screwed up. |
-| <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" width="200%"> | - | Redo. For when you realized it wasn't that bad |
-| <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" width="200%"> | - | Toggles grid display on/off |
-| <img src="https://user-images.githubusercontent.com/434355/30785999-6ab77d5c-a16f-11e7-8f46-05859afea191.png" width="200%"> | - | Shift sprite left |
-| <img src="https://user-images.githubusercontent.com/434355/30786000-6ab92882-a16f-11e7-9b0b-39517adf02a3.png" width="200%"> | - | Shift sprite right |
-| <img src="https://user-images.githubusercontent.com/434355/30786001-6abda4c0-a16f-11e7-9e23-53b845c900ba.png" width="200%"> | - | Shift sprite up |
-| <img src="https://user-images.githubusercontent.com/434355/30785998-6ab5f36a-a16f-11e7-9694-772a8fd79331.png" width="200%"> | - | Shift sprite down |
-| <img src="https://user-images.githubusercontent.com/434355/30785983-6a741e18-a16f-11e7-89e6-931b5cc52a0e.png" width="200%"> | - | Flip sprite horizontal |
-| <img src="https://user-images.githubusercontent.com/434355/30785984-6a75c10a-a16f-11e7-8701-589fd6218bd5.png" width="200%"> | - | Flip sprite vertical |
-| <img src="https://user-images.githubusercontent.com/434355/30785991-6a99bf10-a16f-11e7-821b-b5be9f81d7d7.png" width="200%"> | - | Toggle between singlecolor and multicolor mode |
-| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" width="200%"> | - | Fill the sprite with selected color |
 
 ## What it currently does
 
@@ -48,6 +31,29 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 * animation
 * stacked sprite layers (onion skinning)
 * and tons of other stuff
+
+---
+
+# UI
+Please note that keyboard and touch controls are not implemented as of now.
+
+| Symbol        | Shortcut      | Function  |
+| :-------------: | ------------- | --------------- |
+| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" width="200%"> | - | Loads a file. Supported formats: Spritemate (SPR) |
+| <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" width="200%"> | - | Saves a file. Supported formats: Spritemate (SPR) |
+| <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" width="200%"> | - | Undo. For when you screwed up. |
+| <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" width="200%"> | - | Redo. For when you realized it wasn't that bad |
+| <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" width="200%"> | - | Toggles grid display on/off |
+| <img src="https://user-images.githubusercontent.com/434355/30785999-6ab77d5c-a16f-11e7-8f46-05859afea191.png" width="200%"> | - | Shift sprite left |
+| <img src="https://user-images.githubusercontent.com/434355/30786000-6ab92882-a16f-11e7-9b0b-39517adf02a3.png" width="200%"> | - | Shift sprite right |
+| <img src="https://user-images.githubusercontent.com/434355/30786001-6abda4c0-a16f-11e7-9e23-53b845c900ba.png" width="200%"> | - | Shift sprite up |
+| <img src="https://user-images.githubusercontent.com/434355/30785998-6ab5f36a-a16f-11e7-9694-772a8fd79331.png" width="200%"> | - | Shift sprite down |
+| <img src="https://user-images.githubusercontent.com/434355/30785983-6a741e18-a16f-11e7-89e6-931b5cc52a0e.png" width="200%"> | - | Flip sprite horizontal |
+| <img src="https://user-images.githubusercontent.com/434355/30785984-6a75c10a-a16f-11e7-8701-589fd6218bd5.png" width="200%"> | - | Flip sprite vertical |
+| <img src="https://user-images.githubusercontent.com/434355/30785991-6a99bf10-a16f-11e7-821b-b5be9f81d7d7.png" width="200%"> | - | Toggle between singlecolor and multicolor mode |
+| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" width="200%"> | - | Fill the sprite with selected color |
+
+---
 
 ## History
 
