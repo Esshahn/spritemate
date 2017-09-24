@@ -7,8 +7,8 @@ You can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 | Symbol        | Shortcut      | Function  |
 | ------------- | ------------- | --------------- |
-| https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png | - | loads a file |
-| https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png | - | saves a file |
+| ![icon-load](https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png) | - | loads a file |
+| ![icon-save](https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png) | - | saves a file |
 |  | -      |     |
 
 ## What it currently does
