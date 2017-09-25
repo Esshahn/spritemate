@@ -133,6 +133,7 @@ class App
  
       if (e.key == "a")
       {
+        console.log(this.sprite.get_all());
         this.update_ui();
       }
 

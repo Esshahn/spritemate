@@ -65,15 +65,42 @@ var Load = function () {
   }, {
     key: 'parse_file_spritepad',
     value: function parse_file_spritepad(file) {
-      var file_array = [];
 
-      for (var i = 0; i < file.length; i++) {
+      this.sprite_count = Math.floor(file.length / 64);
+      console.log("Number of sprites: " + this.sprite_count);
+      console.log("bytes left: " + file.length % 64);
+
+      this.imported_file = {};
+      this.imported_file.colors = { "t": 11, "m1": 8, "m2": 3 };
+      this.imported_file.sprites = [];
+      this.imported_file.current_sprite = 0;
+      this.imported_file.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+
+      var sprite = {
+        color: 1,
+        multicolor: false,
+        double_x: false,
+        double_y: false,
+        pixels: []
+      };
+
+      var binary = "";
+      for (var i = 9; i < 65 + 7; i++) {
         // convert data in SPR file into binary
-        var binary = ("0000000" + file.charCodeAt(i).toString(2)).slice(-8);
-        file_array.push(binary);
+        binary += ("0000000" + file.charCodeAt(i).toString(2)).slice(-8);
       }
 
-      console.log(file_array);
+      binary = binary.replace(/0/g, "t");
+      binary = binary.replace(/1/g, "i");
+      binary = binary.match(/.{1,24}/g);
+
+      for (var _i = 0; _i < binary.length; _i++) {
+        binary[_i] = binary[_i].split("");
+        sprite.pixels.push(binary[_i]);
+      }
+
+      this.imported_file.sprites.push(sprite);
+      console.log(this.imported_file);
     }
   }, {
     key: 'get_imported_file',

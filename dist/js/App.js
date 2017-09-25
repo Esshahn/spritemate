@@ -131,6 +131,7 @@ var App = function () {
       $(document).keydown(function (e) {
 
         if (e.key == "a") {
+          console.log(_this.sprite.get_all());
           _this.update_ui();
         }
 
