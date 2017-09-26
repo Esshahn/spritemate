@@ -70,37 +70,79 @@ var Load = function () {
       console.log("Number of sprites: " + this.sprite_count);
       console.log("bytes left: " + file.length % 64);
 
+      // check byte 72 which is the indidual color (low nibble) and the multicolor state (high nibble)
+      if (file.charCodeAt(72) > 127) {
+        this.multicolor = true;
+        this.pencolor = file.charCodeAt(72) - 128;
+      } else {
+        this.multicolor = false;
+        this.pencolor = file.charCodeAt(72);
+      }
+
       this.imported_file = {};
-      this.imported_file.colors = { "t": 11, "m1": 8, "m2": 3 };
+      this.imported_file.colors = { "t": file.charCodeAt(6), "m1": file.charCodeAt(7), "m2": file.charCodeAt(8) };
       this.imported_file.sprites = [];
       this.imported_file.current_sprite = 0;
       this.imported_file.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
 
       var sprite = {
-        color: 1,
-        multicolor: false,
+        color: this.pencolor,
+        multicolor: this.multicolor,
         double_x: false,
         double_y: false,
         pixels: []
       };
 
-      var binary = "";
+      var binary = [];
       for (var i = 9; i < 65 + 7; i++) {
         // convert data in SPR file into binary
-        binary += ("0000000" + file.charCodeAt(i).toString(2)).slice(-8);
+        var converted_number = ("0000000" + file.charCodeAt(i).toString(2)).slice(-8);
+        var bit = converted_number.match(/.{1,2}/g);
+        for (var j = 0; j < bit.length; j++) {
+          var pen = void 0;
+
+          if (this.multicolor) {
+            if (bit[j] == "00") pen = "t";
+            if (bit[j] == "10") pen = "i";
+            if (bit[j] == "01") pen = "m1";
+            if (bit[j] == "11") pen = "m2";
+
+            binary.push(pen);
+            binary.push(pen);
+          } else {
+
+            if (bit[j][0] == "0") {
+              binary.push("t");
+            } else {
+              binary.push("i");
+            }
+
+            if (bit[j][1] == "0") {
+              binary.push("t");
+            } else {
+              binary.push("i");
+            }
+          }
+        }
       }
 
-      binary = binary.replace(/0/g, "t");
-      binary = binary.replace(/1/g, "i");
-      binary = binary.match(/.{1,24}/g);
-
+      var spritedata = [];
+      var line = 0;
       for (var _i = 0; _i < binary.length; _i++) {
-        binary[_i] = binary[_i].split("");
-        sprite.pixels.push(binary[_i]);
+        spritedata.push(binary[_i]);
+
+        line++;
+
+        if (line == 24) {
+          sprite.pixels.push(spritedata);
+
+          line = 0;
+          spritedata = [];
+          console.log("line");
+        }
       }
 
       this.imported_file.sprites.push(sprite);
-      console.log(this.imported_file);
     }
   }, {
     key: 'get_imported_file',
