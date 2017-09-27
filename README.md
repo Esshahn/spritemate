@@ -1,21 +1,18 @@
 # spritemate
-spritemate is a browser based sprite editor for the Commodore 64.
+spritemate is a browser based sprite editor for the Commodore 64. It works in most modern browsers on Windows, Mac and Linux. All data is processed on front end side, no back end is involved and you can use this tool offline. The release version will support the most common sprite formats for the Commodore 64 (e.g. SpritePad), therefore spritemate can be used as easy sprite viewer on almost any device with a browser.
+
 There's no official release yet, but you can check out a version from 2017-09-22: http://spritemate.com/170922/
 
 <img src="https://user-images.githubusercontent.com/434355/30771674-a15113be-a04d-11e7-9f9f-e29d3582e4fe.png" width= "50%"/>
 
-## What it currently does
+## Features (what it currently does)
 
 * choose one of 16 C64 colors from the color palette
-* draw pixels on a 24x21 pixel (hires) or 12x21 pixel (multicolor) canvas
+* draw pixels on a 24x21 pixel (singlecolor) or 12x21 pixel (multicolor) canvas
 * C64 mode restrictions (number of colors per sprite, global sprite colors)
-* delete pixels
-* fill
-* shift left, right, up, down
-* flip horizontal, vertical
+* delete, fill, shift left, right, up, down, flip horizontal & vertical
 * check your sprite in the preview window
-* multicolor and hires mode support
-* grid mode on/off in editor
+* display grid in editor
 * multiple sprites
 * double width & height sprites
 * sprite sorting
@@ -23,13 +20,24 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * window based GUI
 * loading and saving to internal format
 
-## What it does not yet
+## Backlog (what it does not yet)
 
-* loading & saving as image (PNG), native C64 binary, SpritePad SPR
-* pixel tools like: rotate, copy & paste
+* loading & saving as image (PNG), native C64 binary, SpritePad SPR & SPD
+* import & export SpritePad SPR & SPD file formats
+* import & export PNG images
+* import & export native C64 binary
+* export as ASM source
+* export as PRG
+* export animation as GIF
+* flood fill
+* rotate 90 degrees
+* copy & paste
+* select and move pixels
 * save window layout
 * animation
 * stacked sprite layers (onion skinning)
+* touch controls and tablet optimization
+* keyboard controls
 * and tons of other stuff
 
 ---
