@@ -63,29 +63,56 @@ class Load
     this.imported_file = JSON.parse(file);
   }
 
- parse_file_spritepad(file) 
+  parse_file_spritepad(file) 
   {
-    
-    this.sprite_count = Math.floor( file.length / 64 );
+    this.file = file;
+    this.start_of_sprite_data = 9;
+    this.sprite_size = 64;
+    this.gravitational_const_of_the_universe = 8; // TODO: understand this
+ 
+    // how many sprites in the file?
+    this.sprite_count = Math.floor( this.file.length / 64 ) -1;
     console.log("Number of sprites: "+ this.sprite_count);
-    console.log("bytes left: "+ file.length % 64);
 
-    // check byte 72 which is the indidual color (low nibble) and the multicolor state (high nibble)
-    if (file.charCodeAt(72)>127)
-    {
-      this.multicolor = true;
-      this.pencolor = file.charCodeAt(72) - 128;
-    } else {
-      this.multicolor = false;
-      this.pencolor = file.charCodeAt(72)
-    }
+    this.create_sprite_data_object();
+  
+    for (let i=0; i<this.sprite_count; i++) this.convert_sprite_data_to_internal_format(i);
+    
+  }
+
+
+  create_sprite_data_object()
+  {
+    // colors for transparent, multicolor 1 and multicolor 2
+    this.color_trans = this.file.charCodeAt(6);
+    this.color_multi1 = this.file.charCodeAt(7);
+    this.color_multi2 = this.file.charCodeAt(8);
 
     this.imported_file = {};
-    this.imported_file.colors = {"t": file.charCodeAt(6), "m1": file.charCodeAt(7), "m2": file.charCodeAt(8)};
+    this.imported_file.colors = {"t": this.color_trans, "m1": this.color_multi1, "m2": this.color_multi2};
     this.imported_file.sprites = [];
     this.imported_file.current_sprite = 0;
     this.imported_file.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
-    
+  }
+
+  convert_sprite_data_to_internal_format(sprite_number)
+  {
+
+    var colorpos = this.gravitational_const_of_the_universe + (sprite_number+1)*this.sprite_size;
+
+    // check byte 72 which is the indidual color (low nibble) and the multicolor state (high nibble)
+    console.log(this.file.charCodeAt(colorpos));
+    if (this.file.charCodeAt(colorpos)>=128)
+    {
+      this.multicolor = true;
+
+    } else {
+      this.multicolor = false;
+    }
+
+    // this reads in the lower nibble of the byte and converts it do decimal. 
+    this.pencolor = parseInt( (this.file.charCodeAt(colorpos).toString(2).slice(-4)) , 2);
+
     var sprite = {
       color: this.pencolor,
       multicolor: this.multicolor,
@@ -95,10 +122,10 @@ class Load
     };
 
     var binary = []; 
-    for(let i=9; i<65 + 7; i++)
+    for(let i=(this.start_of_sprite_data + sprite_number * this.sprite_size); i<((sprite_number+1) * this.sprite_size) + this.gravitational_const_of_the_universe; i++)
     {
      // convert data in SPR file into binary
-     let converted_number = ( "0000000" + file.charCodeAt(i).toString(2) ).slice(-8);
+     let converted_number = ( "0000000" + this.file.charCodeAt(i).toString(2) ).slice(-8);
      var bit = converted_number.match(/.{1,2}/g);
      for (let j=0; j<bit.length; j++)
      {
@@ -129,8 +156,6 @@ class Load
           binary.push ("i");
         }
       }
-
-
      }
     }
 
@@ -139,27 +164,18 @@ class Load
     for(let i=0; i<binary.length; i++)
     {
       spritedata.push(binary[i]);
-
       line ++;
       
       if(line == 24)
       {
         sprite.pixels.push(spritedata);
-
         line = 0;
         spritedata = [];
-        console.log("line");
       }
-      
     }
-    
+
     this.imported_file.sprites.push(sprite);
-
   }
-
-
-
-
 
   get_imported_file()
   {
