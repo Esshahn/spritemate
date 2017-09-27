@@ -72,10 +72,8 @@ class Load
  
     // how many sprites in the file?
     this.sprite_count = Math.floor( this.file.length / 64 ) -1;
-    console.log("Number of sprites: "+ this.sprite_count);
 
     this.create_sprite_data_object();
-  
     for (let i=0; i<this.sprite_count; i++) this.convert_sprite_data_to_internal_format(i);
     
   }
@@ -98,17 +96,12 @@ class Load
   convert_sprite_data_to_internal_format(sprite_number)
   {
 
+    // check byte 64 which is the indidual color (low nibble) and the multicolor state (high nibble)
     var colorpos = this.gravitational_const_of_the_universe + (sprite_number+1)*this.sprite_size;
+    
+    this.multicolor = false;
 
-    // check byte 72 which is the indidual color (low nibble) and the multicolor state (high nibble)
-    console.log(this.file.charCodeAt(colorpos));
-    if (this.file.charCodeAt(colorpos)>=128)
-    {
-      this.multicolor = true;
-
-    } else {
-      this.multicolor = false;
-    }
+    if (this.file.charCodeAt(colorpos)>=128) this.multicolor = true;
 
     // this reads in the lower nibble of the byte and converts it do decimal. 
     this.pencolor = parseInt( (this.file.charCodeAt(colorpos).toString(2).slice(-4)) , 2);
@@ -125,37 +118,33 @@ class Load
     for(let i=(this.start_of_sprite_data + sprite_number * this.sprite_size); i<((sprite_number+1) * this.sprite_size) + this.gravitational_const_of_the_universe; i++)
     {
      // convert data in SPR file into binary
-     let converted_number = ( "0000000" + this.file.charCodeAt(i).toString(2) ).slice(-8);
-     var bit = converted_number.match(/.{1,2}/g);
-     for (let j=0; j<bit.length; j++)
+     var byte = ( "0000000" + this.file.charCodeAt(i).toString(2) ).slice(-8).match(/.{1,2}/g);
+     for (let j=0; j<byte.length; j++)
      {
       let pen;
 
       if(this.multicolor)
       {
-        if (bit[j] == "00")  pen = "t";
-        if (bit[j] == "10")  pen = "i";
-        if (bit[j] == "01")  pen = "m1";
-        if (bit[j] == "11")  pen = "m2";
+        if (byte[j] == "00")  pen = "t";
+        if (byte[j] == "10")  pen = "i";
+        if (byte[j] == "01")  pen = "m1";
+        if (byte[j] == "11")  pen = "m2";
 
         binary.push( pen );
         binary.push( pen );
-      } else {
-
-        if (bit[j][0] == "0")
-        {
-          binary.push ("t");
-        } else {
-          binary.push ("i");
-        }
-
-        if (bit[j][1] == "0")
-        {
-          binary.push ("t");
-        } else {
-          binary.push ("i");
-        }
       }
+
+      if(!this.multicolor)
+      {
+        pen = "i";
+        if (byte[j][0] == "0") pen = "t";
+        binary.push ( pen );
+
+        pen = "i";
+        if (byte[j][1] == "0") pen = "t";
+        binary.push ( pen );
+      }
+
      }
     }
 
