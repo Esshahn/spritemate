@@ -70,11 +70,8 @@ class Load
     this.sprite_size = 64;
     this.gravitational_const_of_the_universe = 8; // TODO: understand this
  
-    // how many sprites in the file?
-    this.sprite_count = Math.floor( this.file.length / 64 ) -1;
-
     this.create_sprite_data_object();
-    for (let i=0; i<this.sprite_count; i++) this.convert_sprite_data_to_internal_format(i);
+    for (let i=0; i<this.number_of_sprites; i++) this.convert_sprite_data_to_internal_format(i);
     
   }
 
@@ -85,6 +82,7 @@ class Load
     this.color_trans = this.file.charCodeAt(6);
     this.color_multi1 = this.file.charCodeAt(7);
     this.color_multi2 = this.file.charCodeAt(8);
+    this.number_of_sprites = parseInt(this.file.charCodeAt(4),10)+1;
 
     this.imported_file = {};
     this.imported_file.colors = {"t": this.color_trans, "m1": this.color_multi1, "m2": this.color_multi2};
