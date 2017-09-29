@@ -127,7 +127,7 @@ class Save
       data.push(Math.floor(Math.random()*255)); // 63 bytes of sprite data
     }
     data.push(4); // should be the individual color
-    console.log(data);
+
     return data;
   }
 
