@@ -87,23 +87,71 @@ var Save = function () {
 
       // SPD file format information
       // bytes 00,01,02 = "SPD"
-      // byte 03 = 
+      // byte 03 = version number of spritepad
       // byte 04 = number of sprites
-      // byte 05 =
+      // byte 05 = number of animations
       // byte 06 = color transparent
       // byte 07 = color multicolor 1
       // byte 08 = color multicolor 2
       // byte 09 = start of sprite data
-      // byte 73 = multicolor (high nibble) and color individual (low nibble)
+      // byte 73 = 0-3 color, 4 overlay, 7 multicolor/singlecolor
+      // bytes xx = "00", "00", "01", "00" added at the end of file (SpritePad animation info)
 
       var data = [];
       data.push(83, 80, 68); // the "SPD" header that identifies SPD files apparently
-      data.push(0, this.savedata.sprites.length - 1, 0); // what do these bytes do in Spritepad?
-      data.push(this.savedata.colors.t, this.savedata.colors.m1, this.savedata.colors.m2);
-      for (var i = 0; i < 63; i++) {
-        data.push(Math.floor(Math.random() * 255)); // 63 bytes of sprite data
+      data.push(1, this.savedata.sprites.length - 1, 0); // number of sprites
+      data.push(this.savedata.colors.t, this.savedata.colors.m1, this.savedata.colors.m2); // colors
+
+      var byte = "";
+      var bit = "";
+
+      for (var j = 0; j < this.savedata.sprites.length; j++) // iterate through all sprites
+      {
+
+        var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+
+        var is_multicolor = this.savedata.sprites[j].multicolor;
+        var stepping = 1;
+        if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
+
+        // iterate through the pixel data array 
+        // and create a hex values based on multicolor or singlecolor
+        for (var i = 0; i < spritedata.length; i = i + 8) {
+          for (var k = 0; k < 8; k = k + stepping) {
+            var pen = spritedata[i + k];
+
+            if (is_multicolor) {
+              if (pen == "i") bit = "10";
+              if (pen == "t") bit = "00";
+              if (pen == "m1") bit = "01";
+              if (pen == "m2") bit = "11";
+            }
+
+            if (!is_multicolor) {
+              bit = "1";
+              if (pen == "t") bit = "0";
+            }
+
+            byte = byte + bit;
+          }
+
+          var hex = parseInt(byte, 2);
+          data.push(hex);
+          byte = "";
+        }
+
+        // finally, we add multicolor and color info for byte 64
+        var high_nibble = "0000";
+        if (is_multicolor) high_nibble = "1000";
+
+        var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
+
+        var color_byte = parseInt(high_nibble + low_nibble, 2);
+        data.push(color_byte); // should be the individual color
       }
-      data.push(4); // should be the individual color
+
+      // almost done, just add some animation data crap at the end
+      data.push(0, 0, 1, 0); // SpritePad animation info (currently unused)
 
       return data;
     }
