@@ -19,16 +19,14 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * undo & redo
 * window based GUI
 * import & export to internal format
-* import SpritePad SPD format
+* import & export SpritePad SPD format
 
 ## Backlog (what it does not yet)
 
-* loading & saving as image (PNG), native C64 binary, SpritePad SPR & SPD
-* export SpritePad SPR & SPD file formats
+* import & export SpritePad SPR format
 * import & export PNG images
 * import & export native C64 binary
 * export as ASM source
-* export as PRG
 * export animation as GIF
 * flood fill
 * rotate 90 degrees
@@ -65,6 +63,9 @@ Please note that keyboard and touch controls are not implemented as of now.
 ---
 
 ## History
+
+2017-10-04
+* export sprites as SPD to SpritePad
 
 2017-09-27
 * import sprites from SpritePad SPD files
