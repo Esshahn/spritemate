@@ -22,11 +22,10 @@ var Preview = function () {
     this.canvas_element.height = this.height;
     this.canvas = this.canvas_element.getContext('2d');
 
-    var template = '\n      <div id="preview_menu">\n      <div class="icon-preview-x2" id="icon-preview-x"></div>\n      <div class="icon-preview-y2" id="icon-preview-y"></div>\n      </div>\n    ';
+    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x"></div>\n        <div class="icon-preview-y2" id="icon-preview-y"></div>\n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n    ';
 
     $("#window-" + this.window).append(template);
-
-    $("#window-" + this.window).append(this.canvas_element);
+    $("#preview-canvas").append(this.canvas_element);
   }
 
   _createClass(Preview, [{
@@ -40,8 +39,32 @@ var Preview = function () {
       return this.height;
     }
   }, {
+    key: 'zoom_in',
+    value: function zoom_in() {
+      if (this.zoom <= 16) {
+        this.zoom += 2;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: 'zoom_out',
+    value: function zoom_out() {
+      if (this.zoom >= 2) {
+        this.zoom -= 2;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: 'update_zoom',
+    value: function update_zoom() {
+      this.width = this.pixels_x * this.zoom;
+      this.height = this.pixels_y * this.zoom;
+    }
+  }, {
     key: 'update',
     value: function update(all_data) {
+      this.canvas_element.width = this.width;
+      this.canvas_element.height = this.height;
       var sprite_data = all_data.sprites[all_data.current_sprite];
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
