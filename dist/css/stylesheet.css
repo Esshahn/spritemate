@@ -71,6 +71,12 @@ fieldset p
   padding: 0px; 
 }
 
+fieldset .right
+{
+  float: right;
+  width: 200px;
+}
+
 
 .ui-widget-content a
 {
@@ -101,7 +107,7 @@ canvas
   border-radius: 32px;
   margin: 4px;
   padding: 8px 16px 8px 16px;
-  min-width: 200px;
+  min-width: 160px;
 }
 
 .ui-widget button:hover
@@ -294,26 +300,28 @@ canvas
 }
 
 
-.preview.ui-dialog-content
+#preview-canvas
 {
- 
+ text-align:center;
 }
 
-#preview_menu
+
+.window_menu
 {
-  text-align: center;
   padding-bottom: 8px;
-}
-
-#list_menu
-{
-  text-align: center;
   image-rendering: optimizeSpeed;             /* Older versions of FF          */
   image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
   image-rendering: -webkit-optimize-contrast; /* Safari                        */
   image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
   image-rendering: pixelated;                 /* Awesome future-browsers       */
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+
+
+
+.window_menu .right
+{
+  float: right;
 }
 
 #spritelist

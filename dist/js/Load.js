@@ -36,10 +36,10 @@ var Load = function () {
         var reader = new FileReader();
         reader.onload = function () {
           if (file.name.match(/\.(spm)$/)) {
-            _this.parse_file_spritemate(reader.result);
+            _this.parse_file_spm(reader.result);
           }
           if (file.name.match(/\.(spd|spr)$/)) {
-            _this.parse_file_spritepad(reader.result);
+            _this.parse_file_spd(reader.result);
           }
           _this.eventhandler.onLoad();
           $('#input-load').remove(); // by removing the input field and reassigning it, reloading the same file will work
@@ -58,17 +58,25 @@ var Load = function () {
       }
     }
   }, {
-    key: 'parse_file_spritemate',
-    value: function parse_file_spritemate(file) {
+    key: 'parse_file_spm',
+    value: function parse_file_spm(file) {
       this.imported_file = JSON.parse(file);
     }
   }, {
-    key: 'parse_file_spritepad',
-    value: function parse_file_spritepad(file) {
+    key: 'parse_file_spd',
+    value: function parse_file_spd(file, format) {
       this.file = file;
-      this.start_of_sprite_data = 9;
+
+      this.start_of_sprite_data = 0;
+      this.old_format = true;
+
+      // is this the new format?
+      if (this.file[0] == "S" && this.file[1] == "P" && this.file[2] == "D") {
+        this.start_of_sprite_data = 6;
+        this.old_format = false;
+      }
+
       this.sprite_size = 64;
-      this.gravitational_const_of_the_universe = 8; // TODO: understand this
 
       this.create_sprite_data_object();
       for (var i = 0; i < this.number_of_sprites; i++) {
@@ -79,10 +87,16 @@ var Load = function () {
     key: 'create_sprite_data_object',
     value: function create_sprite_data_object() {
       // colors for transparent, multicolor 1 and multicolor 2
-      this.color_trans = this.file.charCodeAt(6);
-      this.color_multi1 = this.file.charCodeAt(7);
-      this.color_multi2 = this.file.charCodeAt(8);
-      this.number_of_sprites = parseInt(this.file.charCodeAt(4), 10) + 1;
+      this.color_trans = this.file.charCodeAt(this.start_of_sprite_data + 0);
+      this.color_multi1 = this.file.charCodeAt(this.start_of_sprite_data + 1);
+      this.color_multi2 = this.file.charCodeAt(this.start_of_sprite_data + 2);
+
+      // check for number of sprites 
+      if (this.old_format) {
+        this.number_of_sprites = (this.file.length - 3) / 64; // calculate the number
+      } else {
+        this.number_of_sprites = parseInt(this.file.charCodeAt(4), 10) + 1; // new format has the number stored here
+      }
 
       this.imported_file = {};
       this.imported_file.colors = { "t": this.color_trans, "m1": this.color_multi1, "m2": this.color_multi2 };
@@ -95,7 +109,7 @@ var Load = function () {
     value: function convert_sprite_data_to_internal_format(sprite_number) {
 
       // check byte 64 which is the indidual color (low nibble) and the multicolor state (high nibble)
-      var colorpos = this.gravitational_const_of_the_universe + (sprite_number + 1) * this.sprite_size;
+      var colorpos = this.start_of_sprite_data + 2 + (sprite_number + 1) * this.sprite_size;
 
       this.multicolor = false;
 
@@ -113,7 +127,11 @@ var Load = function () {
       };
 
       var binary = [];
-      for (var i = this.start_of_sprite_data + sprite_number * this.sprite_size; i < (sprite_number + 1) * this.sprite_size + this.gravitational_const_of_the_universe; i++) {
+
+      var begin_of_sprite_data = this.start_of_sprite_data + 3 + sprite_number * this.sprite_size;
+      var end_of_sprite_data = (sprite_number + 1) * this.sprite_size + this.start_of_sprite_data + 3;
+
+      for (var i = begin_of_sprite_data; i < end_of_sprite_data; i++) {
         // convert data in SPR file into binary
         var byte = ("0000000" + this.file.charCodeAt(i).toString(2)).slice(-8).match(/.{1,2}/g);
         for (var j = 0; j < byte.length; j++) {

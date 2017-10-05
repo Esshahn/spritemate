@@ -20,15 +20,19 @@ class Preview
     this.canvas = this.canvas_element.getContext('2d');
 
     let template = `
-      <div id="preview_menu">
-      <div class="icon-preview-x2" id="icon-preview-x"></div>
-      <div class="icon-preview-y2" id="icon-preview-y"></div>
+      <div class="window_menu">
+        <div class="icon-preview-x2" id="icon-preview-x"></div>
+        <div class="icon-preview-y2" id="icon-preview-y"></div>
+        <div class="right">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">
+          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
+        </div>
       </div>
+      <div id="preview-canvas"></div>
     `;
 
     $("#window-"+this.window).append(template);
-
-    $("#window-"+this.window).append(this.canvas_element);
+    $("#preview-canvas").append(this.canvas_element);
    
   }
 
@@ -42,8 +46,35 @@ class Preview
     return this.height;
   }
 
+
+  zoom_in()
+  {
+    if (this.zoom <= 16)
+    {
+      this.zoom += 2;
+      this.update_zoom();
+    } 
+  }
+
+  zoom_out()
+  {
+    if (this.zoom >= 2)
+    {
+     this.zoom -= 2;
+     this.update_zoom();
+    }
+  }
+
+  update_zoom()
+  {
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
+  }
+
   update(all_data)
   {
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
     let sprite_data = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;

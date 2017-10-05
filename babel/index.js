@@ -12,9 +12,9 @@ function init()
               "#8e5029","#553800","#c46c71","#4a4a4a",
               "#7b7b7b","#a9ff9f","#706deb","#b2b2b2"
               ],
-      zoom_editor: 20,
+      zoom_editor: 18,
       zoom_preview: 5,
-      zoom_list: 3,
+      zoom_list: 2,
       display_grid: true
     };
 

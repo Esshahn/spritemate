@@ -21,11 +21,11 @@ var App = function () {
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1, this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: 650, top: 180, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: 600, top: 180, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2, this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 880, top: 420, width: 330, height: 200 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: 790, top: 400, width: 440, height: 200 };
     this.window_preview = new Window(window_config);
     this.list = new List(3, this.config);
 
@@ -53,7 +53,7 @@ var App = function () {
       this.preview.update(this.sprite.get_all());
       this.list.update(this.sprite.get_all());
       this.palette.update(this.sprite.get_all());
-      console.log("ui refresh: " + Date());
+      //console.log("ui refresh: " + Date());
     }
   }, {
     key: "update_loaded_file",
@@ -99,6 +99,8 @@ var App = function () {
       this.init_ui_fade("icon-list-grid");
       this.init_ui_fade("icon-list-zoom-in");
       this.init_ui_fade("icon-list-zoom-out");
+      this.init_ui_fade("icon-preview-zoom-in");
+      this.init_ui_fade("icon-preview-zoom-out");
       this.init_ui_fade("icon-preview-x");
       this.init_ui_fade("icon-preview-y");
 
@@ -336,6 +338,16 @@ var App = function () {
       $('#icon-preview-y').mouseup(function (e) {
         _this.sprite.toggle_double_y();
         $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+        _this.update_ui();
+      });
+
+      $('#icon-preview-zoom-in').mouseup(function (e) {
+        _this.preview.zoom_in();
+        _this.update_ui();
+      });
+
+      $('#icon-preview-zoom-out').mouseup(function (e) {
+        _this.preview.zoom_out();
         _this.update_ui();
       });
 

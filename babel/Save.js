@@ -15,15 +15,21 @@ class Save
       <br/>
       <fieldset>
         <legend>Spritemate // *.spm</legend>
-        <button id="button-save-spm">Save as Spritemate *.spm</button>
+        <button id="button-save-spm">Save as Spritemate</button>
         <p>The natural format for Spritemate. Recommended as long as you are not done working on the sprites.</p>
       </fieldset>
     
       <fieldset>
         <legend>Spritepad // *.spd</legend>
-        <button id="button-save-spd">Save as Spritepad *.spd</button>
-        <p>Most common Sprite editing software on Windows.</p>
+        
+        <div class="fieldset right">
+          <button id="button-save-spd">Save as 2.0</button>
+          <button id="button-save-spd-old">Save as 1.8.1</button>
+        </div>
+        <p>Most common Sprite editing software on Windows. Choose between the 2.0 beta or the older 1.8.1 file format.</p>
+        
       </fieldset>
+
   <!--
       <fieldset>
         <legend>Binary // *.bin</legend>
@@ -47,7 +53,8 @@ class Save
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
     $('#button-save-cancel').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
     $('#button-save-spm').mouseup((e) => this.save_spm(this.savedata, 'myfilename.spm'));
-    $('#button-save-spd').mouseup((e) => this.save_spd('myfilename.spd'));
+    $('#button-save-spd').mouseup((e) => this.save_spd('myfilename.spd',"new"));
+    $('#button-save-spd-old').mouseup((e) => this.save_spd('myfilename.spd',"old"));
    
   }
 
@@ -75,9 +82,9 @@ class Save
       $("#window-"+this.window).dialog( "close" );
   }
 
-  save_spd(filename)
+  save_spd(filename,format)
   {
-      var hexdata = this.create_spd_array();
+      var hexdata = this.create_spd_array(format);
 
       var bytes = new Uint8Array(hexdata);
 
@@ -101,7 +108,7 @@ class Save
       $("#window-"+this.window).dialog( "close" );
   }
 
-  create_spd_array()
+  create_spd_array(format)
   {
 
     // WIZBALL!!
@@ -120,8 +127,13 @@ class Save
     // bytes xx = "00", "00", "01", "00" added at the end of file (SpritePad animation info)
     
     var data = []
-    data.push(83,80,68); // the "SPD" header that identifies SPD files apparently
-    data.push(1,this.savedata.sprites.length-1,0); // number of sprites
+
+    if (format == "new")
+    {
+      data.push(83,80,68); // the "SPD" header that identifies SPD files apparently
+      data.push(1,this.savedata.sprites.length-1,0); // number of sprites
+    }
+
     data.push(this.savedata.colors.t,this.savedata.colors.m1,this.savedata.colors.m2); // colors
     
     var byte = "";
@@ -177,8 +189,11 @@ class Save
       data.push(color_byte); // should be the individual color
     }
 
-    // almost done, just add some animation data crap at the end
-    data.push(0,0,1,0); // SpritePad animation info (currently unused)
+    if (format == "new")
+    {
+      // almost done, just add some animation data crap at the end
+      data.push(0,0,1,0); // SpritePad animation info (currently unused) 
+    }
 
     return data;
   }

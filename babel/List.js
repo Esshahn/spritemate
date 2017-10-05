@@ -17,14 +17,16 @@ class List
     this.grid = true;
 
     let template = `
-      <div id="list_menu">
-      <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
-      <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
-      <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
-      <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
-      <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
-      <div id="spritelist"></div>
+      <div class="window_menu">
+        <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
+        <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
+        <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
+        <div class="right">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
+          <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
+        </div>
       </div>
+      <div id="spritelist"></div>
     `;
 
     $("#window-"+this.window).append(template);
@@ -138,6 +140,7 @@ class List
 
           canvas.fillStyle = this.config.colors[color] ;
           canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  
+
         }
       }
     }

@@ -19,7 +19,7 @@ var List = function () {
     this.sorted_array = [];
     this.grid = true;
 
-    var template = "\n      <div id=\"list_menu\">\n      <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n      <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"kill sprite\">\n      <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n      <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n      <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n      <div id=\"spritelist\"></div>\n      </div>\n    ";
+    var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"kill sprite\">\n        <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n        <div class=\"right\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
 
     $("#window-" + this.window).append(template);
 
