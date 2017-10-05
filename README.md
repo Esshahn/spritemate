@@ -19,11 +19,11 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * undo & redo
 * window based GUI
 * import & export to internal format
-* import & export SpritePad SPD format
+* import & export SpritePad 2.0 format
+* import & export SpritePad 1.8.1 format
 
 ## Backlog (what it does not yet)
 
-* import & export SpritePad SPR format
 * import & export PNG images
 * import & export native C64 binary
 * export as ASM source
@@ -63,6 +63,10 @@ Please note that keyboard and touch controls are not implemented as of now.
 ---
 
 ## History
+
+2017-10-05
+* full import & export of SpritePad 1.8.1 and 2.0 formats
+* preview window zoom
 
 2017-10-04
 * export sprites as SPD to SpritePad
