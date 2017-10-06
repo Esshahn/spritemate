@@ -22,7 +22,11 @@ var Editor = function () {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    $("#window-" + this.window).append(this.canvas_element);
+    var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-multicolor.png\" title=\"toggle single- & multicolor\" id=\"icon-multicolor\">\n        <img src=\"img/icon3/icon-shift-left.png\" title=\"shift left\" id=\"icon-shift-left\">\n        <img src=\"img/icon3/icon-shift-right.png\" title=\"shift right\" id=\"icon-shift-right\">\n        <img src=\"img/icon3/icon-shift-up.png\" title=\"shift up\" id=\"icon-shift-up\">\n        <img src=\"img/icon3/icon-shift-down.png\" title=\"shift down\" id=\"icon-shift-down\">\n        <img src=\"img/icon3/icon-flip-horizontal.png\" title=\"flip horizontal\" id=\"icon-flip-horizontal\">\n        <img src=\"img/icon3/icon-flip-vertical.png\" title=\"flip vertical\" id=\"icon-flip-vertical\">\n        \n        <div class=\"right\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-editor-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-editor-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"editor-canvas\"></div>\n    ";
+
+    $("#window-" + this.window).append(template);
+
+    $("#editor-canvas").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
   }
@@ -49,6 +53,8 @@ var Editor = function () {
   }, {
     key: "update",
     value: function update(all_data) {
+      this.canvas_element.width = this.width;
+      this.canvas_element.height = this.height;
       var sprite_data = all_data.sprites[all_data.current_sprite];
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -64,7 +70,7 @@ var Editor = function () {
             if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
           }
           this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step, this.pixels_y);
+          this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);
         }
       }
 
@@ -106,6 +112,28 @@ var Editor = function () {
       var x_grid = Math.floor(x / (this.width / this.config.sprite_x));
       var y_grid = Math.floor(y / (this.height / this.config.sprite_y));
       return { x: x_grid, y: y_grid };
+    }
+  }, {
+    key: "zoom_in",
+    value: function zoom_in() {
+      if (this.zoom <= 22) {
+        this.zoom += 2;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: "zoom_out",
+    value: function zoom_out() {
+      if (this.zoom >= 10) {
+        this.zoom -= 2;
+        this.update_zoom();
+      }
+    }
+  }, {
+    key: "update_zoom",
+    value: function update_zoom() {
+      this.width = this.pixels_x * this.zoom;
+      this.height = this.pixels_y * this.zoom;
     }
   }]);
 

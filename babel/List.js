@@ -20,8 +20,9 @@ class List
       <div class="window_menu">
         <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
         <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
-        <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
+        
         <div class="right">
+          <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
           <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
           <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
         </div>
@@ -139,7 +140,7 @@ class List
           if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
 
           canvas.fillStyle = this.config.colors[color] ;
-          canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y);  
+          canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);  
 
         }
       }

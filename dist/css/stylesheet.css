@@ -146,9 +146,11 @@ canvas
 
 #menu
 {
-  height: 70px;
-  margin: 8px;
-  padding: 0px 20px 0px 20px;
+  text-align: center;
+  width: 54px;
+  float: left;
+  padding: 6px 6px 6px 6px;
+
   box-shadow: 0px 5px 6px 2px rgba(0,0,0,.3);
   background: -webkit-linear-gradient(#444444, #111111); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#444444, #111111); /* For Opera 11.1 to 12.0 */
@@ -286,12 +288,12 @@ canvas
 
 .sprite.ui-dialog-content
 {
-  padding: 0px;
+  
 }
 
 .tools.ui-dialog-content
 {
-  padding: 0px;
+
 }
 
 .colors.ui-dialog-content
@@ -302,12 +304,13 @@ canvas
 
 #preview-canvas
 {
- text-align:center;
+ text-align: center;
 }
 
 
 .window_menu
 {
+  min-height: 30px;
   padding-bottom: 8px;
   image-rendering: optimizeSpeed;             /* Older versions of FF          */
   image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
@@ -397,16 +400,6 @@ canvas
 
 
 
-#icon-list-new
-{
-
-}
-
-#icon-list-delete
-{
- 
-}
-
 .ui-dialog-titlebar
 {
   font-family: 'Quicksand', sans-serif;
@@ -442,14 +435,10 @@ canvas
   padding: 0px;
 }
 
-.ui-dialog :active 
-{
-  border: 0px;
-}
 
 .ui-dialog .ui-dialog-titlebar 
 {
-    padding: 0px;
+  padding: 0px;
 }
 
 .ui-dialog .ui-resizable-se, .ui-dialog .ui-resizable-sw, .ui-dialog .ui-resizable-ne, .ui-dialog .ui-resizable-nw 

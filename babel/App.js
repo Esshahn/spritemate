@@ -10,20 +10,20 @@ class App
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 150, top: 180, width: "auto", height: "auto" };
+    let window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 240, top: 100, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0,this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", type: "colors", resizable: false, left: 50, top: 180, width: "auto", height: "auto" };
+    window_config = { title: "Palette", type: "colors", resizable: false, left: 120, top: 100, width: "auto", height: "auto" };
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1,this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: 600, top: 180, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: 720, top: 100, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 790, top: 400, width: 440, height: 200 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: 930, top: 320, width: 440, height: 200 };
     this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
@@ -47,7 +47,31 @@ class App
 
 
 
-
+toggle_fullscreen() 
+{
+  if (!document.fullscreenElement &&    // alternative standard method
+      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
 
 
 
@@ -88,7 +112,7 @@ class App
     this.init_ui_fade("icon-save");
     this.init_ui_fade("icon-undo");
     this.init_ui_fade("icon-redo");
-    this.init_ui_fade("icon-grid");
+    this.init_ui_fade("icon-editor-grid");
     this.init_ui_fade("icon-shift-left");
     this.init_ui_fade("icon-shift-right");
     this.init_ui_fade("icon-shift-up");
@@ -97,11 +121,14 @@ class App
     this.init_ui_fade("icon-flip-vertical");
     this.init_ui_fade("icon-multicolor");
     this.init_ui_fade("icon-fill");
+    this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
     
     // init hover effect for list and preview
     this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-list-grid");
+    this.init_ui_fade("icon-editor-zoom-in");
+    this.init_ui_fade("icon-editor-zoom-out");
     this.init_ui_fade("icon-list-zoom-in");
     this.init_ui_fade("icon-list-zoom-out");
     this.init_ui_fade("icon-preview-zoom-in");
@@ -136,6 +163,7 @@ class App
       if (e.key == "a")
       {
         console.log(this.sprite.get_all());
+        this.toggleFullScreen();
         this.update_ui();
       }
 
@@ -177,47 +205,6 @@ class App
       // stop drawing pixels
       this.is_drawing = false;
       this.sprite.save_backup();
-    });
-
-
-/*
-
-
-
-  //////////////////  TOP MENU
-
-
-
-*/
-
-    $('#icon-load').mouseup((e) =>
-    {
-      $("#input-load").trigger("click");
-    });
-
-    $('#icon-save').mouseup((e) =>
-    {
-      $("#window-5").dialog( "open");
-      this.save.set_save_data(this.sprite.get_all());
-    });
-
-
-    $('#icon-undo').mouseup((e) =>
-    {
-      this.sprite.undo();
-      this.update_ui();
-    });
-
-    $('#icon-redo').mouseup((e) =>
-    {
-      this.sprite.redo();
-      this.update_ui();
-    });
-
-    $('#icon-grid').mouseup((e) =>
-    {
-      this.editor.toggle_grid();
-      this.update_ui();
     });
 
     $('#icon-shift-left').mouseup((e) =>
@@ -262,6 +249,61 @@ class App
       this.update_ui();
     });
 
+
+    $('#icon-editor-zoom-in').mouseup((e) =>
+    {     
+      this.editor.zoom_in();
+      this.update_ui();
+    });
+
+    $('#icon-editor-zoom-out').mouseup((e) =>
+    {     
+      this.editor.zoom_out();
+      this.update_ui();
+    });
+
+    $('#icon-editor-grid').mouseup((e) =>
+    {
+      this.editor.toggle_grid();
+      this.update_ui();
+    });
+
+
+/*
+
+
+
+  //////////////////  MENU
+
+
+
+*/
+
+    $('#icon-load').mouseup((e) =>
+    {
+      $("#input-load").trigger("click");
+    });
+
+    $('#icon-save').mouseup((e) =>
+    {
+      $("#window-5").dialog( "open");
+      this.save.set_save_data(this.sprite.get_all());
+    });
+
+
+    $('#icon-undo').mouseup((e) =>
+    {
+      this.sprite.undo();
+      this.update_ui();
+    });
+
+    $('#icon-redo').mouseup((e) =>
+    {
+      this.sprite.redo();
+      this.update_ui();
+    });
+
+  
     $('#icon-trash').mouseup((e) =>
     {
       this.sprite.delete();
@@ -273,6 +315,12 @@ class App
     $('#icon-fill').mouseup((e) =>
     {
       this.sprite.fill();
+      this.update_ui();
+    });
+
+    $('#icon-fullscreen').mouseup((e) =>
+    {
+      this.toggle_fullscreen();
       this.update_ui();
     });
 
@@ -434,29 +482,5 @@ class App
 }
 
 
-/*
-function toggleFullScreen() {
-  if (!document.fullscreenElement &&    // alternative standard method
-      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) {
-      document.documentElement.msRequestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-      document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-    }
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  }
-}
-*/
+
+

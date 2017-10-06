@@ -95,7 +95,7 @@ class Preview
         }
 
         this.canvas.fillStyle = this.config.colors[color] ;
-        this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step, this.pixels_y); 
+        this.canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom); 
       }
     }
 
