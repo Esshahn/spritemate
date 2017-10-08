@@ -9,7 +9,11 @@ body, html, p, div
   font-size: 96%;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  color: #00b9ee;
+}
+
+p
+{
+  margin: 8px;
 }
 
 body, html
@@ -168,7 +172,7 @@ canvas
   bottom: 0px;
   height: 20px;
   padding: 6px 12px 6px 12px;
-
+  color: #00b9ee;
   background: -webkit-linear-gradient(#181818, #111111); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#181818, #111111); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(#181818, #111111); /* For Firefox 3.6 to 15 */
