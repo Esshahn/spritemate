@@ -98,6 +98,12 @@ var Load = function () {
         this.number_of_sprites = parseInt(this.file.charCodeAt(4), 10) + 1; // new format has the number stored here
       }
 
+      if (this.number_of_sprites == 1) {
+        status(this.number_of_sprites + " sprite imported successfully.");
+      } else {
+        status(this.number_of_sprites + " sprites imported successfully.");
+      }
+
       this.imported_file = {};
       this.imported_file.colors = { "t": this.color_trans, "m1": this.color_multi1, "m2": this.color_multi2 };
       this.imported_file.sprites = [];
