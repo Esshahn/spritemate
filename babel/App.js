@@ -7,6 +7,7 @@ class App
   { 
   
     this.config = config;
+    
     this.sprite = new Sprite(this.config);
 
     // init the base windows
@@ -49,34 +50,31 @@ class App
   }
 
 
-toggle_fullscreen() 
-{
-  if (!document.fullscreenElement &&    // alternative standard method
-      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) {
-      document.documentElement.msRequestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-      document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-    }
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
+  toggle_fullscreen() 
+  {
+    if (!document.fullscreenElement &&    // alternative standard method
+        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
     }
   }
-}
-
-
-
 
 
   update_ui()
@@ -103,7 +101,6 @@ toggle_fullscreen()
     $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
     $('#' + element).mouseleave((e) => {$('#' + element).animate({backgroundColor: 'transparent'}, 'fast');});
   }
-
 
 
   user_interaction()
@@ -172,7 +169,7 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
 
 */
 
-
+/*
     $(document).keydown((e) =>
     {
  
@@ -197,7 +194,7 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
       }
 
     });
-
+*/
 
 /*
 
@@ -330,11 +327,6 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
         this.update_ui();
     });
         
-  }
-
-}
-
-
 
 /* 
 
@@ -438,8 +430,6 @@ EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           O
       this.editor.toggle_grid();
       this.update_ui();
     });
-
-
 
 
 /*
@@ -571,7 +561,9 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
       this.update_ui();
     });
 
+  }
 
+}
 
 
 /*

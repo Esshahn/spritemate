@@ -84,6 +84,8 @@ fieldset .right
 }
 
 
+
+
 .ui-widget-content a
 {
   color: #00b9ee;
@@ -100,6 +102,11 @@ canvas
   image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
   image-rendering: pixelated;                 /* Awesome future-browsers       */
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+
+.center
+{
+  text-align: center;
 }
 
 .ui-widget button
@@ -137,6 +144,38 @@ canvas
   background-color: #e6007e;
 }
 
+.ui-widget input
+{
+  border: 2px solid #00b9ee;
+  background-color: black;
+  color: white;
+  font-size: 100%;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: normal;
+  border-radius: 32px;
+  margin: 4px;
+  padding: 8px 16px 8px 16px;
+  min-width: 260px;
+  text-align: center;
+}
+
+.ui-widget input:focus
+{
+  outline:0;
+  background-color: #00b9ee;
+}
+
+.ui-widget .error:focus
+{
+  border: 2px solid #e6007e;
+  background-color: #e6007e;
+}
+
+.ui-widget .error
+{
+  border: 2px solid #e6007e;
+  sbackground-color: #e6007e;
+}
 
 #info
 {
@@ -466,6 +505,8 @@ canvas
 {
     width: 12px;
     height: 12px;
+}
+
 
 
 

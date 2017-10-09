@@ -11,6 +11,7 @@ var App = function () {
     _classCallCheck(this, App);
 
     this.config = config;
+
     this.sprite = new Sprite(this.config);
 
     // init the base windows
@@ -174,25 +175,32 @@ var App = function () {
       
       */
 
-      $(document).keydown(function (e) {
-
-        if (e.key == "a") {
-          console.log(_this.sprite.get_all());
-          _this.toggleFullScreen();
-          _this.update_ui();
-        }
-
-        if (e.key == "A") {
-          // toggle hires or multicolor
-          _this.sprite.toggle_double_y();
-          _this.update_ui();
-        }
-
-        if (e.key == "f") {
-          // toggle fullscreen
-          _this.toggle_fullscreen();
-        }
-      });
+      /*
+          $(document).keydown((e) =>
+          {
+       
+            if (e.key == "a")
+            {
+              console.log(this.sprite.get_all());
+              this.toggleFullScreen();
+              this.update_ui();
+            }
+      
+            if (e.key == "A")
+            {
+              // toggle hires or multicolor
+              this.sprite.toggle_double_y();
+              this.update_ui();
+            }
+      
+            if (e.key == "f")
+            {
+              // toggle fullscreen
+              this.toggle_fullscreen();
+            }
+      
+          });
+      */
 
       /*
       
@@ -307,217 +315,217 @@ var App = function () {
         _this.sprite.set_pen("m2");
         _this.update_ui();
       });
+
+      /* 
+      
+      EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIIITTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   
+      E::::::::::::::::::::ED::::::::::::DDD   I::::::::IT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  
+      E::::::::::::::::::::ED:::::::::::::::DD I::::::::IT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R 
+      EE::::::EEEEEEEEE::::EDDD:::::DDDDD:::::DII::::::IIT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::R
+        E:::::E       EEEEEE  D:::::D    D:::::D I::::I  TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R
+        E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
+        E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
+        E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R:::::::::::::RR  
+        E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
+        E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
+        E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
+        E:::::E       EEEEEE  D:::::D    D:::::D I::::I          T:::::T        O::::::O   O::::::O  R::::R     R:::::R
+      EE::::::EEEEEEEE:::::EDDD:::::DDDDD:::::DII::::::II      TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::R
+      E::::::::::::::::::::ED:::::::::::::::DD I::::::::I      T:::::::::T       OO:::::::::::::OO R::::::R     R:::::R
+      E::::::::::::::::::::ED::::::::::::DDD   I::::::::I      T:::::::::T         OO:::::::::OO   R::::::R     R:::::R
+      EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRR
+      
+      */
+
+      $('#editor').mousedown(function (e) {
+        _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        _this.is_drawing = true; // needed for mousemove drawing
+        _this.update_ui();
+      });
+
+      $('#editor').mousemove(function (e) {
+        if (_this.is_drawing) {
+          _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+          _this.update_ui();
+        }
+      });
+
+      $('#editor').mouseup(function (e) {
+        // stop drawing pixels
+        _this.is_drawing = false;
+        _this.sprite.save_backup();
+        _this.update_ui();
+      });
+
+      $('#icon-shift-left').mouseup(function (e) {
+        _this.sprite.shift_horizontal("left");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-right').mouseup(function (e) {
+        _this.sprite.shift_horizontal("right");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-up').mouseup(function (e) {
+        _this.sprite.shift_vertical("up");
+        _this.update_ui();
+      });
+
+      $('#icon-shift-down').mouseup(function (e) {
+        _this.sprite.shift_vertical("down");
+        _this.update_ui();
+      });
+
+      $('#icon-flip-horizontal').mouseup(function (e) {
+        _this.sprite.flip_horizontal();
+        _this.update_ui();
+      });
+
+      $('#icon-flip-vertical').mouseup(function (e) {
+        _this.sprite.flip_vertical();
+        _this.update_ui();
+      });
+
+      $('#icon-multicolor').mouseup(function (e) {
+        _this.sprite.toggle_multicolor();
+        _this.update_ui();
+      });
+
+      $('#icon-editor-zoom-in').mouseup(function (e) {
+        _this.editor.zoom_in();
+        _this.update_ui();
+      });
+
+      $('#icon-editor-zoom-out').mouseup(function (e) {
+        _this.editor.zoom_out();
+        _this.update_ui();
+      });
+
+      $('#icon-editor-grid').mouseup(function (e) {
+        _this.editor.toggle_grid();
+        _this.update_ui();
+      });
+
+      /*
+      
+      LLLLLLLLLLL             IIIIIIIIII   SSSSSSSSSSSSSSS TTTTTTTTTTTTTTTTTTTTTTT
+      L:::::::::L             I::::::::I SS:::::::::::::::ST:::::::::::::::::::::T
+      L:::::::::L             I::::::::IS:::::SSSSSS::::::ST:::::::::::::::::::::T
+      LL:::::::LL             II::::::IIS:::::S     SSSSSSST:::::TT:::::::TT:::::T
+        L:::::L                 I::::I  S:::::S            TTTTTT  T:::::T  TTTTTT
+        L:::::L                 I::::I  S:::::S                    T:::::T        
+        L:::::L                 I::::I   S::::SSSS                 T:::::T        
+        L:::::L                 I::::I    SS::::::SSSSS            T:::::T        
+        L:::::L                 I::::I      SSS::::::::SS          T:::::T        
+        L:::::L                 I::::I         SSSSSS::::S         T:::::T        
+        L:::::L                 I::::I              S:::::S        T:::::T        
+        L:::::L         LLLLLL  I::::I              S:::::S        T:::::T        
+      LL:::::::LLLLLLLLL:::::LII::::::IISSSSSSS     S:::::S      TT:::::::TT      
+      L::::::::::::::::::::::LI::::::::IS::::::SSSSSS:::::S      T:::::::::T      
+      L::::::::::::::::::::::LI::::::::IS:::::::::::::::SS       T:::::::::T      
+      LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT  
+      
+      */
+
+      $('#spritelist').mouseup(function (e) {
+        if (!_this.dragging) {
+          _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
+          if (!_this.sprite.is_multicolor() && _this.sprite.is_pen_multicolor()) {
+            _this.sprite.set_pen("i");
+          }
+          _this.update_ui();
+        }
+      });
+
+      $("#spritelist").sortable({ stop: function stop(e, ui) {
+          _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
+          _this.dragging = false;
+          _this.update_ui();
+        }
+      });
+
+      $("#spritelist").sortable({ start: function start(e, ui) {
+          _this.dragging = true;
+        }
+      });
+
+      $('#icon-list-new').mouseup(function (e) {
+        _this.sprite.new(_this.palette.get_color());
+        $('#icon-trash').fadeTo("slow", 0.75);
+        $('#icon-list-delete').fadeTo("slow", 0.75);
+        _this.update_ui();
+      });
+
+      $('#icon-list-delete').mouseup(function (e) {
+        _this.sprite.delete();
+        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
+        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
+        _this.update_ui();
+      });
+
+      $('#icon-list-grid').mouseup(function (e) {
+        _this.list.toggle_grid();
+        _this.update_ui();
+      });
+
+      $('#icon-list-zoom-in').mouseup(function (e) {
+        _this.list.zoom_in();
+        _this.update_ui();
+      });
+
+      $('#icon-list-zoom-out').mouseup(function (e) {
+        _this.list.zoom_out();
+        _this.update_ui();
+      });
+
+      /*
+      
+      PPPPPPPPPPPPPPPPP   RRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEEVVVVVVVV           VVVVVVVV
+      P::::::::::::::::P  R::::::::::::::::R  E::::::::::::::::::::EV::::::V           V::::::V
+      P::::::PPPPPP:::::P R::::::RRRRRR:::::R E::::::::::::::::::::EV::::::V           V::::::V
+      PP:::::P     P:::::PRR:::::R     R:::::REE::::::EEEEEEEEE::::EV::::::V           V::::::V
+        P::::P     P:::::P  R::::R     R:::::R  E:::::E       EEEEEE V:::::V           V:::::V 
+        P::::P     P:::::P  R::::R     R:::::R  E:::::E               V:::::V         V:::::V  
+        P::::PPPPPP:::::P   R::::RRRRRR:::::R   E::::::EEEEEEEEEE      V:::::V       V:::::V   
+        P:::::::::::::PP    R:::::::::::::RR    E:::::::::::::::E       V:::::V     V:::::V    
+        P::::PPPPPPPPP      R::::RRRRRR:::::R   E:::::::::::::::E        V:::::V   V:::::V     
+        P::::P              R::::R     R:::::R  E::::::EEEEEEEEEE         V:::::V V:::::V      
+        P::::P              R::::R     R:::::R  E:::::E                    V:::::V:::::V       
+        P::::P              R::::R     R:::::R  E:::::E       EEEEEE        V:::::::::V        
+      PP::::::PP          RR:::::R     R:::::REE::::::EEEEEEEE:::::E         V:::::::V         
+      P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E          V:::::V          
+      P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E           V:::V           
+      PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV           
+      
+      */
+
+      $('#icon-preview-x').mouseup(function (e) {
+        _this.sprite.toggle_double_x();
+        $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
+        _this.update_ui();
+      });
+
+      $('#icon-preview-y').mouseup(function (e) {
+        _this.sprite.toggle_double_y();
+        $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+        _this.update_ui();
+      });
+
+      $('#icon-preview-zoom-in').mouseup(function (e) {
+        _this.preview.zoom_in();
+        _this.update_ui();
+      });
+
+      $('#icon-preview-zoom-out').mouseup(function (e) {
+        _this.preview.zoom_out();
+        _this.update_ui();
+      });
     }
   }]);
 
   return App;
 }();
-
-/* 
-
-EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIIITTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   
-E::::::::::::::::::::ED::::::::::::DDD   I::::::::IT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  
-E::::::::::::::::::::ED:::::::::::::::DD I::::::::IT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R 
-EE::::::EEEEEEEEE::::EDDD:::::DDDDD:::::DII::::::IIT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::R
-  E:::::E       EEEEEE  D:::::D    D:::::D I::::I  TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R
-  E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-  E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R:::::::::::::RR  
-  E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-  E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E:::::E       EEEEEE  D:::::D    D:::::D I::::I          T:::::T        O::::::O   O::::::O  R::::R     R:::::R
-EE::::::EEEEEEEE:::::EDDD:::::DDDDD:::::DII::::::II      TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::R
-E::::::::::::::::::::ED:::::::::::::::DD I::::::::I      T:::::::::T       OO:::::::::::::OO R::::::R     R:::::R
-E::::::::::::::::::::ED::::::::::::DDD   I::::::::I      T:::::::::T         OO:::::::::OO   R::::::R     R:::::R
-EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRR
-
-*/
-
-$('#editor').mousedown(function (e) {
-  undefined.sprite.set_pixel(undefined.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-  undefined.is_drawing = true; // needed for mousemove drawing
-  undefined.update_ui();
-});
-
-$('#editor').mousemove(function (e) {
-  if (undefined.is_drawing) {
-    undefined.sprite.set_pixel(undefined.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-    undefined.update_ui();
-  }
-});
-
-$('#editor').mouseup(function (e) {
-  // stop drawing pixels
-  undefined.is_drawing = false;
-  undefined.sprite.save_backup();
-  undefined.update_ui();
-});
-
-$('#icon-shift-left').mouseup(function (e) {
-  undefined.sprite.shift_horizontal("left");
-  undefined.update_ui();
-});
-
-$('#icon-shift-right').mouseup(function (e) {
-  undefined.sprite.shift_horizontal("right");
-  undefined.update_ui();
-});
-
-$('#icon-shift-up').mouseup(function (e) {
-  undefined.sprite.shift_vertical("up");
-  undefined.update_ui();
-});
-
-$('#icon-shift-down').mouseup(function (e) {
-  undefined.sprite.shift_vertical("down");
-  undefined.update_ui();
-});
-
-$('#icon-flip-horizontal').mouseup(function (e) {
-  undefined.sprite.flip_horizontal();
-  undefined.update_ui();
-});
-
-$('#icon-flip-vertical').mouseup(function (e) {
-  undefined.sprite.flip_vertical();
-  undefined.update_ui();
-});
-
-$('#icon-multicolor').mouseup(function (e) {
-  undefined.sprite.toggle_multicolor();
-  undefined.update_ui();
-});
-
-$('#icon-editor-zoom-in').mouseup(function (e) {
-  undefined.editor.zoom_in();
-  undefined.update_ui();
-});
-
-$('#icon-editor-zoom-out').mouseup(function (e) {
-  undefined.editor.zoom_out();
-  undefined.update_ui();
-});
-
-$('#icon-editor-grid').mouseup(function (e) {
-  undefined.editor.toggle_grid();
-  undefined.update_ui();
-});
-
-/*
-
-LLLLLLLLLLL             IIIIIIIIII   SSSSSSSSSSSSSSS TTTTTTTTTTTTTTTTTTTTTTT
-L:::::::::L             I::::::::I SS:::::::::::::::ST:::::::::::::::::::::T
-L:::::::::L             I::::::::IS:::::SSSSSS::::::ST:::::::::::::::::::::T
-LL:::::::LL             II::::::IIS:::::S     SSSSSSST:::::TT:::::::TT:::::T
-  L:::::L                 I::::I  S:::::S            TTTTTT  T:::::T  TTTTTT
-  L:::::L                 I::::I  S:::::S                    T:::::T        
-  L:::::L                 I::::I   S::::SSSS                 T:::::T        
-  L:::::L                 I::::I    SS::::::SSSSS            T:::::T        
-  L:::::L                 I::::I      SSS::::::::SS          T:::::T        
-  L:::::L                 I::::I         SSSSSS::::S         T:::::T        
-  L:::::L                 I::::I              S:::::S        T:::::T        
-  L:::::L         LLLLLL  I::::I              S:::::S        T:::::T        
-LL:::::::LLLLLLLLL:::::LII::::::IISSSSSSS     S:::::S      TT:::::::TT      
-L::::::::::::::::::::::LI::::::::IS::::::SSSSSS:::::S      T:::::::::T      
-L::::::::::::::::::::::LI::::::::IS:::::::::::::::SS       T:::::::::T      
-LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT  
-
-*/
-
-$('#spritelist').mouseup(function (e) {
-  if (!undefined.dragging) {
-    undefined.sprite.set_current_sprite(undefined.list.get_clicked_sprite());
-    if (!undefined.sprite.is_multicolor() && undefined.sprite.is_pen_multicolor()) {
-      undefined.sprite.set_pen("i");
-    }
-    undefined.update_ui();
-  }
-});
-
-$("#spritelist").sortable({ stop: function stop(e, ui) {
-    undefined.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
-    undefined.dragging = false;
-    undefined.update_ui();
-  }
-});
-
-$("#spritelist").sortable({ start: function start(e, ui) {
-    undefined.dragging = true;
-  }
-});
-
-$('#icon-list-new').mouseup(function (e) {
-  undefined.sprite.new(undefined.palette.get_color());
-  $('#icon-trash').fadeTo("slow", 0.75);
-  $('#icon-list-delete').fadeTo("slow", 0.75);
-  undefined.update_ui();
-});
-
-$('#icon-list-delete').mouseup(function (e) {
-  undefined.sprite.delete();
-  if (undefined.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
-  if (undefined.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
-  undefined.update_ui();
-});
-
-$('#icon-list-grid').mouseup(function (e) {
-  undefined.list.toggle_grid();
-  undefined.update_ui();
-});
-
-$('#icon-list-zoom-in').mouseup(function (e) {
-  undefined.list.zoom_in();
-  undefined.update_ui();
-});
-
-$('#icon-list-zoom-out').mouseup(function (e) {
-  undefined.list.zoom_out();
-  undefined.update_ui();
-});
-
-/*
-
-PPPPPPPPPPPPPPPPP   RRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEEVVVVVVVV           VVVVVVVV
-P::::::::::::::::P  R::::::::::::::::R  E::::::::::::::::::::EV::::::V           V::::::V
-P::::::PPPPPP:::::P R::::::RRRRRR:::::R E::::::::::::::::::::EV::::::V           V::::::V
-PP:::::P     P:::::PRR:::::R     R:::::REE::::::EEEEEEEEE::::EV::::::V           V::::::V
-  P::::P     P:::::P  R::::R     R:::::R  E:::::E       EEEEEE V:::::V           V:::::V 
-  P::::P     P:::::P  R::::R     R:::::R  E:::::E               V:::::V         V:::::V  
-  P::::PPPPPP:::::P   R::::RRRRRR:::::R   E::::::EEEEEEEEEE      V:::::V       V:::::V   
-  P:::::::::::::PP    R:::::::::::::RR    E:::::::::::::::E       V:::::V     V:::::V    
-  P::::PPPPPPPPP      R::::RRRRRR:::::R   E:::::::::::::::E        V:::::V   V:::::V     
-  P::::P              R::::R     R:::::R  E::::::EEEEEEEEEE         V:::::V V:::::V      
-  P::::P              R::::R     R:::::R  E:::::E                    V:::::V:::::V       
-  P::::P              R::::R     R:::::R  E:::::E       EEEEEE        V:::::::::V        
-PP::::::PP          RR:::::R     R:::::REE::::::EEEEEEEE:::::E         V:::::::V         
-P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E          V:::::V          
-P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E           V:::V           
-PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV           
-
-*/
-
-$('#icon-preview-x').mouseup(function (e) {
-  undefined.sprite.toggle_double_x();
-  $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
-  undefined.update_ui();
-});
-
-$('#icon-preview-y').mouseup(function (e) {
-  undefined.sprite.toggle_double_y();
-  $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-  undefined.update_ui();
-});
-
-$('#icon-preview-zoom-in').mouseup(function (e) {
-  undefined.preview.zoom_in();
-  undefined.update_ui();
-});
-
-$('#icon-preview-zoom-out').mouseup(function (e) {
-  undefined.preview.zoom_out();
-  undefined.update_ui();
-});
 
 /*
 

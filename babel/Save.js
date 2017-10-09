@@ -1,5 +1,3 @@
-
-
 class Save
 {
 
@@ -7,42 +5,38 @@ class Save
   {
     this.config = config;
     this.window = window;
+    this.default_filename ="mysprites";
 
     let template = `
     <div id="window-save">
       <h1 autofocus>Save Data</h1>
       <h2>The file will be saved to your default download location</h2>
-      <br/>
+
+      <div class="center">
+        Filename: <input autofocus type="text" id="filename" name="filename" value="${this.default_filename}">
+      </div>
+      <br/><br/>
       <fieldset>
-        <legend>Spritemate // *.spm</legend>
+        <legend>spritemate // *.spm</legend>
         <button id="button-save-spm">Save as Spritemate</button>
-        <p>The natural format for Spritemate. Recommended as long as you are not done working on the sprites.</p>
+        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>
       </fieldset>
     
       <fieldset>
         <legend>Spritepad // *.spd</legend>
-        
         <div class="fieldset right">
           <button id="button-save-spd">Save as 2.0</button>
           <button id="button-save-spd-old">Save as 1.8.1</button>
         </div>
-        <p>Most common Sprite editing software on Windows. Choose between the 2.0 beta or the older 1.8.1 file format.</p>
-        
-      </fieldset>
-
-  <!--
-      <fieldset>
-        <legend>Binary // *.bin</legend>
-        <button id="button-save">Save as Binary *.bin</button>
-        <p>Ready to use binary data.</p>
+        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>
       </fieldset>
 
       <fieldset>
-        <legend>ACME Source // *.asm</legend>
-        <button id="button-save">Save as ACME *.asm</button>
-        <p>Compilable source code for ACME assembler.</p>  
+        <legend>ACME source // *.asm</legend>
+        <button id="button-save-source">Save as source file</button>
+        <p>A text file containing the sprite data.</p>
       </fieldset>
-    -->
+
       <div id="button-row">
         <button id="button-save-cancel" class="button-cancel">Cancel</button>
       </div>
@@ -52,18 +46,48 @@ class Save
     $("#window-"+this.window).append(template);
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
     $('#button-save-cancel').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
-    $('#button-save-spm').mouseup((e) => this.save_spm(this.savedata, 'myfilename.spm'));
-    $('#button-save-spd').mouseup((e) => this.save_spd('myfilename.spd',"new"));
-    $('#button-save-spd-old').mouseup((e) => this.save_spd('myfilename.spd',"old"));
+    $('#button-save-spm').mouseup((e) => this.save_spm());
+    $('#button-save-spd').mouseup((e) => this.save_spd("new"));
+    $('#button-save-spd-old').mouseup((e) => this.save_spd("old"));
+    $('#button-save-source').mouseup((e) => this.save_source());
+
+    $( "#filename" ).keyup((e) => 
+    {
+      this.default_filename = $("#filename").val();
+      if (this.default_filename.length < 1)
+      {
+        $("#filename").addClass("error");
+        $('#button-save-spm').prop('disabled', true);
+        $('#button-save-spm').addClass("error");
+        $('#button-save-spd').prop('disabled', true);
+        $('#button-save-spd').addClass("error");
+        $('#button-save-spd-old').prop('disabled', true);
+        $('#button-save-spd-old').addClass("error");
+        $('#button-save-source').prop('disabled', true);
+        $('#button-save-source').addClass("error");
+      }else{
+        $("#filename").removeClass("error");
+        $('#button-save-spm').prop('disabled', false);
+        $('#button-save-spm').removeClass("error");
+        $('#button-save-spd').prop('disabled', false);
+        $('#button-save-spd').removeClass("error");
+        $('#button-save-spd-old').prop('disabled', false);
+        $('#button-save-spd-old').removeClass("error");
+        $('#button-save-source').prop('disabled', false);
+        $('#button-save-source').removeClass("error");
+      }
+    });
+
+
    
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
 
-  save_spm(data, filename, type)
+  save_spm()
   {
-
-      var file = new Blob([JSON.stringify(data)], {type: "text/plain"});
+      let filename = this.default_filename + ".spm";
+      var file = new Blob([JSON.stringify(this.savedata)], {type: "text/plain"});
       if (window.navigator.msSaveOrOpenBlob) // IE10+
           window.navigator.msSaveOrOpenBlob(file, filename);
       else { // Others
@@ -82,12 +106,35 @@ class Save
       $("#window-"+this.window).dialog( "close" );
   }
 
-  save_spd(filename,format)
+  save_source()
   {
+      let filename = this.default_filename + ".txt";
+      var data = this.create_source();
+      var file = new Blob([data], {type: "text/plain"});
+
+      if (window.navigator.msSaveOrOpenBlob) // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+      else { // Others
+          var a = document.createElement("a"),
+                  url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);  
+          }, 0); 
+      }
+
+      $("#window-"+this.window).dialog( "close" );
+  }
+
+  save_spd(format)
+  {
+      let filename = this.default_filename + ".spd";
       var hexdata = this.create_spd_array(format);
-
       var bytes = new Uint8Array(hexdata);
-
       var file = new Blob([bytes], {type: "application/octet-stream"});
 
       if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -198,6 +245,83 @@ class Save
     return data;
   }
 
+
+  create_source()
+  {
+
+    var data = "";
+
+    data += "\n; generated with spritemate on " + new Date().toLocaleString();
+
+    data += "\n\nLDA #" + this.savedata.colors.m1 + " ; sprite multicolor 1";
+    data += "\nSTA $D025";
+    data += "\nLDA #" + this.savedata.colors.m2 + " ; sprite multicolor 2";
+    data += "\nSTA $D026";
+    data += "\n";
+    
+    var byte = "";
+    var bit = "";
+
+    for (var j=0; j<this.savedata.sprites.length; j++)  // iterate through all sprites
+    {
+
+      var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      
+      var is_multicolor = this.savedata.sprites[j].multicolor;
+      var stepping = 1; 
+      if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
+
+      data +="\n\nsprite_" + j + "\n";
+      // iterate through the pixel data array 
+      // and create a hex values based on multicolor or singlecolor
+      for(var i=0; i<spritedata.length; i=i+8)
+      {
+
+        if (i%64 == 0)
+        {
+          data = data.substring(0, data.length - 1);
+          data +="\n.byte ";
+        }
+
+        for (let k=0; k<8; k=k+stepping)
+        {
+          let pen = spritedata[i+k];
+
+          if (is_multicolor)
+          {
+            if (pen == "i") bit = "10";
+            if (pen == "t") bit = "00";
+            if (pen == "m1") bit = "01";
+            if (pen == "m2") bit = "11"; 
+          }
+
+          if (!is_multicolor)
+          {
+            bit = "1";
+            if (pen == "t") bit = "0";
+          } 
+         
+          byte = byte + bit;
+        }
+
+        let hex = parseInt(byte, 2).toString(16);
+        data += "$"+("0"+hex).slice(-2)+",";
+        byte = "";
+
+      }
+
+      // finally, we add multicolor and color info for byte 64
+      var high_nibble = "0000";
+      if (is_multicolor) high_nibble = "1000";
+
+      var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
+      
+      let color_byte = "$" +("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
+      data += color_byte; // should be the individual color
+    }
+    
+    return data;
+  }
 
   set_save_data(savedata)
   {
