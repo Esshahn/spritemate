@@ -64,6 +64,11 @@ Please note that keyboard and touch controls are not implemented as of now.
 
 ## History
 
+2017-10-07
+* reworked toolbar/menu
+* fullscreen option
+* status bar
+
 2017-10-05
 * full import & export of SpritePad 1.8.1 and 2.0 formats
 * preview window zoom
