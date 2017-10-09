@@ -83,6 +83,7 @@ var Save = function () {
       }
 
       $("#window-" + this.window).dialog("close");
+      status("File has been saved.");
     }
   }, {
     key: "save_source",
@@ -107,6 +108,7 @@ var Save = function () {
       }
 
       $("#window-" + this.window).dialog("close");
+      status("File has been saved.");
     }
   }, {
     key: "save_spd",
@@ -132,6 +134,7 @@ var Save = function () {
       }
 
       $("#window-" + this.window).dialog("close");
+      status("File has been saved.");
     }
   }, {
     key: "create_spd_array",

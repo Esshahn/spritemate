@@ -104,6 +104,7 @@ class Save
       }
 
       $("#window-"+this.window).dialog( "close" );
+      status("File has been saved.");
   }
 
   save_source()
@@ -128,6 +129,7 @@ class Save
       }
 
       $("#window-"+this.window).dialog( "close" );
+      status("File has been saved.");
   }
 
   save_spd(format)
@@ -153,6 +155,7 @@ class Save
       }
 
       $("#window-"+this.window).dialog( "close" );
+      status("File has been saved.");
   }
 
   create_spd_array(format)
