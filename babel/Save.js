@@ -280,7 +280,7 @@ class Save
         if (i%64 == 0)
         {
           data = data.substring(0, data.length - 1);
-          data +="\n.byte ";
+          data +="\n!byte ";
         }
 
         for (let k=0; k<8; k=k+stepping)
