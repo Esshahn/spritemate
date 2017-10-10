@@ -311,43 +311,41 @@ var Sprite = function () {
         this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
       }
     }
+  }, {
+    key: "floodfill",
+    value: function floodfill(pos) {
+      // https://stackoverflow.com/questions/22053759/multidimensional-array-fill
+      // get target value
+      var x = pos.x;
+      var y = pos.y;
+      var data = this.all.sprites[this.all.current_sprite].pixels;
 
-    /*
-      get_pixel(x,y)
-      {
-    
-        return this.all.sprites[this.all.current_sprite].pixels[y][x];
-    
-      }
-    */
+      // multicolor check
+      var stepping = 1;
+      var is_multi = this.all.sprites[this.all.current_sprite].multicolor;
+      if (is_multi) stepping = 2;
 
-    /*
-      get_last_sprite()
-      {
-        return this.all.sprites.length - 1;
-      }
-    */
+      if (is_multi && x % 2 !== 0) x = x - 1;
+      var target = data[y][x];
 
-    /*
-      get_all_sprites()
-      {
-        if (this.all.sprites)
-        {
-          return this.all.sprites;
-        }else{
-          return false;
+      function flow(x, y, pen) {
+
+        // bounds check what we were passed
+        if (y >= 0 && y < data.length && x >= 0 && x < data[y].length) {
+          if (is_multi && x % 2 !== 0) x = x - 1;
+          if (data[y][x] === target && data[y][x] != pen) {
+            data[y][x] = pen;
+            flow(x - stepping, y, pen); // check up
+            flow(x + stepping, y, pen); // check down
+            flow(x, y - 1, pen); // check left
+            flow(x, y + 1, pen); // check right
+          }
         }
       }
-    */
 
-    /*
-      get_current_sprite_number()
-      {
-        console.log("woppo");
-        return this.all.current_sprite;
-      }
-    */
-
+      flow(x, y, this.all.pen);
+      this.all.sprites[this.all.current_sprite].pixels = data;
+    }
   }]);
 
   return Sprite;

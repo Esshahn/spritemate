@@ -364,8 +364,9 @@ EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           O
 
       if (this.mode == "fill")
       {
-        this.sprite.fill();
+        this.sprite.floodfill(this.editor.get_pixel(e));
       }
+      
       this.update_ui();
     });
 

@@ -349,8 +349,9 @@ var App = function () {
         }
 
         if (_this.mode == "fill") {
-          _this.sprite.fill();
+          _this.sprite.floodfill(_this.editor.get_pixel(e));
         }
+
         _this.update_ui();
       });
 
