@@ -15,20 +15,19 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * display grid in editor
 * multiple sprites
 * double width & height sprites
+* flood fill
 * sprite sorting
 * undo & redo
 * window based GUI
 * import & export to internal format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
+* export as ASM source
 
 ## Backlog (what it does not yet)
 
 * import & export PNG images
-* import & export native C64 binary
-* export as ASM source
 * export animation as GIF
-* flood fill
 * rotate 90 degrees
 * copy & paste
 * select and move pixels
@@ -63,6 +62,12 @@ Please note that keyboard and touch controls are not implemented as of now.
 ---
 
 ## History
+
+2017-10-10
+* flood fill
+* draw & fill modes can be switched
+* performance optimization when working with huge sprite set
+* export as ASM sourcecode
 
 2017-10-07
 * reworked toolbar/menu
