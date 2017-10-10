@@ -46,7 +46,8 @@ var App = function () {
 
     this.sprite.new(this.palette.get_color());
 
-    this.mode = "draw";
+    this.mode = "draw"; // modes can be "draw", "select" and "fill"
+
     status("Welcome to spritemate!");
     this.update_ui();
     this.user_interaction();
@@ -151,9 +152,6 @@ var App = function () {
         if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'transparent' }, 'fast');
       });
 
-      $('#icon-select').css({ opacity: 0.20 });
-      $('#icon-fill').css({ opacity: 0.20 });
-
       /*
       
       KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEEYYYYYYY       YYYYYYY   SSSSSSSSSSSSSSS 
@@ -247,18 +245,25 @@ var App = function () {
       $('#icon-draw').mouseup(function (e) {
         _this.mode = "draw";
         status("Draw mode");
+        $("#image-icon-draw").attr("src", "img/icon3/icon-draw-hi.png");
+        $("#image-icon-select").attr("src", "img/icon3/icon-select.png");
+        $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
       });
 
       $('#icon-select').mouseup(function (e) {
         _this.mode = "select";
         status("Select mode");
+        $("#image-icon-draw").attr("src", "img/icon3/icon-draw.png");
+        $("#image-icon-select").attr("src", "img/icon3/icon-select-hi.png");
+        $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
       });
 
       $('#icon-fill').mouseup(function (e) {
-        _this.mode = "draw";
+        _this.mode = "fill";
         status("Fill mode");
-        _this.sprite.fill();
-        _this.update_ui();
+        $("#image-icon-draw").attr("src", "img/icon3/icon-draw.png");
+        $("#image-icon-select").attr("src", "img/icon3/icon-select.png");
+        $("#image-icon-fill").attr("src", "img/icon3/icon-fill-hi.png");
       });
 
       $('#icon-fullscreen').mouseup(function (e) {
@@ -338,15 +343,23 @@ var App = function () {
       */
 
       $('#editor').mousedown(function (e) {
-        _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-        _this.is_drawing = true; // needed for mousemove drawing
+        if (_this.mode == "draw") {
+          _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+          _this.is_drawing = true; // needed for mousemove drawing
+        }
+
+        if (_this.mode == "fill") {
+          _this.sprite.fill();
+        }
         _this.update_ui();
       });
 
       $('#editor').mousemove(function (e) {
-        if (_this.is_drawing) {
+        if (_this.is_drawing && _this.mode == "draw") {
           _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-          _this.update_ui();
+          _this.editor.update(_this.sprite.get_all());
+          _this.preview.update(_this.sprite.get_all());
+          _this.list.update_current_sprite(_this.sprite.get_all()); // only updates the sprite drawn onto
         }
       });
 
@@ -452,7 +465,6 @@ var App = function () {
 
       $('#icon-list-new').mouseup(function (e) {
         _this.sprite.new(_this.palette.get_color());
-        $('#icon-trash').fadeTo("slow", 0.75);
         $('#icon-list-delete').fadeTo("slow", 0.75);
         _this.update_ui();
       });
@@ -460,7 +472,6 @@ var App = function () {
       $('#icon-list-delete').mouseup(function (e) {
         _this.sprite.delete();
         if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
-        if (_this.sprite.only_one_sprite()) $('#icon-trash').fadeTo("slow", 0.33);
         _this.update_ui();
       });
 
@@ -549,5 +560,6 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 */
 
 function status(text) {
-  $("#statustext").text(text).fadeIn(500).delay(3000).fadeOut(1500);
+  $("#statustext").stop(true, true);
+  $("#statustext").text(text).fadeIn(100).delay(2000).fadeOut(1000);
 }

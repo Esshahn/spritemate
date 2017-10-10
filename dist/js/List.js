@@ -103,6 +103,37 @@ var List = function () {
       $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
     }
   }, {
+    key: "update_current_sprite",
+    value: function update_current_sprite(all_data) {
+
+      // this one gets called during drawing in the editor
+      // because the normal update method gets too slow
+      // when the sprite list is becoming longer
+      var sprite_data = all_data.sprites[all_data.current_sprite];
+      var canvas = document.getElementById(all_data.current_sprite).getContext('2d');
+
+      var x_grid_step = 1;
+      if (sprite_data.multicolor) x_grid_step = 2;
+
+      for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
+        for (var j = 0; j < this.pixels_y; j++) {
+
+          var array_entry = sprite_data.pixels[j][i];
+          if (array_entry == "i") {
+            var color = sprite_data.color;
+          } else {
+            var color = all_data.colors[array_entry];
+
+            // if singlecolor only, replace the multicolor pixels with the individual color
+            if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
+          }
+
+          canvas.fillStyle = this.config.colors[color];
+          canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);
+        }
+      }
+    }
+  }, {
     key: "update",
     value: function update(all_data) {
 

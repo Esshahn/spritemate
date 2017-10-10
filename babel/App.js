@@ -2,7 +2,7 @@
 
 class App
 {
-  
+
   constructor(config)
   { 
   
@@ -42,7 +42,8 @@ class App
 
     this.sprite.new(this.palette.get_color());
 
-    this.mode = "draw";
+    this.mode = "draw"; // modes can be "draw", "select" and "fill"
+
     status("Welcome to spritemate!");
     this.update_ui();
     this.user_interaction();
@@ -143,9 +144,7 @@ class App
     $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
     $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'transparent'}, 'fast');});
 
-    
-    $('#icon-select').css({ opacity: 0.20 });
-    $('#icon-fill').css({ opacity: 0.20 });
+
 
 
 /*
@@ -247,20 +246,27 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     {
       this.mode = "draw";
       status("Draw mode");
+      $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
+      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
+      $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
     });
 
     $('#icon-select').mouseup((e) =>
     {
       this.mode = "select";
       status("Select mode");
+      $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
+      $("#image-icon-select").attr("src","img/icon3/icon-select-hi.png");
+      $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
     });
   
     $('#icon-fill').mouseup((e) =>
     {
-      this.mode = "draw";
+      this.mode = "fill";
       status("Fill mode");
-      this.sprite.fill();
-      this.update_ui();
+      $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
+      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
+      $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
     });
 
     $('#icon-fullscreen').mouseup((e) =>
@@ -350,15 +356,25 @@ EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           O
 */
 
     $('#editor').mousedown((e) => {
-      this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-      this.is_drawing = true; // needed for mousemove drawing
+      if (this.mode == "draw")
+      {
+        this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        this.is_drawing = true; // needed for mousemove drawing
+      }
+
+      if (this.mode == "fill")
+      {
+        this.sprite.fill();
+      }
       this.update_ui();
     });
 
     $('#editor').mousemove((e) => {
-      if (this.is_drawing){
+      if (this.is_drawing && this.mode=="draw"){
         this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-        this.update_ui(); 
+        this.editor.update(this.sprite.get_all()); 
+        this.preview.update(this.sprite.get_all());
+        this.list.update_current_sprite(this.sprite.get_all()); // only updates the sprite drawn onto
       }    
     });
 
@@ -483,7 +499,6 @@ LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT
    $('#icon-list-new').mouseup((e) =>
     {      
       this.sprite.new(this.palette.get_color());
-      $('#icon-trash').fadeTo( "slow", 0.75 );
       $('#icon-list-delete').fadeTo( "slow", 0.75 );
       this.update_ui();
     });
@@ -492,7 +507,6 @@ LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT
     {     
       this.sprite.delete();
       if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
-      if (this.sprite.only_one_sprite()) $('#icon-trash').fadeTo( "slow", 0.33 );
       this.update_ui(); 
     });
 
@@ -590,7 +604,8 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 
 function status(text)
 {
-  $("#statustext").text(text).fadeIn(500).delay(3000).fadeOut(1500);
+  $("#statustext").stop(true,true);
+  $("#statustext").text(text).fadeIn(100).delay(2000).fadeOut(1000);
 }
 
 

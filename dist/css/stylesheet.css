@@ -507,6 +507,11 @@ canvas
     height: 12px;
 }
 
+.ui-dialog .ui-dialog-title
+{
+  width: 100%;
+}
+
 
 
 
