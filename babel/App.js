@@ -99,7 +99,7 @@ class App
 
   init_ui_fade(element)
   {
-    $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
+    $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(80,80,80,0.5)'}, 'fast');});
     $('#' + element).mouseleave((e) => {$('#' + element).animate({backgroundColor: 'transparent'}, 'fast');});
   }
 
@@ -121,7 +121,7 @@ class App
     this.init_ui_fade("icon-flip-vertical");
     this.init_ui_fade("icon-multicolor");
     this.init_ui_fade("icon-draw");
-    this.init_ui_fade("icon-select");
+   // this.init_ui_fade("icon-select");
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
@@ -144,7 +144,7 @@ class App
     $('#icon-list-delete').mouseenter((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'rgba(0,0,0,0.5)'}, 'fast');});
     $('#icon-list-delete').mouseleave((e) => { if (!this.sprite.only_one_sprite()) $('#icon-list-delete').animate({backgroundColor: 'transparent'}, 'fast');});
 
-
+    $('#icon-select').css({ opacity: 0.20 });
 
 
 /*
@@ -168,15 +168,13 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
 
 */
 
-/*
+
     $(document).keydown((e) =>
     {
- 
+ /*
       if (e.key == "a")
       {
-        console.log(this.sprite.get_all());
-        this.toggleFullScreen();
-        this.update_ui();
+        
       }
 
       if (e.key == "A")
@@ -191,9 +189,9 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
         // toggle fullscreen
         this.toggle_fullscreen();
       }
-
-    });
 */
+    });
+
 
 /*
 
@@ -251,6 +249,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
     });
 
+/*
     $('#icon-select').mouseup((e) =>
     {
       this.mode = "select";
@@ -259,7 +258,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       $("#image-icon-select").attr("src","img/icon3/icon-select-hi.png");
       $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
     });
-  
+*/  
     $('#icon-fill').mouseup((e) =>
     {
       this.mode = "fill";

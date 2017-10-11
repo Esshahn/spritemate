@@ -101,7 +101,7 @@ var App = function () {
     key: "init_ui_fade",
     value: function init_ui_fade(element) {
       $('#' + element).mouseenter(function (e) {
-        $('#' + element).animate({ backgroundColor: 'rgba(0,0,0,0.5)' }, 'fast');
+        $('#' + element).animate({ backgroundColor: 'rgba(80,80,80,0.5)' }, 'fast');
       });
       $('#' + element).mouseleave(function (e) {
         $('#' + element).animate({ backgroundColor: 'transparent' }, 'fast');
@@ -126,7 +126,7 @@ var App = function () {
       this.init_ui_fade("icon-flip-vertical");
       this.init_ui_fade("icon-multicolor");
       this.init_ui_fade("icon-draw");
-      this.init_ui_fade("icon-select");
+      // this.init_ui_fade("icon-select");
       this.init_ui_fade("icon-fill");
       this.init_ui_fade("icon-fullscreen");
       this.init_ui_fade("icon-info");
@@ -152,6 +152,8 @@ var App = function () {
         if (!_this.sprite.only_one_sprite()) $('#icon-list-delete').animate({ backgroundColor: 'transparent' }, 'fast');
       });
 
+      $('#icon-select').css({ opacity: 0.20 });
+
       /*
       
       KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEEYYYYYYY       YYYYYYY   SSSSSSSSSSSSSSS 
@@ -173,32 +175,25 @@ var App = function () {
       
       */
 
-      /*
-          $(document).keydown((e) =>
-          {
-       
-            if (e.key == "a")
-            {
-              console.log(this.sprite.get_all());
-              this.toggleFullScreen();
-              this.update_ui();
-            }
-      
-            if (e.key == "A")
-            {
-              // toggle hires or multicolor
-              this.sprite.toggle_double_y();
-              this.update_ui();
-            }
-      
-            if (e.key == "f")
-            {
-              // toggle fullscreen
-              this.toggle_fullscreen();
-            }
-      
-          });
-      */
+      $(document).keydown(function (e) {
+        /*
+             if (e.key == "a")
+             {
+               
+             }
+              if (e.key == "A")
+             {
+               // toggle hires or multicolor
+               this.sprite.toggle_double_y();
+               this.update_ui();
+             }
+              if (e.key == "f")
+             {
+               // toggle fullscreen
+               this.toggle_fullscreen();
+             }
+        */
+      });
 
       /*
       
@@ -250,14 +245,16 @@ var App = function () {
         $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
       });
 
-      $('#icon-select').mouseup(function (e) {
-        _this.mode = "select";
-        status("Select mode");
-        $("#image-icon-draw").attr("src", "img/icon3/icon-draw.png");
-        $("#image-icon-select").attr("src", "img/icon3/icon-select-hi.png");
-        $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
-      });
-
+      /*
+          $('#icon-select').mouseup((e) =>
+          {
+            this.mode = "select";
+            status("Select mode");
+            $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
+            $("#image-icon-select").attr("src","img/icon3/icon-select-hi.png");
+            $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+          });
+      */
       $('#icon-fill').mouseup(function (e) {
         _this.mode = "fill";
         status("Fill mode");
