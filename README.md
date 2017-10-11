@@ -69,7 +69,7 @@ Please note that keyboard and touch controls are not implemented as of now.
 | <img src="https://user-images.githubusercontent.com/434355/30785983-6a741e18-a16f-11e7-89e6-931b5cc52a0e.png" > | - | Flip sprite horizontal |
 | <img src="https://user-images.githubusercontent.com/434355/30785984-6a75c10a-a16f-11e7-8701-589fd6218bd5.png" > | - | Flip sprite vertical |
 | <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
-| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zoom window in/out |
+| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" > | - | Zoom window in/out |
 
 ---
 
