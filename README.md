@@ -43,8 +43,8 @@ There's no official release yet, but you can check out a version from 2017-09-22
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
-| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" > | - | Loads a file. Supported formats: Spritemate (SPR) |
-| <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" > | - | Saves a file. Supported formats: Spritemate (SPR) |
+| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" > | - | Loads a file. Supported formats: Spritemate (SPM), SpritePad (SPD, SPR) |
+| <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" > | - | Saves a file. Supported formats: Spritemate (SPM), SpritePad (SPD), ASM source (TXT) |
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" > | - | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" > | - | Redo. For when you realized it wasn't that bad |
 | <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | - | Draw pixels |
