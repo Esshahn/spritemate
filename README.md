@@ -45,7 +45,7 @@ Please note that keyboard and touch controls are not implemented as of now.
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
-| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" width="150%"> | - | Loads a file. Supported formats: Spritemate (SPR) |
+| <img src="https://user-images.githubusercontent.com/434355/30785990-6a8e9bd0-a16f-11e7-904f-33975fbdb725.png" width="100%"> | - | Loads a file. Supported formats: Spritemate (SPR) |
 | <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" width="150%"> | - | Saves a file. Supported formats: Spritemate (SPR) |
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" width="150%"> | - | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" width="150%"> | - | Redo. For when you realized it wasn't that bad |
