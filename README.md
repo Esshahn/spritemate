@@ -38,10 +38,8 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * keyboard controls
 * and tons of other stuff
 
----
 
 ## Menu toolbar
-Please note that keyboard and touch controls are not implemented as of now.
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
@@ -56,7 +54,6 @@ Please note that keyboard and touch controls are not implemented as of now.
 | <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" > | - | Displays the info window |
 
 ## Editor window
-Please note that keyboard and touch controls are not implemented as of now.
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
@@ -67,6 +64,23 @@ Please note that keyboard and touch controls are not implemented as of now.
 | <img src="https://user-images.githubusercontent.com/434355/30785998-6ab5f36a-a16f-11e7-9694-772a8fd79331.png" > | - | Shift sprite down |
 | <img src="https://user-images.githubusercontent.com/434355/30785983-6a741e18-a16f-11e7-89e6-931b5cc52a0e.png" > | - | Flip sprite horizontal |
 | <img src="https://user-images.githubusercontent.com/434355/30785984-6a75c10a-a16f-11e7-8701-589fd6218bd5.png" > | - | Flip sprite vertical |
+| <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
+| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
+
+## Preview window
+
+| Symbol        | Shortcut      | Function  |
+| :-------------: | ------------- | --------------- |
+| <img src="https://user-images.githubusercontent.com/434355/31428737-1dd2f520-ae6c-11e7-80af-9d269fa33ac9.png" > | - | Stretches sprite horizontally |
+| <img src="https://user-images.githubusercontent.com/434355/31428740-1ff3dfc2-ae6c-11e7-97f8-0ccd8517d7ee.png" > | - | Stretches sprite vertically |
+| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
+
+## Sprite list window
+
+| Symbol        | Shortcut      | Function  |
+| :-------------: | ------------- | --------------- |
+| <img src="https://user-images.githubusercontent.com/434355/31428733-1c109d14-ae6c-11e7-8a32-531462af606f.png" > | - | Create new sprite |
+| <img src="https://user-images.githubusercontent.com/434355/31428731-1a84c466-ae6c-11e7-94a5-f7c23f30f24f.png" > | - | Remove selected sprite |
 | <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
 | <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
 
