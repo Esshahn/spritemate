@@ -49,7 +49,11 @@ Please note that keyboard and touch controls are not implemented as of now.
 | <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" width="200%"> | - | Saves a file. Supported formats: Spritemate (SPR) |
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" width="200%"> | - | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" width="200%"> | - | Redo. For when you realized it wasn't that bad |
-| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" width="200%"> | - | Fill the sprite with selected color |
+| <img src="https://user-images.githubusercontent.com/434355/31428722-121338da-ae6c-11e7-8269-fb9c5558bc5a.png" width="200%"> | - | Draw pixels |
+| <img src="https://user-images.githubusercontent.com/434355/31428743-24037cb2-ae6c-11e7-919a-0073e3d3324f.png" width="200%"> | - | Select pixels |
+| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" width="200%"> | - | Flood fill |
+| <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" width="200%"> | - | Toggle fullscreen window mode |
+| <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" width="200%"> | - | Displays the info window |
 
 # Editor window
 Please note that keyboard and touch controls are not implemented as of now.
