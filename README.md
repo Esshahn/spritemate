@@ -49,7 +49,7 @@ Please note that keyboard and touch controls are not implemented as of now.
 | <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" > | - | Saves a file. Supported formats: Spritemate (SPR) |
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" > | - | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" > | - | Redo. For when you realized it wasn't that bad |
-| <img src="https://user-images.githubusercontent.com/434355/31428722-121338da-ae6c-11e7-8269-fb9c5558bc5a.png" > | - | Draw pixels |
+| <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | - | Draw pixels |
 | <img src="https://user-images.githubusercontent.com/434355/31428743-24037cb2-ae6c-11e7-919a-0073e3d3324f.png" > | - | Select pixels |
 | <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" > | - | Flood fill |
 | <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" > | - | Toggle fullscreen window mode |
