@@ -19,6 +19,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * flood fill
 * sprite sorting
 * undo & redo
+* copy & paste
 * window based GUI
 * import & export to internal format
 * import & export SpritePad 2.0 format
@@ -30,7 +31,6 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * import & export PNG images
 * export animation as GIF
 * rotate 90 degrees
-* copy & paste
 * select and move pixels
 * save window layout
 * animation
@@ -49,7 +49,6 @@ There's no official release yet, but you can check out a version from 2017-09-22
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" > | - | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" > | - | Redo. For when you realized it wasn't that bad |
 | <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | - | Draw pixels |
-| <img src="https://user-images.githubusercontent.com/434355/31428743-24037cb2-ae6c-11e7-919a-0073e3d3324f.png" > | - | Select pixels |
 | <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" > | - | Flood fill |
 | <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" > | - | Toggle fullscreen window mode |
 | <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" > | - | Displays the info window |
