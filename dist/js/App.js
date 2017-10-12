@@ -133,10 +133,10 @@ var App = function () {
     key: "init_ui_fade",
     value: function init_ui_fade(element) {
       $('#' + element).mouseenter(function (e) {
-        $('#' + element).animate({ backgroundColor: 'rgba(80,80,80,0.5)' }, 'fast');
+        $('#' + element).stop(true, true).animate({ backgroundColor: 'rgba(90,90,90,0.5)' }, 'fast');
       });
       $('#' + element).mouseleave(function (e) {
-        $('#' + element).animate({ backgroundColor: 'transparent' }, 'fast');
+        $('#' + element).stop(true, true).animate({ backgroundColor: 'transparent' }, 'fast');
       });
     }
   }, {

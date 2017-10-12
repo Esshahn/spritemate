@@ -137,8 +137,8 @@ class App
 
   init_ui_fade(element)
   {
-    $('#' + element).mouseenter((e) => {$('#' + element).animate({backgroundColor: 'rgba(80,80,80,0.5)'}, 'fast');});
-    $('#' + element).mouseleave((e) => {$('#' + element).animate({backgroundColor: 'transparent'}, 'fast');});
+    $('#' + element).mouseenter((e) => {$('#' + element).stop(true,true).animate({backgroundColor: 'rgba(90,90,90,0.5)'}, 'fast');});
+    $('#' + element).mouseleave((e) => {$('#' + element).stop(true,true).animate({backgroundColor: 'transparent'}, 'fast');});
   }
 
 
