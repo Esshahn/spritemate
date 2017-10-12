@@ -34,7 +34,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * select and move pixels
 * save window layout
 * animation
-* stacked sprite layers (onion skinning)
+* stacked sprite layers (sprite overlays)
 * touch controls and tablet optimization
 * keyboard controls
 * and tons of other stuff
