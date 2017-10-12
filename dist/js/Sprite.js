@@ -19,6 +19,7 @@ var Sprite = function () {
     this.all.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
     this.backup_position = -1;
+    this.copy_sprite = {};
   }
 
   _createClass(Sprite, [{
@@ -215,6 +216,11 @@ var Sprite = function () {
       return this.all.sprites[this.all.current_sprite];
     }
   }, {
+    key: "get_number_of_sprites",
+    value: function get_number_of_sprites() {
+      return this.all.sprites.length;
+    }
+  }, {
     key: "only_one_sprite",
     value: function only_one_sprite() {
       if (this.all.sprites.length == 1) return true;
@@ -374,6 +380,44 @@ var Sprite = function () {
 
       flow(x, y, this.all.pen);
       this.all.sprites[this.all.current_sprite].pixels = data;
+    }
+  }, {
+    key: "copy",
+    value: function copy() {
+      this.copy_sprite = jQuery.extend(true, {}, this.all.sprites[this.all.current_sprite]);
+    }
+  }, {
+    key: "is_copy_empty",
+    value: function is_copy_empty() {
+      if (Object.keys(this.copy_sprite).length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: "paste",
+    value: function paste() {
+      this.all.sprites[this.all.current_sprite] = jQuery.extend(true, {}, this.copy_sprite);
+      this.save_backup();
+    }
+  }, {
+    key: "can_undo",
+    value: function can_undo() {
+      if (this.backup_position < 1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }, {
+    key: "can_redo",
+    value: function can_redo() {
+      if (this.backup_position < this.backup.length - 1) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }]);
 

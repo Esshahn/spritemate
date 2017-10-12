@@ -19,7 +19,7 @@ var List = function () {
     this.sorted_array = [];
     this.grid = true;
 
-    var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"kill sprite\">\n        \n        <div class=\"right\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
+    var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"remove sprite\">\n        <img src=\"img/icon3/icon-list-copy.png\" id=\"icon-list-copy\" title=\"copy sprite\">\n        <img src=\"img/icon3/icon-list-paste.png\" id=\"icon-list-paste\" title=\"paste sprite\">\n        \n        <div class=\"right\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
 
     $("#window-" + this.window).append(template);
 
@@ -80,7 +80,6 @@ var List = function () {
   }, {
     key: "zoom_in",
     value: function zoom_in() {
-      console.log("zooming in");
       if (this.zoom <= 8) {
         this.zoom++;
         this.update_zoom();

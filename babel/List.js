@@ -19,7 +19,9 @@ class List
     let template = `
       <div class="window_menu">
         <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
-        <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="kill sprite">
+        <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="remove sprite">
+        <img src="img/icon3/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
+        <img src="img/icon3/icon-list-paste.png" id="icon-list-paste" title="paste sprite">
         
         <div class="right">
           <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
@@ -86,7 +88,6 @@ class List
 
   zoom_in()
   {
-    console.log("zooming in");
     if (this.zoom <= 8)
     {
       this.zoom ++;

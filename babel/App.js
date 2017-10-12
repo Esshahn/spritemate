@@ -45,7 +45,7 @@ class App
     this.mode = "draw"; // modes can be "draw", "select" and "fill"
 
     status("Welcome to spritemate!");
-    this.update_ui();
+    this.update();
     this.user_interaction();
 
   }
@@ -78,13 +78,51 @@ class App
   }
 
 
+  update()
+  {
+    let all = this.sprite.get_all();
+
+    this.editor.update(   all);
+    this.preview.update(  all);
+    this.list.update(     all);
+    this.palette.update(  all);
+    this.update_ui();
+    //console.log("ui refresh: " + Date());
+    
+
+  }
+
   update_ui()
   {
-    this.editor.update(   this.sprite.get_all());
-    this.preview.update(  this.sprite.get_all());
-    this.list.update(     this.sprite.get_all());
-    this.palette.update(  this.sprite.get_all());
-    //console.log("ui refresh: " + Date());
+
+    if (this.sprite.get_number_of_sprites() > 1)
+    {
+      $('#icon-list-delete').fadeTo( "fast", 1 );
+    } else {
+      $('#icon-list-delete').fadeTo( "fast", 0.33 );
+    }
+
+    if (this.sprite.is_copy_empty())
+    {
+      $('#icon-list-paste').fadeTo( "fast", 0.33 );
+    } else {
+      $('#icon-list-paste').fadeTo( "fast", 1 );
+    }
+
+    if (this.sprite.can_undo())
+    {
+      $('#icon-undo').fadeTo( "fast", 1 );
+    } else {
+      $('#icon-undo').fadeTo( "fast", 0.33 );
+    }
+
+    if (this.sprite.can_redo())
+    {
+      $('#icon-redo').fadeTo( "fast", 1 );
+    } else {
+      $('#icon-redo').fadeTo( "fast", 0.33 );
+    }
+
   }
 
 
@@ -93,7 +131,7 @@ class App
     // called as a callback event from the load class
     // after a file got loaded in completely
     this.sprite.set_all(this.load.get_imported_file());
-    this.update_ui();
+    this.update();
   }
 
 
@@ -126,8 +164,10 @@ class App
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
     
-    // init hover effect for list and preview
+  
     this.init_ui_fade("icon-list-new");
+    this.init_ui_fade("icon-list-copy");
+    this.init_ui_fade("icon-list-paste");
     this.init_ui_fade("icon-list-grid");
     this.init_ui_fade("icon-editor-zoom-in");
     this.init_ui_fade("icon-editor-zoom-out");
@@ -149,22 +189,22 @@ class App
 
 /*
 
-KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEEYYYYYYY       YYYYYYY   SSSSSSSSSSSSSSS 
-K:::::::K    K:::::KE::::::::::::::::::::EY:::::Y       Y:::::Y SS:::::::::::::::S
-K:::::::K    K:::::KE::::::::::::::::::::EY:::::Y       Y:::::YS:::::SSSSSS::::::S
-K:::::::K   K::::::KEE::::::EEEEEEEEE::::EY::::::Y     Y::::::YS:::::S     SSSSSSS
-KK::::::K  K:::::KKK  E:::::E       EEEEEEYYY:::::Y   Y:::::YYYS:::::S            
-  K:::::K K:::::K     E:::::E                Y:::::Y Y:::::Y   S:::::S            
-  K::::::K:::::K      E::::::EEEEEEEEEE       Y:::::Y:::::Y     S::::SSSS         
-  K:::::::::::K       E:::::::::::::::E        Y:::::::::Y       SS::::::SSSSS    
-  K:::::::::::K       E:::::::::::::::E         Y:::::::Y          SSS::::::::SS  
-  K::::::K:::::K      E::::::EEEEEEEEEE          Y:::::Y              SSSSSS::::S 
-  K:::::K K:::::K     E:::::E                    Y:::::Y                   S:::::S
-KK::::::K  K:::::KKK  E:::::E       EEEEEE       Y:::::Y                   S:::::S
-K:::::::K   K::::::KEE::::::EEEEEEEE:::::E       Y:::::Y       SSSSSSS     S:::::S
-K:::::::K    K:::::KE::::::::::::::::::::E    YYYY:::::YYYY    S::::::SSSSSS:::::S
-K:::::::K    K:::::KE::::::::::::::::::::E    Y:::::::::::Y    S:::::::::::::::SS 
-KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS  
+KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE   YYYYYYY       YYYYYYY      SSSSSSSSSSSSSSS 
+K:::::::K    K:::::K   E::::::::::::::::::::E   Y:::::Y       Y:::::Y    SS:::::::::::::::S
+K:::::::K    K:::::K   E::::::::::::::::::::E   Y:::::Y       Y:::::Y   S:::::SSSSSS::::::S
+K:::::::K   K::::::K   EE::::::EEEEEEEEE::::E   Y::::::Y     Y::::::Y   S:::::S     SSSSSSS
+KK::::::K  K:::::KKK     E:::::E       EEEEEE   YYY:::::Y   Y:::::YYY   S:::::S            
+  K:::::K K:::::K        E:::::E                   Y:::::Y Y:::::Y      S:::::S            
+  K::::::K:::::K         E::::::EEEEEEEEEE          Y:::::Y:::::Y        S::::SSSS         
+  K:::::::::::K          E:::::::::::::::E           Y:::::::::Y          SS::::::SSSSS    
+  K:::::::::::K          E:::::::::::::::E            Y:::::::Y             SSS::::::::SS  
+  K::::::K:::::K         E::::::EEEEEEEEEE             Y:::::Y                 SSSSSS::::S 
+  K:::::K K:::::K        E:::::E                       Y:::::Y                      S:::::S
+KK::::::K  K:::::KKK     E:::::E       EEEEEE          Y:::::Y                      S:::::S
+K:::::::K   K::::::K   EE::::::EEEEEEEE:::::E          Y:::::Y          SSSSSSS     S:::::S
+K:::::::K    K:::::K   E::::::::::::::::::::E       YYYY:::::YYYY       S::::::SSSSSS:::::S
+K:::::::K    K:::::K   E::::::::::::::::::::E       Y:::::::::::Y       S:::::::::::::::SS 
+KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSSSSSSSSSS  
 
 */
 
@@ -181,7 +221,7 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
       {
         // toggle hires or multicolor
         this.sprite.toggle_double_y();
-        this.update_ui();
+        this.update();
       }
 
       if (e.key == "f")
@@ -195,22 +235,22 @@ KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS
 
 /*
 
-MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN        NNNNNNNNUUUUUUUU     UUUUUUUU
-M:::::::M             M:::::::ME::::::::::::::::::::EN:::::::N       N::::::NU::::::U     U::::::U
-M::::::::M           M::::::::ME::::::::::::::::::::EN::::::::N      N::::::NU::::::U     U::::::U
-M:::::::::M         M:::::::::MEE::::::EEEEEEEEE::::EN:::::::::N     N::::::NUU:::::U     U:::::UU
-M::::::::::M       M::::::::::M  E:::::E       EEEEEEN::::::::::N    N::::::N U:::::U     U:::::U 
-M:::::::::::M     M:::::::::::M  E:::::E             N:::::::::::N   N::::::N U:::::D     D:::::U 
-M:::::::M::::M   M::::M:::::::M  E::::::EEEEEEEEEE   N:::::::N::::N  N::::::N U:::::D     D:::::U 
-M::::::M M::::M M::::M M::::::M  E:::::::::::::::E   N::::::N N::::N N::::::N U:::::D     D:::::U 
-M::::::M  M::::M::::M  M::::::M  E:::::::::::::::E   N::::::N  N::::N:::::::N U:::::D     D:::::U 
-M::::::M   M:::::::M   M::::::M  E::::::EEEEEEEEEE   N::::::N   N:::::::::::N U:::::D     D:::::U 
-M::::::M    M:::::M    M::::::M  E:::::E             N::::::N    N::::::::::N U:::::D     D:::::U 
-M::::::M     MMMMM     M::::::M  E:::::E       EEEEEEN::::::N     N:::::::::N U::::::U   U::::::U 
-M::::::M               M::::::MEE::::::EEEEEEEE:::::EN::::::N      N::::::::N U:::::::UUU:::::::U 
-M::::::M               M::::::ME::::::::::::::::::::EN::::::N       N:::::::N  UU:::::::::::::UU  
-M::::::M               M::::::ME::::::::::::::::::::EN::::::N        N::::::N    UU:::::::::UU    
-MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN      UUUUUUUUU  
+MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN        NNNNNNNN   UUUUUUUU     UUUUUUUU
+M:::::::M             M:::::::M   E::::::::::::::::::::E   N:::::::N       N::::::N   U::::::U     U::::::U
+M::::::::M           M::::::::M   E::::::::::::::::::::E   N::::::::N      N::::::N   U::::::U     U::::::U
+M:::::::::M         M:::::::::M   EE::::::EEEEEEEEE::::E   N:::::::::N     N::::::N   UU:::::U     U:::::UU
+M::::::::::M       M::::::::::M     E:::::E       EEEEEE   N::::::::::N    N::::::N    U:::::U     U:::::U 
+M:::::::::::M     M:::::::::::M     E:::::E                N:::::::::::N   N::::::N    U:::::D     D:::::U 
+M:::::::M::::M   M::::M:::::::M     E::::::EEEEEEEEEE      N:::::::N::::N  N::::::N    U:::::D     D:::::U 
+M::::::M M::::M M::::M M::::::M     E:::::::::::::::E      N::::::N N::::N N::::::N    U:::::D     D:::::U 
+M::::::M  M::::M::::M  M::::::M     E:::::::::::::::E      N::::::N  N::::N:::::::N    U:::::D     D:::::U 
+M::::::M   M:::::::M   M::::::M     E::::::EEEEEEEEEE      N::::::N   N:::::::::::N    U:::::D     D:::::U 
+M::::::M    M:::::M    M::::::M     E:::::E                N::::::N    N::::::::::N    U:::::D     D:::::U 
+M::::::M     MMMMM     M::::::M     E:::::E       EEEEEE   N::::::N     N:::::::::N    U::::::U   U::::::U 
+M::::::M               M::::::M   EE::::::EEEEEEEE:::::E   N::::::N      N::::::::N    U:::::::UUU:::::::U 
+M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N       N:::::::N     UU:::::::::::::UU  
+M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N        N::::::N       UU:::::::::UU    
+MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNNNNN         UUUUUUUUU  
 
 
 
@@ -231,13 +271,13 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     $('#icon-undo').mouseup((e) =>
     {
       this.sprite.undo();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-redo').mouseup((e) =>
     {
       this.sprite.redo();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-draw').mouseup((e) =>
@@ -305,52 +345,52 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
     {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
-      this.update_ui(); 
+      this.update(); 
     });
 
     $('#palette_i').mouseup((e) =>
     {     
       this.sprite.set_pen("i");
-      this.update_ui();
+      this.update();
     });
 
     $('#palette_t').mouseup((e) =>
     {     
       this.sprite.set_pen("t");
-      this.update_ui();
+      this.update();
     });
 
     $('#palette_m1').mouseup((e) =>
     {  
         this.sprite.set_pen("m1");
-        this.update_ui();
+        this.update();
     });
 
     $('#palette_m2').mouseup((e) =>
     {    
         this.sprite.set_pen("m2");
-        this.update_ui();
+        this.update();
     });
         
 
 /* 
 
-EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIIITTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   
-E::::::::::::::::::::ED::::::::::::DDD   I::::::::IT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  
-E::::::::::::::::::::ED:::::::::::::::DD I::::::::IT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R 
-EE::::::EEEEEEEEE::::EDDD:::::DDDDD:::::DII::::::IIT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::R
-  E:::::E       EEEEEE  D:::::D    D:::::D I::::I  TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R
-  E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-  E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R:::::::::::::RR  
-  E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-  E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-  E:::::E       EEEEEE  D:::::D    D:::::D I::::I          T:::::T        O::::::O   O::::::O  R::::R     R:::::R
-EE::::::EEEEEEEE:::::EDDD:::::DDDDD:::::DII::::::II      TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::R
-E::::::::::::::::::::ED:::::::::::::::DD I::::::::I      T:::::::::T       OO:::::::::::::OO R::::::R     R:::::R
-E::::::::::::::::::::ED::::::::::::DDD   I::::::::I      T:::::::::T         OO:::::::::OO   R::::::R     R:::::R
-EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRR
+EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII   TTTTTTTTTTTTTTTTTTTTTTT    
+E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I   T:::::::::::::::::::::T 
+E::::::::::::::::::::E   D:::::::::::::::DD    I::::::::I   T:::::::::::::::::::::T
+EE::::::EEEEEEEEE::::E   DDD:::::DDDDD:::::D   II::::::II   T:::::TT:::::::TT:::::T
+  E:::::E       EEEEEE     D:::::D    D:::::D    I::::I     TTTTTT  T:::::T  TTTTTT
+  E:::::E                  D:::::D     D:::::D   I::::I             T:::::T        
+  E::::::EEEEEEEEEE        D:::::D     D:::::D   I::::I             T:::::T        
+  E:::::::::::::::E        D:::::D     D:::::D   I::::I             T:::::T         
+  E:::::::::::::::E        D:::::D     D:::::D   I::::I             T:::::T        
+  E::::::EEEEEEEEEE        D:::::D     D:::::D   I::::I             T:::::T        
+  E:::::E                  D:::::D     D:::::D   I::::I             T:::::T       
+  E:::::E       EEEEEE     D:::::D    D:::::D    I::::I             T:::::T       
+EE::::::EEEEEEEE:::::E   DDD:::::DDDDD:::::D   II::::::II         TT:::::::TT     
+E::::::::::::::::::::E   D:::::::::::::::DD    I::::::::I         T:::::::::T     
+E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I         T:::::::::T      
+EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT        
 
 */
 
@@ -366,7 +406,7 @@ EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           O
         this.sprite.floodfill(this.editor.get_pixel(e));
       }
       
-      this.update_ui();
+      this.update();
     });
 
     $('#editor').mousemove((e) => {
@@ -383,89 +423,89 @@ EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           O
       // stop drawing pixels
       this.is_drawing = false;
       this.sprite.save_backup();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-shift-left').mouseup((e) =>
     {
       this.sprite.shift_horizontal("left");
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-shift-right').mouseup((e) =>
     {
       this.sprite.shift_horizontal("right");
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-shift-up').mouseup((e) =>
     {
       this.sprite.shift_vertical("up");
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-shift-down').mouseup((e) =>
     {
       this.sprite.shift_vertical("down");
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-flip-horizontal').mouseup((e) =>
     {
       this.sprite.flip_horizontal();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-flip-vertical').mouseup((e) =>
     {
       this.sprite.flip_vertical();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-multicolor').mouseup((e) =>
     {
       this.sprite.toggle_multicolor();
-      this.update_ui();
+      this.update();
     });
 
 
     $('#icon-editor-zoom-in').mouseup((e) =>
     {     
       this.editor.zoom_in();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-editor-zoom-out').mouseup((e) =>
     {     
       this.editor.zoom_out();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-editor-grid').mouseup((e) =>
     {
       this.editor.toggle_grid();
-      this.update_ui();
+      this.update();
     });
 
 
 /*
 
-LLLLLLLLLLL             IIIIIIIIII   SSSSSSSSSSSSSSS TTTTTTTTTTTTTTTTTTTTTTT
-L:::::::::L             I::::::::I SS:::::::::::::::ST:::::::::::::::::::::T
-L:::::::::L             I::::::::IS:::::SSSSSS::::::ST:::::::::::::::::::::T
-LL:::::::LL             II::::::IIS:::::S     SSSSSSST:::::TT:::::::TT:::::T
-  L:::::L                 I::::I  S:::::S            TTTTTT  T:::::T  TTTTTT
-  L:::::L                 I::::I  S:::::S                    T:::::T        
-  L:::::L                 I::::I   S::::SSSS                 T:::::T        
-  L:::::L                 I::::I    SS::::::SSSSS            T:::::T        
-  L:::::L                 I::::I      SSS::::::::SS          T:::::T        
-  L:::::L                 I::::I         SSSSSS::::S         T:::::T        
-  L:::::L                 I::::I              S:::::S        T:::::T        
-  L:::::L         LLLLLL  I::::I              S:::::S        T:::::T        
-LL:::::::LLLLLLLLL:::::LII::::::IISSSSSSS     S:::::S      TT:::::::TT      
-L::::::::::::::::::::::LI::::::::IS::::::SSSSSS:::::S      T:::::::::T      
-L::::::::::::::::::::::LI::::::::IS:::::::::::::::SS       T:::::::::T      
-LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT  
+LLLLLLLLLLL                IIIIIIIIII      SSSSSSSSSSSSSSS    TTTTTTTTTTTTTTTTTTTTTTT
+L:::::::::L                I::::::::I    SS:::::::::::::::S   T:::::::::::::::::::::T
+L:::::::::L                I::::::::I   S:::::SSSSSS::::::S   T:::::::::::::::::::::T
+LL:::::::LL                II::::::II   S:::::S     SSSSSSS   T:::::TT:::::::TT:::::T
+  L:::::L                    I::::I     S:::::S               TTTTTT  T:::::T  TTTTTT
+  L:::::L                    I::::I     S:::::S                       T:::::T        
+  L:::::L                    I::::I      S::::SSSS                    T:::::T        
+  L:::::L                    I::::I       SS::::::SSSSS               T:::::T        
+  L:::::L                    I::::I         SSS::::::::SS             T:::::T        
+  L:::::L                    I::::I            SSSSSS::::S            T:::::T        
+  L:::::L                    I::::I                 S:::::S           T:::::T        
+  L:::::L         LLLLLL     I::::I                 S:::::S           T:::::T        
+LL:::::::LLLLLLLLL:::::L   II::::::II   SSSS        S:::::S         TT:::::::TT      
+L::::::::::::::::::::::L   I::::::::I   S::::::SSSSSS:::::S         T:::::::::T      
+L::::::::::::::::::::::L   I::::::::I   S:::::::::::::::SS          T:::::::::T      
+LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT  
 
 */
 
@@ -478,7 +518,7 @@ LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT
         {
           this.sprite.set_pen("i");
         }
-        this.update_ui();
+        this.update();
       } 
     });
 
@@ -486,7 +526,7 @@ LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT
       {
         this.sprite.sort_spritelist($( "#spritelist" ).sortable( "toArray" ));
         this.dragging = false;
-        this.update_ui();
+        this.update();
       }
     });
 
@@ -499,33 +539,50 @@ LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT
    $('#icon-list-new').mouseup((e) =>
     {      
       this.sprite.new(this.palette.get_color());
-      $('#icon-list-delete').fadeTo( "slow", 0.75 );
-      this.update_ui();
+      this.update();
     });
 
    $('#icon-list-delete').mouseup((e) =>
     {     
       this.sprite.delete();
-      if (this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo( "slow", 0.33 );
-      this.update_ui(); 
+      this.update(); 
+    });
+
+   $('#icon-list-copy').mouseup((e) =>
+    {  
+      this.sprite.copy();
+      this.update_ui();
+      status("Sprite copied.");
+    });
+
+   $('#icon-list-paste').mouseup((e) =>
+    {   
+      if (!this.sprite.is_copy_empty())
+      {
+        this.sprite.paste(); 
+        this.update();
+        status("Sprite pasted.");
+      } else {
+        status("Nothing to copy.","error");
+      }
     });
 
    $('#icon-list-grid').mouseup((e) =>
     {     
       this.list.toggle_grid();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-list-zoom-in').mouseup((e) =>
     {     
       this.list.zoom_in();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-list-zoom-out').mouseup((e) =>
     {     
       this.list.zoom_out();
-      this.update_ui();
+      this.update();
     });
 
 /*
@@ -553,26 +610,26 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     {     
       this.sprite.toggle_double_x();
       $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
-      this.update_ui();
+      this.update();
     });
 
    $('#icon-preview-y').mouseup((e) =>
     {     
       this.sprite.toggle_double_y();
       $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-preview-zoom-in').mouseup((e) =>
     {     
       this.preview.zoom_in();
-      this.update_ui();
+      this.update();
     });
 
     $('#icon-preview-zoom-out').mouseup((e) =>
     {     
       this.preview.zoom_out();
-      this.update_ui();
+      this.update();
     });
 
   }
@@ -602,8 +659,15 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 */
 
 
-function status(text)
+function status(text,state = "normal")
 {
+  if (state == "normal")
+  {
+
+  } else {
+
+  }
+
   $("#statustext").stop(true,true);
   $("#statustext").text(text).fadeIn(100).delay(2000).fadeOut(1000);
 }

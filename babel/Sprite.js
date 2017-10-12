@@ -17,7 +17,8 @@ class Sprite
     this.all.current_sprite = 0;
     this.all.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
-    this.backup_position = -1;    
+    this.backup_position = -1; 
+    this.copy_sprite = {};   
   }
 
   new(color = 1,multicolor = false)
@@ -219,6 +220,11 @@ class Sprite
     return this.all.sprites[this.all.current_sprite];
   }
 
+  get_number_of_sprites()
+  {
+    return this.all.sprites.length;
+  }
+
   only_one_sprite()
   {
     if (this.all.sprites.length == 1) return true;
@@ -396,6 +402,45 @@ class Sprite
     this.all.sprites[this.all.current_sprite].pixels = data;
   }
 
+  copy()
+  {
+    this.copy_sprite = jQuery.extend(true, {}, this.all.sprites[this.all.current_sprite]);
+  }
 
+  is_copy_empty()
+  {
+    if (Object.keys(this.copy_sprite).length === 0)
+    {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  paste()
+  {
+    this.all.sprites[this.all.current_sprite] = jQuery.extend(true, {}, this.copy_sprite);
+    this.save_backup();
+  }
+
+  can_undo()
+  {
+    if (this.backup_position < 1)
+    {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  can_redo()
+  {
+    if (this.backup_position < this.backup.length-1)
+    {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }
