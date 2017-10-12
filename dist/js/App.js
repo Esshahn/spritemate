@@ -49,7 +49,7 @@ var App = function () {
     this.mode = "draw"; // modes can be "draw", "select" and "fill"
 
     status("Welcome to spritemate!");
-    this.update_ui();
+    this.update();
     this.user_interaction();
   }
 
@@ -81,13 +81,45 @@ var App = function () {
       }
     }
   }, {
+    key: "update",
+    value: function update() {
+      var all = this.sprite.get_all();
+
+      this.editor.update(all);
+      this.preview.update(all);
+      this.list.update(all);
+      this.palette.update(all);
+      this.update_ui();
+      //console.log("ui refresh: " + Date());
+
+    }
+  }, {
     key: "update_ui",
     value: function update_ui() {
-      this.editor.update(this.sprite.get_all());
-      this.preview.update(this.sprite.get_all());
-      this.list.update(this.sprite.get_all());
-      this.palette.update(this.sprite.get_all());
-      //console.log("ui refresh: " + Date());
+
+      if (this.sprite.get_number_of_sprites() > 1) {
+        $('#icon-list-delete').fadeTo("fast", 1);
+      } else {
+        $('#icon-list-delete').fadeTo("fast", 0.33);
+      }
+
+      if (this.sprite.is_copy_empty()) {
+        $('#icon-list-paste').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-list-paste').fadeTo("fast", 1);
+      }
+
+      if (this.sprite.can_undo()) {
+        $('#icon-undo').fadeTo("fast", 1);
+      } else {
+        $('#icon-undo').fadeTo("fast", 0.33);
+      }
+
+      if (this.sprite.can_redo()) {
+        $('#icon-redo').fadeTo("fast", 1);
+      } else {
+        $('#icon-redo').fadeTo("fast", 0.33);
+      }
     }
   }, {
     key: "update_loaded_file",
@@ -95,7 +127,7 @@ var App = function () {
       // called as a callback event from the load class
       // after a file got loaded in completely
       this.sprite.set_all(this.load.get_imported_file());
-      this.update_ui();
+      this.update();
     }
   }, {
     key: "init_ui_fade",
@@ -131,8 +163,9 @@ var App = function () {
       this.init_ui_fade("icon-fullscreen");
       this.init_ui_fade("icon-info");
 
-      // init hover effect for list and preview
       this.init_ui_fade("icon-list-new");
+      this.init_ui_fade("icon-list-copy");
+      this.init_ui_fade("icon-list-paste");
       this.init_ui_fade("icon-list-grid");
       this.init_ui_fade("icon-editor-zoom-in");
       this.init_ui_fade("icon-editor-zoom-out");
@@ -156,22 +189,22 @@ var App = function () {
 
       /*
       
-      KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEEYYYYYYY       YYYYYYY   SSSSSSSSSSSSSSS 
-      K:::::::K    K:::::KE::::::::::::::::::::EY:::::Y       Y:::::Y SS:::::::::::::::S
-      K:::::::K    K:::::KE::::::::::::::::::::EY:::::Y       Y:::::YS:::::SSSSSS::::::S
-      K:::::::K   K::::::KEE::::::EEEEEEEEE::::EY::::::Y     Y::::::YS:::::S     SSSSSSS
-      KK::::::K  K:::::KKK  E:::::E       EEEEEEYYY:::::Y   Y:::::YYYS:::::S            
-        K:::::K K:::::K     E:::::E                Y:::::Y Y:::::Y   S:::::S            
-        K::::::K:::::K      E::::::EEEEEEEEEE       Y:::::Y:::::Y     S::::SSSS         
-        K:::::::::::K       E:::::::::::::::E        Y:::::::::Y       SS::::::SSSSS    
-        K:::::::::::K       E:::::::::::::::E         Y:::::::Y          SSS::::::::SS  
-        K::::::K:::::K      E::::::EEEEEEEEEE          Y:::::Y              SSSSSS::::S 
-        K:::::K K:::::K     E:::::E                    Y:::::Y                   S:::::S
-      KK::::::K  K:::::KKK  E:::::E       EEEEEE       Y:::::Y                   S:::::S
-      K:::::::K   K::::::KEE::::::EEEEEEEE:::::E       Y:::::Y       SSSSSSS     S:::::S
-      K:::::::K    K:::::KE::::::::::::::::::::E    YYYY:::::YYYY    S::::::SSSSSS:::::S
-      K:::::::K    K:::::KE::::::::::::::::::::E    Y:::::::::::Y    S:::::::::::::::SS 
-      KKKKKKKKK    KKKKKKKEEEEEEEEEEEEEEEEEEEEEE    YYYYYYYYYYYYY     SSSSSSSSSSSSSSS  
+      KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE   YYYYYYY       YYYYYYY      SSSSSSSSSSSSSSS 
+      K:::::::K    K:::::K   E::::::::::::::::::::E   Y:::::Y       Y:::::Y    SS:::::::::::::::S
+      K:::::::K    K:::::K   E::::::::::::::::::::E   Y:::::Y       Y:::::Y   S:::::SSSSSS::::::S
+      K:::::::K   K::::::K   EE::::::EEEEEEEEE::::E   Y::::::Y     Y::::::Y   S:::::S     SSSSSSS
+      KK::::::K  K:::::KKK     E:::::E       EEEEEE   YYY:::::Y   Y:::::YYY   S:::::S            
+        K:::::K K:::::K        E:::::E                   Y:::::Y Y:::::Y      S:::::S            
+        K::::::K:::::K         E::::::EEEEEEEEEE          Y:::::Y:::::Y        S::::SSSS         
+        K:::::::::::K          E:::::::::::::::E           Y:::::::::Y          SS::::::SSSSS    
+        K:::::::::::K          E:::::::::::::::E            Y:::::::Y             SSS::::::::SS  
+        K::::::K:::::K         E::::::EEEEEEEEEE             Y:::::Y                 SSSSSS::::S 
+        K:::::K K:::::K        E:::::E                       Y:::::Y                      S:::::S
+      KK::::::K  K:::::KKK     E:::::E       EEEEEE          Y:::::Y                      S:::::S
+      K:::::::K   K::::::K   EE::::::EEEEEEEE:::::E          Y:::::Y          SSSSSSS     S:::::S
+      K:::::::K    K:::::K   E::::::::::::::::::::E       YYYY:::::YYYY       S::::::SSSSSS:::::S
+      K:::::::K    K:::::K   E::::::::::::::::::::E       Y:::::::::::Y       S:::::::::::::::SS 
+      KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSSSSSSSSSS  
       
       */
 
@@ -185,7 +218,7 @@ var App = function () {
              {
                // toggle hires or multicolor
                this.sprite.toggle_double_y();
-               this.update_ui();
+               this.update();
              }
               if (e.key == "f")
              {
@@ -197,22 +230,22 @@ var App = function () {
 
       /*
       
-      MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN        NNNNNNNNUUUUUUUU     UUUUUUUU
-      M:::::::M             M:::::::ME::::::::::::::::::::EN:::::::N       N::::::NU::::::U     U::::::U
-      M::::::::M           M::::::::ME::::::::::::::::::::EN::::::::N      N::::::NU::::::U     U::::::U
-      M:::::::::M         M:::::::::MEE::::::EEEEEEEEE::::EN:::::::::N     N::::::NUU:::::U     U:::::UU
-      M::::::::::M       M::::::::::M  E:::::E       EEEEEEN::::::::::N    N::::::N U:::::U     U:::::U 
-      M:::::::::::M     M:::::::::::M  E:::::E             N:::::::::::N   N::::::N U:::::D     D:::::U 
-      M:::::::M::::M   M::::M:::::::M  E::::::EEEEEEEEEE   N:::::::N::::N  N::::::N U:::::D     D:::::U 
-      M::::::M M::::M M::::M M::::::M  E:::::::::::::::E   N::::::N N::::N N::::::N U:::::D     D:::::U 
-      M::::::M  M::::M::::M  M::::::M  E:::::::::::::::E   N::::::N  N::::N:::::::N U:::::D     D:::::U 
-      M::::::M   M:::::::M   M::::::M  E::::::EEEEEEEEEE   N::::::N   N:::::::::::N U:::::D     D:::::U 
-      M::::::M    M:::::M    M::::::M  E:::::E             N::::::N    N::::::::::N U:::::D     D:::::U 
-      M::::::M     MMMMM     M::::::M  E:::::E       EEEEEEN::::::N     N:::::::::N U::::::U   U::::::U 
-      M::::::M               M::::::MEE::::::EEEEEEEE:::::EN::::::N      N::::::::N U:::::::UUU:::::::U 
-      M::::::M               M::::::ME::::::::::::::::::::EN::::::N       N:::::::N  UU:::::::::::::UU  
-      M::::::M               M::::::ME::::::::::::::::::::EN::::::N        N::::::N    UU:::::::::UU    
-      MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN      UUUUUUUUU  
+      MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN        NNNNNNNN   UUUUUUUU     UUUUUUUU
+      M:::::::M             M:::::::M   E::::::::::::::::::::E   N:::::::N       N::::::N   U::::::U     U::::::U
+      M::::::::M           M::::::::M   E::::::::::::::::::::E   N::::::::N      N::::::N   U::::::U     U::::::U
+      M:::::::::M         M:::::::::M   EE::::::EEEEEEEEE::::E   N:::::::::N     N::::::N   UU:::::U     U:::::UU
+      M::::::::::M       M::::::::::M     E:::::E       EEEEEE   N::::::::::N    N::::::N    U:::::U     U:::::U 
+      M:::::::::::M     M:::::::::::M     E:::::E                N:::::::::::N   N::::::N    U:::::D     D:::::U 
+      M:::::::M::::M   M::::M:::::::M     E::::::EEEEEEEEEE      N:::::::N::::N  N::::::N    U:::::D     D:::::U 
+      M::::::M M::::M M::::M M::::::M     E:::::::::::::::E      N::::::N N::::N N::::::N    U:::::D     D:::::U 
+      M::::::M  M::::M::::M  M::::::M     E:::::::::::::::E      N::::::N  N::::N:::::::N    U:::::D     D:::::U 
+      M::::::M   M:::::::M   M::::::M     E::::::EEEEEEEEEE      N::::::N   N:::::::::::N    U:::::D     D:::::U 
+      M::::::M    M:::::M    M::::::M     E:::::E                N::::::N    N::::::::::N    U:::::D     D:::::U 
+      M::::::M     MMMMM     M::::::M     E:::::E       EEEEEE   N::::::N     N:::::::::N    U::::::U   U::::::U 
+      M::::::M               M::::::M   EE::::::EEEEEEEE:::::E   N::::::N      N::::::::N    U:::::::UUU:::::::U 
+      M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N       N:::::::N     UU:::::::::::::UU  
+      M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N        N::::::N       UU:::::::::UU    
+      MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNNNNN         UUUUUUUUU  
       
       
       
@@ -229,12 +262,12 @@ var App = function () {
 
       $('#icon-undo').mouseup(function (e) {
         _this.sprite.undo();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-redo').mouseup(function (e) {
         _this.sprite.redo();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-draw').mouseup(function (e) {
@@ -295,47 +328,47 @@ var App = function () {
       $('#palette').mouseup(function (e) {
         _this.palette.set_active_color(e);
         _this.sprite.set_pen_color(_this.palette.get_color());
-        _this.update_ui();
+        _this.update();
       });
 
       $('#palette_i').mouseup(function (e) {
         _this.sprite.set_pen("i");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#palette_t').mouseup(function (e) {
         _this.sprite.set_pen("t");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#palette_m1').mouseup(function (e) {
         _this.sprite.set_pen("m1");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#palette_m2').mouseup(function (e) {
         _this.sprite.set_pen("m2");
-        _this.update_ui();
+        _this.update();
       });
 
       /* 
       
-      EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIIITTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   
-      E::::::::::::::::::::ED::::::::::::DDD   I::::::::IT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  
-      E::::::::::::::::::::ED:::::::::::::::DD I::::::::IT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R 
-      EE::::::EEEEEEEEE::::EDDD:::::DDDDD:::::DII::::::IIT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::R
-        E:::::E       EEEEEE  D:::::D    D:::::D I::::I  TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R
-        E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-        E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-        E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R:::::::::::::RR  
-        E:::::::::::::::E     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R 
-        E::::::EEEEEEEEEE     D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-        E:::::E               D:::::D     D:::::DI::::I          T:::::T        O:::::O     O:::::O  R::::R     R:::::R
-        E:::::E       EEEEEE  D:::::D    D:::::D I::::I          T:::::T        O::::::O   O::::::O  R::::R     R:::::R
-      EE::::::EEEEEEEE:::::EDDD:::::DDDDD:::::DII::::::II      TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::R
-      E::::::::::::::::::::ED:::::::::::::::DD I::::::::I      T:::::::::T       OO:::::::::::::OO R::::::R     R:::::R
-      E::::::::::::::::::::ED::::::::::::DDD   I::::::::I      T:::::::::T         OO:::::::::OO   R::::::R     R:::::R
-      EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD      IIIIIIIIII      TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRR
+      EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII   TTTTTTTTTTTTTTTTTTTTTTT    
+      E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I   T:::::::::::::::::::::T 
+      E::::::::::::::::::::E   D:::::::::::::::DD    I::::::::I   T:::::::::::::::::::::T
+      EE::::::EEEEEEEEE::::E   DDD:::::DDDDD:::::D   II::::::II   T:::::TT:::::::TT:::::T
+        E:::::E       EEEEEE     D:::::D    D:::::D    I::::I     TTTTTT  T:::::T  TTTTTT
+        E:::::E                  D:::::D     D:::::D   I::::I             T:::::T        
+        E::::::EEEEEEEEEE        D:::::D     D:::::D   I::::I             T:::::T        
+        E:::::::::::::::E        D:::::D     D:::::D   I::::I             T:::::T         
+        E:::::::::::::::E        D:::::D     D:::::D   I::::I             T:::::T        
+        E::::::EEEEEEEEEE        D:::::D     D:::::D   I::::I             T:::::T        
+        E:::::E                  D:::::D     D:::::D   I::::I             T:::::T       
+        E:::::E       EEEEEE     D:::::D    D:::::D    I::::I             T:::::T       
+      EE::::::EEEEEEEE:::::E   DDD:::::DDDDD:::::D   II::::::II         TT:::::::TT     
+      E::::::::::::::::::::E   D:::::::::::::::DD    I::::::::I         T:::::::::T     
+      E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I         T:::::::::T      
+      EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT        
       
       */
 
@@ -349,7 +382,7 @@ var App = function () {
           _this.sprite.floodfill(_this.editor.get_pixel(e));
         }
 
-        _this.update_ui();
+        _this.update();
       });
 
       $('#editor').mousemove(function (e) {
@@ -365,77 +398,77 @@ var App = function () {
         // stop drawing pixels
         _this.is_drawing = false;
         _this.sprite.save_backup();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-shift-left').mouseup(function (e) {
         _this.sprite.shift_horizontal("left");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-shift-right').mouseup(function (e) {
         _this.sprite.shift_horizontal("right");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-shift-up').mouseup(function (e) {
         _this.sprite.shift_vertical("up");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-shift-down').mouseup(function (e) {
         _this.sprite.shift_vertical("down");
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-flip-horizontal').mouseup(function (e) {
         _this.sprite.flip_horizontal();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-flip-vertical').mouseup(function (e) {
         _this.sprite.flip_vertical();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-multicolor').mouseup(function (e) {
         _this.sprite.toggle_multicolor();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-editor-zoom-in').mouseup(function (e) {
         _this.editor.zoom_in();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-editor-zoom-out').mouseup(function (e) {
         _this.editor.zoom_out();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-editor-grid').mouseup(function (e) {
         _this.editor.toggle_grid();
-        _this.update_ui();
+        _this.update();
       });
 
       /*
       
-      LLLLLLLLLLL             IIIIIIIIII   SSSSSSSSSSSSSSS TTTTTTTTTTTTTTTTTTTTTTT
-      L:::::::::L             I::::::::I SS:::::::::::::::ST:::::::::::::::::::::T
-      L:::::::::L             I::::::::IS:::::SSSSSS::::::ST:::::::::::::::::::::T
-      LL:::::::LL             II::::::IIS:::::S     SSSSSSST:::::TT:::::::TT:::::T
-        L:::::L                 I::::I  S:::::S            TTTTTT  T:::::T  TTTTTT
-        L:::::L                 I::::I  S:::::S                    T:::::T        
-        L:::::L                 I::::I   S::::SSSS                 T:::::T        
-        L:::::L                 I::::I    SS::::::SSSSS            T:::::T        
-        L:::::L                 I::::I      SSS::::::::SS          T:::::T        
-        L:::::L                 I::::I         SSSSSS::::S         T:::::T        
-        L:::::L                 I::::I              S:::::S        T:::::T        
-        L:::::L         LLLLLL  I::::I              S:::::S        T:::::T        
-      LL:::::::LLLLLLLLL:::::LII::::::IISSSSSSS     S:::::S      TT:::::::TT      
-      L::::::::::::::::::::::LI::::::::IS::::::SSSSSS:::::S      T:::::::::T      
-      L::::::::::::::::::::::LI::::::::IS:::::::::::::::SS       T:::::::::T      
-      LLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIII SSSSSSSSSSSSSSS         TTTTTTTTTTT  
+      LLLLLLLLLLL                IIIIIIIIII      SSSSSSSSSSSSSSS    TTTTTTTTTTTTTTTTTTTTTTT
+      L:::::::::L                I::::::::I    SS:::::::::::::::S   T:::::::::::::::::::::T
+      L:::::::::L                I::::::::I   S:::::SSSSSS::::::S   T:::::::::::::::::::::T
+      LL:::::::LL                II::::::II   S:::::S     SSSSSSS   T:::::TT:::::::TT:::::T
+        L:::::L                    I::::I     S:::::S               TTTTTT  T:::::T  TTTTTT
+        L:::::L                    I::::I     S:::::S                       T:::::T        
+        L:::::L                    I::::I      S::::SSSS                    T:::::T        
+        L:::::L                    I::::I       SS::::::SSSSS               T:::::T        
+        L:::::L                    I::::I         SSS::::::::SS             T:::::T        
+        L:::::L                    I::::I            SSSSSS::::S            T:::::T        
+        L:::::L                    I::::I                 S:::::S           T:::::T        
+        L:::::L         LLLLLL     I::::I                 S:::::S           T:::::T        
+      LL:::::::LLLLLLLLL:::::L   II::::::II   SSSS        S:::::S         TT:::::::TT      
+      L::::::::::::::::::::::L   I::::::::I   S::::::SSSSSS:::::S         T:::::::::T      
+      L::::::::::::::::::::::L   I::::::::I   S:::::::::::::::SS          T:::::::::T      
+      LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT  
       
       */
 
@@ -445,14 +478,14 @@ var App = function () {
           if (!_this.sprite.is_multicolor() && _this.sprite.is_pen_multicolor()) {
             _this.sprite.set_pen("i");
           }
-          _this.update_ui();
+          _this.update();
         }
       });
 
       $("#spritelist").sortable({ stop: function stop(e, ui) {
           _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
           _this.dragging = false;
-          _this.update_ui();
+          _this.update();
         }
       });
 
@@ -463,29 +496,43 @@ var App = function () {
 
       $('#icon-list-new').mouseup(function (e) {
         _this.sprite.new(_this.palette.get_color());
-        $('#icon-list-delete').fadeTo("slow", 0.75);
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-list-delete').mouseup(function (e) {
         _this.sprite.delete();
-        if (_this.sprite.only_one_sprite()) $('#icon-list-delete').fadeTo("slow", 0.33);
+        _this.update();
+      });
+
+      $('#icon-list-copy').mouseup(function (e) {
+        _this.sprite.copy();
         _this.update_ui();
+        status("Sprite copied.");
+      });
+
+      $('#icon-list-paste').mouseup(function (e) {
+        if (!_this.sprite.is_copy_empty()) {
+          _this.sprite.paste();
+          _this.update();
+          status("Sprite pasted.");
+        } else {
+          status("Nothing to copy.", "error");
+        }
       });
 
       $('#icon-list-grid').mouseup(function (e) {
         _this.list.toggle_grid();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-list-zoom-in').mouseup(function (e) {
         _this.list.zoom_in();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-list-zoom-out').mouseup(function (e) {
         _this.list.zoom_out();
-        _this.update_ui();
+        _this.update();
       });
 
       /*
@@ -512,23 +559,23 @@ var App = function () {
       $('#icon-preview-x').mouseup(function (e) {
         _this.sprite.toggle_double_x();
         $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-preview-y').mouseup(function (e) {
         _this.sprite.toggle_double_y();
         $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-preview-zoom-in').mouseup(function (e) {
         _this.preview.zoom_in();
-        _this.update_ui();
+        _this.update();
       });
 
       $('#icon-preview-zoom-out').mouseup(function (e) {
         _this.preview.zoom_out();
-        _this.update_ui();
+        _this.update();
       });
     }
   }]);
@@ -558,6 +605,10 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 */
 
 function status(text) {
+  var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
+
+  if (state == "normal") {} else {}
+
   $("#statustext").stop(true, true);
   $("#statustext").text(text).fadeIn(100).delay(2000).fadeOut(1000);
 }
