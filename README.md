@@ -86,7 +86,10 @@ There's no official release yet, but you can check out a version from 2017-09-22
 | <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
 | <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
 
----
+## Some useful hints
+
+* you can rearrange sprites by just dragging them to the desired position
+* you can copy & paste sprites by using the corresponding icons in the sprite list window
 
 ## History
 
