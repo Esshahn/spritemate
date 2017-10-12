@@ -80,14 +80,21 @@ There's no official release yet, but you can check out a version from 2017-09-22
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
-| <img src="https://user-images.githubusercontent.com/434355/31428733-1c109d14-ae6c-11e7-8a32-531462af606f.png" > | - | Create new sprite |
-| <img src="https://user-images.githubusercontent.com/434355/31428731-1a84c466-ae6c-11e7-94a5-f7c23f30f24f.png" > | - | Remove selected sprite |
+| <img src="https://user-images.githubusercontent.com/434355/31494459-a8293e90-af53-11e7-9a94-6116f320e520.png" > | - | Create new sprite |
+| <img src="https://user-images.githubusercontent.com/434355/31494458-a80da95a-af53-11e7-87a3-ec6f5f82658b.png" > | - | Remove selected sprite |
+| <img src="https://user-images.githubusercontent.com/434355/31494457-a7ed60f0-af53-11e7-8ceb-db8b61a6a2db.png" > | - | Copy sprite |
+| <img src="https://user-images.githubusercontent.com/434355/31494460-a84380ac-af53-11e7-8ee1-dd733beaa912.png" > | - | Paste sprite |
 | <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
 | <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
 
 ---
 
 ## History
+
+2017-10-12
+* Copy & Paste for sprites
+* Symbols for Copy & Paste
+* More UI context states
 
 2017-10-10
 * flood fill
