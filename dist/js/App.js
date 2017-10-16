@@ -51,6 +51,8 @@ var App = function () {
     status("Welcome to spritemate!");
     this.update();
     this.user_interaction();
+
+    $("#window-4").dialog("open");
   }
 
   _createClass(App, [{
