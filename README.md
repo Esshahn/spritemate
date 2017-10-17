@@ -73,6 +73,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 | :-------------: | ------------- | --------------- |
 | <img src="https://user-images.githubusercontent.com/434355/31428737-1dd2f520-ae6c-11e7-80af-9d269fa33ac9.png" > | - | Stretches sprite horizontally |
 | <img src="https://user-images.githubusercontent.com/434355/31428740-1ff3dfc2-ae6c-11e7-97f8-0ccd8517d7ee.png" > | - | Stretches sprite vertically |
+| <img src="https://user-images.githubusercontent.com/434355/31675717-c742c2fe-b365-11e7-9b03-1caae8ee39ea.png" > | - | Overlay next sprite |
 | <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
 
 ## Sprite list window
