@@ -16,6 +16,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * display grid in editor
 * multiple sprites
 * double width & height sprites
+* stacked sprite layers (sprite overlays)
 * flood fill
 * sprite sorting
 * undo & redo
@@ -34,11 +35,9 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * select and move pixels
 * save window layout
 * animation
-* stacked sprite layers (sprite overlays)
 * touch controls and tablet optimization
 * keyboard controls
 * and tons of other stuff
-
 
 ## Menu toolbar
 
@@ -93,6 +92,11 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * you can copy & paste sprites by using the corresponding icons in the sprite list window
 
 ## History
+
+2017-10-17
+* Simple sprite overlays
+* Additional zoom levels for big screens
+* fix for Firefox, should work now
 
 2017-10-12
 * Copy & Paste for sprites
