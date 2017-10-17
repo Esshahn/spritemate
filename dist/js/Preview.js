@@ -22,7 +22,7 @@ var Preview = function () {
     this.canvas_element.height = this.height;
     this.canvas = this.canvas_element.getContext('2d');
 
-    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x"></div>\n        <div class="icon-preview-y2" id="icon-preview-y"></div>\n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n    ';
+    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x"></div>\n        <div class="icon-preview-y2" id="icon-preview-y"></div>\n        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">\n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n    ';
 
     $("#window-" + this.window).append(template);
     $("#preview-canvas").append(this.canvas_element);
@@ -41,7 +41,7 @@ var Preview = function () {
   }, {
     key: 'zoom_in',
     value: function zoom_in() {
-      if (this.zoom <= 16) {
+      if (this.zoom <= 24) {
         this.zoom += 2;
         this.update_zoom();
       }
@@ -73,18 +73,23 @@ var Preview = function () {
         for (var j = 0; j < this.pixels_y; j++) {
 
           var array_entry = sprite_data.pixels[j][i];
+
+          // if singlecolor only, replace the multicolor pixels with the individual color
+          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";
+
           if (array_entry == "i") {
             var color = sprite_data.color;
           } else {
             var color = all_data.colors[array_entry];
-
-            // if singlecolor only, replace the multicolor pixels with the individual color
-            if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
           }
 
           this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);
+          this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
         }
+      }
+
+      if (sprite_data.overlay && all_data.current_sprite < all_data.sprites.length - 1) {
+        this.display_overlay(all_data);
       }
 
       // set the preview window x and y stretch
@@ -106,6 +111,31 @@ var Preview = function () {
 
       $('#preview').css('width', this.width * double_x);
       $('#preview').css('height', this.height * double_y);
+    }
+  }, {
+    key: 'display_overlay',
+    value: function display_overlay(all_data) {
+
+      var sprite_data = all_data.sprites[all_data.current_sprite + 1];
+      var x_grid_step = 1;
+      if (sprite_data.multicolor) x_grid_step = 2;
+      for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
+        for (var j = 0; j < this.pixels_y; j++) {
+          var array_entry = sprite_data.pixels[j][i];
+
+          // if singlecolor only, replace the multicolor pixels with the individual color
+          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";
+
+          if (array_entry == "i") {
+            var color = sprite_data.color;
+          } else {
+            var color = all_data.colors[array_entry];
+          }
+
+          this.canvas.fillStyle = this.config.colors[color];
+          if (array_entry != "t") this.canvas.fillRect(i * this.zoom, j * this.zoom, this.zoom * x_grid_step, this.zoom);
+        }
+      }
     }
   }]);
 

@@ -42,13 +42,13 @@ class App
 
     this.sprite.new(this.palette.get_color());
 
-    this.mode = "draw"; // modes can be "draw", "select" and "fill"
+    this.mode = "draw"; // modes can be "draw" and "fill"
 
     status("Welcome to spritemate!");
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog( "open");
+     $("#window-4").dialog( "open");
 
   }
 
@@ -125,6 +125,13 @@ class App
       $('#icon-redo').fadeTo( "fast", 0.33 );
     }
 
+    if (this.sprite.is_overlay())
+    {
+      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay-hi.png");
+    } else {
+      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay.png");
+    }
+
   }
 
 
@@ -177,6 +184,7 @@ class App
     this.init_ui_fade("icon-list-zoom-out");
     this.init_ui_fade("icon-preview-zoom-in");
     this.init_ui_fade("icon-preview-zoom-out");
+    this.init_ui_fade("icon-preview-overlay");
     this.init_ui_fade("icon-preview-x");
     this.init_ui_fade("icon-preview-y");
     
@@ -619,6 +627,12 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     {     
       this.sprite.toggle_double_y();
       $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+      this.update();
+    });
+
+    $('#icon-preview-overlay').mouseup((e) =>
+    {     
+      this.sprite.toggle_overlay();
       this.update();
     });
 

@@ -14,7 +14,7 @@ class Info
         <img autofocus src="img/logo.png" id="logo">
         <p>A tool to draw sprites for the Commodore 64</p>
         <br/>
-        <p>This is the closed beta $01.<br/>Please do not share this link publicly yet. </p>
+        <p>This is the closed beta $02.<br/>Please do not share this link publicly yet. </p>
         <p>Check out the documentation on Github:<br/><a target="_blank" href="https://github.com/Esshahn/spritemate">https://github.com/Esshahn/spritemate</a></p>
         <p>Report bugs, ideas & requests to ingo (at) awsm (dot) de</p>
         <br/>

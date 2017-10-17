@@ -70,7 +70,7 @@ var Editor = function () {
             if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
           }
           this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(i * this.zoom, j * this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);
+          this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
         }
       }
 
@@ -116,7 +116,7 @@ var Editor = function () {
   }, {
     key: "zoom_in",
     value: function zoom_in() {
-      if (this.zoom <= 22) {
+      if (this.zoom <= 26) {
         this.zoom += 2;
         this.update_zoom();
       }

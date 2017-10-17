@@ -34,6 +34,7 @@ var Sprite = function () {
         "multicolor": multicolor,
         "double_x": false,
         "double_y": false,
+        "overlay": false,
         "pixels": []
       };
 
@@ -418,6 +419,20 @@ var Sprite = function () {
       } else {
         return false;
       }
+    }
+  }, {
+    key: "toggle_overlay",
+    value: function toggle_overlay() {
+      if (this.all.sprites[this.all.current_sprite].overlay) {
+        this.all.sprites[this.all.current_sprite].overlay = false;
+      } else {
+        this.all.sprites[this.all.current_sprite].overlay = true;
+      }
+    }
+  }, {
+    key: "is_overlay",
+    value: function is_overlay() {
+      return this.all.sprites[this.all.current_sprite].overlay;
     }
   }]);
 

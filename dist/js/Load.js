@@ -19,7 +19,7 @@ var Load = function () {
       var element = document.createElement('div');
       element.innerHTML = '<input type="file" id="input-load" style="display: none">';
       var fileInput = element.firstChild;
-      document.body.append(fileInput);
+      document.body.appendChild(fileInput);
       var that = this;
       fileInput.addEventListener('change', function () {
         that.read_file_data(fileInput);

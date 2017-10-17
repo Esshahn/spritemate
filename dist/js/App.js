@@ -46,7 +46,7 @@ var App = function () {
 
     this.sprite.new(this.palette.get_color());
 
-    this.mode = "draw"; // modes can be "draw", "select" and "fill"
+    this.mode = "draw"; // modes can be "draw" and "fill"
 
     status("Welcome to spritemate!");
     this.update();
@@ -122,6 +122,12 @@ var App = function () {
       } else {
         $('#icon-redo').fadeTo("fast", 0.33);
       }
+
+      if (this.sprite.is_overlay()) {
+        $('#icon-preview-overlay').attr("src", "img/icon3/icon-preview-overlay-hi.png");
+      } else {
+        $('#icon-preview-overlay').attr("src", "img/icon3/icon-preview-overlay.png");
+      }
     }
   }, {
     key: "update_loaded_file",
@@ -175,6 +181,7 @@ var App = function () {
       this.init_ui_fade("icon-list-zoom-out");
       this.init_ui_fade("icon-preview-zoom-in");
       this.init_ui_fade("icon-preview-zoom-out");
+      this.init_ui_fade("icon-preview-overlay");
       this.init_ui_fade("icon-preview-x");
       this.init_ui_fade("icon-preview-y");
 
@@ -567,6 +574,11 @@ var App = function () {
       $('#icon-preview-y').mouseup(function (e) {
         _this.sprite.toggle_double_y();
         $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+        _this.update();
+      });
+
+      $('#icon-preview-overlay').mouseup(function (e) {
+        _this.sprite.toggle_overlay();
         _this.update();
       });
 

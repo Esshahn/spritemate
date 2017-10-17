@@ -88,7 +88,7 @@ class List
 
   zoom_in()
   {
-    if (this.zoom <= 8)
+    if (this.zoom <= 16)
     {
       this.zoom ++;
       this.update_zoom();
@@ -140,7 +140,7 @@ class List
         }
 
         canvas.fillStyle = this.config.colors[color] ;
-        canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom); 
+        canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
       }
     }
   }

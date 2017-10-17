@@ -30,6 +30,7 @@ class Sprite
       "multicolor" : multicolor,
       "double_x" : false,
       "double_y" : false,
+      "overlay" : false,
       "pixels": []
     };
 
@@ -441,6 +442,21 @@ class Sprite
     } else {
       return false;
     }
+  }
+
+  toggle_overlay()
+  {
+    if (this.all.sprites[this.all.current_sprite].overlay)
+    {
+      this.all.sprites[this.all.current_sprite].overlay = false;
+    } else {
+      this.all.sprites[this.all.current_sprite].overlay = true;
+    }
+  }
+
+  is_overlay()
+  {
+    return this.all.sprites[this.all.current_sprite].overlay;
   }
 
 }
