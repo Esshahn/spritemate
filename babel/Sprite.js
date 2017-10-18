@@ -459,4 +459,6 @@ class Sprite
     return this.all.sprites[this.all.current_sprite].overlay;
   }
 
+
+
 }

@@ -385,6 +385,7 @@ canvas
 .window_menu .right
 {
   float: right;
+  color: #00b9ee;
 }
 
 #spritelist
@@ -460,6 +461,33 @@ canvas
 
 
 
+#info fieldset
+{
+  border: 1px dotted #333333;
+  font-size: 90%;
+  padding: 12px 12px 12px 12px;
+  margin: 24px 0px 24px 0px;
+  overflow: auto;
+  height: 120px;
+  text-align: left;
+  width: 500px;
+  color: #bbbbbb;
+}
+
+#info fieldset legend
+{
+  text-align: center;
+}
+
+#info fieldset h1
+{
+  font-size: 100%;
+  text-align: left;
+  margin: 4px;
+  text-transform: uppercase;
+  margin-top: 20px;
+}
+
 .ui-dialog-titlebar
 {
   font-family: 'Quicksand', sans-serif;
@@ -467,7 +495,6 @@ canvas
   text-transform: uppercase;
   font-size: 60%;
   text-align: center;
-  background-color: #ff8800;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }

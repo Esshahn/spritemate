@@ -80,31 +80,31 @@ class Preview
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
+    // first fill the whole sprite with the background color
+    this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    this.canvas.fillRect(0,0,this.width,this.height); 
+
     for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
       for (let j=0; j<this.pixels_y; j++)
       {
-
         let array_entry = sprite_data.pixels[j][i];
 
         // if singlecolor only, replace the multicolor pixels with the individual color
         if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i"; 
 
-        if (array_entry == "i"){
-          var color = sprite_data.color;
-        }else{
-          var color = all_data.colors[array_entry];
-        }
+        let color = sprite_data.color;
+        if (array_entry != "i") color = all_data.colors[array_entry];
 
-        this.canvas.fillStyle = this.config.colors[color];
-        this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+        if (array_entry != "t")
+        {
+          this.canvas.fillStyle = this.config.colors[color];
+          this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+        }
       }
     }
 
-    if (sprite_data.overlay && all_data.current_sprite < (all_data.sprites.length -1) )
-    {
-      this.display_overlay(all_data);
-    }
+    if (sprite_data.overlay && all_data.current_sprite < (all_data.sprites.length -1)) this.display_overlay(all_data);
 
     // set the preview window x and y stretch
     if(sprite_data.double_x){
@@ -132,10 +132,10 @@ class Preview
 
   display_overlay(all_data)
   {
-
     let sprite_data = all_data.sprites[all_data.current_sprite+1];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
+
     for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
       for (let j=0; j<this.pixels_y; j++)
@@ -145,16 +145,14 @@ class Preview
         // if singlecolor only, replace the multicolor pixels with the individual color
         if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";  
               
-        if (array_entry == "i")
-        {
-          var color = sprite_data.color;
-        }else{
-          var color = all_data.colors[array_entry];
-        }
+        let color = sprite_data.color;
+        if (array_entry != "i") color = all_data.colors[array_entry];
         
-        this.canvas.fillStyle = this.config.colors[color];
-        if (array_entry != "t") this.canvas.fillRect(i*this.zoom, j*this.zoom, this.zoom * x_grid_step , this.zoom);  
-   
+        if (array_entry != "t")
+        {
+          this.canvas.fillStyle = this.config.colors[color];
+          this.canvas.fillRect(i*this.zoom, j*this.zoom, this.zoom * x_grid_step , this.zoom);
+        } 
       }
     }
   }

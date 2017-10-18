@@ -124,23 +124,27 @@ class List
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
+    // first fill the whole sprite with the background color
+    canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    canvas.fillRect(0,0,this.width,this.height);
+
     for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
       for (let j=0; j<this.pixels_y; j++)
       {
 
         let array_entry = sprite_data.pixels[j][i];
-        if (array_entry == "i"){
-          var color = sprite_data.color;
-        }else{
-          var color = all_data.colors[array_entry];
-          
-          // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
-        }
+        // if singlecolor only, replace the multicolor pixels with the individual color
+        if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
 
-        canvas.fillStyle = this.config.colors[color] ;
-        canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+        let color = sprite_data.color;
+        if (array_entry != "i") color = all_data.colors[array_entry];
+
+        if (array_entry != "t")
+        {
+          canvas.fillStyle = this.config.colors[color] ;
+          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+        }
       }
     }
   }
@@ -150,7 +154,8 @@ class List
     
     $(".sprite_in_list").remove();
 
-    for (let i=0; i<all_data.sprites.length; i++){
+    for (let i=0; i<all_data.sprites.length; i++)
+    {
       this.create_canvas(i,all_data.current_sprite);
 
       let canvas = document.getElementById( i).getContext('2d');
@@ -158,23 +163,28 @@ class List
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
 
+      // first fill the whole sprite with the background color
+      canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+      canvas.fillRect(0,0,this.width,this.height);
+
       for (let i=0; i<this.pixels_x; i=i+x_grid_step)
       {
         for (let j=0; j<this.pixels_y; j++)
         {
 
           let array_entry = sprite_data.pixels[j][i];
-          if (array_entry == "i"){
-            var color = sprite_data.color;
-          }else{
-            var color = all_data.colors[array_entry];
-          }
 
-           // if singlecolor only, replace the multicolor pixels with the individual color
+          // if singlecolor only, replace the multicolor pixels with the individual color
           if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
 
-          canvas.fillStyle = this.config.colors[color] ;
-          canvas.fillRect(i*this.zoom, j*this.zoom, this.pixels_x * x_grid_step * this.zoom, this.pixels_y * this.zoom);  
+          let color = sprite_data.color;
+          if (array_entry != "i") color = all_data.colors[array_entry];
+
+          if (array_entry != "t")
+          {
+            canvas.fillStyle = this.config.colors[color] ;
+            canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
+          }
 
         }
       }
