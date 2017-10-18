@@ -47,6 +47,16 @@ var Preview = function () {
       }
     }
   }, {
+    key: 'is_min_zoom',
+    value: function is_min_zoom() {
+      if (this.zoom < 2) return true;
+    }
+  }, {
+    key: 'is_max_zoom',
+    value: function is_max_zoom() {
+      if (this.zoom >= 24) return true;
+    }
+  }, {
     key: 'zoom_out',
     value: function zoom_out() {
       if (this.zoom >= 2) {

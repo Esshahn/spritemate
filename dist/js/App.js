@@ -52,7 +52,7 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog("open");
+    //$("#window-4").dialog( "open");
   }
 
   _createClass(App, [{
@@ -127,6 +127,42 @@ var App = function () {
         $('#icon-preview-overlay').attr("src", "img/icon3/icon-preview-overlay-hi.png");
       } else {
         $('#icon-preview-overlay').attr("src", "img/icon3/icon-preview-overlay.png");
+      }
+
+      if (this.preview.is_min_zoom()) {
+        $('#icon-preview-zoom-out').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-preview-zoom-out').fadeTo("fast", 1);
+      }
+
+      if (this.preview.is_max_zoom()) {
+        $('#icon-preview-zoom-in').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-preview-zoom-in').fadeTo("fast", 1);
+      }
+
+      if (this.editor.is_min_zoom()) {
+        $('#icon-editor-zoom-out').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-editor-zoom-out').fadeTo("fast", 1);
+      }
+
+      if (this.editor.is_max_zoom()) {
+        $('#icon-editor-zoom-in').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-editor-zoom-in').fadeTo("fast", 1);
+      }
+
+      if (this.list.is_min_zoom()) {
+        $('#icon-list-zoom-out').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-list-zoom-out').fadeTo("fast", 1);
+      }
+
+      if (this.list.is_max_zoom()) {
+        $('#icon-list-zoom-in').fadeTo("fast", 0.33);
+      } else {
+        $('#icon-list-zoom-in').fadeTo("fast", 1);
       }
     }
   }, {

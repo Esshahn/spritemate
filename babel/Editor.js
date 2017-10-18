@@ -201,6 +201,16 @@ class Editor
     }
   }
 
+  is_min_zoom()
+  {
+    if (this.zoom <= 8) return true;
+  }
+
+  is_max_zoom()
+  {
+    if (this.zoom >= 28) return true;
+  }
+
   update_zoom()
   {
     this.width = this.pixels_x * this.zoom;

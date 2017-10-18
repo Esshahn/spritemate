@@ -94,6 +94,16 @@ var List = function () {
       }
     }
   }, {
+    key: "is_min_zoom",
+    value: function is_min_zoom() {
+      if (this.zoom < 2) return true;
+    }
+  }, {
+    key: "is_max_zoom",
+    value: function is_max_zoom() {
+      if (this.zoom > 16) return true;
+    }
+  }, {
     key: "update_zoom",
     value: function update_zoom() {
       this.width = this.pixels_x * this.zoom;

@@ -104,6 +104,16 @@ class List
     }
   }
 
+  is_min_zoom()
+  {
+    if (this.zoom < 2) return true;
+  }
+
+  is_max_zoom()
+  {
+    if (this.zoom > 16) return true;
+  }
+
   update_zoom()
   {
     this.width = this.pixels_x * this.zoom;

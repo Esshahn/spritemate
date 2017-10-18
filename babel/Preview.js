@@ -57,6 +57,16 @@ class Preview
     } 
   }
 
+  is_min_zoom()
+  {
+    if (this.zoom < 2) return true;
+  }
+
+  is_max_zoom()
+  {
+    if (this.zoom >= 24) return true;
+  }
+
   zoom_out()
   {
     if (this.zoom >= 2)
