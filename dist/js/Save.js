@@ -173,6 +173,8 @@ var Save = function () {
         var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
 
         var is_multicolor = this.savedata.sprites[j].multicolor;
+        var is_overlay = this.savedata.sprites[j].overlay;
+
         var stepping = 1;
         if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
@@ -202,9 +204,17 @@ var Save = function () {
           byte = "";
         }
 
-        // finally, we add multicolor and color info for byte 64
-        var high_nibble = "0000";
-        if (is_multicolor) high_nibble = "1000";
+        // finally, we add multicolor, overlay and color info for byte 64
+
+        // bit 7 of the high nibble stands for multicolor
+        var multicolor = "00";
+        if (is_multicolor) multicolor = "10";
+
+        // bit 4 of the high nibble stands for overlay
+        var overlay = "00";
+        if (is_overlay) overlay = "01";
+
+        var high_nibble = multicolor + overlay;
 
         var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
 

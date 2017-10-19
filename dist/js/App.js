@@ -540,7 +540,7 @@ var App = function () {
       });
 
       $('#icon-list-new').mouseup(function (e) {
-        _this.sprite.new(_this.palette.get_color());
+        _this.sprite.new(_this.palette.get_color(), _this.sprite.is_multicolor());
         _this.update();
       });
 

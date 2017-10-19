@@ -590,7 +590,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
    $('#icon-list-new').mouseup((e) =>
     {      
-      this.sprite.new(this.palette.get_color());
+      this.sprite.new(this.palette.get_color(), this.sprite.is_multicolor());
       this.update();
     });
 

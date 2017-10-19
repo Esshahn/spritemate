@@ -15,10 +15,19 @@ class Info
         <p>A tool to draw sprites for the Commodore 64</p>
 
         <fieldset>
-            <legend>What's new in beta $03</legend>
-            <h1>sprite overlays</h1>
+            <legend>What's new</legend>
+            <h1>October 19, 2017</h1>
+
+            <p>
+                - sprite overlay settings will be imported from SpritePad 2.x<br/>
+                - sprite overlay settings will be exported to SpritePad 2.x<br/>
+                - new sprites inherit the multicolor setting of the current sprite<br/>
+                - zoom icons fade out when min/max level is reached
+            </p>
+            <h1>October 18, 2017</h1>
+            <h2>Sprite Overlays</h2>
             <p>Toggle sprite overlays in preview window. The following sprite will be used as overlay. The preview window shows both sprites and the editor window shows the other sprite with reduced visibility (like onion skinning). Please note that currently sprite overlay information is stored in native spritemate format only.</p>
-            <h1>bug fixes and changes</h1>
+            <h2>Bug fixes and changes</h2>
             <p>
                 - spritemate should work again in Firefox
                 <br/>- zoom levels for windows have been increased

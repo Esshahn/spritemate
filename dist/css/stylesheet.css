@@ -481,10 +481,21 @@ canvas
 
 #info fieldset h1
 {
+  font-size: 110%;
+  margin: 4px;
+  text-align: left;
+  text-transform: uppercase;
+  margin-top: 20px;
+  font-weight: bold;
+  scolor: #e6007e;
+}
+
+#info fieldset h2
+{
   font-size: 100%;
   text-align: left;
   margin: 4px;
-  text-transform: uppercase;
+  stext-transform: uppercase;
   margin-top: 20px;
 }
 

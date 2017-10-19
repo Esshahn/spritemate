@@ -121,7 +121,12 @@ class Load
     
     this.multicolor = false;
 
-    if (this.file.charCodeAt(colorpos)>=128) this.multicolor = true;
+    if (this.file.charCodeAt(colorpos).toString(2)[0] == 1) this.multicolor = true;
+
+    this.overlay = false;
+
+    // this is actually a good way to identify a bit
+    if (this.file.charCodeAt(colorpos).toString(2)[3] == 1) this.overlay = true;
 
     // this reads in the lower nibble of the byte and converts it do decimal. 
     this.pencolor = parseInt( (this.file.charCodeAt(colorpos).toString(2).slice(-4)) , 2);
@@ -131,6 +136,7 @@ class Load
       multicolor: this.multicolor,
       double_x : false,
       double_y : false,
+      overlay : this.overlay,
       pixels: []
     };
 

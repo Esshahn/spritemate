@@ -161,7 +161,7 @@ class List
 
   update(all_data)
   {
-    
+    $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
     $(".sprite_in_list").remove();
 
     for (let i=0; i<all_data.sprites.length; i++)
