@@ -19,20 +19,21 @@ class Info
             <h1>October 19, 2017</h1>
 
             <p>
-                - sprite overlay settings will be imported from SpritePad 2.x<br/>
-                - sprite overlay settings will be exported to SpritePad 2.x<br/>
-                - new sprites inherit the multicolor setting of the current sprite<br/>
-                - zoom icons fade out when min/max level is reached
+                - SpritePad 2.x overlay settings will be imported & exported now<br/>
+                - new sprites inherit the multicolor setting of the current sprite (thx2 Wiebo)<br/>
+                - sprite index & amount of sprites shown in list window title (thx2 Wiebo)<br/>
+                - zoom icons fade out when min/max level is reached<br/>
+                - more speed enhancements
             </p>
             <h1>October 18, 2017</h1>
             <h2>Sprite Overlays</h2>
             <p>Toggle sprite overlays in preview window. The following sprite will be used as overlay. The preview window shows both sprites and the editor window shows the other sprite with reduced visibility (like onion skinning). Please note that currently sprite overlay information is stored in native spritemate format only.</p>
             <h2>Bug fixes and changes</h2>
             <p>
-                - spritemate should work again in Firefox
-                <br/>- zoom levels for windows have been increased
-                <br/>- fixed a crazy stupid thing in pixel display code
-                <br/>- huge speed improvements for sprite display
+                - spritemate should work again in Firefox (thx2 merman1974)<br/>
+                - zoom levels for windows have been increased (thx2 INC$D021)<br/>
+                - fixed a crazy stupid thing in pixel display code<br/>
+                - huge speed improvements for sprite display
             </p>
         </fieldset>
 

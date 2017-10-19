@@ -144,16 +144,13 @@ class List
       {
 
         let array_entry = sprite_data.pixels[j][i];
-        // if singlecolor only, replace the multicolor pixels with the individual color
-        if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
-
-        let color = sprite_data.color;
-        if (array_entry != "i") color = all_data.colors[array_entry];
 
         if (array_entry != "t")
         {
+          let color = sprite_data.color;
+          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
           canvas.fillStyle = this.config.colors[color] ;
-          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }
       }
     }
@@ -164,11 +161,12 @@ class List
     $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
     $(".sprite_in_list").remove();
 
-    for (let i=0; i<all_data.sprites.length; i++)
+    let length = all_data.sprites.length;
+    for (let i=0; i<length; i++)
     {
       this.create_canvas(i,all_data.current_sprite);
 
-      let canvas = document.getElementById( i).getContext('2d');
+      let canvas = document.getElementById(i).getContext('2d');
       let sprite_data = all_data.sprites[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -184,24 +182,17 @@ class List
 
           let array_entry = sprite_data.pixels[j][i];
 
-          // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
-
-          let color = sprite_data.color;
-          if (array_entry != "i") color = all_data.colors[array_entry];
-
           if (array_entry != "t")
           {
+            let color = sprite_data.color;
+            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
             canvas.fillStyle = this.config.colors[color] ;
             canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
           }
-
         }
       }
     }
   }
-
-
 
 }
 

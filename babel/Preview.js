@@ -100,16 +100,12 @@ class Preview
       {
         let array_entry = sprite_data.pixels[j][i];
 
-        // if singlecolor only, replace the multicolor pixels with the individual color
-        if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i"; 
-
-        let color = sprite_data.color;
-        if (array_entry != "i") color = all_data.colors[array_entry];
-
         if (array_entry != "t")
         {
-          this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom); 
+          let color = sprite_data.color;
+          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
+          this.canvas.fillStyle = this.config.colors[color] ;
+          this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }
       }
     }

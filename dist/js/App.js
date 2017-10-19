@@ -52,7 +52,7 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    //$("#window-4").dialog( "open");
+    $("#window-4").dialog("open");
   }
 
   _createClass(App, [{
@@ -92,8 +92,6 @@ var App = function () {
       this.list.update(all);
       this.palette.update(all);
       this.update_ui();
-      //console.log("ui refresh: " + Date());
-
     }
   }, {
     key: "update_ui",
@@ -254,22 +252,26 @@ var App = function () {
       */
 
       $(document).keydown(function (e) {
+
+        if (e.key == "a") {
+          console.time('performance');
+          for (var i = 0; i <= 100; i++) {
+            _this.update();
+          }console.timeEnd('performance');
+        }
         /*
-             if (e.key == "a")
-             {
-               
-             }
               if (e.key == "A")
-             {
-               // toggle hires or multicolor
-               this.sprite.toggle_double_y();
-               this.update();
-             }
+              {
+                // toggle hires or multicolor
+                this.sprite.toggle_double_y();
+                this.update();
+              }
+        
               if (e.key == "f")
-             {
-               // toggle fullscreen
-               this.toggle_fullscreen();
-             }
+              {
+                // toggle fullscreen
+                this.toggle_fullscreen();
+              }
         */
       });
 

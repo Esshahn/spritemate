@@ -48,7 +48,7 @@ class App
     this.update();
     this.user_interaction();
 
-    //$("#window-4").dialog( "open");
+    $("#window-4").dialog( "open");
 
   }
 
@@ -89,9 +89,6 @@ class App
     this.list.update(     all);
     this.palette.update(  all);
     this.update_ui();
-    //console.log("ui refresh: " + Date());
-    
-
   }
 
   update_ui()
@@ -263,12 +260,14 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
     $(document).keydown((e) =>
     {
- /*
+ 
       if (e.key == "a")
       {
-        
+        console.time('performance');
+        for(let i=0; i<=100;i++) this.update();
+        console.timeEnd('performance');
       }
-
+/*
       if (e.key == "A")
       {
         // toggle hires or multicolor

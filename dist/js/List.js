@@ -132,13 +132,10 @@ var List = function () {
         for (var j = 0; j < this.pixels_y; j++) {
 
           var array_entry = sprite_data.pixels[j][i];
-          // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
-
-          var color = sprite_data.color;
-          if (array_entry != "i") color = all_data.colors[array_entry];
 
           if (array_entry != "t") {
+            var color = sprite_data.color;
+            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
             canvas.fillStyle = this.config.colors[color];
             canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
           }
@@ -151,7 +148,8 @@ var List = function () {
       $('#window-' + this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
       $(".sprite_in_list").remove();
 
-      for (var i = 0; i < all_data.sprites.length; i++) {
+      var length = all_data.sprites.length;
+      for (var i = 0; i < length; i++) {
         this.create_canvas(i, all_data.current_sprite);
 
         var canvas = document.getElementById(i).getContext('2d');
@@ -168,13 +166,9 @@ var List = function () {
 
             var array_entry = sprite_data.pixels[j][_i];
 
-            // if singlecolor only, replace the multicolor pixels with the individual color
-            if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) color = sprite_data.color;
-
-            var color = sprite_data.color;
-            if (array_entry != "i") color = all_data.colors[array_entry];
-
             if (array_entry != "t") {
+              var color = sprite_data.color;
+              if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
               canvas.fillStyle = this.config.colors[color];
               canvas.fillRect(_i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
             }
