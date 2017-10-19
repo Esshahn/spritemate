@@ -15,7 +15,7 @@ var App = function () {
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    var window_config = { title: "Edit Sprite", type: "sprite", resizable: false, left: 210, top: 100, width: "auto", height: "auto" };
+    var window_config = { title: "Editor", type: "sprite", resizable: false, left: 210, top: 100, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0, this.config);
 
@@ -24,11 +24,11 @@ var App = function () {
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1, this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: 680, top: 100, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: 700, top: 100, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2, this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 880, top: 320, width: 440, height: 200 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: 900, top: 320, width: 440, height: 200 };
     this.window_preview = new Window(window_config);
     this.list = new List(3, this.config);
 
@@ -43,7 +43,7 @@ var App = function () {
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
-    this.oldpos = { x: 0, y: 0 };
+    this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
     this.sprite.new(this.palette.get_color());
 
     this.mode = "draw"; // modes can be "draw" and "fill"
@@ -252,12 +252,22 @@ var App = function () {
       */
 
       $(document).keydown(function (e) {
+        //console.log(e.key);
 
         if (e.key == "a") {
           console.time('performance');
           for (var i = 0; i <= 100; i++) {
             _this.update();
           }console.timeEnd('performance');
+        }
+
+        if (e.key == "ArrowRight") {
+          _this.sprite.set_current_sprite("right");
+          _this.update();
+        }
+        if (e.key == "ArrowLeft") {
+          _this.sprite.set_current_sprite("left");
+          _this.update();
         }
         /*
               if (e.key == "A")

@@ -307,7 +307,7 @@ canvas
   float: left;
   padding: 0px 2px 0px 2px;
   cursor: pointer;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .iconset_right
@@ -327,19 +327,6 @@ canvas
   margin: 0px;
 
 }
-
-.icon-spacer
-{
-  height: 58px;
-  image-rendering: optimizeSpeed;             /* Older versions of FF          */
-  image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
-  image-rendering: -webkit-optimize-contrast; /* Safari                        */
-  image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
-  image-rendering: pixelated;                 /* Awesome future-browsers       */
-  -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
-}
-
-
 
 .sprite
 {

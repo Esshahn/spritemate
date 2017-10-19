@@ -25,8 +25,7 @@ class Preview
         <div class="icon-preview-y2" id="icon-preview-y"></div>
         <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">
         <div class="right">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
         </div>
       </div>
       <div id="preview-canvas"></div>

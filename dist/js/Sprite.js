@@ -284,7 +284,15 @@ var Sprite = function () {
   }, {
     key: "set_current_sprite",
     value: function set_current_sprite(spritenumber) {
-      this.all.current_sprite = spritenumber;
+      if (spritenumber == "right" && this.all.current_sprite < this.all.sprites.length - 1) {
+        spritenumber = this.all.current_sprite + 1;
+      }
+
+      if (spritenumber == "left" && this.all.current_sprite > 0) {
+        spritenumber = this.all.current_sprite - 1;
+      }
+
+      if (typeof spritenumber == "number") this.all.current_sprite = spritenumber;
     }
   }, {
     key: "delete",

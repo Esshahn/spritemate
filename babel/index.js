@@ -14,7 +14,7 @@ function init()
               ],
       zoom_editor: 18,
       zoom_preview: 5,
-      zoom_list: 2,
+      zoom_list: 4,
       display_grid: true
     };
 

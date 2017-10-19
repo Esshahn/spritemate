@@ -25,8 +25,7 @@ class List
         
         <div class="right">
           <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
         </div>
       </div>
       <div id="spritelist"></div>

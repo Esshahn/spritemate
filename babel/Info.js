@@ -22,6 +22,7 @@ class Info
                 - SpritePad 2.x overlay settings will be imported & exported now<br/>
                 - new sprites inherit the multicolor setting of the current sprite (thx2 Wiebo)<br/>
                 - sprite index & amount of sprites shown in list window title (thx2 Wiebo)<br/>
+                - you can now use cursor keys to navigate through sprites (thx2 Wiebo)<br/>
                 - zoom icons fade out when min/max level is reached<br/>
                 - more speed enhancements
             </p>

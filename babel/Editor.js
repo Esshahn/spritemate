@@ -31,8 +31,7 @@ class Editor
         
         <div class="right">
           <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
         </div>
       </div>
       <div id="editor-canvas"></div>
