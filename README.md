@@ -96,6 +96,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 ## History
 
 2017-10-19
+* KICK ASS syntax support for source export
 * Sprite overlays are shown in editor
 * import & export sprite overlay settings from SpritePad
 * number of sprites and current sprite index shown in list window title
