@@ -52,7 +52,7 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    // $("#window-4").dialog( "open");
+    $("#window-4").dialog("open");
   }
 
   _createClass(App, [{
