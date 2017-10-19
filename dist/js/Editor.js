@@ -82,7 +82,7 @@ var Editor = function () {
   }, {
     key: "display_overlay",
     value: function display_overlay(all_data, mode) {
-      var alpha = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.2;
+      var alpha = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.4;
 
       var overlay_sprite_number = 1;
       if (mode == "previous") overlay_sprite_number = -1;

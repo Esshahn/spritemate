@@ -95,7 +95,7 @@ class Editor
     if (this.grid) this.display_grid(sprite_data);
   }
 
-  display_overlay(all_data,mode, alpha = 0.2)
+  display_overlay(all_data,mode, alpha = 0.4)
   {
     let overlay_sprite_number = 1;
     if (mode == "previous") overlay_sprite_number = -1;

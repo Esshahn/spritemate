@@ -43,7 +43,7 @@ var App = function () {
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
-
+    this.oldpos = { x: 0, y: 0 };
     this.sprite.new(this.palette.get_color());
 
     this.mode = "draw"; // modes can be "draw" and "fill"
@@ -52,7 +52,7 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog("open");
+    // $("#window-4").dialog( "open");
   }
 
   _createClass(App, [{
@@ -433,11 +433,18 @@ var App = function () {
       });
 
       $('#editor').mousemove(function (e) {
+
         if (_this.is_drawing && _this.mode == "draw") {
-          _this.sprite.set_pixel(_this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-          _this.editor.update(_this.sprite.get_all());
-          _this.preview.update(_this.sprite.get_all());
-          _this.list.update_current_sprite(_this.sprite.get_all()); // only updates the sprite drawn onto
+          var newpos = _this.editor.get_pixel(e);
+          // only draw if the mouse has entered a new pixel area (just for performance)
+          if (newpos.x != _this.oldpos.x || newpos.y != _this.oldpos.y) {
+            var all = _this.sprite.get_all();
+            _this.sprite.set_pixel(newpos, e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+            _this.editor.update(all);
+            _this.preview.update(all);
+            _this.list.update_current_sprite(all); // only updates the sprite drawn onto
+            _this.oldpos = newpos;
+          }
         }
       });
 
