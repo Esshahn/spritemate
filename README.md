@@ -91,6 +91,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * you can rearrange sprites by just dragging them to the desired position
 * you can copy & paste sprites by using the corresponding icons in the sprite list window
 * hold down shift key and click with the mouse to delete pixels
+* use the cursor keys (left & right) to navigate through your sprite list quickly
 
 ## History
 
@@ -99,6 +100,7 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * import & export sprite overlay settings from SpritePad
 * number of sprites and current sprite index shown in list window title
 * new sprites inherit the color and multicolor settings of the active sprite
+* cursor keys left & right to navigate through the sprite list
 * performance enhancements
 
 2017-10-17
