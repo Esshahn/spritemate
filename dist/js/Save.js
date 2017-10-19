@@ -14,7 +14,7 @@ var Save = function () {
     this.window = window;
     this.default_filename = "mysprites";
 
-    var template = "\n    <div id=\"window-save\">\n      <h1 autofocus>Save Data</h1>\n      <h2>The file will be saved to your default download location</h2>\n\n      <div class=\"center\">\n        Filename: <input autofocus type=\"text\" id=\"filename\" name=\"filename\" value=\"" + this.default_filename + "\">\n      </div>\n      <br/><br/>\n      <fieldset>\n        <legend>spritemate // *.spm</legend>\n        <button id=\"button-save-spm\">Save as Spritemate</button>\n        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>\n      </fieldset>\n    \n      <fieldset>\n        <legend>Spritepad // *.spd</legend>\n        <div class=\"fieldset right\">\n          <button id=\"button-save-spd\">Save as 2.0</button>\n          <button id=\"button-save-spd-old\">Save as 1.8.1</button>\n        </div>\n        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>\n      </fieldset>\n\n      <fieldset>\n        <legend>ACME source // *.asm</legend>\n        <button id=\"button-save-source\">Save as source file</button>\n        <p>A text file containing the sprite data.</p>\n      </fieldset>\n\n      <div id=\"button-row\">\n        <button id=\"button-save-cancel\" class=\"button-cancel\">Cancel</button>\n      </div>\n    </div> \n    ";
+    var template = "\n    <div id=\"window-save\">\n      <h1>Save Data</h1>\n      <h2>The file will be saved to your default download location</h2>\n\n      <div class=\"center\">\n        Filename: <input autofocus type=\"text\" id=\"filename\" name=\"filename\" value=\"" + this.default_filename + "\">\n      </div>\n      <br/>\n      <fieldset>\n        <legend>spritemate // *.spm</legend>\n        <button id=\"button-save-spm\">Save as Spritemate</button>\n        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>\n      </fieldset>\n    \n      <fieldset>\n        <legend>Spritepad // *.spd</legend>\n        <div class=\"fieldset right\">\n          <button id=\"button-save-spd\">Save as 2.0</button>\n          <button id=\"button-save-spd-old\">Save as 1.8.1</button>\n        </div>\n        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>\n      </fieldset>\n\n      <fieldset>\n        <legend>assembly source // *.txt</legend>\n        <div class=\"fieldset right\">\n          <button id=\"button-save-source-kick\">KICK ASS syntax</button>\n          <button id=\"button-save-source-acme\">ACME syntax</button>\n        </div>\n        <p>A text file containing the sprite data in assembly language.</p>\n      </fieldset>\n\n      <div id=\"button-row\">\n        <button id=\"button-save-cancel\" class=\"button-cancel\">Cancel</button>\n      </div>\n    </div> \n    ";
 
     $("#window-" + this.window).append(template);
     $("#window-" + this.window).dialog({ show: 'fade', hide: 'fade' });
@@ -30,8 +30,11 @@ var Save = function () {
     $('#button-save-spd-old').mouseup(function (e) {
       return _this.save_spd("old");
     });
-    $('#button-save-source').mouseup(function (e) {
-      return _this.save_source();
+    $('#button-save-source-kick').mouseup(function (e) {
+      return _this.save_source("kick");
+    });
+    $('#button-save-source-acme').mouseup(function (e) {
+      return _this.save_source("acme");
     });
 
     $("#filename").keyup(function (e) {
@@ -87,9 +90,10 @@ var Save = function () {
     }
   }, {
     key: "save_source",
-    value: function save_source() {
+    value: function save_source(format) {
+
       var filename = this.default_filename + ".txt";
-      var data = this.create_source();
+      var data = this.create_source(format);
       var file = new Blob([data], { type: "text/plain" });
 
       if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -231,15 +235,23 @@ var Save = function () {
     }
   }, {
     key: "create_source",
-    value: function create_source() {
+    value: function create_source(format) {
+
+      var comment = ";";
+      var prefix = "!";
+
+      if (format == "kick") {
+        comment = "//";
+        prefix = ".";
+      }
 
       var data = "";
 
-      data += "\n; generated with spritemate on " + new Date().toLocaleString();
+      data += "\n" + comment + " generated with spritemate on " + new Date().toLocaleString();
 
-      data += "\n\nLDA #" + this.savedata.colors.m1 + " ; sprite multicolor 1";
+      data += "\n\nLDA #" + this.savedata.colors.m1 + " " + comment + " sprite multicolor 1";
       data += "\nSTA $D025";
-      data += "\nLDA #" + this.savedata.colors.m2 + " ; sprite multicolor 2";
+      data += "\nLDA #" + this.savedata.colors.m2 + " " + comment + " sprite multicolor 2";
       data += "\nSTA $D026";
       data += "\n";
 
@@ -262,7 +274,7 @@ var Save = function () {
 
           if (i % 64 == 0) {
             data = data.substring(0, data.length - 1);
-            data += "\n!byte ";
+            data += "\n" + prefix + "byte ";
           }
 
           for (var k = 0; k < 8; k = k + stepping) {

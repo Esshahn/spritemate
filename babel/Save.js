@@ -9,13 +9,13 @@ class Save
 
     let template = `
     <div id="window-save">
-      <h1 autofocus>Save Data</h1>
+      <h1>Save Data</h1>
       <h2>The file will be saved to your default download location</h2>
 
       <div class="center">
         Filename: <input autofocus type="text" id="filename" name="filename" value="${this.default_filename}">
       </div>
-      <br/><br/>
+      <br/>
       <fieldset>
         <legend>spritemate // *.spm</legend>
         <button id="button-save-spm">Save as Spritemate</button>
@@ -32,9 +32,12 @@ class Save
       </fieldset>
 
       <fieldset>
-        <legend>ACME source // *.asm</legend>
-        <button id="button-save-source">Save as source file</button>
-        <p>A text file containing the sprite data.</p>
+        <legend>assembly source // *.txt</legend>
+        <div class="fieldset right">
+          <button id="button-save-source-kick">KICK ASS syntax</button>
+          <button id="button-save-source-acme">ACME syntax</button>
+        </div>
+        <p>A text file containing the sprite data in assembly language.</p>
       </fieldset>
 
       <div id="button-row">
@@ -49,7 +52,8 @@ class Save
     $('#button-save-spm').mouseup((e) => this.save_spm());
     $('#button-save-spd').mouseup((e) => this.save_spd("new"));
     $('#button-save-spd-old').mouseup((e) => this.save_spd("old"));
-    $('#button-save-source').mouseup((e) => this.save_source());
+    $('#button-save-source-kick').mouseup((e) => this.save_source("kick"));
+    $('#button-save-source-acme').mouseup((e) => this.save_source("acme"));
 
     $( "#filename" ).keyup((e) => 
     {
@@ -107,29 +111,30 @@ class Save
       status("File has been saved.");
   }
 
-  save_source()
+  save_source(format)
   {
-      let filename = this.default_filename + ".txt";
-      var data = this.create_source();
-      var file = new Blob([data], {type: "text/plain"});
 
-      if (window.navigator.msSaveOrOpenBlob) // IE10+
-          window.navigator.msSaveOrOpenBlob(file, filename);
-      else { // Others
-          var a = document.createElement("a"),
-                  url = URL.createObjectURL(file);
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function() {
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);  
-          }, 0); 
-      }
+    let filename = this.default_filename + ".txt";
+    var data = this.create_source(format);
+    var file = new Blob([data], {type: "text/plain"});
 
-      $("#window-"+this.window).dialog( "close" );
-      status("File has been saved.");
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+
+    $("#window-"+this.window).dialog( "close" );
+    status("File has been saved.");
   }
 
   save_spd(format)
@@ -259,16 +264,25 @@ class Save
   }
 
 
-  create_source()
+  create_source(format)
   {
+
+    var comment = ";";
+    var prefix = "!";
+
+    if (format == "kick")
+    {
+      comment = "//";
+      prefix = ".";
+    }
 
     var data = "";
 
-    data += "\n; generated with spritemate on " + new Date().toLocaleString();
+    data += "\n"+comment+" generated with spritemate on " + new Date().toLocaleString();
 
-    data += "\n\nLDA #" + this.savedata.colors.m1 + " ; sprite multicolor 1";
+    data += "\n\nLDA #" + this.savedata.colors.m1 + " "+comment+" sprite multicolor 1";
     data += "\nSTA $D025";
-    data += "\nLDA #" + this.savedata.colors.m2 + " ; sprite multicolor 2";
+    data += "\nLDA #" + this.savedata.colors.m2 + " "+comment+" sprite multicolor 2";
     data += "\nSTA $D026";
     data += "\n";
     
@@ -293,7 +307,7 @@ class Save
         if (i%64 == 0)
         {
           data = data.substring(0, data.length - 1);
-          data +="\n!byte ";
+          data +="\n"+prefix+"byte ";
         }
 
         for (let k=0; k<8; k=k+stepping)
