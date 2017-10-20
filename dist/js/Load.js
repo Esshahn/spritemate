@@ -117,14 +117,16 @@ var Load = function () {
       // check byte 64 which is the indidual color (low nibble) and the multicolor state (high nibble)
       var colorpos = this.start_of_sprite_data + 2 + (sprite_number + 1) * this.sprite_size;
 
+      // this is actually a good way to identify a bit
+      var bits = ("00000000" + this.file.charCodeAt(colorpos).toString(2)).slice(-8);
+
       this.multicolor = false;
 
-      if (this.file.charCodeAt(colorpos).toString(2)[0] == 1) this.multicolor = true;
+      if (bits[0] == 1) this.multicolor = true;
 
       this.overlay = false;
 
-      // this is actually a good way to identify a bit
-      if (this.file.charCodeAt(colorpos).toString(2)[3] == 1) this.overlay = true;
+      if (bits[3] == 1) this.overlay = true;
 
       // this reads in the lower nibble of the byte and converts it do decimal. 
       this.pencolor = parseInt(this.file.charCodeAt(colorpos).toString(2).slice(-4), 2);

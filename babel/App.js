@@ -51,7 +51,7 @@ class App
     this.update();
     this.user_interaction();
 
-    //$("#window-4").dialog( "open");
+    $("#window-4").dialog( "open");
 
   }
 
@@ -270,7 +270,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
     $(document).keydown((e) =>
     {
-      console.log(e.key);
+      //console.log(e.key);
       if ( this.allow_keyboard_shortcuts )
       {
         if (e.key == "a")

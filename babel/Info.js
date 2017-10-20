@@ -40,6 +40,7 @@ class Info
 
             <p>
                 - Tooltips on the icons now look nicer (thx2 korshun)<br/>
+                - Fixed a bug in the SpritePad importer<br/>
                 - small visual and bug fixes
             </p>
 

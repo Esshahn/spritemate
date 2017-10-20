@@ -55,7 +55,7 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    //$("#window-4").dialog( "open");
+    $("#window-4").dialog("open");
   }
 
   _createClass(App, [{
@@ -262,7 +262,7 @@ var App = function () {
       */
 
       $(document).keydown(function (e) {
-        console.log(e.key);
+        //console.log(e.key);
         if (_this.allow_keyboard_shortcuts) {
           if (e.key == "a") {
             console.time('performance');
