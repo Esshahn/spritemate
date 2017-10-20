@@ -38,7 +38,7 @@ var App = function () {
 
     window_config = { title: "Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_info = new Window(window_config);
-    this.save = new Save(5, this.config);
+    this.save = new Save(5, this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -47,12 +47,15 @@ var App = function () {
     this.sprite.new(this.palette.get_color());
 
     this.mode = "draw"; // modes can be "draw" and "fill"
+    this.allow_keyboard_shortcuts = true;
+
+    $(document).tooltip(); // initializes tooltip handling in jquery
 
     status("Welcome to spritemate!");
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog("open");
+    //$("#window-4").dialog( "open");
   }
 
   _createClass(App, [{
@@ -172,6 +175,13 @@ var App = function () {
       this.update();
     }
   }, {
+    key: "regain_keyboard_controls",
+    value: function regain_keyboard_controls() {
+      // this will be called whenever keyboard controls have been deactivated, e.g. for input fields
+      // currently used as callback after the save dialog
+      this.allow_keyboard_shortcuts = true;
+    }
+  }, {
     key: "init_ui_fade",
     value: function init_ui_fade(element) {
       $('#' + element).mouseenter(function (e) {
@@ -252,37 +262,80 @@ var App = function () {
       */
 
       $(document).keydown(function (e) {
-        //console.log(e.key);
+        console.log(e.key);
+        if (_this.allow_keyboard_shortcuts) {
+          if (e.key == "a") {
+            console.time('performance');
+            for (var i = 0; i <= 100; i++) {
+              _this.update();
+            }console.timeEnd('performance');
+          }
 
-        if (e.key == "a") {
-          console.time('performance');
-          for (var i = 0; i <= 100; i++) {
+          if (e.key == "ArrowRight") {
+            _this.sprite.set_current_sprite("right");
             _this.update();
-          }console.timeEnd('performance');
-        }
+          }
+          if (e.key == "ArrowLeft") {
+            _this.sprite.set_current_sprite("left");
+            _this.update();
+          }
 
-        if (e.key == "ArrowRight") {
-          _this.sprite.set_current_sprite("right");
-          _this.update();
+          if (e.key == "f") {
+            _this.toggle_fullscreen();
+          }
+
+          if (e.key == "d") {
+            // toggle between draw and fill modes
+            if (_this.mode == "draw") {
+              _this.mode = "fill";
+              status("Fill mode");
+              $("#image-icon-draw").attr("src", "img/icon3/icon-draw.png");
+              $("#image-icon-select").attr("src", "img/icon3/icon-select.png");
+              $("#image-icon-fill").attr("src", "img/icon3/icon-fill-hi.png");
+            } else {
+              _this.mode = "draw";
+              status("Draw mode");
+              $("#image-icon-draw").attr("src", "img/icon3/icon-draw-hi.png");
+              $("#image-icon-select").attr("src", "img/icon3/icon-select.png");
+              $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
+            }
+          }
+
+          if (e.key == "1") {
+            _this.sprite.set_pen("i");
+            _this.update();
+          }
+
+          if (e.key == "2") {
+            _this.sprite.set_pen("t");
+            _this.update();
+          }
+
+          if (e.key == "3" && _this.sprite.is_multicolor()) {
+            _this.sprite.set_pen("m1");
+            _this.update();
+          }
+
+          if (e.key == "4" && _this.sprite.is_multicolor()) {
+            _this.sprite.set_pen("m2");
+            _this.update();
+          }
+
+          if (e.key == "z") {
+            _this.sprite.undo();
+            _this.update();
+          }
+
+          if (e.key == "Z") {
+            _this.sprite.redo();
+            _this.update();
+          }
+
+          if (e.key == "m") {
+            _this.sprite.toggle_multicolor();
+            _this.update();
+          }
         }
-        if (e.key == "ArrowLeft") {
-          _this.sprite.set_current_sprite("left");
-          _this.update();
-        }
-        /*
-              if (e.key == "A")
-              {
-                // toggle hires or multicolor
-                this.sprite.toggle_double_y();
-                this.update();
-              }
-        
-              if (e.key == "f")
-              {
-                // toggle fullscreen
-                this.toggle_fullscreen();
-              }
-        */
       });
 
       /*
@@ -313,6 +366,7 @@ var App = function () {
       });
 
       $('#icon-save').mouseup(function (e) {
+        _this.allow_keyboard_shortcuts = false;
         $("#window-5").dialog("open");
         _this.save.set_save_data(_this.sprite.get_all());
       });

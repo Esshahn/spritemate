@@ -1,11 +1,12 @@
 class Save
 {
 
-  constructor(window,config)
+  constructor(window,config,eventhandler)
   {
     this.config = config;
     this.window = window;
     this.default_filename ="mysprites";
+    this.eventhandler = eventhandler;
 
     let template = `
     <div id="window-save">
@@ -48,7 +49,7 @@ class Save
 
     $("#window-"+this.window).append(template);
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-save-cancel').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
+    $('#button-save-cancel').mouseup((e) => this.close_window());
     $('#button-save-spm').mouseup((e) => this.save_spm());
     $('#button-save-spd').mouseup((e) => this.save_spd("new"));
     $('#button-save-spd-old').mouseup((e) => this.save_spd("old"));
@@ -67,8 +68,10 @@ class Save
         $('#button-save-spd').addClass("error");
         $('#button-save-spd-old').prop('disabled', true);
         $('#button-save-spd-old').addClass("error");
-        $('#button-save-source').prop('disabled', true);
-        $('#button-save-source').addClass("error");
+        $('#button-save-source-kick').prop('disabled', true);
+        $('#button-save-source-kick').addClass("error");
+        $('#button-save-source-acme').prop('disabled', true);
+        $('#button-save-source-acme').addClass("error");
       }else{
         $("#filename").removeClass("error");
         $('#button-save-spm').prop('disabled', false);
@@ -77,8 +80,10 @@ class Save
         $('#button-save-spd').removeClass("error");
         $('#button-save-spd-old').prop('disabled', false);
         $('#button-save-spd-old').removeClass("error");
-        $('#button-save-source').prop('disabled', false);
-        $('#button-save-source').removeClass("error");
+        $('#button-save-source-kick').prop('disabled', false);
+        $('#button-save-source-kick').removeClass("error");
+        $('#button-save-source-acme').prop('disabled', false);
+        $('#button-save-source-acme').removeClass("error");
       }
     });
 
@@ -107,8 +112,8 @@ class Save
           }, 0); 
       }
 
-      $("#window-"+this.window).dialog( "close" );
       status("File has been saved.");
+      this.close_window();
   }
 
   save_source(format)
@@ -133,8 +138,8 @@ class Save
         }, 0); 
     }
 
-    $("#window-"+this.window).dialog( "close" );
     status("File has been saved.");
+    this.close_window();
   }
 
   save_spd(format)
@@ -159,8 +164,8 @@ class Save
           }, 0); 
       }
 
-      $("#window-"+this.window).dialog( "close" );
       status("File has been saved.");
+      this.close_window();
   }
 
   create_spd_array(format)
@@ -353,6 +358,12 @@ class Save
   set_save_data(savedata)
   {
     this.savedata = savedata;
+  }
+
+  close_window()
+  {
+      $("#window-"+this.window).dialog( "close" );
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 
 

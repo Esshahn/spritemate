@@ -27,19 +27,19 @@ class Palette
       <div id="palette_spritecolors">
           <div id="palette_i">
               <p>Individual</p>
-              <div class="palette_color_item" id="color_i"></div>
+              <div class="palette_color_item" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
           </div>
           <div id="palette_t">
               <p>Transparent</p>
-              <div class="palette_color_item" id="color_t"></div>
+              <div class="palette_color_item" id="color_t" title="transparent&nbsp;(2)"></div>
           </div>
           <div id="palette_m1">
               <p>Multicolor 1</p>
-              <div class="palette_color_item" id="color_m1"></div>
+              <div class="palette_color_item" id="color_m1" title="multicolor&nbsp;1&nbsp;(3)"></div>
           </div>
           <div id="palette_m2">
               <p>Multicolor 2</p>
-              <div class="palette_color_item" id="color_m2"></div>
+              <div class="palette_color_item" id="color_m2" title="multicolor&nbsp;2&nbsp;(4)"></div>
           </div>
       </div>
 

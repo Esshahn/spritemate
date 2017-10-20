@@ -16,13 +16,39 @@ class Info
 
         <fieldset>
             <legend>What's new</legend>
+            <h1>October 20, 2017</h1>
+
+            <h2>Keyboard Shortcuts</h2>
+            <p>
+            The most common actions have received hotkeys for quick access. 
+            Using hotkeys in a browser is always a bit tricky, as many combinations are taken by the browser (like CMD/CTRL + C for "copy"). 
+            Therefore some shortcuts might seem less intuitive. These functions are available by pressing keys now:
+            </p>
+            
+            <br/>
+
+            <p>
+            (1,2,3,4) - set one of the four available pens/colors<br/>
+            (f) - toggle fullscreen on/off<br/>
+            (d) - toggle between "draw" and "fill" modes<br/>
+            (z) - undo, (shift + z) = redo<br/>
+            (m) - toggle singlecolor/multicolor<br/>
+            (cursor left, right) - navigate through sprite list (thx2 Wiebo)<br/>
+            </p>
+
+            <h2>Bug fixes and changes</h2>
+
+            <p>
+                - Tooltips on the icons now look nicer (thx2 korshun)<br/>
+                - small visual and bug fixes
+            </p>
+
             <h1>October 19, 2017</h1>
 
             <p>
                 - SpritePad 2.x overlay settings will be imported & exported now<br/>
                 - new sprites inherit the multicolor setting of the current sprite (thx2 Wiebo)<br/>
                 - sprite index & amount of sprites shown in list window title (thx2 Wiebo)<br/>
-                - you can now use cursor keys to navigate through sprites (thx2 Wiebo)<br/>
                 - assembler source now supports KICK ASS and ACME syntax (thx2 korshun)<br/>
                 - zoom icons fade out when min/max level is reached<br/>
                 - more speed enhancements

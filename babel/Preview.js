@@ -21,8 +21,8 @@ class Preview
 
     let template = `
       <div class="window_menu">
-        <div class="icon-preview-x2" id="icon-preview-x"></div>
-        <div class="icon-preview-y2" id="icon-preview-y"></div>
+        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>
+        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>
         <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">
         <div class="right">
           <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">

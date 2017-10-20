@@ -34,7 +34,7 @@ class App
 
     window_config = { title: "Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_info = new Window(window_config);
-    this.save = new Save(5,this.config);
+    this.save = new Save(5,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -43,12 +43,15 @@ class App
     this.sprite.new(this.palette.get_color());
 
     this.mode = "draw"; // modes can be "draw" and "fill"
+    this.allow_keyboard_shortcuts = true;
 
+    $( document ).tooltip(); // initializes tooltip handling in jquery
+     
     status("Welcome to spritemate!");
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog( "open");
+    //$("#window-4").dialog( "open");
 
   }
 
@@ -182,6 +185,13 @@ class App
     this.update();
   }
 
+  regain_keyboard_controls()
+  {
+    // this will be called whenever keyboard controls have been deactivated, e.g. for input fields
+    // currently used as callback after the save dialog
+    this.allow_keyboard_shortcuts = true;
+  }
+
 
   init_ui_fade(element)
   {
@@ -260,39 +270,95 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
     $(document).keydown((e) =>
     {
-      //console.log(e.key);
+      console.log(e.key);
+      if ( this.allow_keyboard_shortcuts )
+      {
+        if (e.key == "a")
+        {
+          console.time('performance');
+          for(let i=0; i<=100;i++) this.update();
+          console.timeEnd('performance');
+        }
 
-      if (e.key == "a")
-      {
-        console.time('performance');
-        for(let i=0; i<=100;i++) this.update();
-        console.timeEnd('performance');
-      }
+        if (e.key == "ArrowRight")
+        {
+          this.sprite.set_current_sprite("right");
+          this.update();
+        }
+        if (e.key == "ArrowLeft")
+        {
+          this.sprite.set_current_sprite("left");
+          this.update();
+        }
 
-      if (e.key == "ArrowRight")
-      {
-        this.sprite.set_current_sprite("right");
-        this.update();
-      }
-      if (e.key == "ArrowLeft")
-      {
-        this.sprite.set_current_sprite("left");
-        this.update();
-      }
-/*
-      if (e.key == "A")
-      {
-        // toggle hires or multicolor
-        this.sprite.toggle_double_y();
-        this.update();
-      }
+        if (e.key == "f")
+        {
+          this.toggle_fullscreen();
+        }
 
-      if (e.key == "f")
-      {
-        // toggle fullscreen
-        this.toggle_fullscreen();
+        if (e.key == "d")
+        {
+          // toggle between draw and fill modes
+          if (this.mode == "draw")
+          {
+            this.mode = "fill";
+            status("Fill mode");
+            $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
+            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
+            $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
+          } else {
+            this.mode = "draw";
+            status("Draw mode");
+            $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
+            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
+            $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+          }
+        }
+
+        if (e.key == "1")
+        {     
+          this.sprite.set_pen("i");
+          this.update();
+        }
+
+        if (e.key == "2")
+        {     
+          this.sprite.set_pen("t");
+          this.update();
+        }
+
+        if (e.key == "3" && this.sprite.is_multicolor())
+        {  
+          this.sprite.set_pen("m1");
+          this.update();
+        }
+
+        if (e.key == "4" && this.sprite.is_multicolor())
+        {    
+          this.sprite.set_pen("m2");
+          this.update();
+        }
+
+        if (e.key == "z")
+        {    
+          this.sprite.undo();
+          this.update();
+        }
+
+        if (e.key == "Z")
+        {    
+          this.sprite.redo();
+          this.update();
+        }
+
+        if (e.key == "m")
+        { 
+          this.sprite.toggle_multicolor();
+          this.update();
+        }
+
+
       }
-*/
     });
 
 
@@ -326,6 +392,7 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
 
     $('#icon-save').mouseup((e) =>
     {
+      this.allow_keyboard_shortcuts = false;
       $("#window-5").dialog( "open");
       this.save.set_save_data(this.sprite.get_all());
     });

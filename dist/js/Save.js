@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Save = function () {
-  function Save(window, config) {
+  function Save(window, config, eventhandler) {
     var _this = this;
 
     _classCallCheck(this, Save);
@@ -13,13 +13,14 @@ var Save = function () {
     this.config = config;
     this.window = window;
     this.default_filename = "mysprites";
+    this.eventhandler = eventhandler;
 
     var template = "\n    <div id=\"window-save\">\n      <h1>Save Data</h1>\n      <h2>The file will be saved to your default download location</h2>\n\n      <div class=\"center\">\n        Filename: <input autofocus type=\"text\" id=\"filename\" name=\"filename\" value=\"" + this.default_filename + "\">\n      </div>\n      <br/>\n      <fieldset>\n        <legend>spritemate // *.spm</legend>\n        <button id=\"button-save-spm\">Save as Spritemate</button>\n        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>\n      </fieldset>\n    \n      <fieldset>\n        <legend>Spritepad // *.spd</legend>\n        <div class=\"fieldset right\">\n          <button id=\"button-save-spd\">Save as 2.0</button>\n          <button id=\"button-save-spd-old\">Save as 1.8.1</button>\n        </div>\n        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>\n      </fieldset>\n\n      <fieldset>\n        <legend>assembly source // *.txt</legend>\n        <div class=\"fieldset right\">\n          <button id=\"button-save-source-kick\">KICK ASS syntax</button>\n          <button id=\"button-save-source-acme\">ACME syntax</button>\n        </div>\n        <p>A text file containing the sprite data in assembly language.</p>\n      </fieldset>\n\n      <div id=\"button-row\">\n        <button id=\"button-save-cancel\" class=\"button-cancel\">Cancel</button>\n      </div>\n    </div> \n    ";
 
     $("#window-" + this.window).append(template);
     $("#window-" + this.window).dialog({ show: 'fade', hide: 'fade' });
     $('#button-save-cancel').mouseup(function (e) {
-      return $("#window-" + _this.window).dialog("close");
+      return _this.close_window();
     });
     $('#button-save-spm').mouseup(function (e) {
       return _this.save_spm();
@@ -47,8 +48,10 @@ var Save = function () {
         $('#button-save-spd').addClass("error");
         $('#button-save-spd-old').prop('disabled', true);
         $('#button-save-spd-old').addClass("error");
-        $('#button-save-source').prop('disabled', true);
-        $('#button-save-source').addClass("error");
+        $('#button-save-source-kick').prop('disabled', true);
+        $('#button-save-source-kick').addClass("error");
+        $('#button-save-source-acme').prop('disabled', true);
+        $('#button-save-source-acme').addClass("error");
       } else {
         $("#filename").removeClass("error");
         $('#button-save-spm').prop('disabled', false);
@@ -57,8 +60,10 @@ var Save = function () {
         $('#button-save-spd').removeClass("error");
         $('#button-save-spd-old').prop('disabled', false);
         $('#button-save-spd-old').removeClass("error");
-        $('#button-save-source').prop('disabled', false);
-        $('#button-save-source').removeClass("error");
+        $('#button-save-source-kick').prop('disabled', false);
+        $('#button-save-source-kick').removeClass("error");
+        $('#button-save-source-acme').prop('disabled', false);
+        $('#button-save-source-acme').removeClass("error");
       }
     });
   }
@@ -85,8 +90,8 @@ var Save = function () {
         }, 0);
       }
 
-      $("#window-" + this.window).dialog("close");
       status("File has been saved.");
+      this.close_window();
     }
   }, {
     key: "save_source",
@@ -111,8 +116,8 @@ var Save = function () {
         }, 0);
       }
 
-      $("#window-" + this.window).dialog("close");
       status("File has been saved.");
+      this.close_window();
     }
   }, {
     key: "save_spd",
@@ -137,8 +142,8 @@ var Save = function () {
         }, 0);
       }
 
-      $("#window-" + this.window).dialog("close");
       status("File has been saved.");
+      this.close_window();
     }
   }, {
     key: "create_spd_array",
@@ -316,6 +321,12 @@ var Save = function () {
     key: "set_save_data",
     value: function set_save_data(savedata) {
       this.savedata = savedata;
+    }
+  }, {
+    key: "close_window",
+    value: function close_window() {
+      $("#window-" + this.window).dialog("close");
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     }
   }]);
 

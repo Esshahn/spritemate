@@ -21,7 +21,7 @@ class Editor
 
     let template = `
       <div class="window_menu">
-        <img src="img/icon3/icon-multicolor.png" title="toggle single- & multicolor" id="icon-multicolor">
+        <img src="img/icon3/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
         <img src="img/icon3/icon-shift-left.png" title="shift left" id="icon-shift-left">
         <img src="img/icon3/icon-shift-right.png" title="shift right" id="icon-shift-right">
         <img src="img/icon3/icon-shift-up.png" title="shift up" id="icon-shift-up">
