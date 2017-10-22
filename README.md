@@ -1,10 +1,10 @@
 # spritemate
 spritemate is a browser based sprite editor for the Commodore 64. 
-It works in most modern browsers on Windows, Mac and Linux. All data is processed on front end side, no back end is involved and you can use this tool offline. The release version will support the most common sprite formats for the Commodore 64 (e.g. SpritePad), therefore spritemate can be used as easy sprite viewer on almost any device with a browser.
+It works in most modern browsers on Windows, Mac and Linux. All data is processed on front end side, no back end is involved and you can use this tool offline. spritemate supports importing and exporting of the most common sprite formats for the Commodore 64 (e.g. SpritePad) and can be used as easy sprite viewer and editor on almost any device with a browser.
 
-There's no official release yet, but you can check out a version from 2017-09-22: http://spritemate.com/170922/
+Latest stable version: http://spritemate.com/
 
-<img src="https://user-images.githubusercontent.com/434355/30771674-a15113be-a04d-11e7-9f9f-e29d3582e4fe.png" width= "50%"/>
+<img src="https://user-images.githubusercontent.com/434355/31865103-30467f1e-b769-11e7-9f3e-c065b4413f82.png" width= "50%"/>
 
 ## Features (what it currently does)
 
@@ -95,6 +95,14 @@ There's no official release yet, but you can check out a version from 2017-09-22
 * you can copy & paste sprites by using the corresponding icons in the sprite list window
 
 ## History
+
+2017-10-23
+* first public release!
+
+2017-10-20
+* Keyboard shortcuts support
+* fixed a bug in sprite importer script introduced the other day
+* nicer looking tooltips
 
 2017-10-19
 * KICK ASS syntax support for source export
