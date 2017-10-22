@@ -12,10 +12,17 @@ class Info
     <div id="info">
         <p>Welcome to</p>
         <img autofocus src="img/logo.png" id="logo">
-        <p>A tool to draw sprites for the Commodore 64</p>
+        <p>The Commodore 64 sprite editor</p>
 
         <fieldset>
             <legend>What's new</legend>
+            <h1>October 23, 2017</h1>
+
+            <h2>First public beta release</h2>
+            <p>
+            spritemate is now in public beta. Thanks to all the beta testers who helped find bugs and suggest features and improvements. Please check out the <a target="_blank" href="https://github.com/Esshahn/spritemate">documentation on Github</a> to get a feature overview. 
+
+            </p>
             <h1>October 20, 2017</h1>
 
             <h2>Keyboard Shortcuts</h2>
@@ -68,10 +75,8 @@ class Info
 
         <p>Documentation: <a target="_blank" href="https://github.com/Esshahn/spritemate">https://github.com/Esshahn/spritemate</a></p>
         <p>Ingo Hinterding / <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a> of <a target="_blank" href="http://csdb.dk/group/?id=7228">Mayday!</a>
-        / <a target="_blank" href="http://www.awsm.de">www.awsm.de</a> / <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
-        <br/>
+        / <a target="_blank" href="http://www.awsm.de">http://www.awsm.de</a> / <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
         <p>Report bugs, ideas & requests to ingo (at) awsm (dot) de</p>
-        <p>Please do not share this link publicly yet. Thank you for testing!</p>
         <br/>
         <button id="button-info">Let's go!</button>
     </div>
