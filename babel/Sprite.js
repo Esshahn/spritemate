@@ -411,6 +411,7 @@ class Sprite
 
     flow(x,y,this.all.pen);
     this.all.sprites[this.all.current_sprite].pixels = data;
+    this.save_backup();
   }
 
   copy()
