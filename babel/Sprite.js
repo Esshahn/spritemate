@@ -302,6 +302,7 @@ class Sprite
     } 
 
     if (typeof(spritenumber) == "number") this.all.current_sprite = spritenumber;
+    this.save_backup();
   }
 
   delete()

@@ -294,6 +294,7 @@ var Sprite = function () {
       }
 
       if (typeof spritenumber == "number") this.all.current_sprite = spritenumber;
+      this.save_backup();
     }
   }, {
     key: "delete",
