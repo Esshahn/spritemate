@@ -259,6 +259,7 @@ class Sprite
     } else {
       this.all.colors[this.all.pen] = pencolor;
     }
+    this.save_backup();
   }
 
   get_all()

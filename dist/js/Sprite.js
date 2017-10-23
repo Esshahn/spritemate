@@ -253,6 +253,7 @@ var Sprite = function () {
       } else {
         this.all.colors[this.all.pen] = pencolor;
       }
+      this.save_backup();
     }
   }, {
     key: "get_all",
