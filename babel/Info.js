@@ -16,7 +16,7 @@ class Info
 
         <fieldset>
             <legend>What's new</legend>
-            <h1>October 23, 2017</h1>
+            <h1>October 24, 2017</h1>
 
             <h2>First public beta release</h2>
             <p>
