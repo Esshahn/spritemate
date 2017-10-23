@@ -96,8 +96,8 @@ Latest version: http://spritemate.com/
 
 ## History
 
-2017-10-23
-* first public release!
+2017-10-24
+* first public release
 
 2017-10-20
 * Keyboard shortcuts support
