@@ -5,7 +5,7 @@ Latest version: http://spritemate.com/
 
 <img src="https://user-images.githubusercontent.com/434355/31865103-30467f1e-b769-11e7-9f3e-c065b4413f82.png" width= "80%"/>
 
-## Features (what it currently does)
+## Features
 
 * choose from the 16 colors of the C64 palette
 * draw pixels on a 24x21 pixel (singlecolor) or 12x21 pixel (multicolor) canvas
@@ -26,7 +26,7 @@ Latest version: http://spritemate.com/
 * export as ASM source (KICK and ACME)
 * keyboard shortcuts
 
-## Backlog (what it does not yet)
+## Backlog
 
 * animation
 * export animation as GIF
