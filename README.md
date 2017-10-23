@@ -1,6 +1,5 @@
-# spritemate
-spritemate is a browser based sprite editor for the Commodore 64. 
-It works in most modern browsers on Windows, Mac and Linux. All data is processed on front end side, no back end is involved and you can use this tool offline. spritemate supports importing and exporting of the most common sprite formats for the Commodore 64 (e.g. SpritePad) and can be used as easy sprite viewer and editor on almost any device with a browser.
+# Spritemate
+Spritemate is a new sprite editor for the Commodore 64. It works with most modern browsers on Windows, Mac and Linux and is pure JavaScript and HTML - no plugins. All data is processed on client side only. Spritemate supports importing and exporting of the most common file formats for the Commodore 64 (e.g. SpritePad) and can be used as viewer and editor on almost any device with a browser.
 
 Latest version: http://spritemate.com/
 
@@ -8,7 +7,7 @@ Latest version: http://spritemate.com/
 
 ## Features (what it currently does)
 
-* choose one of 16 C64 colors from the color palette
+* choose from the 16 colors of the C64 palette
 * draw pixels on a 24x21 pixel (singlecolor) or 12x21 pixel (multicolor) canvas
 * C64 mode restrictions (number of colors per sprite, global sprite colors)
 * delete, fill, shift left, right, up, down, flip horizontal & vertical
@@ -17,25 +16,24 @@ Latest version: http://spritemate.com/
 * multiple sprites
 * double width & height sprites
 * stacked sprite layers (sprite overlays)
-* flood fill
 * sprite sorting
 * undo & redo
 * copy & paste
 * window based GUI
-* import & export to internal format
+* import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
-* export as ASM source
+* export as ASM source (KICK and ACME)
 * keyboard shortcuts
 
 ## Backlog (what it does not yet)
 
-* import & export PNG images
+* animation
 * export animation as GIF
+* import & export PNG images
 * rotate 90 degrees
 * select and move pixels
 * save window layout
-* animation
 * touch controls and tablet optimization
 * and tons of other stuff
 
