@@ -51,7 +51,13 @@ class List
     canvas_element.id =  id;
     canvas_element.width = this.width;
     canvas_element.height = this.height;
- 
+
+    /*
+    var sprite_div = `<div id="sprite-${id}" class="sprite"></div>`;
+    $("#spritelist").append(sprite_div);
+    $("#sprite-"+id).append(canvas_element);
+    */
+
     $("#spritelist").append(canvas_element);
     $(canvas_element).addClass("sprite_in_list");
     $(canvas_element).addClass("list-sprite-size"); // see comment in constructor

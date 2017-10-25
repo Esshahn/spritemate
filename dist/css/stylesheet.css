@@ -328,10 +328,6 @@ canvas
 
 }
 
-.sprite
-{
- background-color: red;
-}
 
 .sprite.ui-dialog-content
 {
@@ -379,6 +375,14 @@ canvas
 {
    margin:0px;
    padding: 0px;
+}
+
+
+#spritelist .sprite
+{
+  padding: 8px;
+  width: 90%;
+  border: 1px dotted #555555;
 }
 
 
