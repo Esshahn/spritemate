@@ -45,7 +45,7 @@ class App
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
 
-    $( document ).tooltip(); // initializes tooltip handling in jquery
+    $( document ).tooltip({show: {delay: 1000}}); // initializes tooltip handling in jquery
      
     status("Welcome to spritemate!");
     this.update();
@@ -55,6 +55,25 @@ class App
 
   }
 
+  write_to_web_storage()
+  {
+    if (typeof(Storage) !== "undefined")
+    {
+      localStorage.setItem("text", "moinsen");
+    } else {
+       status("I can't write to local web storage.");
+    }
+  }
+
+  read_from_web_storage()
+  {
+    if (typeof(Storage) !== "undefined")
+    {
+      status(localStorage.getItem("text"));
+    } else {
+      status("I can't write to local web storage.");
+    }
+  }
 
   toggle_fullscreen() 
   {
@@ -357,6 +376,15 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
+        if (e.key == "q")
+        { 
+          this.write_to_web_storage();
+        }
+
+        if (e.key == "w")
+        { 
+          this.read_from_web_storage();
+        }
 
       }
     });

@@ -49,7 +49,7 @@ var App = function () {
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
 
-    $(document).tooltip(); // initializes tooltip handling in jquery
+    $(document).tooltip({ show: { delay: 1000 } }); // initializes tooltip handling in jquery
 
     status("Welcome to spritemate!");
     this.update();
@@ -59,6 +59,24 @@ var App = function () {
   }
 
   _createClass(App, [{
+    key: "write_to_web_storage",
+    value: function write_to_web_storage() {
+      if (typeof Storage !== "undefined") {
+        localStorage.setItem("text", "moinsen");
+      } else {
+        status("I can't write to local web storage.");
+      }
+    }
+  }, {
+    key: "read_from_web_storage",
+    value: function read_from_web_storage() {
+      if (typeof Storage !== "undefined") {
+        status(localStorage.getItem("text"));
+      } else {
+        status("I can't write to local web storage.");
+      }
+    }
+  }, {
     key: "toggle_fullscreen",
     value: function toggle_fullscreen() {
       if (!document.fullscreenElement && // alternative standard method
@@ -334,6 +352,14 @@ var App = function () {
           if (e.key == "m") {
             _this.sprite.toggle_multicolor();
             _this.update();
+          }
+
+          if (e.key == "q") {
+            _this.write_to_web_storage();
+          }
+
+          if (e.key == "w") {
+            _this.read_from_web_storage();
           }
         }
       });
