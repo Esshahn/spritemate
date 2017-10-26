@@ -59,6 +59,7 @@ legend
   padding: 0px 20px 0px 20px;
 }
 
+
 fieldset
 {
   margin-bottom: 12px;
@@ -84,8 +85,6 @@ fieldset .right
 }
 
 
-
-
 .ui-widget-content a
 {
   color: #00b9ee;
@@ -108,6 +107,37 @@ canvas
 {
   text-align: center;
 }
+
+.settings_colorfield
+{
+  border: 1px dotted #555555;
+  min-width: 0px;
+  float:left;
+}
+
+.settings_color
+{
+  width: 5px;
+  height: 10px;
+  padding: 8px;
+  float:left;
+
+}
+
+.ui-widget input.settings_colorvalue
+{
+  border: 0px solid #00b9ee;
+  min-width: 0px;
+  width: 52px;
+  border-radius: 0px;
+  padding: 4px 4px 4px 4px;
+  font-size: 80%;
+  margin: 2px 2px 2px 2px;
+
+}
+
+
+
 
 .ui-widget button
 {
@@ -159,11 +189,14 @@ canvas
   text-align: center;
 }
 
+
 .ui-widget input:focus
 {
   outline:0;
   background-color: #00b9ee;
 }
+
+
 
 .ui-widget .error:focus
 {
@@ -540,8 +573,3 @@ canvas
 {
   width: 100%;
 }
-
-
-
-
-

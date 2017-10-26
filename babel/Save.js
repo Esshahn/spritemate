@@ -62,28 +62,18 @@ class Save
       if (this.default_filename.length < 1)
       {
         $("#filename").addClass("error");
-        $('#button-save-spm').prop('disabled', true);
-        $('#button-save-spm').addClass("error");
-        $('#button-save-spd').prop('disabled', true);
-        $('#button-save-spd').addClass("error");
-        $('#button-save-spd-old').prop('disabled', true);
-        $('#button-save-spd-old').addClass("error");
-        $('#button-save-source-kick').prop('disabled', true);
-        $('#button-save-source-kick').addClass("error");
-        $('#button-save-source-acme').prop('disabled', true);
-        $('#button-save-source-acme').addClass("error");
+        $('#button-save-spm').prop('disabled', true).addClass("error");
+        $('#button-save-spd').prop('disabled', true).addClass("error");
+        $('#button-save-spd-old').prop('disabled', true).addClass("error");
+        $('#button-save-source-kick').prop('disabled', true).addClass("error");
+        $('#button-save-source-acme').prop('disabled', true).addClass("error");
       }else{
         $("#filename").removeClass("error");
-        $('#button-save-spm').prop('disabled', false);
-        $('#button-save-spm').removeClass("error");
-        $('#button-save-spd').prop('disabled', false);
-        $('#button-save-spd').removeClass("error");
-        $('#button-save-spd-old').prop('disabled', false);
-        $('#button-save-spd-old').removeClass("error");
-        $('#button-save-source-kick').prop('disabled', false);
-        $('#button-save-source-kick').removeClass("error");
-        $('#button-save-source-acme').prop('disabled', false);
-        $('#button-save-source-acme').removeClass("error");
+        $('#button-save-spm').prop('disabled', false).removeClass("error");
+        $('#button-save-spd').prop('disabled', false).removeClass("error");
+        $('#button-save-spd-old').prop('disabled', false).removeClass("error");
+        $('#button-save-source-kick').prop('disabled', false).removeClass("error");
+        $('#button-save-source-acme').prop('disabled', false).removeClass("error");
       }
     });
 

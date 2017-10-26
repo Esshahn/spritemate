@@ -28,13 +28,17 @@ class App
     this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
-    window_config = { title: "Spritemate", type: "info", resizable: false, autoOpen: false, width: "auto", height: "auto" };
+    window_config = { title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: "auto", height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
-    window_config = { title: "Save", type: "file", resizable: false, autoOpen: false, width: 580, height: "auto" };
+    window_config = { title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_info = new Window(window_config);
     this.save = new Save(5,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
+
+    window_config = { title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
+    this.window_settings = new Window(window_config);
+    this.settings = new Settings(7,this.config);
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -51,7 +55,7 @@ class App
     this.update();
     this.user_interaction();
 
-    $("#window-4").dialog( "open");
+   // $("#window-4").dialog( "open");
 
   }
 
@@ -240,6 +244,7 @@ class App
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
+    this.init_ui_fade("icon-settings");
     
   
     this.init_ui_fade("icon-list-new");
@@ -469,6 +474,12 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     $('#icon-fullscreen').mouseup((e) =>
     {
       this.toggle_fullscreen();
+    });
+
+    $('#icon-settings').mouseup((e) =>
+    {
+      $("#window-7").dialog( "open");
+      this.allow_keyboard_shortcuts = false;
     });
 
     $('#icon-info').mouseup((e) =>
