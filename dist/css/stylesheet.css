@@ -587,3 +587,9 @@ canvas
 {
   width: 100%;
 }
+
+.ui-widget-overlay 
+{
+    background: #000000;
+    opacity: 0.6;
+}
