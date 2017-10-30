@@ -115,13 +115,27 @@ canvas
   float:left;
 }
 
+#selected_colors
+{
+  width: 400px;
+  float: right;
+  line-height: 26px;
+}
+
+.settings_selected_color
+{
+  width: 5px;
+  height: 10px;
+  padding: 8px;
+  float:left;
+}
+
 .settings_color
 {
   width: 5px;
   height: 10px;
   padding: 8px;
   float:left;
-
 }
 
 .ui-widget input.settings_colorvalue

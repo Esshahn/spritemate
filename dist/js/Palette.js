@@ -109,6 +109,12 @@ var Palette = function () {
       return this.active_color;
     }
   }, {
+    key: "set_colors",
+    value: function set_colors(colors) {
+      this.colors = colors;
+      this.draw_palette();
+    }
+  }, {
     key: "findPos",
     value: function findPos(obj) {
       var curleft = 0,

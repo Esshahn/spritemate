@@ -12,10 +12,29 @@ class Info
     <div id="info">
         <p>Welcome to</p>
         <img autofocus src="img/logo.png" id="logo">
-        <p>The Commodore 64 sprite editor</p>
+        <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
             <legend>What's new</legend>
+            <h1>October 30, 2017</h1>
+
+            <h2>Save settings & color palette change</h2>
+            <p>
+            Spritemate saves settings locally now. 
+            It might work a bit wonky still and I know about least one part where the code works but should not as to my understanding (but who am I to judge the developer...). 
+            Anyway, the foundation to more configuration options has been layed and more settings will be saved in a future update.
+            </p>
+
+            <br/>
+            - locally saved config file<br/>
+            - this info modal will be displayed only once when new features are introduced<br/>
+            - new settings modal<br/>
+            - choose between three color palettes now: colodore, pepto and custom<br/>
+            - custom palette feature lets you define your own palette<br/>
+            - tooltips now have a delay of one second before showing<br/>
+            - modals are now in focus to prevent unwanted interface interaction<br/>
+            - current version number is now shown in info modal
+
             <h1>October 24, 2017</h1>
 
             <h2>First public beta release</h2>

@@ -3,31 +3,28 @@
 class Settings
 {
 
-  constructor(window,config)
+  constructor(window,config,eventhandler)
   {
     this.config = config;
     this.window = window;
-    this.custom_colors = config.colors;
-
+    this.eventhandler = eventhandler;
+    
     let template = `
     <div id="modal">
         <h1 autofocus>Settings</h1>
-        <h2>Your settings will be saved locally in your browser storage</h2>
+        <h2>Your settings will be saved locally to your browser storage</h2>
         <fieldset>
             <legend>Color palette</legend>
             
-            <select name="colorpalette" id="colorpalette">
-              <option "selected">Colodore</option>
-              <option>Pepto</option>
-              <option>Vice</option>
-              <option>Custom</option>
+            <select id="colorpalette">
+              <option>colodore</option>
+              <option>pepto</option>
+              <option>custom</option>
             </select>
 
             <br/>
             <br/>
-            <p>Custom values</p>
 
-            
             <div class="settings_colorfield">
                 <div class="settings_color" id="col-0"></div>
                 <input type="text" class="settings_colorvalue" id="colval-0" name="" value="">
@@ -93,37 +90,47 @@ class Settings
                 <div class="settings_color" id="col-15"></div>
                 <input type="text" class="settings_colorvalue" id="colval-15" name="" value="">
             </div>
-        
 
         </fieldset>
 
-        <button id="button-settings">Done</button>
+        <!--
+        <fieldset>
+            <legend>Window settings</legend>
+            <div class="fieldset right">
+                <button id="button-save">Save now</button>
+                <button id="button-reset">Reset to defaults</button>
+            </div>
+            <p>Saves the window layout and zoom levels</p>
+        </fieldset>
+        -->
+        <div id="button-row">
+          <button id="button-apply">Apply</button>
+        </div>
 
     </div>
     `;
     $("#window-"+this.window).append(template);
 
-    // assign jquery ui style for the dropdown select
-    $( function() 
-    {
-        $( "#colorpalette" ).selectmenu();
-    } );
+    this.config.colors = this.config.palettes[this.config.selected_palette];
 
-    this.assign_colors(this.custom_colors);
+    $("#colorpalette").val(this.config.selected_palette);
 
-    this.init_inputfields(this.custom_colors);
+    this.init_inputfields(this.config.colors);
+    this.selection_change();
+    this.update_colors();
 
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-settings').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
-
+    
+    $('#button-apply').mouseup((e) => this.close_window());
+     
   }
 
-  assign_colors(colors)
+  update_colors()
   {
-    for (let i=0; i<colors.length;i++)
+    for (let i=0; i<this.config.colors.length;i++)
     {
-      $("#colval-"+i).val(colors[i]);
-      $("#col-"+i).animate({backgroundColor: colors[i]}, 'fast');
+      $("#colval-"+i).val(this.config.colors[i]);
+      $("#col-"+i).animate({backgroundColor: this.config.colors[i]}, 'fast');
     }
   }
 
@@ -133,17 +140,59 @@ class Settings
     for (let i=0; i<colors.length;i++)
     {
       $("#colval-"+i).change(function(){
-        that.update_color(i);
+        that.update_custom_colors(i);
       });
-    }   
+    }
+
+    if (this.config.selected_palette != "custom")
+    {
+      $('.settings_colorvalue').prop('disabled', true).fadeTo( "fast", 0.33 );
+    } else {
+      $('.settings_colorvalue').prop('disabled', false).fadeTo( "fast", 1 );
+    }  
   }
 
-  update_color(color)
+  selection_change()
   {
+    let that = this;
+    $("#colorpalette").change(function(){
+
+      let palette = $("#colorpalette").val();
+
+      that.config.colors = that.config.palettes[palette];
+      that.config.selected_palette = palette;
+
+      if (palette != "custom")
+      {
+        $('.settings_colorvalue').prop('disabled', true).fadeTo( "fast", 0.33 );
+      } else {
+        $('.settings_colorvalue').prop('disabled', false).fadeTo( "fast", 1 );
+      }
+
+      that.update_colors(that.config.colors);
+    });
+  }
+
+  update_custom_colors(color)
+  {
+    // takes the value of the input field and updates both the color and the input field
     let colvalue = $("#colval-"+color).val();
-    colvalue = "#" + colvalue.replace(/#/g,"");
-    $("#colval-"+color).val(colvalue);
-    $("#col-"+color).animate({backgroundColor: colvalue}, 'fast');
+    colvalue = "#" +("000000" + colvalue.replace(/#/g,"")).slice(-6);
+    this.config.palettes.custom[color] = colvalue;
+    this.config.colors = this.config.palettes.custom;
+    this.update_colors();
+  }
+
+
+  close_window()
+  {
+      $("#window-"+this.window).dialog( "close" );
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+  }
+
+  get_config()
+  {
+    return this.config;
   }
 
 

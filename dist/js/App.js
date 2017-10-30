@@ -10,7 +10,9 @@ var App = function () {
   function App(config) {
     _classCallCheck(this, App);
 
-    this.config = config;
+    this.storage = new Storage(config);
+    this.config = this.storage.get_config();
+    this.config.colors = this.config.palettes[this.config.selected_palette];
 
     this.sprite = new Sprite(this.config);
 
@@ -42,7 +44,7 @@ var App = function () {
 
     window_config = { title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
     this.window_settings = new Window(window_config);
-    this.settings = new Settings(7, this.config);
+    this.settings = new Settings(7, this.config, { onLoad: this.update_config.bind(this) });
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -59,28 +61,10 @@ var App = function () {
     this.update();
     this.user_interaction();
 
-    // $("#window-4").dialog( "open");
+    if (this.storage.is_updated_version()) $("#window-4").dialog("open");
   }
 
   _createClass(App, [{
-    key: "write_to_web_storage",
-    value: function write_to_web_storage() {
-      if (typeof Storage !== "undefined") {
-        localStorage.setItem("text", "moinsen");
-      } else {
-        status("I can't write to local web storage.");
-      }
-    }
-  }, {
-    key: "read_from_web_storage",
-    value: function read_from_web_storage() {
-      if (typeof Storage !== "undefined") {
-        status(localStorage.getItem("text"));
-      } else {
-        status("I can't write to local web storage.");
-      }
-    }
-  }, {
     key: "toggle_fullscreen",
     value: function toggle_fullscreen() {
       if (!document.fullscreenElement && // alternative standard method
@@ -187,6 +171,15 @@ var App = function () {
       } else {
         $('#icon-list-zoom-in').fadeTo("fast", 1);
       }
+    }
+  }, {
+    key: "update_config",
+    value: function update_config() {
+      // this gets called after the settings modal has been closed
+      this.palette.set_colors(this.config.colors);
+      this.storage.write(this.config);
+      this.update();
+      status("Configuration updated.");
     }
   }, {
     key: "update_loaded_file",

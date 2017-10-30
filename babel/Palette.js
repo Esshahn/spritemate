@@ -133,6 +133,12 @@ class Palette
     return this.active_color;
   }
 
+  set_colors(colors)
+  {
+    this.colors = colors;
+    this.draw_palette();
+  }
+
 
   findPos(obj)
   {
