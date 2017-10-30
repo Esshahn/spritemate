@@ -585,11 +585,15 @@ var App = function () {
 
       $('#icon-editor-zoom-in').mouseup(function (e) {
         _this.editor.zoom_in();
+        _this.config.zoom_editor = _this.editor.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-editor-zoom-out').mouseup(function (e) {
         _this.editor.zoom_out();
+        _this.config.zoom_editor = _this.editor.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
@@ -674,11 +678,15 @@ var App = function () {
 
       $('#icon-list-zoom-in').mouseup(function (e) {
         _this.list.zoom_in();
+        _this.config.zoom_list = _this.list.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-list-zoom-out').mouseup(function (e) {
         _this.list.zoom_out();
+        _this.config.zoom_list = _this.list.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
@@ -722,11 +730,15 @@ var App = function () {
 
       $('#icon-preview-zoom-in').mouseup(function (e) {
         _this.preview.zoom_in();
+        _this.config.zoom_preview = _this.preview.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-preview-zoom-out').mouseup(function (e) {
         _this.preview.zoom_out();
+        _this.config.zoom_preview = _this.preview.get_zoom();
+        _this.storage.write(_this.config);
         _this.update();
       });
     }

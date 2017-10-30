@@ -196,6 +196,11 @@ class Editor
     }
   }
 
+  get_zoom()
+  {
+    return this.zoom;
+  }
+
   is_min_zoom()
   {
     if (this.zoom <= 8) return true;

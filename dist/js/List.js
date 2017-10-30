@@ -100,6 +100,11 @@ var List = function () {
       }
     }
   }, {
+    key: "get_zoom",
+    value: function get_zoom() {
+      return this.zoom;
+    }
+  }, {
     key: "is_min_zoom",
     value: function is_min_zoom() {
       if (this.zoom < 2) return true;

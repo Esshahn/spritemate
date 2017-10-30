@@ -643,12 +643,16 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     $('#icon-editor-zoom-in').mouseup((e) =>
     {     
       this.editor.zoom_in();
+      this.config.zoom_editor = this.editor.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 
     $('#icon-editor-zoom-out').mouseup((e) =>
     {     
       this.editor.zoom_out();
+      this.config.zoom_editor = this.editor.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 
@@ -747,12 +751,16 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     $('#icon-list-zoom-in').mouseup((e) =>
     {     
       this.list.zoom_in();
+      this.config.zoom_list = this.list.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 
     $('#icon-list-zoom-out').mouseup((e) =>
     {     
       this.list.zoom_out();
+      this.config.zoom_list = this.list.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 
@@ -800,12 +808,16 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     $('#icon-preview-zoom-in').mouseup((e) =>
     {     
       this.preview.zoom_in();
+      this.config.zoom_preview = this.preview.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 
     $('#icon-preview-zoom-out').mouseup((e) =>
     {     
       this.preview.zoom_out();
+      this.config.zoom_preview = this.preview.get_zoom();
+      this.storage.write(this.config);
       this.update();
     });
 

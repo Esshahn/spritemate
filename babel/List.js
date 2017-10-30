@@ -109,6 +109,11 @@ class List
     }
   }
 
+  get_zoom()
+  {
+    return this.zoom;
+  }
+
   is_min_zoom()
   {
     if (this.zoom < 2) return true;

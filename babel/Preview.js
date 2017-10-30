@@ -75,6 +75,11 @@ class Preview
     }
   }
 
+  get_zoom()
+  {
+    return this.zoom;
+  }
+
   update_zoom()
   {
     this.width = this.pixels_x * this.zoom;

@@ -65,6 +65,11 @@ var Preview = function () {
       }
     }
   }, {
+    key: 'get_zoom',
+    value: function get_zoom() {
+      return this.zoom;
+    }
+  }, {
     key: 'update_zoom',
     value: function update_zoom() {
       this.width = this.pixels_x * this.zoom;
