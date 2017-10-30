@@ -288,18 +288,14 @@ class Sprite
     this.save_backup();
   }
 
-
   set_current_sprite(spritenumber)
   {
-    if (spritenumber == "right" && (this.all.current_sprite < this.all.sprites.length-1))
-    {
-      spritenumber = this.all.current_sprite + 1;
-    } 
+    if (spritenumber == "right") spritenumber = this.all.current_sprite + 1;
+    if (spritenumber == "left") spritenumber = this.all.current_sprite - 1;
 
-    if (spritenumber == "left" && (this.all.current_sprite > 0 ) )
-    {
-      spritenumber = this.all.current_sprite - 1;
-    } 
+    // cycle through the list
+    if (spritenumber < 0) spritenumber = this.all.sprites.length-1;
+    if (spritenumber > this.all.sprites.length-1) spritenumber = 0;
 
     if (typeof(spritenumber) == "number") this.all.current_sprite = spritenumber;
     this.save_backup();

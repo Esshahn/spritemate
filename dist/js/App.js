@@ -34,7 +34,7 @@ var App = function () {
     this.window_preview = new Window(window_config);
     this.list = new List(3, this.config);
 
-    window_config = { title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: "auto", height: "auto" };
+    window_config = { title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4, this.config);
 
