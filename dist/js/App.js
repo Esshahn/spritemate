@@ -17,20 +17,20 @@ var App = function () {
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    var window_config = { title: "Editor", type: "sprite", resizable: false, left: 210, top: 100, width: "auto", height: "auto" };
+    var window_config = { title: "Editor", type: "sprite", resizable: false, left: this.config.window_editor.left, top: this.config.window_editor.top, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0, this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", type: "colors", resizable: false, left: 110, top: 100, width: "auto", height: "auto" };
+    window_config = { title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1, this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: 700, top: 100, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: this.config.window_preview.left, top: this.config.window_preview.top, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2, this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 900, top: 320, width: 440, height: 200 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: this.config.window_list.left, top: this.config.window_list.top, width: this.config.window_list.width, height: this.config.window_list.height };
     this.window_preview = new Window(window_config);
     this.list = new List(3, this.config);
 
@@ -585,20 +585,22 @@ var App = function () {
 
       $('#icon-editor-zoom-in').mouseup(function (e) {
         _this.editor.zoom_in();
-        _this.config.zoom_editor = _this.editor.get_zoom();
+        _this.config.window_editor.zoom = _this.editor.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-editor-zoom-out').mouseup(function (e) {
         _this.editor.zoom_out();
-        _this.config.zoom_editor = _this.editor.get_zoom();
+        _this.config.window_editor.zoom = _this.editor.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-editor-grid').mouseup(function (e) {
         _this.editor.toggle_grid();
+        _this.config.window_editor.grid = _this.editor.get_grid();
+        _this.storage.write(_this.config);
         _this.update();
       });
 
@@ -678,14 +680,14 @@ var App = function () {
 
       $('#icon-list-zoom-in').mouseup(function (e) {
         _this.list.zoom_in();
-        _this.config.zoom_list = _this.list.get_zoom();
+        _this.config.window_list.zoom = _this.list.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-list-zoom-out').mouseup(function (e) {
         _this.list.zoom_out();
-        _this.config.zoom_list = _this.list.get_zoom();
+        _this.config.window_list.zoom = _this.list.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });
@@ -730,14 +732,14 @@ var App = function () {
 
       $('#icon-preview-zoom-in').mouseup(function (e) {
         _this.preview.zoom_in();
-        _this.config.zoom_preview = _this.preview.get_zoom();
+        _this.config.window_preview.zoom = _this.preview.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });
 
       $('#icon-preview-zoom-out').mouseup(function (e) {
         _this.preview.zoom_out();
-        _this.config.zoom_preview = _this.preview.get_zoom();
+        _this.config.window_preview.zoom = _this.preview.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
       });

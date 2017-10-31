@@ -13,20 +13,20 @@ class App
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    let window_config = { title: "Editor", type: "sprite", resizable: false, left: 210, top: 100, width: "auto", height: "auto" };
+    let window_config = { title: "Editor", type: "sprite", resizable: false, left: this.config.window_editor.left, top: this.config.window_editor.top, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config);
     this.editor = new Editor(0,this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", type: "colors", resizable: false, left: 110, top: 100, width: "auto", height: "auto" };
+    window_config = { title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
     this.window_colors = new Window(window_config);
     this.palette = new Palette(1,this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: 700, top: 100, width: "auto", height: "auto" };
+    window_config = { title: "Preview", type: "preview", resizable: false, left: this.config.window_preview.left, top: this.config.window_preview.top, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config);
     this.preview = new Preview(2,this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: 900, top: 320, width: 440, height: 200 };
+    window_config = { title: "Sprite List", type: "list", resizable: true, left: this.config.window_list.left, top: this.config.window_list.top, width: this.config.window_list.width, height: this.config.window_list.height };
     this.window_preview = new Window(window_config);
     this.list = new List(3,this.config);
 
@@ -643,7 +643,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     $('#icon-editor-zoom-in').mouseup((e) =>
     {     
       this.editor.zoom_in();
-      this.config.zoom_editor = this.editor.get_zoom();
+      this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
@@ -651,7 +651,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     $('#icon-editor-zoom-out').mouseup((e) =>
     {     
       this.editor.zoom_out();
-      this.config.zoom_editor = this.editor.get_zoom();
+      this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
@@ -659,6 +659,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     $('#icon-editor-grid').mouseup((e) =>
     {
       this.editor.toggle_grid();
+      this.config.window_editor.grid = this.editor.get_grid();
+      this.storage.write(this.config);
       this.update();
     });
 
@@ -751,7 +753,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     $('#icon-list-zoom-in').mouseup((e) =>
     {     
       this.list.zoom_in();
-      this.config.zoom_list = this.list.get_zoom();
+      this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
@@ -759,7 +761,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     $('#icon-list-zoom-out').mouseup((e) =>
     {     
       this.list.zoom_out();
-      this.config.zoom_list = this.list.get_zoom();
+      this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
@@ -808,7 +810,7 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     $('#icon-preview-zoom-in').mouseup((e) =>
     {     
       this.preview.zoom_in();
-      this.config.zoom_preview = this.preview.get_zoom();
+      this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
@@ -816,7 +818,7 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     $('#icon-preview-zoom-out').mouseup((e) =>
     {     
       this.preview.zoom_out();
-      this.config.zoom_preview = this.preview.get_zoom();
+      this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     });

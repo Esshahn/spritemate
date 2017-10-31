@@ -9,10 +9,10 @@ var Editor = function () {
     _classCallCheck(this, Editor);
 
     this.config = config;
-    this.grid = this.config.display_grid;
+    this.grid = this.config.window_editor.grid;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
-    this.zoom = this.config.zoom_editor;
+    this.zoom = this.config.window_editor.zoom;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -49,6 +49,11 @@ var Editor = function () {
       } else {
         this.grid = true;
       }
+    }
+  }, {
+    key: "get_grid",
+    value: function get_grid() {
+      return this.grid;
     }
   }, {
     key: "update",

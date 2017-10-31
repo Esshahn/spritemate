@@ -3,7 +3,7 @@ function init()
 
     let config = 
     {
-      version: 1.01,
+      version: 1.02,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
@@ -29,10 +29,30 @@ function init()
                 "#7b7b7b","#a9ff9f","#706deb","#b2b2b2"
               ]},
       selected_palette: "pepto",
-      zoom_editor: 18,
-      zoom_preview: 5,
-      zoom_list: 4,
-      display_grid: true
+      window_editor: {
+              "top": 100,
+              "left": 210,
+              "zoom": 18,
+              "grid": true
+              },
+      window_preview: {
+              "top": 100,
+              "left": 700,
+              "zoom": 5
+              },
+      window_list: {
+              "top": 320,
+              "left": 900,
+              "width": 440,
+              "height": 200,
+              "zoom": 4
+              },
+      window_palette: {
+              "top": 100,
+              "left": 110,
+              "zoom": 1
+              }
+
     };
 
     let sprite_app = new App(config);

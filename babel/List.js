@@ -7,7 +7,7 @@ class List
   {
     this.config = config;
     this.window = window;
-    this.zoom = this.config.zoom_list; 
+    this.zoom = this.config.window_list.zoom; 
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -32,6 +32,21 @@ class List
     `;
 
     $("#window-"+this.window).append(template);
+
+    $("#window-"+this.window ).dialog({
+    resizeStop: function( event, ui ) 
+    {
+      console.log("resized");
+    }
+    });
+
+    $("#window-"+this.window ).dialog({
+    dragStop: function( event, ui ) 
+    {
+      console.log("dragged");
+      console.log(ui.position.top);
+    }
+    });
     
     $("#spritelist").sortable({
       cursor:"move",

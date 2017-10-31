@@ -10,7 +10,7 @@ var List = function () {
 
     this.config = config;
     this.window = window;
-    this.zoom = this.config.zoom_list;
+    this.zoom = this.config.window_list.zoom;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -22,6 +22,19 @@ var List = function () {
     var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"remove sprite\">\n        <img src=\"img/icon3/icon-list-copy.png\" id=\"icon-list-copy\" title=\"copy sprite\">\n        <img src=\"img/icon3/icon-list-paste.png\" id=\"icon-list-paste\" title=\"paste sprite\">\n        \n        <div class=\"right\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\"><img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
 
     $("#window-" + this.window).append(template);
+
+    $("#window-" + this.window).dialog({
+      resizeStop: function resizeStop(event, ui) {
+        console.log("resized");
+      }
+    });
+
+    $("#window-" + this.window).dialog({
+      dragStop: function dragStop(event, ui) {
+        console.log("dragged");
+        console.log(ui.position.top);
+      }
+    });
 
     $("#spritelist").sortable({
       cursor: "move",
