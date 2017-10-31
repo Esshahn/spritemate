@@ -8,8 +8,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
  */
 
-var Window = function Window(config) {
+var Window = function Window(config, callback) {
     _classCallCheck(this, Window);
+
+    this.callback = callback;
 
     config.id = "window-" + $('div[id^="window-"]').length;
     config.position = { at: "left+" + config.left + " top+" + config.top };
@@ -18,6 +20,7 @@ var Window = function Window(config) {
     if (config.escape == undefined) config.escape = false;
 
     $("#app").append("<div id='" + config.id + "' class='" + config.type + "' title='" + config.title + "'></div>");
+
     $("#" + config.id).dialog({
         width: config.width,
         height: config.height,
@@ -29,4 +32,13 @@ var Window = function Window(config) {
         resizable: config.resizable,
         buttons: config.buttons
     });
+
+    if (this.callback) {
+        var that = this;
+        $("#" + config.id).dialog({
+            dragStop: function dragStop() {
+                that.callback();
+            }
+        });
+    }
 };

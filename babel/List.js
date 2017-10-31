@@ -40,13 +40,7 @@ class List
     }
     });
 
-    $("#window-"+this.window ).dialog({
-    dragStop: function( event, ui ) 
-    {
-      console.log("dragged");
-      console.log(ui.position.top);
-    }
-    });
+
     
     $("#spritelist").sortable({
       cursor:"move",

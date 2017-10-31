@@ -7,8 +7,10 @@
 
 class Window
 {
-    constructor(config)
+    constructor(config,callback)
     {
+        this.callback = callback;
+        
         config.id = "window-" + $('div[id^="window-"]').length;
         config.position = { at: "left+"+config.left+" top+"+config.top }; 
         if (config.top == undefined) config.position = undefined;
@@ -16,6 +18,7 @@ class Window
         if (config.escape == undefined) config.escape = false;
         
         $( "#app" ).append( "<div id='"+config.id+"' class='"+config.type+"' title='"+config.title+"'></div>" );
+        
         $("#" + config.id).dialog({
             width: config.width,
             height: config.height,
@@ -27,6 +30,14 @@ class Window
             resizable: config.resizable,
             buttons: config.buttons
         });
-    }         
-    
+
+        if (this.callback)
+        {
+          let that = this;
+          $("#" + config.id).dialog({
+            dragStop: function(){that.callback();}
+          });  
+        }
+    } 
+           
 }

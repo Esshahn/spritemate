@@ -29,13 +29,6 @@ var List = function () {
       }
     });
 
-    $("#window-" + this.window).dialog({
-      dragStop: function dragStop(event, ui) {
-        console.log("dragged");
-        console.log(ui.position.top);
-      }
-    });
-
     $("#spritelist").sortable({
       cursor: "move",
       tolerance: "pointer",
