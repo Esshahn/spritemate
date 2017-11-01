@@ -20,6 +20,7 @@ Latest version: http://spritemate.com/
 * undo & redo
 * copy & paste
 * window based GUI
+* save window layout
 * import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
@@ -31,9 +32,7 @@ Latest version: http://spritemate.com/
 * animation
 * export animation as GIF
 * import & export PNG images
-* rotate 90 degrees
 * select and move pixels
-* save window layout
 * touch controls and tablet optimization
 * and tons of other stuff
 
@@ -93,6 +92,13 @@ Latest version: http://spritemate.com/
 * you can copy & paste sprites by using the corresponding icons in the sprite list window
 
 ## History
+
+2017-11-01
+* local config file support
+* window positions, zoom levels are saved locally
+* new settings modal with color palette options: pepto, colodore and custom
+* cursor keys rotate through the sprite list
+* minar fixes and tweaks
 
 2017-10-24
 * first public release
