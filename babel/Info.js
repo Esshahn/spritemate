@@ -33,6 +33,7 @@ class Info
             - custom palette feature lets you define your own palette<br/>
             - zoom levels are remembered now<br/>
             - grid on/off in editor is remembered now<br/>
+            - window positions are now remembered<br/>
             - tooltips now have a delay of one second before showing<br/>
             - modals are now in focus to prevent unwanted interface interaction<br/>
             - cursor keys rotate through the sprite list instead of stopping at start and end<br/>

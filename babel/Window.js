@@ -9,10 +9,9 @@ class Window
 {
     constructor(config,callback)
     {
-        this.callback = callback;
         
         config.id = "window-" + $('div[id^="window-"]').length;
-        config.position = { at: "left+"+config.left+" top+"+config.top }; 
+        config.position = {my: "left top", at: "left+"+config.left+" top+"+config.top }; 
         if (config.top == undefined) config.position = undefined;
         if (config.modal == undefined) config.modal = false;
         if (config.escape == undefined) config.escape = false;
@@ -31,12 +30,24 @@ class Window
             buttons: config.buttons
         });
 
-        if (this.callback)
+        // in case a callback was defined for this window
+        // we send the position and size information back to the app for storage
+        if (callback)
         {
-          let that = this;
           $("#" + config.id).dialog({
-            dragStop: function(){that.callback();}
-          });  
+            dragStop: function(event,ui)
+            {
+              var obj = {name: config.name, data: {top: ui.position.top, left: ui.position.left}};
+              callback(obj);
+            }
+          });
+          $("#" + config.id).dialog({
+            resizeStop: function(event,ui)
+            {
+              var obj = {name: config.name, data: {top: ui.position.top, left: ui.position.left, width: ui.size.width, height: ui.size.height}};
+              callback(obj);
+            }
+          });
         }
     } 
            

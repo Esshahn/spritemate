@@ -33,14 +33,6 @@ class List
 
     $("#window-"+this.window).append(template);
 
-    $("#window-"+this.window ).dialog({
-    resizeStop: function( event, ui ) 
-    {
-      console.log("resized");
-    }
-    });
-
-
     
     $("#spritelist").sortable({
       cursor:"move",

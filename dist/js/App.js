@@ -17,32 +17,32 @@ var App = function () {
     this.sprite = new Sprite(this.config);
 
     // init the base windows
-    var window_config = { title: "Editor", type: "sprite", resizable: false, left: this.config.window_editor.left, top: this.config.window_editor.top, width: "auto", height: "auto" };
+    var window_config = { name: "window_editor", title: "Editor", type: "sprite", resizable: false, left: this.config.window_editor.left, top: this.config.window_editor.top, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config, this.store_window.bind(this));
     this.editor = new Editor(0, this.config);
 
     // create the color palette for the color window
-    window_config = { title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
-    this.window_colors = new Window(window_config, this.store_window.bind(this));
+    window_config = { name: "window_palette", title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
+    this.window_palette = new Window(window_config, this.store_window.bind(this));
     this.palette = new Palette(1, this.config);
 
-    window_config = { title: "Preview", type: "preview", resizable: false, left: this.config.window_preview.left, top: this.config.window_preview.top, width: "auto", height: "auto" };
+    window_config = { name: "window_preview", title: "Preview", type: "preview", resizable: false, left: this.config.window_preview.left, top: this.config.window_preview.top, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config, this.store_window.bind(this));
     this.preview = new Preview(2, this.config);
 
-    window_config = { title: "Sprite List", type: "list", resizable: true, left: this.config.window_list.left, top: this.config.window_list.top, width: this.config.window_list.width, height: this.config.window_list.height };
-    this.window_preview = new Window(window_config, this.store_window.bind(this));
+    window_config = { name: "window_list", title: "Sprite List", type: "list", resizable: true, left: this.config.window_list.left, top: this.config.window_list.top, width: this.config.window_list.width, height: this.config.window_list.height };
+    this.window_list = new Window(window_config, this.store_window.bind(this));
     this.list = new List(3, this.config);
 
-    window_config = { title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
+    window_config = { name: "window_info", title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4, this.config);
 
-    window_config = { title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
-    this.window_info = new Window(window_config);
+    window_config = { name: "window_info", title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
+    this.window_save = new Window(window_config);
     this.save = new Save(5, this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
-    window_config = { title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
+    window_config = { name: "window_settings,", title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7, this.config, { onLoad: this.update_config.bind(this) });
 
@@ -174,8 +174,14 @@ var App = function () {
     }
   }, {
     key: "store_window",
-    value: function store_window() {
-      console.log("store");
+    value: function store_window(obj) {
+      // check which data is in the object, compare with config data of that window
+      // and replace the data in the config if matching
+      // then save to storage
+      for (var key in obj.data) {
+        if (this.config[obj.name].hasOwnProperty(key)) this.config[obj.name][key] = obj.data[key];
+      }
+      this.storage.write(this.config);
     }
   }, {
     key: "update_config",

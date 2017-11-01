@@ -3,7 +3,7 @@ function init()
 
     let config = 
     {
-      version: 1.02,
+      version: 1.03,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
@@ -30,25 +30,25 @@ function init()
               ]},
       selected_palette: "pepto",
       window_editor: {
-              "top": 100,
+              "top": 25,
               "left": 210,
               "zoom": 18,
               "grid": true
               },
       window_preview: {
-              "top": 100,
+              "top": 25,
               "left": 700,
               "zoom": 5
               },
       window_list: {
-              "top": 320,
-              "left": 900,
+              "top": 220,
+              "left": 700,
               "width": 440,
               "height": 200,
               "zoom": 4
               },
       window_palette: {
-              "top": 100,
+              "top": 25,
               "left": 110,
               "zoom": 1
               }

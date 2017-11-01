@@ -23,12 +23,6 @@ var List = function () {
 
     $("#window-" + this.window).append(template);
 
-    $("#window-" + this.window).dialog({
-      resizeStop: function resizeStop(event, ui) {
-        console.log("resized");
-      }
-    });
-
     $("#spritelist").sortable({
       cursor: "move",
       tolerance: "pointer",
