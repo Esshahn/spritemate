@@ -46,35 +46,6 @@ class List
     $("#spritelist").disableSelection();
   }
 
-  create_canvas(id,current_sprite)
-  {
-    let canvas_element = document.createElement('canvas');
-    canvas_element.id =  id;
-    canvas_element.width = this.width;
-    canvas_element.height = this.height;
-
-    /*
-    var sprite_div = `<div id="sprite-${id}" class="sprite"></div>`;
-    $("#spritelist").append(sprite_div);
-    $("#sprite-"+id).append(canvas_element);
-    */
-
-    $("#spritelist").append(canvas_element);
-    $(canvas_element).addClass("sprite_in_list");
-    $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
-    
-    if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");  
-    if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   
-
-    $(canvas_element).mouseup((e) => {
-      this.clicked_sprite = id;
-    });
-
-    $(canvas_element).mouseenter((e) => $(canvas_element).addClass("sprite_in_list_hover"));
-    $(canvas_element).mouseleave((e) => $(canvas_element).removeClass("sprite_in_list_hover"));
-  }
-
-
   get_clicked_sprite()
   {
     return this.clicked_sprite;
@@ -133,12 +104,15 @@ class List
     $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
   }
 
-  update_current_sprite(all_data)
+  update(all_data)
   {
     
     // this one gets called during drawing in the editor
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
+    
+    $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
+
     let sprite_data = all_data.sprites[all_data.current_sprite];
     let canvas = document.getElementById(all_data.current_sprite).getContext('2d');
 
@@ -167,17 +141,27 @@ class List
     }
   }
 
-  update(all_data)
+  update_all(all_data)
   {
-    $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
     $(".sprite_in_list").remove();
 
     let length = all_data.sprites.length;
     for (let i=0; i<length; i++)
     {
-      this.create_canvas(i,all_data.current_sprite);
+      let canvas_element = document.createElement('canvas');
+      canvas_element.id =  i;
+      canvas_element.width = this.width;
+      canvas_element.height = this.height;
 
-      let canvas = document.getElementById(i).getContext('2d');
+      $("#spritelist").append(canvas_element);
+      $(canvas_element).addClass("sprite_in_list");
+      $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
+       
+      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   
+
+      $(canvas_element).mouseup((e) => this.clicked_sprite = i);
+
+      let canvas = canvas_element.getContext('2d');
       let sprite_data = all_data.sprites[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -190,20 +174,20 @@ class List
       {
         for (let j=0; j<this.pixels_y; j++)
         {
-
           let array_entry = sprite_data.pixels[j][i];
 
           if (array_entry != "t")
           {
             let color = sprite_data.color;
             if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-            canvas.fillStyle = this.config.colors[color] ;
+            canvas.fillStyle = this.config.colors[color];
             canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
           }
         }
       }
     }
   }
+
 
 }
 

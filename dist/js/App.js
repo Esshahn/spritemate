@@ -58,6 +58,7 @@ var App = function () {
     $(document).tooltip({ show: { delay: 1000 } }); // initializes tooltip handling in jquery
 
     status("Welcome to spritemate!");
+    this.list.update_all(this.sprite.get_all());
     this.update();
     this.user_interaction();
 
@@ -171,6 +172,9 @@ var App = function () {
       } else {
         $('#icon-list-zoom-in').fadeTo("fast", 1);
       }
+
+      $('.sprite_in_list').removeClass("sprite_in_list_selected");
+      $('#spritelist').find('#' + this.sprite.get_current_sprite_number()).addClass("sprite_in_list_selected");
     }
   }, {
     key: "store_window",
@@ -198,6 +202,7 @@ var App = function () {
       // called as a callback event from the load class
       // after a file got loaded in completely
       this.sprite.set_all(this.load.get_imported_file());
+      this.list.update_all(this.sprite.get_all());
       this.update();
     }
   }, {
@@ -236,12 +241,10 @@ var App = function () {
       this.init_ui_fade("icon-flip-vertical");
       this.init_ui_fade("icon-multicolor");
       this.init_ui_fade("icon-draw");
-      // this.init_ui_fade("icon-select");
       this.init_ui_fade("icon-fill");
       this.init_ui_fade("icon-fullscreen");
       this.init_ui_fade("icon-info");
       this.init_ui_fade("icon-settings");
-
       this.init_ui_fade("icon-list-new");
       this.init_ui_fade("icon-list-copy");
       this.init_ui_fade("icon-list-paste");
@@ -424,16 +427,6 @@ var App = function () {
         $("#image-icon-fill").attr("src", "img/icon3/icon-fill.png");
       });
 
-      /*
-          $('#icon-select').mouseup((e) =>
-          {
-            this.mode = "select";
-            status("Select mode");
-            $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
-            $("#image-icon-select").attr("src","img/icon3/icon-select-hi.png");
-            $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
-          });
-      */
       $('#icon-fill').mouseup(function (e) {
         _this.mode = "fill";
         status("Fill mode");
@@ -532,7 +525,6 @@ var App = function () {
         if (_this.mode == "fill") {
           _this.sprite.floodfill(_this.editor.get_pixel(e));
         }
-
         _this.update();
       });
 
@@ -546,7 +538,7 @@ var App = function () {
             _this.sprite.set_pixel(newpos, e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
             _this.editor.update(all);
             _this.preview.update(all);
-            _this.list.update_current_sprite(all); // only updates the sprite drawn onto
+            _this.list.update(all); // only updates the sprite drawn onto
             _this.oldpos = newpos;
           }
         }
@@ -649,6 +641,7 @@ var App = function () {
       $("#spritelist").sortable({ stop: function stop(e, ui) {
           _this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
           _this.dragging = false;
+          _this.list.update_all(_this.sprite.get_all());
           _this.update();
         }
       });
@@ -660,11 +653,13 @@ var App = function () {
 
       $('#icon-list-new').mouseup(function (e) {
         _this.sprite.new(_this.palette.get_color(), _this.sprite.is_multicolor());
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 
       $('#icon-list-delete').mouseup(function (e) {
         _this.sprite.delete();
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 
@@ -686,6 +681,7 @@ var App = function () {
 
       $('#icon-list-grid').mouseup(function (e) {
         _this.list.toggle_grid();
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 
@@ -693,6 +689,7 @@ var App = function () {
         _this.list.zoom_in();
         _this.config.window_list.zoom = _this.list.get_zoom();
         _this.storage.write(_this.config);
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 
@@ -700,6 +697,7 @@ var App = function () {
         _this.list.zoom_out();
         _this.config.window_list.zoom = _this.list.get_zoom();
         _this.storage.write(_this.config);
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 

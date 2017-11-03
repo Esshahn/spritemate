@@ -16,6 +16,11 @@ class Info
 
         <fieldset>
             <h1>Release notes</h1>
+            <h1>November 08, 2017</h1>
+
+            <h2>Features, changes & bugfixes</h2>
+            - Huge speed boost when working with large sprite sets 
+
             <h1>October 30, 2017</h1>
 
             <h2>Save settings & color palette change</h2>

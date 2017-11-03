@@ -217,6 +217,11 @@ var Sprite = function () {
       return this.all.sprites[this.all.current_sprite];
     }
   }, {
+    key: "get_current_sprite_number",
+    value: function get_current_sprite_number() {
+      return this.all.current_sprite;
+    }
+  }, {
     key: "get_number_of_sprites",
     value: function get_number_of_sprites() {
       return this.all.sprites.length;

@@ -440,6 +440,14 @@ canvas
    float: left;
 }
 
+.sprite_in_list:hover
+{
+  border: 1px dotted #e6007e;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
 .sprite_in_list_border
 {
   border: 1px dotted #555555;
@@ -453,12 +461,9 @@ canvas
   box-sizing: border-box;
 }
 
-.sprite_in_list_hover
+.sprite_in_list:active
 {
-  border: 1px dotted #e6007e;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
+  background-color: white;
 }
 
 .icon-preview-x2

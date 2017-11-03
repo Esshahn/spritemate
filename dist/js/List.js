@@ -36,40 +36,6 @@ var List = function () {
   }
 
   _createClass(List, [{
-    key: "create_canvas",
-    value: function create_canvas(id, current_sprite) {
-      var _this = this;
-
-      var canvas_element = document.createElement('canvas');
-      canvas_element.id = id;
-      canvas_element.width = this.width;
-      canvas_element.height = this.height;
-
-      /*
-      var sprite_div = `<div id="sprite-${id}" class="sprite"></div>`;
-      $("#spritelist").append(sprite_div);
-      $("#sprite-"+id).append(canvas_element);
-      */
-
-      $("#spritelist").append(canvas_element);
-      $(canvas_element).addClass("sprite_in_list");
-      $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
-
-      if (current_sprite == id) $(canvas_element).addClass("sprite_in_list_selected");
-      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");
-
-      $(canvas_element).mouseup(function (e) {
-        _this.clicked_sprite = id;
-      });
-
-      $(canvas_element).mouseenter(function (e) {
-        return $(canvas_element).addClass("sprite_in_list_hover");
-      });
-      $(canvas_element).mouseleave(function (e) {
-        return $(canvas_element).removeClass("sprite_in_list_hover");
-      });
-    }
-  }, {
     key: "get_clicked_sprite",
     value: function get_clicked_sprite() {
       return this.clicked_sprite;
@@ -123,12 +89,15 @@ var List = function () {
       $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
     }
   }, {
-    key: "update_current_sprite",
-    value: function update_current_sprite(all_data) {
+    key: "update",
+    value: function update(all_data) {
 
       // this one gets called during drawing in the editor
       // because the normal update method gets too slow
       // when the sprite list is becoming longer
+
+      $('#window-' + this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
+
       var sprite_data = all_data.sprites[all_data.current_sprite];
       var canvas = document.getElementById(all_data.current_sprite).getContext('2d');
 
@@ -154,37 +123,55 @@ var List = function () {
       }
     }
   }, {
-    key: "update",
-    value: function update(all_data) {
-      $('#window-' + this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
+    key: "update_all",
+    value: function update_all(all_data) {
+      var _this = this;
+
       $(".sprite_in_list").remove();
 
       var length = all_data.sprites.length;
-      for (var i = 0; i < length; i++) {
-        this.create_canvas(i, all_data.current_sprite);
 
-        var canvas = document.getElementById(i).getContext('2d');
+      var _loop = function _loop(i) {
+        var canvas_element = document.createElement('canvas');
+        canvas_element.id = i;
+        canvas_element.width = _this.width;
+        canvas_element.height = _this.height;
+
+        $("#spritelist").append(canvas_element);
+        $(canvas_element).addClass("sprite_in_list");
+        $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
+
+        if (_this.grid) $(canvas_element).addClass("sprite_in_list_border");
+
+        $(canvas_element).mouseup(function (e) {
+          return _this.clicked_sprite = i;
+        });
+
+        var canvas = canvas_element.getContext('2d');
         var sprite_data = all_data.sprites[i];
         var x_grid_step = 1;
         if (sprite_data.multicolor) x_grid_step = 2;
 
         // first fill the whole sprite with the background color
-        canvas.fillStyle = this.config.colors[all_data.colors["t"]];
-        canvas.fillRect(0, 0, this.width, this.height);
+        canvas.fillStyle = _this.config.colors[all_data.colors["t"]];
+        canvas.fillRect(0, 0, _this.width, _this.height);
 
-        for (var _i = 0; _i < this.pixels_x; _i = _i + x_grid_step) {
-          for (var j = 0; j < this.pixels_y; j++) {
-
+        for (var _i = 0; _i < _this.pixels_x; _i = _i + x_grid_step) {
+          for (var j = 0; j < _this.pixels_y; j++) {
             var array_entry = sprite_data.pixels[j][_i];
 
             if (array_entry != "t") {
               var color = sprite_data.color;
               if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-              canvas.fillStyle = this.config.colors[color];
-              canvas.fillRect(_i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
+              canvas.fillStyle = _this.config.colors[color];
+              canvas.fillRect(_i * _this.zoom, j * _this.zoom, x_grid_step * _this.zoom, _this.zoom);
             }
           }
         }
+      };
+
+      for (var i = 0; i < length; i++) {
+        _loop(i);
       }
     }
   }]);

@@ -221,6 +221,11 @@ class Sprite
     return this.all.sprites[this.all.current_sprite];
   }
 
+  get_current_sprite_number()
+  {
+    return this.all.current_sprite;
+  }
+
   get_number_of_sprites()
   {
     return this.all.sprites.length;
