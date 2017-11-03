@@ -193,6 +193,7 @@ var App = function () {
       // this gets called after the settings modal has been closed
       this.palette.set_colors(this.config.colors);
       this.storage.write(this.config);
+      this.list.update_all(this.sprite.get_all());
       this.update();
       status("Configuration updated.");
     }
@@ -411,11 +412,13 @@ var App = function () {
 
       $('#icon-undo').mouseup(function (e) {
         _this.sprite.undo();
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 
       $('#icon-redo').mouseup(function (e) {
         _this.sprite.redo();
+        _this.list.update_all(_this.sprite.get_all());
         _this.update();
       });
 

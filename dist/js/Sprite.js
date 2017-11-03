@@ -269,6 +269,7 @@ var Sprite = function () {
     key: "set_all",
     value: function set_all(all) {
       this.all = all;
+      this.save_backup();
     }
   }, {
     key: "sort_spritelist",

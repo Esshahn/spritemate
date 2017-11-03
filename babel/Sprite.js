@@ -275,6 +275,7 @@ class Sprite
   set_all(all)
   {
     this.all = all;
+    this.save_backup();
   }
 
   sort_spritelist(sprite_order_from_dom)

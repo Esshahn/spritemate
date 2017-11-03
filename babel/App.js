@@ -204,6 +204,7 @@ class App
     // this gets called after the settings modal has been closed
     this.palette.set_colors(this.config.colors);
     this.storage.write(this.config);
+    this.list.update_all(this.sprite.get_all());
     this.update();
     status("Configuration updated.");
   }
@@ -440,12 +441,14 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     $('#icon-undo').mouseup((e) =>
     {
       this.sprite.undo();
+      this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
     $('#icon-redo').mouseup((e) =>
     {
       this.sprite.redo();
+      this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
