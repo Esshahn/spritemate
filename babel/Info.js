@@ -101,9 +101,9 @@ class Info
             </p>
         </fieldset>
 
-        <p>Documentation: <a target="_blank" href="https://github.com/Esshahn/spritemate">https://github.com/Esshahn/spritemate</a></p>
-        <p>Ingo Hinterding / <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a> of <a target="_blank" href="http://csdb.dk/group/?id=7228">Mayday!</a>
-        / <a target="_blank" href="http://www.awsm.de">http://www.awsm.de</a> / <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
+        <p>Documentation: <a target="_blank" href="https://github.com/Esshahn/spritemate">github.com/Esshahn/spritemate</a></p>
+        <p>Ingo Hinterding / <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a>
+        / <a target="_blank" href="http://www.awsm.de">www.awsm.de</a> / <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
         <p>Report bugs, ideas & requests to ingo (at) awsm (dot) de</p>
         <br/>
         <button id="button-info">Let's go!</button>

@@ -51,16 +51,6 @@ var Palette = function () {
       $('#color_' + all_data.pen).addClass("palette_color_item_selected");
       $('#palette_' + all_data.pen + ' p').addClass("palette_highlight_text");
 
-      /*
-          if (!sprite_is_multicolor && (all_data.pen != "m1" && all_data.pen != "m2"))
-          {
-            // set the active pen to the individual one when switching to singlecolor
-            $('#palette_spritecolors div').removeClass("palette_color_item_selected");
-            $('#palette_spritecolors p').removeClass("palette_highlight_text");
-            $('#color_individual').addClass("palette_color_item_selected");
-            $('#palette_individual p').addClass("palette_highlight_text");
-          }
-      */
       this.set_multicolor(sprite_is_multicolor);
     }
   }, {

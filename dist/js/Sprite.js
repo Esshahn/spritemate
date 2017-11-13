@@ -35,6 +35,7 @@ var Sprite = function () {
         "double_x": false,
         "double_y": false,
         "overlay": false,
+        "overlay_list": [],
         "pixels": []
       };
 
@@ -448,6 +449,38 @@ var Sprite = function () {
     key: "is_overlay",
     value: function is_overlay() {
       return this.all.sprites[this.all.current_sprite].overlay;
+    }
+  }, {
+    key: "get_overlay_list",
+    value: function get_overlay_list() {
+      return this.all.sprites[this.all.current_sprite].overlay_list.toString();
+    }
+  }, {
+    key: "update_overlay_list",
+    value: function update_overlay_list(list) {
+      // get the old list from the current sprite
+      var old_list = this.all.sprites[this.all.current_sprite].overlay_list;
+      // and delete the lists on these sprites first
+      for (var i = 0; i < old_list.length; i++) {
+        this.all.sprites[old_list[i] - 1].overlay_list = [];
+      }var sprite_array = [];
+
+      // if the list contains numbers
+      if (list != null) {
+        // now we create a new array that eleminates all sprite numbers that can't be in the real list
+        for (var _i2 = 0; _i2 < list.length; _i2++) {
+          if (list[_i2] <= this.all.sprites.length) sprite_array.push(list[_i2]);
+        } // if the current sprite is missing from the list we need to add it again
+        var current_sprite_is_in_the_list = false;
+        for (var _i3 = 0; _i3 < sprite_array.length; _i3++) {
+          if (sprite_array[_i3] == this.all.current_sprite + 1) current_sprite_is_in_the_list = true;
+        }if (current_sprite_is_in_the_list == false) sprite_array.push(this.all.current_sprite + 1);
+
+        // and assign this cleaned up list to the sprites that are in the list
+        for (var _i4 = 0; _i4 < sprite_array.length; _i4++) {
+          this.all.sprites[sprite_array[_i4] - 1].overlay_list = sprite_array;
+        }
+      }
     }
   }]);
 

@@ -34,13 +34,17 @@ class App
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
-    window_config = {name:"window_info", title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
+    window_config = {name:"window_save", title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_save = new Window(window_config);
     this.save = new Save(5,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     window_config = {name:"window_settings,", title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7,this.config, { onLoad: this.update_config.bind(this) });
+
+    window_config = {name:"window_overlays", title: "Sprite Overlays", type: "settings", resizable: false, left: this.config.window_overlays.left, top: this.config.window_overlays.top, autoOpen: true, width: 200, height: "auto" };
+    this.window_overlays = new Window(window_config, this.store_window.bind(this));
+    this.overlays = new Overlays(8,this.config);
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -53,7 +57,7 @@ class App
 
     $( document ).tooltip({show: {delay: 1000}}); // initializes tooltip handling in jquery
      
-    status("Welcome to spritemate!");
+    tipoftheday();
     this.list.update_all(this.sprite.get_all());
     this.update();
     this.user_interaction();
@@ -386,16 +390,6 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         { 
           this.sprite.toggle_multicolor();
           this.update();
-        }
-
-        if (e.key == "q")
-        { 
-          this.write_to_web_storage();
-        }
-
-        if (e.key == "w")
-        { 
-          this.read_from_web_storage();
         }
 
       }
@@ -836,44 +830,25 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
       this.update();
     });
 
-  }
-
-}
-
-
-/*
-
-HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLL             PPPPPPPPPPPPPPPPP   EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   
-H:::::::H     H:::::::HE::::::::::::::::::::EL:::::::::L             P::::::::::::::::P  E::::::::::::::::::::ER::::::::::::::::R  
-H:::::::H     H:::::::HE::::::::::::::::::::EL:::::::::L             P::::::PPPPPP:::::P E::::::::::::::::::::ER::::::RRRRRR:::::R 
-HH::::::H     H::::::HHEE::::::EEEEEEEEE::::ELL:::::::LL             PP:::::P     P:::::PEE::::::EEEEEEEEE::::ERR:::::R     R:::::R
-  H:::::H     H:::::H    E:::::E       EEEEEE  L:::::L                 P::::P     P:::::P  E:::::E       EEEEEE  R::::R     R:::::R
-  H:::::H     H:::::H    E:::::E               L:::::L                 P::::P     P:::::P  E:::::E               R::::R     R:::::R
-  H::::::HHHHH::::::H    E::::::EEEEEEEEEE     L:::::L                 P::::PPPPPP:::::P   E::::::EEEEEEEEEE     R::::RRRRRR:::::R 
-  H:::::::::::::::::H    E:::::::::::::::E     L:::::L                 P:::::::::::::PP    E:::::::::::::::E     R:::::::::::::RR  
-  H:::::::::::::::::H    E:::::::::::::::E     L:::::L                 P::::PPPPPPPPP      E:::::::::::::::E     R::::RRRRRR:::::R 
-  H::::::HHHHH::::::H    E::::::EEEEEEEEEE     L:::::L                 P::::P              E::::::EEEEEEEEEE     R::::R     R:::::R
-  H:::::H     H:::::H    E:::::E               L:::::L                 P::::P              E:::::E               R::::R     R:::::R
-  H:::::H     H:::::H    E:::::E       EEEEEE  L:::::L         LLLLLL  P::::P              E:::::E       EEEEEE  R::::R     R:::::R
-HH::::::H     H::::::HHEE::::::EEEEEEEE:::::ELL:::::::LLLLLLLLL:::::LPP::::::PP          EE::::::EEEEEEEE:::::ERR:::::R     R:::::R
-H:::::::H     H:::::::HE::::::::::::::::::::EL::::::::::::::::::::::LP::::::::P          E::::::::::::::::::::ER::::::R     R:::::R
-H:::::::H     H:::::::HE::::::::::::::::::::EL::::::::::::::::::::::LP::::::::P          E::::::::::::::::::::ER::::::R     R:::::R
-HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP          EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR
-
-*/
-
-
-function status(text,state = "normal")
-{
-  if (state == "normal")
-  {
-
-  } else {
+    $("#input-overlay").keydown( (e) => 
+    {
+      this.allow_keyboard_shortcuts = false;
+      if (e.key == "Enter")
+      {
+        // strip everything that is not a number, returns an array
+        let list = $("#input-overlay").val().match( /\d+/g );
+        //if (list == null) list = "next sprite";
+        // stringify the array again for the input field
+        //$("#input-overlay").val(list.toString());
+        this.sprite.update_overlay_list( list );
+        // defocus 
+        $("#input-overlay").blur();
+        this.update();
+        this.allow_keyboard_shortcuts = true;
+      }
+    });
 
   }
 
-  $("#statustext").stop(true,true);
-  $("#statustext").text(text).fadeIn(100).delay(2000).fadeOut(1000);
 }
-
 

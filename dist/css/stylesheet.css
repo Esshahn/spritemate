@@ -16,6 +16,19 @@ p
   margin: 8px;
 }
 
+a
+{
+  text-decoration: none;
+  color: #00b9ee;
+  border-bottom: 1px dotted #e6007e;
+}
+
+a:hover
+{
+  color: #e6007e;
+  border-bottom: 0px dotted #e6007e;
+}
+
 body, html
 {
   background-color: #111111;
@@ -264,7 +277,10 @@ canvas
   background: -moz-linear-gradient(#181818, #111111); /* For Firefox 3.6 to 15 */
   background: linear-gradient(#181818, #111111); /* Standard syntax */
   z-index: -100;
+  font-size: 110%;
 }
+
+
 
 #button-row
 {
@@ -596,4 +612,44 @@ canvas
 {
     background: #000000;
     opacity: 0.6;
+}
+
+.ui-widget input.ui-inputfield
+{
+  font-size: 80%;
+  margin: 2px;
+  padding: 0px;
+  border: 1px solid black;
+  min-width: 60px;
+  width: 80px;
+  min-height: 19px;
+  float:left;
+  text-align: left;
+  padding: 0px 12px 0px 12px;
+  color: #00b9ee;
+
+}
+
+.ui-widget input.ui-inputfield:focus
+{
+  border: 1px solid #00b9ee;
+  color: white;
+  background-color: black;
+}
+
+.ui-widget input.ui-inputfield:hover
+{
+  border: 1px solid #00b9ee;
+  background-color: black;
+}
+
+.icon-inputfield
+{
+  float:left;
+  image-rendering: optimizeSpeed;             /* Older versions of FF          */
+  image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+  image-rendering: -webkit-optimize-contrast; /* Safari                        */
+  image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+  image-rendering: pixelated;                 /* Awesome future-browsers       */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
