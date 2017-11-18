@@ -38,8 +38,6 @@ function status(text) {
 function tipoftheday() {
   var tips = ["Did you know there was a C64 in John Wick 2?", "Hold shift while clicking to delete pixels.", "You can change and define your own colors in the seetings.", "Press 'z' for undo and 'shift + z' for redo.", "Save your project in Spritemate format when working with multiple overlays.", "You can position all windows how you like it best. Spritemate remembers that for your next visit!", "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.", "Sort your sprites by dragging them around with your mouse!", "You can enter sprite numbers (like 1,5,12,4) in overlay mode or leave the field blank for overlaying the next sprite."];
 
-  var intro = ["Did you know?", "Tip Of The Day:", "Cool:", "Did you know?", "Like it or not, but:"];
-
-  var chosen_tooltip = intro[Math.floor(Math.random() * intro.length)] + "\xa0\xa0\xa0" + tips[Math.floor(Math.random() * tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
+  var chosen_tooltip = tips[Math.floor(Math.random() * tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
   status(chosen_tooltip, "tip");
 }

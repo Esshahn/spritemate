@@ -54,7 +54,7 @@ function init()
               },
       window_overlays: {
               "top": 25,
-              "left": 900,
+              "left": 890,
               "zoom": 1
               }
 

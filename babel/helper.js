@@ -52,16 +52,7 @@ function tipoftheday()
   "You can enter sprite numbers (like 1,5,12,4) in overlay mode or leave the field blank for overlaying the next sprite."
   ];
 
-  let intro = 
-  [
-  "Did you know?",
-  "Tip Of The Day:",
-  "Cool:",
-  "Did you know?",
-  "Like it or not, but:"
-  ];
-
-  let chosen_tooltip = intro[Math.floor(Math.random()*intro.length)] + "\xa0\xa0\xa0" + tips[Math.floor(Math.random()*tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
+  let chosen_tooltip = tips[Math.floor(Math.random()*tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
   status(chosen_tooltip,"tip");
 }
 

@@ -46,7 +46,7 @@ var App = function () {
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7, this.config, { onLoad: this.update_config.bind(this) });
 
-    window_config = { name: "window_overlays", title: "Sprite Overlays", type: "settings", resizable: false, left: this.config.window_overlays.left, top: this.config.window_overlays.top, autoOpen: true, width: 200, height: "auto" };
+    window_config = { name: "window_overlays", title: "Sprite Overlays", type: "settings", resizable: false, left: this.config.window_overlays.left, top: this.config.window_overlays.top, autoOpen: true, width: 220, height: "auto" };
     this.window_overlays = new Window(window_config, this.store_window.bind(this));
     this.overlays = new Overlays(8, this.config);
 
@@ -702,22 +702,22 @@ var App = function () {
 
       /*
       
-      PPPPPPPPPPPPPPPPP   RRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEEVVVVVVVV           VVVVVVVV
-      P::::::::::::::::P  R::::::::::::::::R  E::::::::::::::::::::EV::::::V           V::::::V
-      P::::::PPPPPP:::::P R::::::RRRRRR:::::R E::::::::::::::::::::EV::::::V           V::::::V
-      PP:::::P     P:::::PRR:::::R     R:::::REE::::::EEEEEEEEE::::EV::::::V           V::::::V
-        P::::P     P:::::P  R::::R     R:::::R  E:::::E       EEEEEE V:::::V           V:::::V 
-        P::::P     P:::::P  R::::R     R:::::R  E:::::E               V:::::V         V:::::V  
-        P::::PPPPPP:::::P   R::::RRRRRR:::::R   E::::::EEEEEEEEEE      V:::::V       V:::::V   
-        P:::::::::::::PP    R:::::::::::::RR    E:::::::::::::::E       V:::::V     V:::::V    
-        P::::PPPPPPPPP      R::::RRRRRR:::::R   E:::::::::::::::E        V:::::V   V:::::V     
-        P::::P              R::::R     R:::::R  E::::::EEEEEEEEEE         V:::::V V:::::V      
-        P::::P              R::::R     R:::::R  E:::::E                    V:::::V:::::V       
-        P::::P              R::::R     R:::::R  E:::::E       EEEEEE        V:::::::::V        
-      PP::::::PP          RR:::::R     R:::::REE::::::EEEEEEEE:::::E         V:::::::V         
-      P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E          V:::::V          
-      P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E           V:::V           
-      PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV           
+      PPPPPPPPPPPPPPPPP     RRRRRRRRRRRRRRRRR     EEEEEEEEEEEEEEEEEEEEEE  VVVVVVVV           VVVVVVVV
+      P::::::::::::::::P    R::::::::::::::::R    E::::::::::::::::::::E  V::::::V           V::::::V
+      P::::::PPPPPP:::::P   R::::::RRRRRR:::::R   E::::::::::::::::::::E  V::::::V           V::::::V
+      PP:::::P     P:::::P  RR:::::R     R:::::R  EE::::::EEEEEEEEE::::E  V::::::V           V::::::V
+        P::::P     P:::::P    R::::R     R:::::R    E:::::E       EEEEEE   V:::::V           V:::::V 
+        P::::P     P:::::P    R::::R     R:::::R    E:::::E                 V:::::V         V:::::V  
+        P::::PPPPPP:::::P     R::::RRRRRR:::::R     E::::::EEEEEEEEEE        V:::::V       V:::::V   
+        P:::::::::::::PP      R:::::::::::::RR      E:::::::::::::::E         V:::::V     V:::::V    
+        P::::PPPPPPPPP        R::::RRRRRR:::::R     E:::::::::::::::E          V:::::V   V:::::V     
+        P::::P                R::::R     R:::::R    E::::::EEEEEEEEEE           V:::::V V:::::V      
+        P::::P                R::::R     R:::::R    E:::::E                      V:::::V:::::V       
+        P::::P                R::::R     R:::::R    E:::::E       EEEEEE          V:::::::::V        
+      PP::::::PP            RR:::::R     R:::::R  EE::::::EEEEEEEE:::::E           V:::::::V         
+      P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E            V:::::V          
+      P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E             V:::V           
+      PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              VVV           
       
       */
 
@@ -730,11 +730,6 @@ var App = function () {
       $('#icon-preview-y').mouseup(function (e) {
         _this.sprite.toggle_double_y();
         $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-        _this.update();
-      });
-
-      $('#icon-preview-overlay').mouseup(function (e) {
-        _this.sprite.toggle_overlay();
         _this.update();
       });
 
@@ -752,6 +747,25 @@ var App = function () {
         _this.update();
       });
 
+      /*
+           OOOOOOOOO       VVVVVVVV           VVVVVVVV  EEEEEEEEEEEEEEEEEEEEEE  RRRRRRRRRRRRRRRRR   
+         OO:::::::::OO     V::::::V           V::::::V  E::::::::::::::::::::E  R::::::::::::::::R  
+       OO:::::::::::::OO   V::::::V           V::::::V  E::::::::::::::::::::E  R::::::RRRRRR:::::R 
+      O:::::::OOO:::::::O  V::::::V           V::::::V  EE::::::EEEEEEEEE::::E  RR:::::R     R:::::R
+      O::::::O   O::::::O   V:::::V           V:::::V     E:::::E       EEEEEE    R::::R     R:::::R
+      O:::::O     O:::::O    V:::::V         V:::::V      E:::::E                 R::::R     R:::::R
+      O:::::O     O:::::O     V:::::V       V:::::V       E::::::EEEEEEEEEE       R::::RRRRRR:::::R 
+      O:::::O     O:::::O      V:::::V     V:::::V        E:::::::::::::::E       R:::::::::::::RR  
+      O:::::O     O:::::O       V:::::V   V:::::V         E:::::::::::::::E       R::::RRRRRR:::::R 
+      O:::::O     O:::::O        V:::::V V:::::V          E::::::EEEEEEEEEE       R::::R     R:::::R
+      O:::::O     O:::::O         V:::::V:::::V           E:::::E                 R::::R     R:::::R
+      O::::::O   O::::::O          V:::::::::V            E:::::E       EEEEEE    R::::R     R:::::R
+      O:::::::OOO:::::::O           V:::::::V           EE::::::EEEEEEEE:::::E  RR:::::R     R:::::R
+       OO:::::::::::::OO             V:::::V            E::::::::::::::::::::E  R::::::R     R:::::R
+         OO:::::::::OO                V:::V             E::::::::::::::::::::E  R::::::R     R:::::R
+           OOOOOOOOO                   VVV              EEEEEEEEEEEEEEEEEEEEEE  RRRRRRRR     RRRRRRR
+      */
+
       $("#input-overlay").keydown(function (e) {
         _this.allow_keyboard_shortcuts = false;
         if (e.key == "Enter") {
@@ -766,6 +780,11 @@ var App = function () {
           _this.update();
           _this.allow_keyboard_shortcuts = true;
         }
+      });
+
+      $('#icon-preview-overlay').mousedown(function (e) {
+        _this.sprite.toggle_overlay();
+        _this.update();
       });
     }
   }]);
