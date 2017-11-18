@@ -3,7 +3,7 @@
 function init() {
 
         var config = {
-                version: 1.05,
+                version: 1.03,
                 sprite_x: 24,
                 sprite_y: 21,
                 palettes: {
@@ -32,11 +32,6 @@ function init() {
                 window_palette: {
                         "top": 25,
                         "left": 110,
-                        "zoom": 1
-                },
-                window_overlays: {
-                        "top": 25,
-                        "left": 410,
                         "zoom": 1
                 }
 

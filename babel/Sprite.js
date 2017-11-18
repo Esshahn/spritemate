@@ -474,34 +474,4 @@ class Sprite
     return this.all.sprites[this.all.current_sprite].overlay;
   }
 
-  get_overlay_list()
-  {
-    return this.all.sprites[this.all.current_sprite].overlay_list.toString();
-  }
-
-  update_overlay_list(list)
-  {
-    // get the old list from the current sprite
-    let old_list = this.all.sprites[this.all.current_sprite].overlay_list;
-    // and delete the lists on these sprites first
-    for (let i=0; i<old_list.length; i++) this.all.sprites[old_list[i]-1].overlay_list = [];
-
-    let sprite_array = [];
-
-    // if the list contains numbers
-    if (list != null)
-    {
-      // now we create a new array that eleminates all sprite numbers that can't be in the real list
-      for (let i=0; i<list.length; i++) if (list[i] <= this.all.sprites.length) sprite_array.push(list[i]);
-
-      // if the current sprite is missing from the list we need to add it again
-      let current_sprite_is_in_the_list = false;
-      for (let i=0; i<sprite_array.length; i++) if (sprite_array[i] == this.all.current_sprite+1) current_sprite_is_in_the_list = true;
-      if (current_sprite_is_in_the_list == false) sprite_array.push(this.all.current_sprite+1);
-
-      // and assign this cleaned up list to the sprites that are in the list
-      for (let i=0; i<sprite_array.length; i++) this.all.sprites[sprite_array[i]-1].overlay_list = sprite_array;
-    }
-  }
-
 }

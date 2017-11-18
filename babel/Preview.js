@@ -23,15 +23,12 @@ class Preview
       <div class="window_menu">
         <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>
         <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>
-        
+        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay on/off">
         <div class="right">
           <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
         </div>
       </div>
       <div id="preview-canvas"></div>
-
-      <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" class="icon-inputfield" title="overlay on/off">
-      <input type="text" id="input-overlay" class="ui-inputfield" title="enter a list of sprites (1,2,3) or leave blank for next sprite" value="next sprite">
     `;
 
     $("#window-"+this.window).append(template);

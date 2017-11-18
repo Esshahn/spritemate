@@ -46,10 +46,6 @@ var App = function () {
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7, this.config, { onLoad: this.update_config.bind(this) });
 
-    window_config = { name: "window_overlays", title: "Sprite Overlays", type: "settings", resizable: false, left: this.config.window_overlays.left, top: this.config.window_overlays.top, autoOpen: true, width: 200, height: "auto" };
-    this.window_overlays = new Window(window_config, this.store_window.bind(this));
-    this.overlays = new Overlays(8, this.config);
-
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
@@ -750,22 +746,6 @@ var App = function () {
         _this.config.window_preview.zoom = _this.preview.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
-      });
-
-      $("#input-overlay").keydown(function (e) {
-        _this.allow_keyboard_shortcuts = false;
-        if (e.key == "Enter") {
-          // strip everything that is not a number, returns an array
-          var list = $("#input-overlay").val().match(/\d+/g);
-          //if (list == null) list = "next sprite";
-          // stringify the array again for the input field
-          //$("#input-overlay").val(list.toString());
-          _this.sprite.update_overlay_list(list);
-          // defocus 
-          $("#input-overlay").blur();
-          _this.update();
-          _this.allow_keyboard_shortcuts = true;
-        }
       });
     }
   }]);
