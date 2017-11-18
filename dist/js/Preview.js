@@ -22,7 +22,7 @@ var Preview = function () {
     this.canvas_element.height = this.height;
     this.canvas = this.canvas_element.getContext('2d');
 
-    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        \n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n\n      <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" class="icon-inputfield" title="overlay on/off">\n      <input type="text" id="input-overlay" class="ui-inputfield" title="enter a list of sprites (1,2,3) or leave blank for next sprite" value="next sprite">\n    ';
+    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        \n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n    ';
 
     $("#window-" + this.window).append(template);
     $("#preview-canvas").append(this.canvas_element);

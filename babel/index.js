@@ -3,7 +3,7 @@ function init()
 
     let config = 
     {
-      version: 1.05,
+      version: 1.07,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
@@ -54,7 +54,7 @@ function init()
               },
       window_overlays: {
               "top": 25,
-              "left": 410,
+              "left": 900,
               "zoom": 1
               }
 
