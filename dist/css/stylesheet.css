@@ -9,6 +9,7 @@ body, html, p, div
   font-size: 96%;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
+  line-height: 160%;
 }
 
 p
@@ -20,13 +21,12 @@ a
 {
   text-decoration: none;
   color: #00b9ee;
-  border-bottom: 1px dotted #e6007e;
 }
 
 a:hover
 {
   color: #e6007e;
-  border-bottom: 0px dotted #e6007e;
+  border-bottom: 1px dotted #e6007e;
 }
 
 body, html
@@ -59,10 +59,28 @@ h1
 
 h2
 {
-  font-size: 100%;
+  font-size: 110%;
   color: #00b9ee;
   text-align:center;
   margin: 0px 0px 12px 0px; 
+}
+
+ol { 
+  counter-reset: item; 
+}
+ol li { 
+  display: block; 
+}
+ol li:before { 
+  content: counters(item, ".") "."; 
+  counter-increment: item; 
+  padding-right: 16px; 
+  margin-left: -20px;
+}
+
+#help h1, #help h2
+{
+  text-align: left;
 }
 
 legend
@@ -79,6 +97,21 @@ fieldset
   border-color: rgba(50,50,50,1);
   background-color: rgba(0,0,0,0.5);
 }
+
+table
+{
+  width: 100%;
+}
+
+td,th
+{
+  padding: 8px;
+  margin: 4px 0px 4px 0px;
+  text-align: left;
+  
+}
+
+tr:nth-child(even) {background-color: #222222;}
 
 fieldset button
 {
@@ -120,6 +153,19 @@ canvas
 {
   text-align: center;
 }
+
+.spacer
+{
+  height: 40px;
+}
+
+img.center 
+{
+    display: block;
+    margin: 0 auto;
+}
+
+
 
 .settings_colorfield
 {
@@ -164,8 +210,6 @@ canvas
 }
 
 
-
-
 .ui-widget button
 {
   border: 2px solid #00b9ee;
@@ -178,6 +222,12 @@ canvas
   margin: 4px;
   padding: 8px 16px 8px 16px;
   min-width: 160px;
+}
+
+.ui-widget button.center
+{
+  display: block;
+  margin: 0 auto;
 }
 
 .ui-widget button:hover
@@ -234,13 +284,25 @@ canvas
 .ui-widget .error
 {
   border: 2px solid #e6007e;
-  sbackground-color: #e6007e;
 }
 
 #info
 {
   padding: 12px;
   text-align: center;
+}
+
+#help
+{
+  padding: 12px;
+}
+
+#help-container
+{
+  padding: 12px;
+  height: 400px;
+  overflow: scroll;
+  margin: 24px 0px 24px 0px;
 }
 
 
@@ -370,7 +432,7 @@ canvas
   float: left;
   padding: 0px 2px 0px 2px;
   cursor: pointer;
-  margin-top: 2px;
+  margin-top: 0px;
 }
 
 .iconset_right
@@ -388,7 +450,9 @@ canvas
   text-transform: uppercase;
   text-align: center;
   margin: 0px;
-
+  position: relative;
+  top: -5px;
+  height: 8px;
 }
 
 
@@ -406,6 +470,7 @@ canvas
 {
   padding: 0px;
 }
+
 
 
 #preview-canvas
@@ -567,7 +632,6 @@ canvas
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
-
 
 
 .no-close .ui-dialog-titlebar-close 
