@@ -9,12 +9,13 @@ body, html, p, div
   font-size: 96%;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  line-height: 160%;
+  
 }
 
 p
 {
   margin: 8px;
+  line-height: 160%;
 }
 
 a
@@ -81,6 +82,7 @@ ol li:before {
 #help h1, #help h2
 {
   text-align: left;
+
 }
 
 legend
@@ -505,47 +507,52 @@ img.center
    padding: 0px;
 }
 
-
-#spritelist .sprite
+.sprite_layer
 {
-  padding: 8px;
-  width: 90%;
-  border: 1px dotted #555555;
+  background-color: #080808;
+  width: 100%;
+  border: 1px solid transparent;
+  border-bottom: 1px dotted #555555;
 }
 
-
-.sprite_in_list
-{
-   margin: 0px;
-   padding: 0px;
-   float: left;
-}
-
-.sprite_in_list:hover
+.sprite_layer:hover
 {
   border: 1px dotted #e6007e;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
 }
 
-.sprite_in_list_border
+.sprite_layer:active
 {
-  border: 1px dotted #555555;
-  box-sizing: border-box;
+  border: 1px dotted white;
+}
+
+.sprite_layer canvas
+{
+  margin: 2px;
+}
+
+.sprite_layer_canvas
+{
+  float: left;
+  margin-right: 12px;
+}
+
+.sprite_layer_info
+{
+  float:left;
+  width: 40%;
+  color: #888888;
+  font-size:80%;
 }
 
 
-.sprite_in_list_selected
+
+
+.sprite_layer_selected
 {
   border: 1px dotted #00b9ee;
-  box-sizing: border-box;
 }
 
-.sprite_in_list:active
-{
-  background-color: white;
-}
+
 
 .icon-preview-x2
 {

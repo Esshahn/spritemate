@@ -181,8 +181,8 @@ var App = function () {
         $('#icon-list-zoom-in').fadeTo("fast", 1);
       }
 
-      $('.sprite_in_list').removeClass("sprite_in_list_selected");
-      $('#spritelist').find('#' + this.sprite.get_current_sprite_number()).addClass("sprite_in_list_selected");
+      $('.sprite_layer').removeClass("sprite_layer_selected");
+      $('#spritelist').find('#' + this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
     }
   }, {
     key: "store_window",

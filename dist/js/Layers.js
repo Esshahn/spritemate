@@ -4,9 +4,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var List = function () {
-  function List(window, config) {
-    _classCallCheck(this, List);
+var Layers = function () {
+  function Layers(window, config) {
+    _classCallCheck(this, Layers);
 
     this.config = config;
     this.window = window;
@@ -29,10 +29,13 @@ var List = function () {
       revert: 'invalid'
     });
 
+    // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
+    $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
+
     $("#spritelist").disableSelection();
   }
 
-  _createClass(List, [{
+  _createClass(Layers, [{
     key: "get_clicked_sprite",
     value: function get_clicked_sprite() {
       return this.clicked_sprite;
@@ -82,6 +85,8 @@ var List = function () {
     value: function update_zoom() {
       this.width = this.pixels_x * this.zoom;
       this.height = this.pixels_y * this.zoom;
+      $('head style:last').remove();
+      $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
     }
   }, {
     key: "update",
@@ -94,7 +99,7 @@ var List = function () {
       $('#window-' + this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
 
       var sprite_data = all_data.sprites[all_data.current_sprite];
-      var canvas = document.getElementById("canvas-" + all_data.current_sprite).getContext('2d');
+      var canvas = document.getElementById(all_data.current_sprite).getContext('2d');
 
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -122,21 +127,23 @@ var List = function () {
     value: function update_all(all_data) {
       var _this = this;
 
-      $(".sprite_layer").remove();
+      $(".sprite_in_list").remove();
 
       var length = all_data.sprites.length;
 
       var _loop = function _loop(i) {
         var canvas_element = document.createElement('canvas');
-        canvas_element.id = "canvas-" + i;
+        canvas_element.id = i;
         canvas_element.width = _this.width;
         canvas_element.height = _this.height;
 
-        var template = "\n      <div class=\"sprite_layer\" id=\"" + i + "\">\n        <div class=\"sprite_layer_canvas\"></div>\n        <div class=\"sprite_layer_info\">\n          ID: #" + i + "<br/>\n          NAME: #" + i + "\n        </div>\n        <div style=\"clear:both;\"></div>\n      </div>";
+        $("#spritelist").append(canvas_element);
+        $(canvas_element).addClass("sprite_in_list");
+        $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
 
-        $("#spritelist").append(template);
-        $("#" + i + " .sprite_layer_canvas").append(canvas_element);
-        $("#" + i).mouseup(function (e) {
+        if (_this.grid) $(canvas_element).addClass("sprite_in_list_border");
+
+        $(canvas_element).mouseup(function (e) {
           return _this.clicked_sprite = i;
         });
 
@@ -169,5 +176,5 @@ var List = function () {
     }
   }]);
 
-  return List;
+  return Layers;
 }();
