@@ -3,7 +3,7 @@
 function init() {
 
         var config = {
-                version: 1.07,
+                version: 1.08,
                 sprite_x: 24,
                 sprite_y: 21,
                 palettes: {
@@ -34,10 +34,14 @@ function init() {
                         "left": 110,
                         "zoom": 1
                 },
-                window_overlays: {
+                window_playfield: {
                         "top": 25,
                         "left": 890,
-                        "zoom": 1
+                        "width": 400,
+                        "height": 400,
+                        "canvas_x": 10,
+                        "canvas_y": 10,
+                        "zoom": 2
                 }
 
         };

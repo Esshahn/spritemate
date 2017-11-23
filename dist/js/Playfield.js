@@ -4,31 +4,31 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Preview = function () {
-  function Preview(window, config) {
-    _classCallCheck(this, Preview);
+var Playfield = function () {
+  function Playfield(window, config) {
+    _classCallCheck(this, Playfield);
 
     this.config = config;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
-    this.zoom = this.config.window_preview.zoom; // this.config.zoom;
+    this.zoom = this.config.window_playfield.zoom;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
+    this.width = this.pixels_x * this.config.window_playfield.canvas_x;
+    this.height = this.pixels_y * this.config.window_playfield.canvas_y;
 
-    this.canvas_element.id = "preview";
+    this.canvas_element.id = "playfield";
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
     this.canvas = this.canvas_element.getContext('2d');
 
-    var template = '\n      <div class="window_menu">\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">\n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="preview-canvas"></div>\n    ';
+    var template = '\n      <div class="window_menu">\n        <div class="right">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n      </div>\n      <div id="playfield-canvas"></div>\n    ';
 
     $("#window-" + this.window).append(template);
-    $("#preview-canvas").append(this.canvas_element);
+    $("#playfield-canvas").append(this.canvas_element);
   }
 
-  _createClass(Preview, [{
+  _createClass(Playfield, [{
     key: 'get_width',
     value: function get_width() {
       return this.width;
@@ -96,58 +96,15 @@ var Preview = function () {
             var color = sprite_data.color;
             if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
             this.canvas.fillStyle = this.config.colors[color];
-            this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
+            this.canvas.fillRect(i, j, x_grid_step, 1);
           }
         }
       }
 
-      if (sprite_data.overlay && all_data.current_sprite < all_data.sprites.length - 1) this.display_overlay(all_data);
-
-      // set the preview window x and y stretch
-      if (sprite_data.double_x) {
-        var double_x = 2;
-        $('#icon-preview-x').addClass('icon-preview-x2-hi');
-      } else {
-        var double_x = 1;
-        $('#icon-preview-x').removeClass('icon-preview-x2-hi');
-      }
-
-      if (sprite_data.double_y) {
-        var double_y = 2;
-        $('#icon-preview-y').addClass('icon-preview-y2-hi');
-      } else {
-        var double_y = 1;
-        $('#icon-preview-y').removeClass('icon-preview-y2-hi');
-      }
-
-      $('#preview').css('width', this.width * double_x);
-      $('#preview').css('height', this.height * double_y);
-    }
-  }, {
-    key: 'display_overlay',
-    value: function display_overlay(all_data) {
-      var sprite_data = all_data.sprites[all_data.current_sprite + 1];
-      var x_grid_step = 1;
-      if (sprite_data.multicolor) x_grid_step = 2;
-
-      for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
-        for (var j = 0; j < this.pixels_y; j++) {
-          var array_entry = sprite_data.pixels[j][i];
-
-          // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";
-
-          var color = sprite_data.color;
-          if (array_entry != "i") color = all_data.colors[array_entry];
-
-          if (array_entry != "t") {
-            this.canvas.fillStyle = this.config.colors[color];
-            this.canvas.fillRect(i * this.zoom, j * this.zoom, this.zoom * x_grid_step, this.zoom);
-          }
-        }
-      }
+      $('#playfield').css('width', this.width * this.zoom);
+      $('#playfield').css('height', this.height * this.zoom);
     }
   }]);
 
-  return Preview;
+  return Playfield;
 }();

@@ -46,13 +46,13 @@ var App = function () {
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7, this.config, { onLoad: this.update_config.bind(this) });
 
-    window_config = { name: "window_overlays", title: "Sprite Overlays", type: "settings", resizable: false, left: this.config.window_overlays.left, top: this.config.window_overlays.top, autoOpen: true, width: 220, height: "auto" };
-    this.window_overlays = new Window(window_config, this.store_window.bind(this));
-    this.overlays = new Overlays(8, this.config);
-
     window_config = { name: "window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_help = new Window(window_config);
-    this.help = new Help(9, this.config);
+    this.help = new Help(8, this.config);
+
+    window_config = { name: "window_playfield", title: "Playfield", type: "preview", resizable: false, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
+    this.window_playfield = new Window(window_config, this.store_window.bind(this));
+    this.playfield = new Playfield(9, this.config);
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -109,6 +109,7 @@ var App = function () {
       this.preview.update(all);
       this.list.update(all);
       this.palette.update(all);
+      this.playfield.update(all);
       this.update_ui();
     }
   }, {
@@ -754,41 +755,6 @@ var App = function () {
         _this.config.window_preview.zoom = _this.preview.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
-      });
-
-      /*
-           OOOOOOOOO       VVVVVVVV           VVVVVVVV  EEEEEEEEEEEEEEEEEEEEEE  RRRRRRRRRRRRRRRRR   
-         OO:::::::::OO     V::::::V           V::::::V  E::::::::::::::::::::E  R::::::::::::::::R  
-       OO:::::::::::::OO   V::::::V           V::::::V  E::::::::::::::::::::E  R::::::RRRRRR:::::R 
-      O:::::::OOO:::::::O  V::::::V           V::::::V  EE::::::EEEEEEEEE::::E  RR:::::R     R:::::R
-      O::::::O   O::::::O   V:::::V           V:::::V     E:::::E       EEEEEE    R::::R     R:::::R
-      O:::::O     O:::::O    V:::::V         V:::::V      E:::::E                 R::::R     R:::::R
-      O:::::O     O:::::O     V:::::V       V:::::V       E::::::EEEEEEEEEE       R::::RRRRRR:::::R 
-      O:::::O     O:::::O      V:::::V     V:::::V        E:::::::::::::::E       R:::::::::::::RR  
-      O:::::O     O:::::O       V:::::V   V:::::V         E:::::::::::::::E       R::::RRRRRR:::::R 
-      O:::::O     O:::::O        V:::::V V:::::V          E::::::EEEEEEEEEE       R::::R     R:::::R
-      O:::::O     O:::::O         V:::::V:::::V           E:::::E                 R::::R     R:::::R
-      O::::::O   O::::::O          V:::::::::V            E:::::E       EEEEEE    R::::R     R:::::R
-      O:::::::OOO:::::::O           V:::::::V           EE::::::EEEEEEEE:::::E  RR:::::R     R:::::R
-       OO:::::::::::::OO             V:::::V            E::::::::::::::::::::E  R::::::R     R:::::R
-         OO:::::::::OO                V:::V             E::::::::::::::::::::E  R::::::R     R:::::R
-           OOOOOOOOO                   VVV              EEEEEEEEEEEEEEEEEEEEEE  RRRRRRRR     RRRRRRR
-      */
-
-      $("#input-overlay").keydown(function (e) {
-        _this.allow_keyboard_shortcuts = false;
-        if (e.key == "Enter") {
-          // strip everything that is not a number, returns an array
-          var list = $("#input-overlay").val().match(/\d+/g);
-          //if (list == null) list = "next sprite";
-          // stringify the array again for the input field
-          //$("#input-overlay").val(list.toString());
-          _this.sprite.update_overlay_list(list);
-          // defocus 
-          $("#input-overlay").blur();
-          _this.update();
-          _this.allow_keyboard_shortcuts = true;
-        }
       });
 
       $('#icon-preview-overlay').mousedown(function (e) {
