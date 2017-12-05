@@ -31,7 +31,6 @@ class Sprite
       "double_x" : false,
       "double_y" : false,
       "overlay" : false,
-      "overlay_list": [],
       "pixels": []
     };
 

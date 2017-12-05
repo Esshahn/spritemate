@@ -294,6 +294,20 @@ img.center
   text-align: center;
 }
 
+#playfield
+{
+  width: 1024px;
+  height: 1024px;
+  line-height: 0px;
+}
+
+#playfield-container
+{
+  width: 100%;
+  height: 90%;
+  overflow: scroll;
+}
+
 #help
 {
   padding: 12px;

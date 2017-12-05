@@ -57,8 +57,8 @@ function init()
               "left": 890,
               "width": 400,
               "height": 400,
-              "canvas_x": 10,
-              "canvas_y": 10,
+              "canvas_x": 5,
+              "canvas_y": 5,
               "zoom": 2
               }
 

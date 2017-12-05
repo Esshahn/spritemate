@@ -46,7 +46,7 @@ class App
     this.window_help = new Window(window_config);
     this.help = new Help(8,this.config);
 
-    window_config = {name:"window_playfield", title: "Playfield", type: "preview", resizable: false, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
+    window_config = {name:"window_playfield", title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
     this.window_playfield = new Window(window_config, this.store_window.bind(this));
     this.playfield = new Playfield(9,this.config);
 
@@ -107,7 +107,7 @@ class App
     this.preview.update(  all);
     this.list.update(     all);
     this.palette.update(  all);
-    this.playfield.update(  all);
+    //this.playfield.update(  all);
     this.update_ui();
   }
 
@@ -175,6 +175,20 @@ class App
       $('#icon-editor-zoom-in').fadeTo("fast", 0.33);
     } else {
       $('#icon-editor-zoom-in').fadeTo("fast", 1);
+    }
+
+    if (this.playfield.is_min_zoom())
+    {
+      $('#icon-playfield-zoom-out').fadeTo("fast", 0.33);
+    } else {
+      $('#icon-playfield-zoom-out').fadeTo("fast", 1);
+    }
+
+    if (this.playfield.is_max_zoom())
+    {
+      $('#icon-playfield-zoom-in').fadeTo("fast", 0.33);
+    } else {
+      $('#icon-playfield-zoom-in').fadeTo("fast", 1);
     }
 
     if (this.list.is_min_zoom())
@@ -268,10 +282,12 @@ class App
     this.init_ui_fade("icon-list-copy");
     this.init_ui_fade("icon-list-paste");
     this.init_ui_fade("icon-list-grid");
-    this.init_ui_fade("icon-editor-zoom-in");
-    this.init_ui_fade("icon-editor-zoom-out");
     this.init_ui_fade("icon-list-zoom-in");
     this.init_ui_fade("icon-list-zoom-out");
+    this.init_ui_fade("icon-editor-zoom-in");
+    this.init_ui_fade("icon-editor-zoom-out");
+    this.init_ui_fade("icon-playfield-zoom-in");
+    this.init_ui_fade("icon-playfield-zoom-out");
     this.init_ui_fade("icon-preview-zoom-in");
     this.init_ui_fade("icon-preview-zoom-out");
     this.init_ui_fade("icon-preview-overlay");
@@ -319,6 +335,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           console.time('performance');
           for(let i=0; i<=100;i++) this.update();
           console.timeEnd('performance');
+        
         }
 
         if (e.key == "ArrowRight")
@@ -336,6 +353,14 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         {
           this.toggle_fullscreen();
         }
+
+        if (e.key == "q")
+        {
+          // TODO: delete when done with playfield programming
+          this.playfield.update(  this.sprite.get_all());
+        }
+
+        
 
         if (e.key == "d")
         {
@@ -519,6 +544,7 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
     {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
+      this.list.update_all(this.sprite.get_all());
       this.update(); 
     });
 
@@ -842,7 +868,28 @@ PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              
     });
 
 
+/*
 
+      PLAYFIELD
+ */
+
+
+
+    $('#icon-playfield-zoom-in').mouseup((e) =>
+    {     
+      this.playfield.zoom_in();
+      this.config.window_playfield.zoom = this.playfield.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#icon-playfield-zoom-out').mouseup((e) =>
+    {     
+      this.playfield.zoom_out();
+      this.config.window_playfield.zoom = this.playfield.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
 
     
 

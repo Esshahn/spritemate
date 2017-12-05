@@ -7,67 +7,43 @@ class Playfield
   {
     this.config = config;
     this.window = window;
-    this.canvas_element = document.createElement('canvas');
+    
     this.zoom = this.config.window_playfield.zoom; 
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.config.window_playfield.canvas_x;
     this.height = this.pixels_y * this.config.window_playfield.canvas_y;
     
-    this.canvas_element.id = "playfield";
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
-    this.canvas = this.canvas_element.getContext('2d');
-
     let template = `
       <div class="window_menu">
         <div class="right">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-playfield-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-playfield-zoom-out" title="zoom out">
         </div>
       </div>
-      <div id="playfield-canvas"></div>
+      <div id="playfield-container">
+        <div id="playfield"></div>
+      </div>
     `;
 
     $("#window-"+this.window).append(template);
-    $("#playfield-canvas").append(this.canvas_element);
-   
-  }
 
-  get_width()
-  {
-    return this.width;
-  }
-
-  get_height()
-  {
-    return this.height;
   }
 
 
   zoom_in()
   {
-    if (this.zoom <= 24)
+    if (this.zoom <= 16)
     {
-      this.zoom += 2;
+      this.zoom ++;
       this.update_zoom();
     } 
-  }
-
-  is_min_zoom()
-  {
-    if (this.zoom < 2) return true;
-  }
-
-  is_max_zoom()
-  {
-    if (this.zoom >= 24) return true;
   }
 
   zoom_out()
   {
     if (this.zoom >= 2)
     {
-     this.zoom -= 2;
+     this.zoom --;
      this.update_zoom();
     }
   }
@@ -77,24 +53,50 @@ class Playfield
     return this.zoom;
   }
 
+  is_min_zoom()
+  {
+    if (this.zoom < 2) return true;
+  }
+
+  is_max_zoom()
+  {
+    if (this.zoom > 16) return true;
+  }
+
   update_zoom()
   {
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
+    $("#playfield").css("zoom",this.zoom);
+    $("#playfield").css("-moz-transform","scale("+this.zoom+")");
+    console.log(this.zoom);
   }
+
 
   update(all_data)
   {
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
-    let sprite_data = all_data.sprites[all_data.current_sprite];
+    $("#playfield").empty();
+    $("#playfield").css('background-color',this.config.colors[all_data.colors["t"]] );
+
+    this.update_zoom();
+
+    for (let i=0; i<all_data.sprites.length;i++)
+    {
+      this.create_sprite_canvas(all_data.sprites[i],all_data.colors,i);    
+    }
+    
+  }
+
+  create_sprite_canvas(sprite_data,colors,id)
+  {
+
+    let sprite_canvas = document.createElement('canvas');
+    sprite_canvas.width = this.pixels_x;
+    sprite_canvas.height = this.pixels_y;
+    sprite_canvas.context = sprite_canvas.getContext('2d');
+    sprite_canvas.id = "playfield-sprite-"+id;
+
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
-
-    // first fill the whole sprite with the background color
-    this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
-    this.canvas.fillRect(0,0,this.width,this.height); 
-
+    
     for (let i=0; i<this.pixels_x; i=i+x_grid_step)
     {
       for (let j=0; j<this.pixels_y; j++)
@@ -104,16 +106,23 @@ class Playfield
         if (array_entry != "t")
         {
           let color = sprite_data.color;
-          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-          this.canvas.fillStyle = this.config.colors[color] ;
-          this.canvas.fillRect(i, j, x_grid_step, 1);  
+          if (array_entry != "i" && sprite_data.multicolor) color = colors[array_entry];
+          sprite_canvas.context.fillStyle = this.config.colors[color] ;
+          sprite_canvas.context.fillRect(i, j, x_grid_step, 1);  
         }
       }
     }
 
-    
-    $('#playfield').css('width',this.width * this.zoom);
-    $('#playfield').css('height',this.height * this.zoom);
+    $("#playfield").append( sprite_canvas );
+
+    $('#playfield-sprite-'+id).mousedown((e) => { console.log("mousedown on sprite");});
+    $('#playfield-sprite-'+id).draggable(
+    {
+      containment: "parent",
+      cursor: "crosshair",
+      addClasses: false
+    });
+
 
   }
 
