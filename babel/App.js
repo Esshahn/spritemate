@@ -514,7 +514,7 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
 
     $('#icon-help').mouseup((e) =>
     {
-      $("#window-9").dialog( "open");
+      $("#window-8").dialog( "open");
     });
 
 
@@ -878,6 +878,7 @@ PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              
     $('#icon-playfield-zoom-in').mouseup((e) =>
     {     
       this.playfield.zoom_in();
+      this.playfield.update(this.sprite.get_all());
       this.config.window_playfield.zoom = this.playfield.get_zoom();
       this.storage.write(this.config);
       this.update();
@@ -886,6 +887,7 @@ PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              
     $('#icon-playfield-zoom-out').mouseup((e) =>
     {     
       this.playfield.zoom_out();
+      this.playfield.update(this.sprite.get_all());
       this.config.window_playfield.zoom = this.playfield.get_zoom();
       this.storage.write(this.config);
       this.update();

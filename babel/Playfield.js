@@ -35,7 +35,6 @@ class Playfield
     if (this.zoom <= 16)
     {
       this.zoom ++;
-      this.update_zoom();
     } 
   }
 
@@ -44,7 +43,6 @@ class Playfield
     if (this.zoom >= 2)
     {
      this.zoom --;
-     this.update_zoom();
     }
   }
 
@@ -63,20 +61,11 @@ class Playfield
     if (this.zoom > 16) return true;
   }
 
-  update_zoom()
-  {
-    $("#playfield").css("zoom",this.zoom);
-    $("#playfield").css("-moz-transform","scale("+this.zoom+")");
-    console.log(this.zoom);
-  }
-
-
   update(all_data)
   {
     $("#playfield").empty();
     $("#playfield").css('background-color',this.config.colors[all_data.colors["t"]] );
 
-    this.update_zoom();
 
     for (let i=0; i<all_data.sprites.length;i++)
     {
@@ -89,10 +78,11 @@ class Playfield
   {
 
     let sprite_canvas = document.createElement('canvas');
-    sprite_canvas.width = this.pixels_x;
-    sprite_canvas.height = this.pixels_y;
+    sprite_canvas.width = this.pixels_x * this.zoom;
+    sprite_canvas.height = this.pixels_y * this.zoom;
     sprite_canvas.context = sprite_canvas.getContext('2d');
     sprite_canvas.id = "playfield-sprite-"+id;
+    sprite_canvas.context.scale(this.zoom,this.zoom);
 
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
@@ -113,6 +103,8 @@ class Playfield
       }
     }
 
+
+
     $("#playfield").append( sprite_canvas );
 
     $('#playfield-sprite-'+id).mousedown((e) => { console.log("mousedown on sprite");});
@@ -120,7 +112,8 @@ class Playfield
     {
       containment: "parent",
       cursor: "crosshair",
-      addClasses: false
+      addClasses: false,
+      grid: [ this.pixels_x * this.zoom, this.pixels_y * this.zoom ]
     });
 
 

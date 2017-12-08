@@ -473,7 +473,7 @@ var App = function () {
       });
 
       $('#icon-help').mouseup(function (e) {
-        $("#window-9").dialog("open");
+        $("#window-8").dialog("open");
       });
 
       /*
@@ -789,6 +789,7 @@ var App = function () {
 
       $('#icon-playfield-zoom-in').mouseup(function (e) {
         _this.playfield.zoom_in();
+        _this.playfield.update(_this.sprite.get_all());
         _this.config.window_playfield.zoom = _this.playfield.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
@@ -796,6 +797,7 @@ var App = function () {
 
       $('#icon-playfield-zoom-out').mouseup(function (e) {
         _this.playfield.zoom_out();
+        _this.playfield.update(_this.sprite.get_all());
         _this.config.window_playfield.zoom = _this.playfield.get_zoom();
         _this.storage.write(_this.config);
         _this.update();
