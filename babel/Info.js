@@ -16,6 +16,10 @@ class Info
 
         <fieldset>
             <h1>Release notes</h1>
+
+            <h1>v1.04</h1>
+            - added colon after labels when exporting as Kick assembler
+            
             <h1>November 08, 2017</h1>
 
             <h2>Features, changes & bugfixes</h2>
