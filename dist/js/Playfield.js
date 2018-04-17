@@ -27,7 +27,6 @@ var Playfield = function () {
     value: function zoom_in() {
       if (this.zoom <= 16) {
         this.zoom++;
-        this.update_zoom();
       }
     }
   }, {
@@ -35,7 +34,6 @@ var Playfield = function () {
     value: function zoom_out() {
       if (this.zoom >= 2) {
         this.zoom--;
-        this.update_zoom();
       }
     }
   }, {
@@ -54,19 +52,10 @@ var Playfield = function () {
       if (this.zoom > 16) return true;
     }
   }, {
-    key: "update_zoom",
-    value: function update_zoom() {
-      $("#playfield").css("zoom", this.zoom);
-      $("#playfield").css("-moz-transform", "scale(" + this.zoom + ")");
-      console.log(this.zoom);
-    }
-  }, {
     key: "update",
     value: function update(all_data) {
       $("#playfield").empty();
       $("#playfield").css('background-color', this.config.colors[all_data.colors["t"]]);
-
-      this.update_zoom();
 
       for (var i = 0; i < all_data.sprites.length; i++) {
         this.create_sprite_canvas(all_data.sprites[i], all_data.colors, i);
@@ -77,10 +66,11 @@ var Playfield = function () {
     value: function create_sprite_canvas(sprite_data, colors, id) {
 
       var sprite_canvas = document.createElement('canvas');
-      sprite_canvas.width = this.pixels_x;
-      sprite_canvas.height = this.pixels_y;
+      sprite_canvas.width = this.pixels_x * this.zoom;
+      sprite_canvas.height = this.pixels_y * this.zoom;
       sprite_canvas.context = sprite_canvas.getContext('2d');
       sprite_canvas.id = "playfield-sprite-" + id;
+      sprite_canvas.context.scale(this.zoom, this.zoom);
 
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -106,7 +96,8 @@ var Playfield = function () {
       $('#playfield-sprite-' + id).draggable({
         containment: "parent",
         cursor: "crosshair",
-        addClasses: false
+        addClasses: false,
+        grid: [this.pixels_x * this.zoom, this.pixels_y * this.zoom]
       });
     }
   }]);
