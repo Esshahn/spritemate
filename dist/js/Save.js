@@ -234,10 +234,12 @@ var Save = function () {
 
       var comment = ";";
       var prefix = "!";
+      var label_suffix = "";
 
       if (format == "kick") {
         comment = "//";
         prefix = ".";
+        label_suffix = ":";
       }
 
       var data = "";
@@ -262,7 +264,7 @@ var Save = function () {
         var stepping = 1;
         if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
-        data += "\n\nsprite_" + (j + 1) + "\n";
+        data += "\n\nsprite_" + (j + 1) + label_suffix + "\n";
         // iterate through the pixel data array 
         // and create a hex values based on multicolor or singlecolor
         for (var i = 0; i < spritedata.length; i = i + 8) {
