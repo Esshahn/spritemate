@@ -3,7 +3,7 @@ function init()
 
     let config = 
     {
-      version: 1.04,
+      version: 1.05,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {

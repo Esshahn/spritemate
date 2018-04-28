@@ -42,6 +42,10 @@ class App
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7,this.config, { onLoad: this.update_config.bind(this) });
 
+    window_config = {name:"window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
+    this.window_help = new Window(window_config);
+    this.help = new Help(8,this.config);
+
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
@@ -253,6 +257,7 @@ class App
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
+    this.init_ui_fade("icon-help");
     this.init_ui_fade("icon-settings");
     this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-list-copy");
@@ -475,6 +480,11 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     $('#icon-info').mouseup((e) =>
     {
       $("#window-4").dialog( "open");
+    });
+
+    $('#icon-help').mouseup((e) =>
+    {
+      $("#window-8").dialog( "open");
     });
 
 

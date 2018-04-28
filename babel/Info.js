@@ -15,11 +15,15 @@ class Info
         <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
-            <h1>Release notes:</h1>
+            <h1>Release notes</h1>
 
-            <h1>v1.04</h1>
-            - added colon after labels when exporting as Kick assembler
-            
+            <h1>V1.05</h1>
+            <p>Added a brief documentation (click on help in the menu bar).</p>
+            <p>I didn't get any chance to work on Spritemate for months due to my commercial stuff sucking away all my free time. Also, feedback was stopping recently, which didn't motivate me too much either. Eventually I checked the traffic for Spritemate and was suprised about the steady amount of users. So I decided to dedicate more time to this project again. In any case, if you like Spritemate, you can make a hell of a difference by letting me know, either by mail ( ingo at awsm dot de ) or by sending me a tweet ( <a href="https://twitter.com/awsm9000">@awsm9000</a> ). Let me know how I can make Spritemate better for you!</p>
+
+            <h1>V1.04</h1>
+            <p>Added some fixes to the Kick Assember export (thx2 nurpax)</p>
+
             <h1>November 08, 2017</h1>
 
             <h2>Features, changes & bugfixes</h2>
@@ -105,11 +109,6 @@ class Info
             </p>
         </fieldset>
 
-        <p>Documentation: <a target="_blank" href="https://github.com/Esshahn/spritemate">github.com/Esshahn/spritemate</a></p>
-        <p>Ingo Hinterding / <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm</a>
-        / <a target="_blank" href="http://www.awsm.de">www.awsm.de</a> / <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
-        <p>Report bugs, ideas & requests to ingo (at) awsm (dot) de</p>
-        <br/>
         <button id="button-info">Let's go!</button>
     </div>
     `;
