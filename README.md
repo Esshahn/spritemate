@@ -93,12 +93,16 @@ Latest version: http://spritemate.com/
 
 ## History
 
+2018-04-28
+* merged in help window from the beta branch
+* fixed some issues with Kick Ass export (thx2 nurpax)
+
 2017-11-01
 * local config file support
 * window positions, zoom levels are saved locally
 * new settings modal with color palette options: pepto, colodore and custom
 * cursor keys rotate through the sprite list
-* minar fixes and tweaks
+* minor fixes and tweaks
 
 2017-10-24
 * first public release
