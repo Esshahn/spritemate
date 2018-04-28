@@ -15,7 +15,7 @@ class Info
         <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
-            <h1>Release notes</h1>
+            <h1>Release notes:</h1>
 
             <h1>v1.04</h1>
             - added colon after labels when exporting as Kick assembler
