@@ -14,6 +14,7 @@ body, html, p, div
 p
 {
   margin: 8px;
+  line-height: 160%;
 }
 
 a
@@ -59,10 +60,16 @@ h1
 
 h2
 {
-  font-size: 100%;
+  font-size: 110%;
   color: #00b9ee;
   text-align:center;
   margin: 0px 0px 12px 0px; 
+}
+
+#help h1, #help h2
+{
+  text-align: left;
+
 }
 
 legend
@@ -97,6 +104,21 @@ fieldset .right
   width: 200px;
 }
 
+table
+{
+  width: 100%;
+}
+
+td,th
+{
+  padding: 8px;
+  margin: 4px 0px 4px 0px;
+  text-align: left;
+  
+}
+
+tr:nth-child(even) {background-color: #222222;}
+
 
 .ui-widget-content a
 {
@@ -119,6 +141,11 @@ canvas
 .center
 {
   text-align: center;
+}
+
+.spacer
+{
+  height: 40px;
 }
 
 .settings_colorfield
@@ -178,6 +205,12 @@ canvas
   margin: 4px;
   padding: 8px 16px 8px 16px;
   min-width: 160px;
+}
+
+.ui-widget button.center
+{
+  display: block;
+  margin: 0 auto;
 }
 
 .ui-widget button:hover
@@ -243,6 +276,18 @@ canvas
   text-align: center;
 }
 
+#help
+{
+  padding: 12px;
+}
+
+#help-container
+{
+  padding: 12px;
+  height: 400px;
+  overflow: scroll;
+  margin: 24px 0px 24px 0px;
+}
 
 #editor
 {
@@ -370,7 +415,7 @@ canvas
   float: left;
   padding: 0px 2px 0px 2px;
   cursor: pointer;
-  margin-top: 2px;
+  margin-top: 0px;
 }
 
 .iconset_right
@@ -388,7 +433,9 @@ canvas
   text-transform: uppercase;
   text-align: center;
   margin: 0px;
-
+  position: relative;
+  top: -5px;
+  height: 8px;
 }
 
 
