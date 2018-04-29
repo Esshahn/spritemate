@@ -408,14 +408,27 @@ img.center
 
 }
 
+#palette_all_colors
+{
+  clear:both;
+}
+
 .palette_color_item
 {
   width: 40px;
   height: 20px;
-  background-color: red;
   margin: auto;
+  cursor: pointer; 
+  float: left;
+}
+
+.palette_color_item_active_colors
+{
+  width: 40px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer; 
   margin-bottom: 8px;
-  cursor: pointer;  
 }
 
 .palette_highlight_text

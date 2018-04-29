@@ -501,7 +501,7 @@ var App = function () {
       
       */
 
-      $('#palette').mouseup(function (e) {
+      $('#palette_all_colors').mouseup(function (e) {
         _this.palette.set_active_color(e);
         _this.sprite.set_pen_color(_this.palette.get_color());
         _this.list.update_all(_this.sprite.get_all());

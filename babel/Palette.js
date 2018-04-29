@@ -10,46 +10,33 @@ class Palette
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;
-  
-    this.canvas_element = document.createElement('canvas');
     this.colorsquare_width = 40;
     this.colorsquare_height = 20;
-    this.width = this.colorsquare_width * 2;
-    this.height = this.colors.length/2 * this.colorsquare_height ;
     
-    this.canvas_element.id = "palette";
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
-
-
     let template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
           <div id="palette_i">
               <p>Individual</p>
-              <div class="palette_color_item" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
+              <div class="palette_color_item_active_colors" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
           </div>
           <div id="palette_t">
               <p>Transparent</p>
-              <div class="palette_color_item" id="color_t" title="transparent&nbsp;(2)"></div>
+              <div class="palette_color_item_active_colors" id="color_t" title="transparent&nbsp;(2)"></div>
           </div>
           <div id="palette_m1">
               <p>Multicolor 1</p>
-              <div class="palette_color_item" id="color_m1" title="multicolor&nbsp;1&nbsp;(3)"></div>
+              <div class="palette_color_item_active_colors" id="color_m1" title="multicolor&nbsp;1&nbsp;(3)"></div>
           </div>
           <div id="palette_m2">
               <p>Multicolor 2</p>
-              <div class="palette_color_item" id="color_m2" title="multicolor&nbsp;2&nbsp;(4)"></div>
+              <div class="palette_color_item_active_colors" id="color_m2" title="multicolor&nbsp;2&nbsp;(4)"></div>
           </div>
       </div>
 
     `;
 
     $("#window-"+this.window).append(template);
-
-    $("#palette_all_colors").append(this.canvas_element);
-
-    this.canvas = this.canvas_element.getContext('2d');
  
     this.draw_palette();
 
@@ -79,21 +66,28 @@ class Palette
 
   draw_palette()
   {
+    /* 
+
+    draws the colors from the config as DIVs 
+
+    */
    
+    $("#palette_all_colors").empty(); // clear all color items in case there are already some (e.g. when switching palettes)
     let x = 0;
-    let y = 0;
 
     for (let i=0; i<this.colors.length; i++)
     {
-      this.canvas.fillStyle = this.colors[i];
-      this.canvas.fillRect(x*this.colorsquare_width, y*this.colorsquare_height, this.colorsquare_width, this.colorsquare_height);
+      let picker_div = `<div class="palette_color_item" id="palette_color_`+this.colors[i]+`" title="`+this.colors[i]+`" style="background-color:`+this.colors[i]+`;"></div>`; 
       
-      x++;
-      if (x == 2){
+      x++; 
+      if (x == 2)
+      {
         x = 0;
-        y ++;
+        picker_div += `<div style="clear:both;"></div>`; // after two colors, break to next line
       }
-    } 
+
+      $("#palette_all_colors").append(picker_div);
+    }  
   }
 
   set_multicolor(is_multicolor)
@@ -111,12 +105,8 @@ class Palette
 
   set_active_color(e)
   {
-    let pos = this.findPos(this.canvas_element);
-    let x = e.pageX - pos.x , y = e.pageY - pos.y;
-    let c = this.canvas;
-    let p = c.getImageData(x, y, 1, 1).data; 
-    let hex = "#" + ("000000" + this.rgbToHex(p[0], p[1], p[2])).slice(-6);
-    this.active_color = this.colors.indexOf(hex);
+    let picked_color = $(e.target).prop('id').replace('palette_color_','');
+    this.active_color = this.colors.indexOf(picked_color);
   }
 
   get_color()
@@ -128,28 +118,6 @@ class Palette
   {
     this.colors = colors;
     this.draw_palette();
-  }
-
-
-  findPos(obj)
-  {
-    let curleft = 0, curtop = 0;
-    if (obj.offsetParent) {
-        do 
-        {
-            curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
-        return { x: curleft, y: curtop };
-    }
-    return undefined;
-  }
-
-  rgbToHex(r, g, b)
-  {
-    if (r > 255 || g > 255 || b > 255)
-        throw "Invalid color component";
-    return ((r << 16) | (g << 8) | b).toString(16);
   }
 
 }

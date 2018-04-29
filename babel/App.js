@@ -548,7 +548,7 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
 */
 
-    $('#palette').mouseup((e) =>
+    $('#palette_all_colors').mouseup((e) =>
     {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
@@ -570,14 +570,14 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
     $('#palette_m1').mouseup((e) =>
     {  
-        this.sprite.set_pen("m1");
-        this.update();
+      this.sprite.set_pen("m1");
+      this.update();
     });
 
     $('#palette_m2').mouseup((e) =>
     {    
-        this.sprite.set_pen("m2");
-        this.update();
+      this.sprite.set_pen("m2");
+      this.update();
     });
         
 
