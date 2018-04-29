@@ -44,7 +44,7 @@ var Palette = function () {
       $("#color_m1").css("background-color", this.colors[all_data.colors.m1]);
       $("#color_m2").css("background-color", this.colors[all_data.colors.m2]);
 
-      // now set the rigt pen active
+      // now set the right pen active
       $('#palette_spritecolors div').removeClass("palette_color_item_selected");
       $('#palette_spritecolors p').removeClass("palette_highlight_text");
 

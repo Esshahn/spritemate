@@ -6,6 +6,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=KEYS
 
+function init() {
+  var sprite_app = new App(get_config());
+}
+
 var App = function () {
   function App(config) {
     _classCallCheck(this, App);

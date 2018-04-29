@@ -1,5 +1,13 @@
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=KEYS
 
+function init()
+{
+  let sprite_app = new App(get_config());
+}
+
+
+
+
 class App
 {
 

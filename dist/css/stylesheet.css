@@ -1,33 +1,35 @@
-/*
 
-red: e6007e
-blue: 00b9ee
- */ 
+
+:root 
+{
+  --red:  #e6007e;
+  --blue: #00b9ee;
+}
+
 
 body, html, p, div
 {
-  font-size: 96%;
+  font-size:96%;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  
 }
 
 p
 {
-  margin: 8px;
+  margin:8px;
   line-height: 160%;
 }
 
 a
 {
   text-decoration: none;
-  color: #00b9ee;
+  color: var(--blue);
 }
 
 a:hover
 {
-  color: #e6007e;
-  border-bottom: 1px dotted #e6007e;
+  color: var(--red);
+  border-bottom: 1px dotted var(--red);
 }
 
 body, html
@@ -53,7 +55,7 @@ body, html
 h1
 {
   font-size: 160%;
-  color: #00b9ee;
+  color: var(--blue);
   text-align:center;
   margin-bottom: 0px;
 }
@@ -61,18 +63,23 @@ h1
 h2
 {
   font-size: 110%;
-  color: #00b9ee;
-  text-align:center;
+  color: var(--blue);
+  text-align: center;
   margin: 0px 0px 12px 0px; 
 }
 
-ol { 
+ol 
+{ 
   counter-reset: item; 
 }
-ol li { 
+
+ol li 
+{ 
   display: block; 
 }
-ol li:before { 
+
+ol li:before 
+{ 
   content: counters(item, ".") "."; 
   counter-increment: item; 
   padding-right: 16px; 
@@ -82,13 +89,12 @@ ol li:before {
 #help h1, #help h2
 {
   text-align: left;
-
 }
 
 legend
 {
   font-size: 100%;
-  color: #00b9ee;
+  color: var(--blue);
   padding: 0px 20px 0px 20px;
 }
 
@@ -110,10 +116,12 @@ td,th
   padding: 8px;
   margin: 4px 0px 4px 0px;
   text-align: left;
-  
 }
 
-tr:nth-child(even) {background-color: #222222;}
+tr:nth-child(even) 
+{
+  background-color: #222222;
+}
 
 fieldset button
 {
@@ -135,7 +143,7 @@ fieldset .right
 
 .ui-widget-content a
 {
-  color: #00b9ee;
+  color: var(--blue);
 }
 
 
@@ -163,10 +171,9 @@ canvas
 
 img.center 
 {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
-
 
 
 .settings_colorfield
@@ -201,7 +208,7 @@ img.center
 
 .ui-widget input.settings_colorvalue
 {
-  border: 0px solid #00b9ee;
+  border: 0px solid var(--blue);
   min-width: 0px;
   width: 52px;
   border-radius: 0px;
@@ -214,7 +221,7 @@ img.center
 
 .ui-widget button
 {
-  border: 2px solid #00b9ee;
+  border: 2px solid var(--blue);
   background-color: black;
   color: white;
   font-size: 80%;
@@ -234,7 +241,7 @@ img.center
 
 .ui-widget button:hover
 {
-  background-color: #00b9ee;
+  background-color: var(--blue);
   cursor: pointer;
 }
 
@@ -245,17 +252,17 @@ img.center
 
 .ui-widget .button-cancel
 {
-  border-color: #e6007e;
+  border-color: var(--red);
 }
 
 .ui-widget .button-cancel:hover
 {
-  background-color: #e6007e;
+  background-color: var(--red);
 }
 
 .ui-widget input
 {
-  border: 2px solid #00b9ee;
+  border: 2px solid var(--blue);
   background-color: black;
   color: white;
   font-size: 100%;
@@ -272,20 +279,20 @@ img.center
 .ui-widget input:focus
 {
   outline:0;
-  background-color: #00b9ee;
+  background-color: var(--blue);
 }
 
 
 
 .ui-widget .error:focus
 {
-  border: 2px solid #e6007e;
-  background-color: #e6007e;
+  border: 2px solid var(--red);
+  background-color: var(--red);
 }
 
 .ui-widget .error
 {
-  border: 2px solid #e6007e;
+  border: 2px solid var(--red);
 }
 
 #info
@@ -349,7 +356,7 @@ img.center
   bottom: 0px;
   height: 20px;
   padding: 6px 12px 6px 12px;
-  color: #00b9ee;
+  color: var(--blue);
   background: -webkit-linear-gradient(#181818, #111111); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#181818, #111111); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(#181818, #111111); /* For Firefox 3.6 to 15 */
@@ -413,14 +420,14 @@ img.center
 
 .palette_highlight_text
 {
-  color: #e6007e;
+  color: var(--red);
 }
 
 .palette_color_item_selected
 {
   outline-style: solid;
   outline-width: 2px;
-  outline-color: #00b9ee;
+  outline-color: var(--blue);
 }
 
 #color_transparent
@@ -512,7 +519,7 @@ img.center
 .window_menu .right
 {
   float: right;
-  color: #00b9ee;
+  color: var(--blue);
 }
 
 #spritelist
@@ -531,7 +538,7 @@ img.center
 
 .sprite_layer:hover
 {
-  border: 1px dotted #e6007e;
+  border: 1px dotted var(--red);
 }
 
 .sprite_layer:active
@@ -563,7 +570,7 @@ img.center
 
 .sprite_layer_selected
 {
-  border: 1px dotted #00b9ee;
+  border: 1px dotted var(--blue);
 }
 
 
@@ -600,7 +607,7 @@ img.center
 
 .icon-preview-highlight
 {
-  border: 2px solid #e6007e;
+  border: 2px solid var(--red);
   opacity: 1.0;
 }
 
@@ -631,7 +638,6 @@ img.center
   text-transform: uppercase;
   margin-top: 20px;
   font-weight: bold;
-  scolor: #e6007e;
 }
 
 #info fieldset h2
@@ -639,7 +645,6 @@ img.center
   font-size: 100%;
   text-align: left;
   margin: 4px;
-  stext-transform: uppercase;
   margin-top: 20px;
 }
 
@@ -695,7 +700,7 @@ img.center
 
 .ui-widget-overlay 
 {
-    background: #000000;
+    background: black;
     opacity: 0.6;
 }
 
@@ -711,20 +716,20 @@ img.center
   float:left;
   text-align: left;
   padding: 0px 12px 0px 12px;
-  color: #00b9ee;
+  color: var(--blue);
 
 }
 
 .ui-widget input.ui-inputfield:focus
 {
-  border: 1px solid #00b9ee;
+  border: 1px solid var(--blue);
   color: white;
   background-color: black;
 }
 
 .ui-widget input.ui-inputfield:hover
 {
-  border: 1px solid #00b9ee;
+  border: 1px solid var(--blue);
   background-color: black;
 }
 

@@ -1,4 +1,4 @@
-function init() 
+function get_config() 
 {    
 
     let config = 
@@ -64,5 +64,5 @@ function init()
 
     };
 
-    let sprite_app = new App(config);
+    return config;
 }
