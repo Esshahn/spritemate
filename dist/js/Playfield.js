@@ -58,12 +58,12 @@ var Playfield = function () {
       $("#playfield").css('background-color', this.config.colors[all_data.colors["t"]]);
 
       for (var i = 0; i < all_data.sprites.length; i++) {
-        this.create_sprite_canvas(all_data.sprites[i], all_data.colors, i);
+        this.create_single_sprite_canvas(all_data.sprites[i], all_data.colors, i);
       }
     }
   }, {
-    key: "create_sprite_canvas",
-    value: function create_sprite_canvas(sprite_data, colors, id) {
+    key: "create_single_sprite_canvas",
+    value: function create_single_sprite_canvas(sprite_data, colors, id) {
 
       var sprite_canvas = document.createElement('canvas');
       sprite_canvas.width = this.pixels_x * this.zoom;
@@ -91,13 +91,17 @@ var Playfield = function () {
       $("#playfield").append(sprite_canvas);
 
       $('#playfield-sprite-' + id).mousedown(function (e) {
-        console.log("mousedown on sprite");
+        console.log("mousedown on sprite " + id);
       });
+
       $('#playfield-sprite-' + id).draggable({
-        containment: "parent",
         cursor: "crosshair",
         addClasses: false,
         grid: [this.pixels_x * this.zoom, this.pixels_y * this.zoom]
+      });
+
+      $('#playfield-sprite-' + id).mouseup(function (e) {
+        console.log("mouseup on sprite " + id);
       });
     }
   }]);

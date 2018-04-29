@@ -70,12 +70,12 @@ class Playfield
 
     for (let i=0; i<all_data.sprites.length;i++)
     {
-      this.create_sprite_canvas(all_data.sprites[i],all_data.colors,i);    
+      this.create_single_sprite_canvas(all_data.sprites[i],all_data.colors,i);    
     }
     
   }
 
-  create_sprite_canvas(sprite_data,colors,id)
+  create_single_sprite_canvas(sprite_data,colors,id)
   {
 
     let sprite_canvas = document.createElement('canvas');
@@ -108,13 +108,18 @@ class Playfield
 
     $("#playfield").append( sprite_canvas );
 
-    $('#playfield-sprite-'+id).mousedown((e) => { console.log("mousedown on sprite");});
+    $('#playfield-sprite-'+id).mousedown((e) => { console.log("mousedown on sprite "+ id);});
+    
     $('#playfield-sprite-'+id).draggable(
     {
-      containment: "parent",
       cursor: "crosshair",
       addClasses: false,
       grid: [ this.pixels_x * this.zoom, this.pixels_y * this.zoom ]
+    });
+    
+    $('#playfield-sprite-'+id).mouseup((e) => 
+    { 
+        console.log("mouseup on sprite "+ id);
     });
 
 

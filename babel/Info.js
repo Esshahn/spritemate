@@ -19,6 +19,7 @@ class Info
 
             <h1>V1.06</h1>
             <p>
+            - added divider lines in the editor grid view (thx2 v3to)<br/>
             - zoom icons moved from right side of the window to the left for better usability<br/>
             - color palette now uses DIVs instead of CANVAS (needed for later features)
             </p>
