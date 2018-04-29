@@ -54,7 +54,8 @@ var App = function () {
     this.window_help = new Window(window_config);
     this.help = new Help(8, this.config);
 
-    window_config = { name: "window_playfield", title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
+    // playfield window is hidden by autoOpen:false 
+    window_config = { name: "window_playfield", autoOpen: false, title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
     this.window_playfield = new Window(window_config, this.store_window.bind(this));
     this.playfield = new Playfield(9, this.config);
 

@@ -148,7 +148,7 @@ class Editor
   display_grid(sprite_data)
   {
     // show a grid
-    this.canvas.strokeStyle = "#666666";
+
     this.canvas.setLineDash([1, 1]);
     let x_grid_step = 1;
    
@@ -156,6 +156,11 @@ class Editor
 
     for (let i=0; i<=this.pixels_x; i=i+x_grid_step)
     {
+
+        // adds a vertical line in the middle
+        this.canvas.strokeStyle = "#666666";
+        if (i == this.pixels_x/2) this.canvas.strokeStyle = "#888888";
+        
         this.canvas.beginPath();
         this.canvas.moveTo(i*this.zoom,0);
         this.canvas.lineTo(i*this.zoom,this.height);
@@ -164,11 +169,17 @@ class Editor
 
     for (let i=0; i<=this.pixels_y; i++)
     {
+
+        // adds 3 horizontal lines
+        this.canvas.strokeStyle = "#666666";
+        if (i%(this.pixels_y/3) == 0) this.canvas.strokeStyle = "#888888";
+
         this.canvas.beginPath();
         this.canvas.moveTo(0,i*this.zoom);
         this.canvas.lineTo(this.width,i*this.zoom);
         this.canvas.stroke();
     }
+
   }
 
 
