@@ -22,10 +22,9 @@ var Editor = function () {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    var template = "\n      <div class=\"window_menu\">\n        <img src=\"img/icon3/icon-multicolor.png\" title=\"toggle single- & multicolor (m)\" id=\"icon-multicolor\">\n        <img src=\"img/icon3/icon-shift-left.png\" title=\"shift left\" id=\"icon-shift-left\">\n        <img src=\"img/icon3/icon-shift-right.png\" title=\"shift right\" id=\"icon-shift-right\">\n        <img src=\"img/icon3/icon-shift-up.png\" title=\"shift up\" id=\"icon-shift-up\">\n        <img src=\"img/icon3/icon-shift-down.png\" title=\"shift down\" id=\"icon-shift-down\">\n        <img src=\"img/icon3/icon-flip-horizontal.png\" title=\"flip horizontal\" id=\"icon-flip-horizontal\">\n        <img src=\"img/icon3/icon-flip-vertical.png\" title=\"flip vertical\" id=\"icon-flip-vertical\">\n        \n        <div class=\"right\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-editor-zoom-in\" title=\"zoom in\"><img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-editor-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"editor-canvas\"></div>\n    ";
+    var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-editor-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-editor-zoom-out\" title=\"zoom out\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n        </div>\n\n        <img src=\"img/icon3/icon-multicolor.png\" title=\"toggle single- & multicolor (m)\" id=\"icon-multicolor\">\n        <img src=\"img/icon3/icon-shift-left.png\" title=\"shift left\" id=\"icon-shift-left\">\n        <img src=\"img/icon3/icon-shift-right.png\" title=\"shift right\" id=\"icon-shift-right\">\n        <img src=\"img/icon3/icon-shift-up.png\" title=\"shift up\" id=\"icon-shift-up\">\n        <img src=\"img/icon3/icon-shift-down.png\" title=\"shift down\" id=\"icon-shift-down\">\n        <img src=\"img/icon3/icon-flip-horizontal.png\" title=\"flip horizontal\" id=\"icon-flip-horizontal\">\n        <img src=\"img/icon3/icon-flip-vertical.png\" title=\"flip vertical\" id=\"icon-flip-vertical\">\n        \n      </div>\n      <div id=\"editor-canvas\"></div>\n    ";
 
     $("#window-" + this.window).append(template);
-
     $("#editor-canvas").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
@@ -132,13 +131,18 @@ var Editor = function () {
     key: "display_grid",
     value: function display_grid(sprite_data) {
       // show a grid
-      this.canvas.strokeStyle = "#666666";
+
       this.canvas.setLineDash([1, 1]);
       var x_grid_step = 1;
 
       if (sprite_data.multicolor) x_grid_step = 2;
 
       for (var i = 0; i <= this.pixels_x; i = i + x_grid_step) {
+
+        // adds a vertical line in the middle
+        this.canvas.strokeStyle = "#666666";
+        if (i == this.pixels_x / 2) this.canvas.strokeStyle = "#888888";
+
         this.canvas.beginPath();
         this.canvas.moveTo(i * this.zoom, 0);
         this.canvas.lineTo(i * this.zoom, this.height);
@@ -146,6 +150,11 @@ var Editor = function () {
       }
 
       for (var _i = 0; _i <= this.pixels_y; _i++) {
+
+        // adds 3 horizontal lines
+        this.canvas.strokeStyle = "#666666";
+        if (_i % (this.pixels_y / 3) == 0) this.canvas.strokeStyle = "#888888";
+
         this.canvas.beginPath();
         this.canvas.moveTo(0, _i * this.zoom);
         this.canvas.lineTo(this.width, _i * this.zoom);

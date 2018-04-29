@@ -6,7 +6,6 @@ class Sprite
 
   constructor(config)
   {
-    
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
@@ -31,7 +30,6 @@ class Sprite
       "double_x" : false,
       "double_y" : false,
       "overlay" : false,
-      "overlay_list": [],
       "pixels": []
     };
 
@@ -53,6 +51,7 @@ class Sprite
   {
     // fills the sprite data with the default color
     // generate a bitmap array
+    
     let pixels = [];
 
     for(let i=0; i<this.height; i++)
@@ -335,7 +334,6 @@ class Sprite
 
   redo()
   {
-
     if (this.backup_position < this.backup.length -1)
     {
       this.backup_position ++;
@@ -343,41 +341,6 @@ class Sprite
     }
   }
 
-  rotate_right()
-  {
-    // TODO: currently unused
-    // leaving this in for now but it will likely be hard to do right
-    // for multicolor and 24x21 non-square arrays.
-    
-    var grid = [
-      ["i"], ["t"], ["m1"], ["m2"],
-      ["t"], ["t"], ["t"], ["t"],
-      ["m1"], ["m2"], ["m2"], ["m2"],
-      ["m2"], ["t"], ["i"], ["t"],
-      ["m1"], ["m1"], ["i"], ["t"]
-    ]; 
-
-    var newGrid = [];
-    var rowLength = Math.sqrt(grid.length);
-    newGrid.length = grid.length
-
-    for (var i = 0; i < grid.length; i++)
-    {
-        //convert to x/y
-        var x = i % rowLength;
-        var y = Math.floor(i / rowLength);
-
-        //find new x/y
-        var newX = rowLength - y - 1;
-        var newY = x;
-
-        //convert back to index
-        var newPosition = newY * rowLength + newX;
-        newGrid[newPosition] = grid[i];
-    }
-
-        console.log(newGrid);
-  }
 
   floodfill(pos)
   {

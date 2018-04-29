@@ -35,7 +35,6 @@ var Sprite = function () {
         "double_x": false,
         "double_y": false,
         "overlay": false,
-        "overlay_list": [],
         "pixels": []
       };
 
@@ -57,6 +56,7 @@ var Sprite = function () {
     value: function clear() {
       // fills the sprite data with the default color
       // generate a bitmap array
+
       var pixels = [];
 
       for (var i = 0; i < this.height; i++) {
@@ -328,40 +328,10 @@ var Sprite = function () {
   }, {
     key: "redo",
     value: function redo() {
-
       if (this.backup_position < this.backup.length - 1) {
         this.backup_position++;
         this.all = jQuery.extend(true, {}, this.backup[this.backup_position]);
       }
-    }
-  }, {
-    key: "rotate_right",
-    value: function rotate_right() {
-      // TODO: currently unused
-      // leaving this in for now but it will likely be hard to do right
-      // for multicolor and 24x21 non-square arrays.
-
-      var grid = [["i"], ["t"], ["m1"], ["m2"], ["t"], ["t"], ["t"], ["t"], ["m1"], ["m2"], ["m2"], ["m2"], ["m2"], ["t"], ["i"], ["t"], ["m1"], ["m1"], ["i"], ["t"]];
-
-      var newGrid = [];
-      var rowLength = Math.sqrt(grid.length);
-      newGrid.length = grid.length;
-
-      for (var i = 0; i < grid.length; i++) {
-        //convert to x/y
-        var x = i % rowLength;
-        var y = Math.floor(i / rowLength);
-
-        //find new x/y
-        var newX = rowLength - y - 1;
-        var newY = x;
-
-        //convert back to index
-        var newPosition = newY * rowLength + newX;
-        newGrid[newPosition] = grid[i];
-      }
-
-      console.log(newGrid);
     }
   }, {
     key: "floodfill",

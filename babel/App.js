@@ -1,5 +1,25 @@
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=KEYS
 
+
+
+/*
+
+  To switch to photoshop style layers:
+  - load "List_layerstyle.js" instead of "List.js" in index.html
+  - comment & uncomment 2 lines of code in update_ui in this file
+  - unhide playfield window by "autoOpen: true"
+
+*/
+
+
+function init()
+{
+  let sprite_app = new App(get_config());
+}
+
+
+
+
 class App
 {
 
@@ -45,6 +65,11 @@ class App
     window_config = {name:"window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_help = new Window(window_config);
     this.help = new Help(8,this.config);
+
+    // playfield window is hidden by autoOpen:false 
+    window_config = {name:"window_playfield", autoOpen: false, title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
+    this.window_playfield = new Window(window_config, this.store_window.bind(this));
+    this.playfield = new Playfield(9,this.config);
 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -103,6 +128,7 @@ class App
     this.preview.update(  all);
     this.list.update(     all);
     this.palette.update(  all);
+    //this.playfield.update(  all);
     this.update_ui();
   }
 
@@ -172,6 +198,20 @@ class App
       $('#icon-editor-zoom-in').fadeTo("fast", 1);
     }
 
+    if (this.playfield.is_min_zoom())
+    {
+      $('#icon-playfield-zoom-out').fadeTo("fast", 0.33);
+    } else {
+      $('#icon-playfield-zoom-out').fadeTo("fast", 1);
+    }
+
+    if (this.playfield.is_max_zoom())
+    {
+      $('#icon-playfield-zoom-in').fadeTo("fast", 0.33);
+    } else {
+      $('#icon-playfield-zoom-in').fadeTo("fast", 1);
+    }
+
     if (this.list.is_min_zoom())
     {
       $('#icon-list-zoom-out').fadeTo("fast", 0.33);
@@ -186,9 +226,14 @@ class App
       $('#icon-list-zoom-in').fadeTo("fast", 1);
     }
 
+    // photoshop style layer
+    //$('.sprite_layer').removeClass("sprite_layer_selected");
+    //$('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
+    
+   
+    // spritepad style layer
     $('.sprite_in_list').removeClass("sprite_in_list_selected");
     $('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_in_list_selected");
-
   }
 
   store_window(obj)
@@ -263,10 +308,12 @@ class App
     this.init_ui_fade("icon-list-copy");
     this.init_ui_fade("icon-list-paste");
     this.init_ui_fade("icon-list-grid");
-    this.init_ui_fade("icon-editor-zoom-in");
-    this.init_ui_fade("icon-editor-zoom-out");
     this.init_ui_fade("icon-list-zoom-in");
     this.init_ui_fade("icon-list-zoom-out");
+    this.init_ui_fade("icon-editor-zoom-in");
+    this.init_ui_fade("icon-editor-zoom-out");
+    this.init_ui_fade("icon-playfield-zoom-in");
+    this.init_ui_fade("icon-playfield-zoom-out");
     this.init_ui_fade("icon-preview-zoom-in");
     this.init_ui_fade("icon-preview-zoom-out");
     this.init_ui_fade("icon-preview-overlay");
@@ -314,6 +361,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           console.time('performance');
           for(let i=0; i<=100;i++) this.update();
           console.timeEnd('performance');
+        
         }
 
         if (e.key == "ArrowRight")
@@ -331,6 +379,14 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         {
           this.toggle_fullscreen();
         }
+
+        if (e.key == "q")
+        {
+          // TODO: delete when done with playfield programming
+          this.playfield.update(  this.sprite.get_all());
+        }
+
+        
 
         if (e.key == "d")
         {
@@ -510,10 +566,11 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
 */
 
-    $('#palette').mouseup((e) =>
+    $('#palette_all_colors').mouseup((e) =>
     {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
+      this.list.update_all(this.sprite.get_all());
       this.update(); 
     });
 
@@ -531,14 +588,14 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
     $('#palette_m1').mouseup((e) =>
     {  
-        this.sprite.set_pen("m1");
-        this.update();
+      this.sprite.set_pen("m1");
+      this.update();
     });
 
     $('#palette_m2').mouseup((e) =>
     {    
-        this.sprite.set_pen("m2");
-        this.update();
+      this.sprite.set_pen("m2");
+      this.update();
     });
         
 
@@ -781,22 +838,22 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
 /*
 
-PPPPPPPPPPPPPPPPP   RRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEEVVVVVVVV           VVVVVVVV
-P::::::::::::::::P  R::::::::::::::::R  E::::::::::::::::::::EV::::::V           V::::::V
-P::::::PPPPPP:::::P R::::::RRRRRR:::::R E::::::::::::::::::::EV::::::V           V::::::V
-PP:::::P     P:::::PRR:::::R     R:::::REE::::::EEEEEEEEE::::EV::::::V           V::::::V
-  P::::P     P:::::P  R::::R     R:::::R  E:::::E       EEEEEE V:::::V           V:::::V 
-  P::::P     P:::::P  R::::R     R:::::R  E:::::E               V:::::V         V:::::V  
-  P::::PPPPPP:::::P   R::::RRRRRR:::::R   E::::::EEEEEEEEEE      V:::::V       V:::::V   
-  P:::::::::::::PP    R:::::::::::::RR    E:::::::::::::::E       V:::::V     V:::::V    
-  P::::PPPPPPPPP      R::::RRRRRR:::::R   E:::::::::::::::E        V:::::V   V:::::V     
-  P::::P              R::::R     R:::::R  E::::::EEEEEEEEEE         V:::::V V:::::V      
-  P::::P              R::::R     R:::::R  E:::::E                    V:::::V:::::V       
-  P::::P              R::::R     R:::::R  E:::::E       EEEEEE        V:::::::::V        
-PP::::::PP          RR:::::R     R:::::REE::::::EEEEEEEE:::::E         V:::::::V         
-P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E          V:::::V          
-P::::::::P          R::::::R     R:::::RE::::::::::::::::::::E           V:::V           
-PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV           
+PPPPPPPPPPPPPPPPP     RRRRRRRRRRRRRRRRR     EEEEEEEEEEEEEEEEEEEEEE  VVVVVVVV           VVVVVVVV
+P::::::::::::::::P    R::::::::::::::::R    E::::::::::::::::::::E  V::::::V           V::::::V
+P::::::PPPPPP:::::P   R::::::RRRRRR:::::R   E::::::::::::::::::::E  V::::::V           V::::::V
+PP:::::P     P:::::P  RR:::::R     R:::::R  EE::::::EEEEEEEEE::::E  V::::::V           V::::::V
+  P::::P     P:::::P    R::::R     R:::::R    E:::::E       EEEEEE   V:::::V           V:::::V 
+  P::::P     P:::::P    R::::R     R:::::R    E:::::E                 V:::::V         V:::::V  
+  P::::PPPPPP:::::P     R::::RRRRRR:::::R     E::::::EEEEEEEEEE        V:::::V       V:::::V   
+  P:::::::::::::PP      R:::::::::::::RR      E:::::::::::::::E         V:::::V     V:::::V    
+  P::::PPPPPPPPP        R::::RRRRRR:::::R     E:::::::::::::::E          V:::::V   V:::::V     
+  P::::P                R::::R     R:::::R    E::::::EEEEEEEEEE           V:::::V V:::::V      
+  P::::P                R::::R     R:::::R    E:::::E                      V:::::V:::::V       
+  P::::P                R::::R     R:::::R    E:::::E       EEEEEE          V:::::::::V        
+PP::::::PP            RR:::::R     R:::::R  EE::::::EEEEEEEE:::::E           V:::::::V         
+P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E            V:::::V          
+P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E             V:::V           
+PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              VVV           
 
 */
 
@@ -814,12 +871,6 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
       this.update();
     });
 
-    $('#icon-preview-overlay').mouseup((e) =>
-    {     
-      this.sprite.toggle_overlay();
-      this.update();
-    });
-
     $('#icon-preview-zoom-in').mouseup((e) =>
     {     
       this.preview.zoom_in();
@@ -832,6 +883,38 @@ PPPPPPPPPP          RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEE            VVV
     {     
       this.preview.zoom_out();
       this.config.window_preview.zoom = this.preview.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#icon-preview-overlay').mousedown((e) =>
+    {     
+      this.sprite.toggle_overlay();
+      this.update();
+    });
+
+
+/*
+
+      PLAYFIELD
+ */
+
+
+
+    $('#icon-playfield-zoom-in').mouseup((e) =>
+    {     
+      this.playfield.zoom_in();
+      this.playfield.update(this.sprite.get_all());
+      this.config.window_playfield.zoom = this.playfield.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#icon-playfield-zoom-out').mouseup((e) =>
+    {     
+      this.playfield.zoom_out();
+      this.playfield.update(this.sprite.get_all());
+      this.config.window_playfield.zoom = this.playfield.get_zoom();
       this.storage.write(this.config);
       this.update();
     });

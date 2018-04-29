@@ -1,33 +1,35 @@
-/*
 
-red: e6007e
-blue: 00b9ee
- */ 
+
+:root 
+{
+  --red:  #e6007e;
+  --blue: #00b9ee;
+}
+
 
 body, html, p, div
 {
-  font-size: 96%;
+  font-size:96%;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
 }
 
 p
 {
-  margin: 8px;
+  margin:8px;
   line-height: 160%;
 }
 
 a
 {
   text-decoration: none;
-  color: #00b9ee;
-  border-bottom: 1px dotted #e6007e;
+  color: var(--blue);
 }
 
 a:hover
 {
-  color: #e6007e;
-  border-bottom: 0px dotted #e6007e;
+  color: var(--red);
+  border-bottom: 1px dotted var(--red);
 }
 
 body, html
@@ -53,7 +55,7 @@ body, html
 h1
 {
   font-size: 160%;
-  color: #00b9ee;
+  color: var(--blue);
   text-align:center;
   margin-bottom: 0px;
 }
@@ -61,21 +63,38 @@ h1
 h2
 {
   font-size: 110%;
-  color: #00b9ee;
-  text-align:center;
+  color: var(--blue);
+  text-align: center;
   margin: 0px 0px 12px 0px; 
+}
+
+ol 
+{ 
+  counter-reset: item; 
+}
+
+ol li 
+{ 
+  display: block; 
+}
+
+ol li:before 
+{ 
+  content: counters(item, ".") "."; 
+  counter-increment: item; 
+  padding-right: 16px; 
+  margin-left: -20px;
 }
 
 #help h1, #help h2
 {
   text-align: left;
-
 }
 
 legend
 {
   font-size: 100%;
-  color: #00b9ee;
+  color: var(--blue);
   padding: 0px 20px 0px 20px;
 }
 
@@ -85,6 +104,23 @@ fieldset
   margin-bottom: 12px;
   border-color: rgba(50,50,50,1);
   background-color: rgba(0,0,0,0.5);
+}
+
+table
+{
+  width: 100%;
+}
+
+td,th
+{
+  padding: 8px;
+  margin: 4px 0px 4px 0px;
+  text-align: left;
+}
+
+tr:nth-child(even) 
+{
+  background-color: #222222;
 }
 
 fieldset button
@@ -104,25 +140,10 @@ fieldset .right
   width: 200px;
 }
 
-table
-{
-  width: 100%;
-}
-
-td,th
-{
-  padding: 8px;
-  margin: 4px 0px 4px 0px;
-  text-align: left;
-  
-}
-
-tr:nth-child(even) {background-color: #222222;}
-
 
 .ui-widget-content a
 {
-  color: #00b9ee;
+  color: var(--blue);
 }
 
 
@@ -147,6 +168,13 @@ canvas
 {
   height: 40px;
 }
+
+img.center 
+{
+  display: block;
+  margin: 0 auto;
+}
+
 
 .settings_colorfield
 {
@@ -180,7 +208,7 @@ canvas
 
 .ui-widget input.settings_colorvalue
 {
-  border: 0px solid #00b9ee;
+  border: 0px solid var(--blue);
   min-width: 0px;
   width: 52px;
   border-radius: 0px;
@@ -191,11 +219,9 @@ canvas
 }
 
 
-
-
 .ui-widget button
 {
-  border: 2px solid #00b9ee;
+  border: 2px solid var(--blue);
   background-color: black;
   color: white;
   font-size: 80%;
@@ -215,7 +241,7 @@ canvas
 
 .ui-widget button:hover
 {
-  background-color: #00b9ee;
+  background-color: var(--blue);
   cursor: pointer;
 }
 
@@ -226,17 +252,17 @@ canvas
 
 .ui-widget .button-cancel
 {
-  border-color: #e6007e;
+  border-color: var(--red);
 }
 
 .ui-widget .button-cancel:hover
 {
-  background-color: #e6007e;
+  background-color: var(--red);
 }
 
 .ui-widget input
 {
-  border: 2px solid #00b9ee;
+  border: 2px solid var(--blue);
   background-color: black;
   color: white;
   font-size: 100%;
@@ -253,27 +279,40 @@ canvas
 .ui-widget input:focus
 {
   outline:0;
-  background-color: #00b9ee;
+  background-color: var(--blue);
 }
 
 
 
 .ui-widget .error:focus
 {
-  border: 2px solid #e6007e;
-  background-color: #e6007e;
+  border: 2px solid var(--red);
+  background-color: var(--red);
 }
 
 .ui-widget .error
 {
-  border: 2px solid #e6007e;
-  sbackground-color: #e6007e;
+  border: 2px solid var(--red);
 }
 
 #info
 {
   padding: 12px;
   text-align: center;
+}
+
+#playfield
+{
+  width: 1024px;
+  height: 1024px;
+  line-height: 0px;
+}
+
+#playfield-container
+{
+  width: 100%;
+  height: 90%;
+  overflow: scroll;
 }
 
 #help
@@ -288,6 +327,7 @@ canvas
   overflow: scroll;
   margin: 24px 0px 24px 0px;
 }
+
 
 #editor
 {
@@ -316,7 +356,7 @@ canvas
   bottom: 0px;
   height: 20px;
   padding: 6px 12px 6px 12px;
-  color: #00b9ee;
+  color: var(--blue);
   background: -webkit-linear-gradient(#181818, #111111); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#181818, #111111); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(#181818, #111111); /* For Firefox 3.6 to 15 */
@@ -368,26 +408,39 @@ canvas
 
 }
 
+#palette_all_colors
+{
+  clear:both;
+}
+
 .palette_color_item
 {
   width: 40px;
   height: 20px;
-  background-color: red;
   margin: auto;
+  cursor: pointer; 
+  float: left;
+}
+
+.palette_color_item_active_colors
+{
+  width: 40px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer; 
   margin-bottom: 8px;
-  cursor: pointer;  
 }
 
 .palette_highlight_text
 {
-  color: #e6007e;
+  color: var(--red);
 }
 
 .palette_color_item_selected
 {
   outline-style: solid;
   outline-width: 2px;
-  outline-color: #00b9ee;
+  outline-color: var(--blue);
 }
 
 #color_transparent
@@ -410,7 +463,7 @@ canvas
     -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
 
-.iconset
+.iconset /* vertical menu bar */
 {
   float: left;
   padding: 0px 2px 0px 2px;
@@ -418,7 +471,7 @@ canvas
   margin-top: 0px;
 }
 
-.iconset_right
+.iconset_right /* horizontal menu bar */
 {
   float: right;
   padding: 0px 4px 0px 4px;
@@ -439,6 +492,15 @@ canvas
 }
 
 
+.icons-zoom-area /* zoom icons */
+{
+  margin-right: 10px;
+  padding-right: 10px;
+  float: left;
+  border-right: 1px dotted #555555;
+}
+
+
 .sprite.ui-dialog-content
 {
   
@@ -453,6 +515,7 @@ canvas
 {
   padding: 0px;
 }
+
 
 
 #preview-canvas
@@ -478,23 +541,15 @@ canvas
 .window_menu .right
 {
   float: right;
-  color: #00b9ee;
-}
-
-#spritelist
-{
-   margin:0px;
-   padding: 0px;
+  color: var(--blue);
 }
 
 
-#spritelist .sprite
-{
-  padding: 8px;
-  width: 90%;
-  border: 1px dotted #555555;
-}
+/*
 
+  Old Spritelist Start
+
+ */
 
 .sprite_in_list
 {
@@ -529,6 +584,65 @@ canvas
   background-color: white;
 }
 
+/*
+
+  Old Spritelist End
+
+ */
+
+#spritelist
+{
+   margin:0px;
+   padding: 0px;
+}
+
+.sprite_layer
+{
+  background-color: #080808;
+  width: 100%;
+  border: 1px solid transparent;
+  border-bottom: 1px dotted #555555;
+}
+
+.sprite_layer:hover
+{
+  border: 1px dotted var(--red);
+}
+
+.sprite_layer:active
+{
+  border: 1px dotted white;
+}
+
+.sprite_layer canvas
+{
+  margin: 2px;
+}
+
+.sprite_layer_canvas
+{
+  float: left;
+  margin-right: 12px;
+}
+
+.sprite_layer_info
+{
+  float:left;
+  width: 40%;
+  color: #888888;
+  font-size:80%;
+}
+
+
+
+
+.sprite_layer_selected
+{
+  border: 1px dotted var(--blue);
+}
+
+
+
 .icon-preview-x2
 {
   background-image: url("../img/icon3/icon-preview-x2.png");
@@ -561,7 +675,7 @@ canvas
 
 .icon-preview-highlight
 {
-  border: 2px solid #e6007e;
+  border: 2px solid var(--red);
   opacity: 1.0;
 }
 
@@ -592,7 +706,6 @@ canvas
   text-transform: uppercase;
   margin-top: 20px;
   font-weight: bold;
-  scolor: #e6007e;
 }
 
 #info fieldset h2
@@ -600,7 +713,6 @@ canvas
   font-size: 100%;
   text-align: left;
   margin: 4px;
-  stext-transform: uppercase;
   margin-top: 20px;
 }
 
@@ -614,7 +726,6 @@ canvas
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
-
 
 
 .no-close .ui-dialog-titlebar-close 
@@ -657,7 +768,7 @@ canvas
 
 .ui-widget-overlay 
 {
-    background: #000000;
+    background: black;
     opacity: 0.6;
 }
 
@@ -673,20 +784,20 @@ canvas
   float:left;
   text-align: left;
   padding: 0px 12px 0px 12px;
-  color: #00b9ee;
+  color: var(--blue);
 
 }
 
 .ui-widget input.ui-inputfield:focus
 {
-  border: 1px solid #00b9ee;
+  border: 1px solid var(--blue);
   color: white;
   background-color: black;
 }
 
 .ui-widget input.ui-inputfield:hover
 {
-  border: 1px solid #00b9ee;
+  border: 1px solid var(--blue);
   background-color: black;
 }
 

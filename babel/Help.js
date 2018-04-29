@@ -325,6 +325,7 @@ class Help
                 <li>Rearrange sprites in the sprite list by dragging them around with the mouse</li>
                 <li>You can define and work with your own color palette. Open settings, choose "custom" and change the values. They will be stored in the browser for you</li>
                 <li>The Spritemate JSON file format is great for editing data in the text editor or use with custom tools</li>
+                <li>Right click on the sprite in the editor and you can save the picture as PNG file!</li>
             </ul>
 
         <div class="spacer"></div>

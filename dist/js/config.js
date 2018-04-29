@@ -1,9 +1,9 @@
 "use strict";
 
-function init() {
+function get_config() {
 
         var config = {
-                version: 1.05,
+                version: 1.06,
                 sprite_x: 24,
                 sprite_y: 21,
                 palettes: {
@@ -20,10 +20,10 @@ function init() {
                 window_preview: {
                         "top": 25,
                         "left": 700,
-                        "zoom": 5
+                        "zoom": 6
                 },
                 window_list: {
-                        "top": 220,
+                        "top": 240,
                         "left": 700,
                         "width": 440,
                         "height": 200,
@@ -33,9 +33,18 @@ function init() {
                         "top": 25,
                         "left": 110,
                         "zoom": 1
+                },
+                window_playfield: {
+                        "top": 25,
+                        "left": 890,
+                        "width": 400,
+                        "height": 400,
+                        "canvas_x": 5,
+                        "canvas_y": 5,
+                        "zoom": 2
                 }
 
         };
 
-        var sprite_app = new App(config);
+        return config;
 }

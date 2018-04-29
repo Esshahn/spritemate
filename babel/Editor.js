@@ -21,6 +21,12 @@ class Editor
 
     let template = `
       <div class="window_menu">
+        <div class="icons-zoom-area">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
+          <img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
+        </div>
+
         <img src="img/icon3/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
         <img src="img/icon3/icon-shift-left.png" title="shift left" id="icon-shift-left">
         <img src="img/icon3/icon-shift-right.png" title="shift right" id="icon-shift-right">
@@ -29,16 +35,11 @@ class Editor
         <img src="img/icon3/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
         <img src="img/icon3/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
         
-        <div class="right">
-          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
-        </div>
       </div>
       <div id="editor-canvas"></div>
     `;
 
     $("#window-"+this.window).append(template);
-
     $("#editor-canvas").append(this.canvas_element);
 
     this.canvas = this.canvas_element.getContext('2d');
@@ -57,7 +58,8 @@ class Editor
 
   toggle_grid()
   {
-    if (this.grid){
+    if (this.grid)
+    {
       this.grid = false;
     }else{
       this.grid = true;
@@ -146,7 +148,7 @@ class Editor
   display_grid(sprite_data)
   {
     // show a grid
-    this.canvas.strokeStyle = "#666666";
+
     this.canvas.setLineDash([1, 1]);
     let x_grid_step = 1;
    
@@ -154,6 +156,11 @@ class Editor
 
     for (let i=0; i<=this.pixels_x; i=i+x_grid_step)
     {
+
+        // adds a vertical line in the middle
+        this.canvas.strokeStyle = "#666666";
+        if (i == this.pixels_x/2) this.canvas.strokeStyle = "#888888";
+        
         this.canvas.beginPath();
         this.canvas.moveTo(i*this.zoom,0);
         this.canvas.lineTo(i*this.zoom,this.height);
@@ -162,11 +169,17 @@ class Editor
 
     for (let i=0; i<=this.pixels_y; i++)
     {
+
+        // adds 3 horizontal lines
+        this.canvas.strokeStyle = "#666666";
+        if (i%(this.pixels_y/3) == 0) this.canvas.strokeStyle = "#888888";
+
         this.canvas.beginPath();
         this.canvas.moveTo(0,i*this.zoom);
         this.canvas.lineTo(this.width,i*this.zoom);
         this.canvas.stroke();
     }
+
   }
 
 

@@ -18,11 +18,11 @@ class List
 
     let template = `
       <div class="window_menu">
-      <div class="icons-zoom-area">
+        <div class="icons-zoom-area">
           <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
           <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
-          <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
-      </div>
+          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
+        </div>
         <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
         <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="remove sprite">
         <img src="img/icon3/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
@@ -40,8 +40,6 @@ class List
       revert: 'invalid'
     });
 
-    // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
-    $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
 
     $("#spritelist").disableSelection();
   }
@@ -100,8 +98,6 @@ class List
   {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
-    $('head style:last').remove();
-    $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
   }
 
   update(all_data)
@@ -114,7 +110,7 @@ class List
     $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
 
     let sprite_data = all_data.sprites[all_data.current_sprite];
-    let canvas = document.getElementById(all_data.current_sprite).getContext('2d');
+    let canvas = document.getElementById("canvas-"+all_data.current_sprite).getContext('2d');
 
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
@@ -143,23 +139,29 @@ class List
 
   update_all(all_data)
   {
-    $(".sprite_in_list").remove();
+    $(".sprite_layer").remove();
 
     let length = all_data.sprites.length;
     for (let i=0; i<length; i++)
     {
       let canvas_element = document.createElement('canvas');
-      canvas_element.id =  i;
+      canvas_element.id =  "canvas-"+i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
 
-      $("#spritelist").append(canvas_element);
-      $(canvas_element).addClass("sprite_in_list");
-      $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
-       
-      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   
+      let template = `
+      <div class="sprite_layer" id="${i}">
+        <div class="sprite_layer_canvas"></div>
+        <div class="sprite_layer_info">
+          ID: #${i}<br/>
+          NAME: #${i}
+        </div>
+        <div style="clear:both;"></div>
+      </div>`;
 
-      $(canvas_element).mouseup((e) => this.clicked_sprite = i);
+      $("#spritelist").append(template);
+      $("#"+i+" .sprite_layer_canvas").append(canvas_element);       
+      $("#"+i).mouseup((e) => this.clicked_sprite = i);
 
       let canvas = canvas_element.getContext('2d');
       let sprite_data = all_data.sprites[i];

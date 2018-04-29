@@ -19,7 +19,7 @@ var List = function () {
     this.sorted_array = [];
     this.grid = true;
 
-    var template = "\n      <div class=\"window_menu\">\n      <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-list-grid\" title=\"toggle grid borders\">\n      </div>\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"remove sprite\">\n        <img src=\"img/icon3/icon-list-copy.png\" id=\"icon-list-copy\" title=\"copy sprite\">\n        <img src=\"img/icon3/icon-list-paste.png\" id=\"icon-list-paste\" title=\"paste sprite\">\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
+    var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n        </div>\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"remove sprite\">\n        <img src=\"img/icon3/icon-list-copy.png\" id=\"icon-list-copy\" title=\"copy sprite\">\n        <img src=\"img/icon3/icon-list-paste.png\" id=\"icon-list-paste\" title=\"paste sprite\">\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
 
     $("#window-" + this.window).append(template);
 
@@ -28,9 +28,6 @@ var List = function () {
       tolerance: "pointer",
       revert: 'invalid'
     });
-
-    // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
-    $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
 
     $("#spritelist").disableSelection();
   }
@@ -85,8 +82,6 @@ var List = function () {
     value: function update_zoom() {
       this.width = this.pixels_x * this.zoom;
       this.height = this.pixels_y * this.zoom;
-      $('head style:last').remove();
-      $("<style type='text/css'> .list-sprite-size{ width:" + this.width + "px; height:" + this.height + "px;} </style>").appendTo("head");
     }
   }, {
     key: "update",
@@ -99,7 +94,7 @@ var List = function () {
       $('#window-' + this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
 
       var sprite_data = all_data.sprites[all_data.current_sprite];
-      var canvas = document.getElementById(all_data.current_sprite).getContext('2d');
+      var canvas = document.getElementById("canvas-" + all_data.current_sprite).getContext('2d');
 
       var x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
@@ -127,23 +122,21 @@ var List = function () {
     value: function update_all(all_data) {
       var _this = this;
 
-      $(".sprite_in_list").remove();
+      $(".sprite_layer").remove();
 
       var length = all_data.sprites.length;
 
       var _loop = function _loop(i) {
         var canvas_element = document.createElement('canvas');
-        canvas_element.id = i;
+        canvas_element.id = "canvas-" + i;
         canvas_element.width = _this.width;
         canvas_element.height = _this.height;
 
-        $("#spritelist").append(canvas_element);
-        $(canvas_element).addClass("sprite_in_list");
-        $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
+        var template = "\n      <div class=\"sprite_layer\" id=\"" + i + "\">\n        <div class=\"sprite_layer_canvas\"></div>\n        <div class=\"sprite_layer_info\">\n          ID: #" + i + "<br/>\n          NAME: #" + i + "\n        </div>\n        <div style=\"clear:both;\"></div>\n      </div>";
 
-        if (_this.grid) $(canvas_element).addClass("sprite_in_list_border");
-
-        $(canvas_element).mouseup(function (e) {
+        $("#spritelist").append(template);
+        $("#" + i + " .sprite_layer_canvas").append(canvas_element);
+        $("#" + i).mouseup(function (e) {
           return _this.clicked_sprite = i;
         });
 

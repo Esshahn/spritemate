@@ -262,7 +262,7 @@ class Save
   create_source(format)
   {
 
-    var comment = ";";
+     var comment = ";";
     var prefix = "!";
     var label_suffix = "";
 
