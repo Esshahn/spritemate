@@ -3,7 +3,7 @@ function get_config()
 
     let config = 
     {
-      version: 1.08,
+      version: 1.06,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
@@ -38,10 +38,10 @@ function get_config()
       window_preview: {
               "top": 25,
               "left": 700,
-              "zoom": 5
+              "zoom": 6
               },
       window_list: {
-              "top": 220,
+              "top": 240,
               "left": 700,
               "width": 440,
               "height": 200,

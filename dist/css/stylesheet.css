@@ -544,6 +544,52 @@ img.center
   color: var(--blue);
 }
 
+
+/*
+
+  Old Spritelist Start
+
+ */
+
+.sprite_in_list
+{
+   margin: 0px;
+   padding: 0px;
+   float: left;
+}
+
+.sprite_in_list:hover
+{
+  border: 1px dotted #e6007e;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.sprite_in_list_border
+{
+  border: 1px dotted #555555;
+  box-sizing: border-box;
+}
+
+
+.sprite_in_list_selected
+{
+  border: 1px dotted #00b9ee;
+  box-sizing: border-box;
+}
+
+.sprite_in_list:active
+{
+  background-color: white;
+}
+
+/*
+
+  Old Spritelist End
+
+ */
+
 #spritelist
 {
    margin:0px;

@@ -6,6 +6,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=KEYS
 
+
+/*
+
+  To switch to photoshop style layers:
+  - load "List_layerstyle.js" instead of "List.js" in index.html
+  - comment & uncomment 2 lines of code in update_ui in this file
+  - unhide playfield window by "autoOpen: true"
+
+*/
+
 function init() {
   var sprite_app = new App(get_config());
 }
@@ -55,7 +65,7 @@ var App = function () {
     this.help = new Help(8, this.config);
 
     // playfield window is hidden by autoOpen:false 
-    window_config = { name: "window_playfield", autoOpen: true, title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
+    window_config = { name: "window_playfield", autoOpen: false, title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
     this.window_playfield = new Window(window_config, this.store_window.bind(this));
     this.playfield = new Playfield(9, this.config);
 
@@ -199,8 +209,14 @@ var App = function () {
         $('#icon-list-zoom-in').fadeTo("fast", 1);
       }
 
-      $('.sprite_layer').removeClass("sprite_layer_selected");
-      $('#spritelist').find('#' + this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
+      // photoshop style layer
+      //$('.sprite_layer').removeClass("sprite_layer_selected");
+      //$('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
+
+
+      // spritepad style layer
+      $('.sprite_in_list').removeClass("sprite_in_list_selected");
+      $('#spritelist').find('#' + this.sprite.get_current_sprite_number()).addClass("sprite_in_list_selected");
     }
   }, {
     key: "store_window",

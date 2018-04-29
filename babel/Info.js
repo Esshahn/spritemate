@@ -24,6 +24,12 @@ class Info
             - color palette now uses DIVs instead of CANVAS (needed for later features)
             </p>
 
+            <br/>
+            
+            <p>
+            Although not many features had been added, it took me quite a while to finish this release. I had to revert a lot of code for a really cool new feature that I didn't get to work reliably. Because of that, I had to maintain two code branches and backport features into the stable version. I finally decided to put the new feature on hold and focus on others instead.
+            </p>
+
             <h1>V1.05</h1>
             <p>
             - Added a brief documentation (click on help in the menu bar).
