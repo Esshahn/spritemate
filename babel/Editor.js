@@ -21,6 +21,12 @@ class Editor
 
     let template = `
       <div class="window_menu">
+        <div class="icons-zoom-area">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
+          <img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
+          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
+        </div>
+
         <img src="img/icon3/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
         <img src="img/icon3/icon-shift-left.png" title="shift left" id="icon-shift-left">
         <img src="img/icon3/icon-shift-right.png" title="shift right" id="icon-shift-right">
@@ -29,10 +35,6 @@ class Editor
         <img src="img/icon3/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
         <img src="img/icon3/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
         
-        <div class="right">
-          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
-        </div>
       </div>
       <div id="editor-canvas"></div>
     `;

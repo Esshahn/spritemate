@@ -11,8 +11,6 @@ var Palette = function () {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;
-    this.colorsquare_width = 40;
-    this.colorsquare_height = 20;
 
     var template = "\n      <div id=\"palette_all_colors\"></div>\n      <div id=\"palette_spritecolors\">\n          <div id=\"palette_i\">\n              <p>Individual</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_i\" title=\"individual&nbsp;color&nbsp;(1)\"></div>\n          </div>\n          <div id=\"palette_t\">\n              <p>Transparent</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_t\" title=\"transparent&nbsp;(2)\"></div>\n          </div>\n          <div id=\"palette_m1\">\n              <p>Multicolor 1</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_m1\" title=\"multicolor&nbsp;1&nbsp;(3)\"></div>\n          </div>\n          <div id=\"palette_m2\">\n              <p>Multicolor 2</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_m2\" title=\"multicolor&nbsp;2&nbsp;(4)\"></div>\n          </div>\n      </div>\n\n    ";
 

@@ -17,7 +17,7 @@ var Playfield = function () {
     this.width = this.pixels_x * this.config.window_playfield.canvas_x;
     this.height = this.pixels_y * this.config.window_playfield.canvas_y;
 
-    var template = "\n      <div class=\"window_menu\">\n        <div class=\"right\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-playfield-zoom-in\" title=\"zoom in\"><img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-playfield-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"playfield-container\">\n        <div id=\"playfield\"></div>\n      </div>\n    ";
+    var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-playfield-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-playfield-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"playfield-container\">\n        <div id=\"playfield\"></div>\n      </div>\n    ";
 
     $("#window-" + this.window).append(template);
   }

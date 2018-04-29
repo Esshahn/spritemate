@@ -16,8 +16,9 @@ class Playfield
     
     let template = `
       <div class="window_menu">
-        <div class="right">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-playfield-zoom-in" title="zoom in"><img src="img/icon3/icon-zoom-out.png" id="icon-playfield-zoom-out" title="zoom out">
+        <div class="icons-zoom-area">
+          <img src="img/icon3/icon-zoom-in.png" id="icon-playfield-zoom-in" title="zoom in">
+          <img src="img/icon3/icon-zoom-out.png" id="icon-playfield-zoom-out" title="zoom out">
         </div>
       </div>
       <div id="playfield-container">

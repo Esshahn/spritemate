@@ -10,8 +10,6 @@ class Palette
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;
-    this.colorsquare_width = 40;
-    this.colorsquare_height = 20;
     
     let template = `
       <div id="palette_all_colors"></div>
