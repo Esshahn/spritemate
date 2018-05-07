@@ -3,7 +3,7 @@ function get_config()
 
     let config = 
     {
-      version: 1.06,
+      version: 1.07,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
@@ -29,6 +29,10 @@ function get_config()
                 "#7b7b7b","#a9ff9f","#706deb","#b2b2b2"
               ]},
       selected_palette: "pepto",
+      window_menu: {
+              "top": 25,
+              "left": 10              
+              },
       window_editor: {
               "top": 25,
               "left": 210,

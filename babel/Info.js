@@ -10,18 +10,24 @@ class Info
 
     let template = `
     <div id="info">
-        <p>Welcome to</p>
         <img autofocus src="img/logo.png" id="logo">
         <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.07</h1>
+            <p>
+            - added sprite number tooltip for sprites in the spritelist<br/>
+            - menu palette can now be moved and position is saved<br/>
+            - updated to jquery 3.3.1, code cleanup
+            </p>
+
             <h1>V1.06</h1>
             <p>
             - added divider lines in the editor grid view (thx2 v3to)<br/>
             - zoom icons moved from right side of the window to the left for better usability<br/>
-            - color palette now uses DIVs instead of CANVAS (needed for later features)
+            - color palette now uses DIVs instead of CANVAS (needed for later features)<br/>
             </p>
 
             <br/>

@@ -32,36 +32,42 @@ class App
 
     this.sprite = new Sprite(this.config);
 
-    // init the base windows
+    // editor
     let window_config = {name:"window_editor", title: "Editor", type: "sprite", resizable: false, left: this.config.window_editor.left, top: this.config.window_editor.top, width: "auto", height: "auto" };
     this.window_editor = new Window(window_config, this.store_window.bind(this));
     this.editor = new Editor(0,this.config);
 
-    // create the color palette for the color window
+    // palette
     window_config = {name:"window_palette", title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
     this.window_palette = new Window(window_config, this.store_window.bind(this));
     this.palette = new Palette(1,this.config);
 
+    // preview
     window_config = {name:"window_preview", title: "Preview", type: "preview", resizable: false, left: this.config.window_preview.left, top: this.config.window_preview.top, width: "auto", height: "auto" };
     this.window_preview = new Window(window_config, this.store_window.bind(this));
     this.preview = new Preview(2,this.config);
 
+    // sprite list
     window_config = {name:"window_list", title: "Sprite List", type: "list", resizable: true, left: this.config.window_list.left, top: this.config.window_list.top, width: this.config.window_list.width, height: this.config.window_list.height };
     this.window_list = new Window(window_config, this.store_window.bind(this));
     this.list = new List(3,this.config);
 
+    // info
     window_config = {name:"window_info", title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_info = new Window(window_config);
     this.info = new Info(4,this.config);
 
+    // save
     window_config = {name:"window_save", title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
     this.window_save = new Window(window_config);
     this.save = new Save(5,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
+    // settings
     window_config = {name:"window_settings,", title: "Settings", type: "settings", modal: true, escape: true, resizable: false, autoOpen: false, width: 760, height: "auto" };
     this.window_settings = new Window(window_config);
     this.settings = new Settings(7,this.config, { onLoad: this.update_config.bind(this) });
 
+    // help
     window_config = {name:"window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
     this.window_help = new Window(window_config);
     this.help = new Help(8,this.config);
@@ -71,6 +77,11 @@ class App
     this.window_playfield = new Window(window_config, this.store_window.bind(this));
     this.playfield = new Playfield(9,this.config);
 
+    // menu
+    window_config = {name:"window_menu", title: "Menu", type: "menu", resizable: false, left: this.config.window_menu.left, top: this.config.window_menu.top, width: "auto", height: "auto" };
+    this.window_menu = new Window(window_config, this.store_window.bind(this));
+    this.menu = new Menu(10,this.config);
+ 
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
     this.is_drawing = false;
@@ -83,9 +94,11 @@ class App
     $( document ).tooltip({show: {delay: 1000}}); // initializes tooltip handling in jquery
      
     tipoftheday();
+    
     this.list.update_all(this.sprite.get_all());
     this.update();
     this.user_interaction();
+
 
     if (this.storage.is_updated_version()) $("#window-4").dialog( "open");
 

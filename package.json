@@ -1,8 +1,9 @@
 {
-  "name": "spritejs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "spritemate",
+  "version": "1.0.6",
+  "description": "browser based sprite editor for the commodore 64",
+  "homepage": "http://www.awsm.de",
+  "main": "App.js",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.2"

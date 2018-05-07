@@ -57,9 +57,18 @@ class Preview
     } 
   }
 
+  zoom_out()
+  {
+    if (this.zoom >= 4)
+    {
+     this.zoom -= 2;
+     this.update_zoom();
+    }
+  }
+
   is_min_zoom()
   {
-    if (this.zoom < 2) return true;
+    if (this.zoom <= 2) return true;
   }
 
   is_max_zoom()
@@ -67,14 +76,6 @@ class Preview
     if (this.zoom >= 24) return true;
   }
 
-  zoom_out()
-  {
-    if (this.zoom >= 2)
-    {
-     this.zoom -= 2;
-     this.update_zoom();
-    }
-  }
 
   get_zoom()
   {
