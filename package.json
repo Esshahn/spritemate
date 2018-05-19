@@ -8,7 +8,6 @@
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.2"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel babel --out-dir dist/js -w"
