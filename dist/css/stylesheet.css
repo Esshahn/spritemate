@@ -410,7 +410,7 @@ img.center
 
 .palette_highlight_text
 {
-  color: var(--red);
+  color: var(--blue);
 }
 
 .palette_color_item_selected
