@@ -371,7 +371,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "q")
         {
-          this.sprite.set_all(example_sprite);
+          //this.sprite.set_all(example_sprite);
           this.list.update_all(this.sprite.get_all());
           this.update();
         }

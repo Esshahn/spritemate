@@ -352,7 +352,7 @@ var App = function () {
           }
 
           if (e.key == "q") {
-            _this.sprite.set_all(example_sprite);
+            //this.sprite.set_all(example_sprite);
             _this.list.update_all(_this.sprite.get_all());
             _this.update();
           }
