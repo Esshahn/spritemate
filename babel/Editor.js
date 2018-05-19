@@ -49,10 +49,6 @@ class Editor extends Window_Controls
    
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> beta
   update(all_data)
   {
     this.canvas_element.width = this.width;
