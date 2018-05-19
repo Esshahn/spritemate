@@ -58,6 +58,11 @@ var Load = function () {
       }
     }
   }, {
+    key: 'get_imported_file',
+    value: function get_imported_file() {
+      return this.imported_file;
+    }
+  }, {
     key: 'parse_file_spm',
     value: function parse_file_spm(file) {
       this.imported_file = JSON.parse(file);
@@ -187,11 +192,6 @@ var Load = function () {
       }
 
       this.imported_file.sprites.push(sprite);
-    }
-  }, {
-    key: 'get_imported_file',
-    value: function get_imported_file() {
-      return this.imported_file;
     }
   }]);
 

@@ -4,57 +4,45 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Editor = function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Editor = function (_Window_Controls) {
+  _inherits(Editor, _Window_Controls);
+
   function Editor(window, config) {
     _classCallCheck(this, Editor);
 
-    this.config = config;
-    this.grid = this.config.window_editor.grid;
-    this.window = window;
-    this.canvas_element = document.createElement('canvas');
-    this.zoom = this.config.window_editor.zoom;
-    this.pixels_x = this.config.sprite_x;
-    this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
+    var _this = _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this));
 
-    this.canvas_element.id = "editor";
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
+    _this.config = config;
+    _this.grid = _this.config.window_editor.grid;
+    _this.window = window;
+    _this.canvas_element = document.createElement('canvas');
+    _this.zoom = _this.config.window_editor.zoom;
+    _this.zoom_min = 10;
+    _this.zoom_max = 26;
+    _this.pixels_x = _this.config.sprite_x;
+    _this.pixels_y = _this.config.sprite_y;
+    _this.width = _this.pixels_x * _this.zoom;
+    _this.height = _this.pixels_y * _this.zoom;
+
+    _this.canvas_element.id = "editor";
+    _this.canvas_element.width = _this.width;
+    _this.canvas_element.height = _this.height;
 
     var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-editor-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-editor-zoom-out\" title=\"zoom out\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n        </div>\n\n        <img src=\"img/icon3/icon-multicolor.png\" title=\"toggle single- & multicolor (m)\" id=\"icon-multicolor\">\n        <img src=\"img/icon3/icon-shift-left.png\" title=\"shift left\" id=\"icon-shift-left\">\n        <img src=\"img/icon3/icon-shift-right.png\" title=\"shift right\" id=\"icon-shift-right\">\n        <img src=\"img/icon3/icon-shift-up.png\" title=\"shift up\" id=\"icon-shift-up\">\n        <img src=\"img/icon3/icon-shift-down.png\" title=\"shift down\" id=\"icon-shift-down\">\n        <img src=\"img/icon3/icon-flip-horizontal.png\" title=\"flip horizontal\" id=\"icon-flip-horizontal\">\n        <img src=\"img/icon3/icon-flip-vertical.png\" title=\"flip vertical\" id=\"icon-flip-vertical\">\n        \n      </div>\n      <div id=\"editor-canvas\"></div>\n    ";
 
-    $("#window-" + this.window).append(template);
-    $("#editor-canvas").append(this.canvas_element);
+    $("#window-" + _this.window).append(template);
+    $("#editor-canvas").append(_this.canvas_element);
 
-    this.canvas = this.canvas_element.getContext('2d');
+    _this.canvas = _this.canvas_element.getContext('2d', { alpha: false });
+
+    return _this;
   }
 
   _createClass(Editor, [{
-    key: "get_width",
-    value: function get_width() {
-      return this.width;
-    }
-  }, {
-    key: "get_height",
-    value: function get_height() {
-      return this.height;
-    }
-  }, {
-    key: "toggle_grid",
-    value: function toggle_grid() {
-      if (this.grid) {
-        this.grid = false;
-      } else {
-        this.grid = true;
-      }
-    }
-  }, {
-    key: "get_grid",
-    value: function get_grid() {
-      return this.grid;
-    }
-  }, {
     key: "update",
     value: function update(all_data) {
       this.canvas_element.width = this.width;
@@ -175,43 +163,16 @@ var Editor = function () {
       return { x: x_grid, y: y_grid };
     }
   }, {
-    key: "zoom_in",
-    value: function zoom_in() {
-      if (this.zoom <= 26) {
-        this.zoom += 2;
-        this.update_zoom();
-      }
+    key: "toggle_grid",
+    value: function toggle_grid() {
+      this.grid = !this.grid;
     }
   }, {
-    key: "zoom_out",
-    value: function zoom_out() {
-      if (this.zoom >= 10) {
-        this.zoom -= 2;
-        this.update_zoom();
-      }
-    }
-  }, {
-    key: "get_zoom",
-    value: function get_zoom() {
-      return this.zoom;
-    }
-  }, {
-    key: "is_min_zoom",
-    value: function is_min_zoom() {
-      if (this.zoom <= 8) return true;
-    }
-  }, {
-    key: "is_max_zoom",
-    value: function is_max_zoom() {
-      if (this.zoom >= 28) return true;
-    }
-  }, {
-    key: "update_zoom",
-    value: function update_zoom() {
-      this.width = this.pixels_x * this.zoom;
-      this.height = this.pixels_y * this.zoom;
+    key: "get_grid",
+    value: function get_grid() {
+      return this.grid;
     }
   }]);
 
   return Editor;
-}();
+}(Window_Controls);

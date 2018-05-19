@@ -4,78 +4,43 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Preview = function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Preview = function (_Window_Controls) {
+  _inherits(Preview, _Window_Controls);
+
   function Preview(window, config) {
     _classCallCheck(this, Preview);
 
-    this.config = config;
-    this.window = window;
-    this.canvas_element = document.createElement('canvas');
-    this.zoom = this.config.window_preview.zoom; // this.config.zoom;
-    this.pixels_x = this.config.sprite_x;
-    this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
+    var _this = _possibleConstructorReturn(this, (Preview.__proto__ || Object.getPrototypeOf(Preview)).call(this));
 
-    this.canvas_element.id = "preview";
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
-    this.canvas = this.canvas_element.getContext('2d');
+    _this.config = config;
+    _this.window = window;
+    _this.canvas_element = document.createElement('canvas');
+    _this.zoom = _this.config.window_preview.zoom; // this.config.zoom;
+    _this.zoom_min = 4;
+    _this.zoom_max = 16;
+    _this.pixels_x = _this.config.sprite_x;
+    _this.pixels_y = _this.config.sprite_y;
+    _this.width = _this.pixels_x * _this.zoom;
+    _this.height = _this.pixels_y * _this.zoom;
+
+    _this.canvas_element.id = "preview";
+    _this.canvas_element.width = _this.width;
+    _this.canvas_element.height = _this.height;
+    _this.canvas = _this.canvas_element.getContext('2d');
 
     var template = '\n      <div class="window_menu">\n        <div class="icons-zoom-area">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">\n      </div>\n      <div id="preview-canvas"></div>\n    ';
 
-    $("#window-" + this.window).append(template);
-    $("#preview-canvas").append(this.canvas_element);
+    $("#window-" + _this.window).append(template);
+    $("#preview-canvas").append(_this.canvas_element);
+
+    return _this;
   }
 
   _createClass(Preview, [{
-    key: 'get_width',
-    value: function get_width() {
-      return this.width;
-    }
-  }, {
-    key: 'get_height',
-    value: function get_height() {
-      return this.height;
-    }
-  }, {
-    key: 'zoom_in',
-    value: function zoom_in() {
-      if (this.zoom <= 24) {
-        this.zoom += 2;
-        this.update_zoom();
-      }
-    }
-  }, {
-    key: 'zoom_out',
-    value: function zoom_out() {
-      if (this.zoom >= 4) {
-        this.zoom -= 2;
-        this.update_zoom();
-      }
-    }
-  }, {
-    key: 'is_min_zoom',
-    value: function is_min_zoom() {
-      if (this.zoom <= 2) return true;
-    }
-  }, {
-    key: 'is_max_zoom',
-    value: function is_max_zoom() {
-      if (this.zoom >= 24) return true;
-    }
-  }, {
-    key: 'get_zoom',
-    value: function get_zoom() {
-      return this.zoom;
-    }
-  }, {
-    key: 'update_zoom',
-    value: function update_zoom() {
-      this.width = this.pixels_x * this.zoom;
-      this.height = this.pixels_y * this.zoom;
-    }
-  }, {
     key: 'update',
     value: function update(all_data) {
       this.canvas_element.width = this.width;
@@ -150,4 +115,4 @@ var Preview = function () {
   }]);
 
   return Preview;
-}();
+}(Window_Controls);

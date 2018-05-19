@@ -168,21 +168,13 @@ var Sprite = function () {
   }, {
     key: "toggle_double_x",
     value: function toggle_double_x() {
-      if (this.all.sprites[this.all.current_sprite].double_x) {
-        this.all.sprites[this.all.current_sprite].double_x = false;
-      } else {
-        this.all.sprites[this.all.current_sprite].double_x = true;
-      }
+      this.all.sprites[this.all.current_sprite].double_x = !this.all.sprites[this.all.current_sprite].double_x;
       this.save_backup();
     }
   }, {
     key: "toggle_double_y",
     value: function toggle_double_y() {
-      if (this.all.sprites[this.all.current_sprite].double_y) {
-        this.all.sprites[this.all.current_sprite].double_y = false;
-      } else {
-        this.all.sprites[this.all.current_sprite].double_y = true;
-      }
+      this.all.sprites[this.all.current_sprite].double_y = !this.all.sprites[this.all.current_sprite].double_y;
       this.save_backup();
     }
   }, {
@@ -409,11 +401,7 @@ var Sprite = function () {
   }, {
     key: "toggle_overlay",
     value: function toggle_overlay() {
-      if (this.all.sprites[this.all.current_sprite].overlay) {
-        this.all.sprites[this.all.current_sprite].overlay = false;
-      } else {
-        this.all.sprites[this.all.current_sprite].overlay = true;
-      }
+      this.all.sprites[this.all.current_sprite].overlay = !this.all.sprites[this.all.current_sprite].overlay;
     }
   }, {
     key: "is_overlay",

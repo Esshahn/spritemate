@@ -4,24 +4,34 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var List = function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var List = function (_Window_Controls) {
+  _inherits(List, _Window_Controls);
+
   function List(window, config) {
     _classCallCheck(this, List);
 
-    this.config = config;
-    this.window = window;
-    this.zoom = this.config.window_list.zoom;
-    this.pixels_x = this.config.sprite_x;
-    this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
-    this.clicked_sprite = 0;
-    this.sorted_array = [];
-    this.grid = true;
+    var _this = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this));
+
+    _this.config = config;
+    _this.window = window;
+    _this.zoom = _this.config.window_list.zoom;
+    _this.zoom_min = 2;
+    _this.zoom_max = 16;
+    _this.pixels_x = _this.config.sprite_x;
+    _this.pixels_y = _this.config.sprite_y;
+    _this.width = _this.pixels_x * _this.zoom;
+    _this.height = _this.pixels_y * _this.zoom;
+    _this.clicked_sprite = 0;
+    _this.sorted_array = [];
+    _this.grid = true;
 
     var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-list-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-list-zoom-out\" title=\"zoom out\">\n          <img src=\"img/icon3/icon-grid.png\" id=\"icon-editor-grid\" title=\"toggle grid borders\">\n        </div>\n        <img src=\"img/icon3/icon-list-new.png\" id=\"icon-list-new\" title=\"new sprite\">\n        <img src=\"img/icon3/icon-list-delete.png\" id=\"icon-list-delete\" title=\"remove sprite\">\n        <img src=\"img/icon3/icon-list-copy.png\" id=\"icon-list-copy\" title=\"copy sprite\">\n        <img src=\"img/icon3/icon-list-paste.png\" id=\"icon-list-paste\" title=\"paste sprite\">\n      </div>\n      <div id=\"spritelist\"></div>\n    ";
 
-    $("#window-" + this.window).append(template);
+    $("#window-" + _this.window).append(template);
 
     $("#spritelist").sortable({
       cursor: "move",
@@ -30,6 +40,7 @@ var List = function () {
     });
 
     $("#spritelist").disableSelection();
+    return _this;
   }
 
   _createClass(List, [{
@@ -40,48 +51,7 @@ var List = function () {
   }, {
     key: "toggle_grid",
     value: function toggle_grid() {
-      if (this.grid) {
-        this.grid = false;
-      } else {
-        this.grid = true;
-      }
-    }
-  }, {
-    key: "zoom_in",
-    value: function zoom_in() {
-      if (this.zoom <= 16) {
-        this.zoom++;
-        this.update_zoom();
-      }
-    }
-  }, {
-    key: "zoom_out",
-    value: function zoom_out() {
-      if (this.zoom >= 2) {
-        this.zoom--;
-        this.update_zoom();
-      }
-    }
-  }, {
-    key: "get_zoom",
-    value: function get_zoom() {
-      return this.zoom;
-    }
-  }, {
-    key: "is_min_zoom",
-    value: function is_min_zoom() {
-      if (this.zoom < 2) return true;
-    }
-  }, {
-    key: "is_max_zoom",
-    value: function is_max_zoom() {
-      if (this.zoom > 16) return true;
-    }
-  }, {
-    key: "update_zoom",
-    value: function update_zoom() {
-      this.width = this.pixels_x * this.zoom;
-      this.height = this.pixels_y * this.zoom;
+      this.grid = !this.grid;
     }
   }, {
     key: "update",
@@ -120,7 +90,7 @@ var List = function () {
   }, {
     key: "update_all",
     value: function update_all(all_data) {
-      var _this = this;
+      var _this2 = this;
 
       $(".sprite_layer").remove();
 
@@ -129,15 +99,15 @@ var List = function () {
       var _loop = function _loop(i) {
         var canvas_element = document.createElement('canvas');
         canvas_element.id = "canvas-" + i;
-        canvas_element.width = _this.width;
-        canvas_element.height = _this.height;
+        canvas_element.width = _this2.width;
+        canvas_element.height = _this2.height;
 
         var template = "\n      <div class=\"sprite_layer\" id=\"" + i + "\">\n        <div class=\"sprite_layer_canvas\"></div>\n        <div class=\"sprite_layer_info\">\n          ID: #" + i + "<br/>\n          NAME: #" + i + "\n        </div>\n        <div style=\"clear:both;\"></div>\n      </div>";
 
         $("#spritelist").append(template);
         $("#" + i + " .sprite_layer_canvas").append(canvas_element);
         $("#" + i).mouseup(function (e) {
-          return _this.clicked_sprite = i;
+          return _this2.clicked_sprite = i;
         });
 
         var canvas = canvas_element.getContext('2d');
@@ -146,18 +116,18 @@ var List = function () {
         if (sprite_data.multicolor) x_grid_step = 2;
 
         // first fill the whole sprite with the background color
-        canvas.fillStyle = _this.config.colors[all_data.colors["t"]];
-        canvas.fillRect(0, 0, _this.width, _this.height);
+        canvas.fillStyle = _this2.config.colors[all_data.colors["t"]];
+        canvas.fillRect(0, 0, _this2.width, _this2.height);
 
-        for (var _i = 0; _i < _this.pixels_x; _i = _i + x_grid_step) {
-          for (var j = 0; j < _this.pixels_y; j++) {
+        for (var _i = 0; _i < _this2.pixels_x; _i = _i + x_grid_step) {
+          for (var j = 0; j < _this2.pixels_y; j++) {
             var array_entry = sprite_data.pixels[j][_i];
 
             if (array_entry != "t") {
               var color = sprite_data.color;
               if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-              canvas.fillStyle = _this.config.colors[color];
-              canvas.fillRect(_i * _this.zoom, j * _this.zoom, x_grid_step * _this.zoom, _this.zoom);
+              canvas.fillStyle = _this2.config.colors[color];
+              canvas.fillRect(_i * _this2.zoom, j * _this2.zoom, x_grid_step * _this2.zoom, _this2.zoom);
             }
           }
         }
@@ -170,4 +140,4 @@ var List = function () {
   }]);
 
   return List;
-}();
+}(Window_Controls);

@@ -4,54 +4,36 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Playfield = function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Playfield = function (_Window_Controls) {
+  _inherits(Playfield, _Window_Controls);
+
   function Playfield(window, config) {
     _classCallCheck(this, Playfield);
 
-    this.config = config;
-    this.window = window;
+    var _this = _possibleConstructorReturn(this, (Playfield.__proto__ || Object.getPrototypeOf(Playfield)).call(this));
 
-    this.zoom = this.config.window_playfield.zoom;
-    this.pixels_x = this.config.sprite_x;
-    this.pixels_y = this.config.sprite_y;
-    this.width = this.pixels_x * this.config.window_playfield.canvas_x;
-    this.height = this.pixels_y * this.config.window_playfield.canvas_y;
+    _this.config = config;
+    _this.window = window;
+    _this.zoom = _this.config.window_playfield.zoom;
+    _this.zoom_min = 2;
+    _this.zoom_max = 16;
+    _this.pixels_x = _this.config.sprite_x;
+    _this.pixels_y = _this.config.sprite_y;
+    _this.width = _this.pixels_x * _this.config.window_playfield.canvas_x;
+    _this.height = _this.pixels_y * _this.config.window_playfield.canvas_y;
 
     var template = "\n      <div class=\"window_menu\">\n        <div class=\"icons-zoom-area\">\n          <img src=\"img/icon3/icon-zoom-in.png\" id=\"icon-playfield-zoom-in\" title=\"zoom in\">\n          <img src=\"img/icon3/icon-zoom-out.png\" id=\"icon-playfield-zoom-out\" title=\"zoom out\">\n        </div>\n      </div>\n      <div id=\"playfield-container\">\n        <div id=\"playfield\"></div>\n      </div>\n    ";
 
-    $("#window-" + this.window).append(template);
+    $("#window-" + _this.window).append(template);
+
+    return _this;
   }
 
   _createClass(Playfield, [{
-    key: "zoom_in",
-    value: function zoom_in() {
-      if (this.zoom <= 16) {
-        this.zoom++;
-      }
-    }
-  }, {
-    key: "zoom_out",
-    value: function zoom_out() {
-      if (this.zoom >= 2) {
-        this.zoom--;
-      }
-    }
-  }, {
-    key: "get_zoom",
-    value: function get_zoom() {
-      return this.zoom;
-    }
-  }, {
-    key: "is_min_zoom",
-    value: function is_min_zoom() {
-      if (this.zoom < 2) return true;
-    }
-  }, {
-    key: "is_max_zoom",
-    value: function is_max_zoom() {
-      if (this.zoom > 16) return true;
-    }
-  }, {
     key: "update",
     value: function update(all_data) {
       $("#playfield").empty();
@@ -107,4 +89,4 @@ var Playfield = function () {
   }]);
 
   return Playfield;
-}();
+}(Window_Controls);
