@@ -1,0 +1,29 @@
+*** A (SEUCK sprite file format)
+*** Document revision: 1.0
+*** Last updated: Oct 26, 2017
+*** Author: Zoe Blade
+
+Reverse engineering the SEUCK sprite file format (.a files):
+
+The file is 8130 bytes long.
+
+The first two bytes are 00110000 00110000.
+
+The remaining 8128 bytes contain 127 sprites (numbered 000 through
+to 126 in SEUCK), each 64 bytes long.
+
+Each 3 bytes represent a row of pixels: 12 pairs of bits.  21 rows
+make 63 bytes.
+
+Each pair of bits determines the pixel's colour:
+
+00 Background  1
+01 General col 2
+10 Changeable  4
+11 General col 3
+
+The last byte consists of two nibbles: 0001; then the sprite's
+changeable colour.
+
+The general colours and transparency colour are not stored in the
+file.
