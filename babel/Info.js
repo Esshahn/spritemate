@@ -16,6 +16,11 @@ class Info
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.08</h1>
+            <p>
+            - switched individual and transparent color pickers in color palette<br/>
+            </p>
+
             <h1>V1.07</h1>
             <p>
             - added sprite number tooltips for sprites in the sprite list<br/>

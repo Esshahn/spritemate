@@ -5,7 +5,7 @@ function get_config()
 
     let config = 
     {
-      version: 1.07,
+      version: 1.08,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {

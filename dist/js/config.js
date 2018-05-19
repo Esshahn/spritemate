@@ -5,7 +5,7 @@ var example_sprite = { "colors": { "t": 11, "m1": 7, "m2": 10 }, "sprites": [{ "
 function get_config() {
 
         var config = {
-                version: 1.07,
+                version: 1.08,
                 sprite_x: 24,
                 sprite_y: 21,
                 palettes: {

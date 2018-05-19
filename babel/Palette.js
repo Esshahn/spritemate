@@ -14,13 +14,13 @@ class Palette
     let template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
-          <div id="palette_i">
-              <p>Individual</p>
-              <div class="palette_color_item_active_colors" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
-          </div>
           <div id="palette_t">
               <p>Transparent</p>
               <div class="palette_color_item_active_colors" id="color_t" title="transparent&nbsp;(2)"></div>
+          </div>
+          <div id="palette_i">
+              <p>Individual</p>
+              <div class="palette_color_item_active_colors" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
           </div>
           <div id="palette_m1">
               <p>Multicolor 1</p>
