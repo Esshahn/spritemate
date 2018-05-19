@@ -508,7 +508,6 @@ img.center
 {
    margin: 0px;
    padding: 0px;
-   float: left;
 }
 
 .sprite_in_list:hover
@@ -539,19 +538,21 @@ img.center
   box-shadow: 0px 0px 20px 2px rgba(0,0,0,.6);
 }
 
+#spritelist
+{
+   margin: 0px;
+   padding: 0px;
+   overflow: auto;
+   height: 84%;
+   line-height: 0px;
+   padding-bottom: 20px;
+}
+
 /*
 
   Old Spritelist End
 
  */
-
-#spritelist
-{
-   margin:0px;
-   padding: 0px;
-   overflow: scroll;
-   height: 90%;
-}
 
 .sprite_layer
 {
