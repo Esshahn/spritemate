@@ -1,14 +1,17 @@
 
 
-class Preview
+class Preview extends Window_Controls
 {
 
   constructor(window,config)
   {
+    super();
     this.config = config;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
     this.zoom = this.config.window_preview.zoom; // this.config.zoom;
+    this.zoom_min = 4;
+    this.zoom_max = 16;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -34,58 +37,7 @@ class Preview
 
     $("#window-"+this.window).append(template);
     $("#preview-canvas").append(this.canvas_element);
-   
-  }
-
-  get_width()
-  {
-    return this.width;
-  }
-
-  get_height()
-  {
-    return this.height;
-  }
-
-
-  zoom_in()
-  {
-    if (this.zoom <= 24)
-    {
-      this.zoom += 2;
-      this.update_zoom();
-    } 
-  }
-
-  zoom_out()
-  {
-    if (this.zoom >= 4)
-    {
-     this.zoom -= 2;
-     this.update_zoom();
-    }
-  }
-
-  is_min_zoom()
-  {
-    if (this.zoom <= 2) return true;
-  }
-
-  is_max_zoom()
-  {
-    if (this.zoom >= 24) return true;
-  }
-
-
-  get_zoom()
-  {
-    return this.zoom;
-  }
-
-  update_zoom()
-  {
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
+ 
   }
 
   update(all_data)

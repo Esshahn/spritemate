@@ -30,6 +30,7 @@ class Window
             buttons: config.buttons
         });
 
+
         // in case a callback was defined for this window
         // we send the position and size information back to the app for storage
         if (callback)

@@ -1,13 +1,16 @@
 
 
-class List
+class List extends Window_Controls
 {
 
   constructor(window,config)
   {
+    super();
     this.config = config;
     this.window = window;
     this.zoom = this.config.window_list.zoom; 
+    this.zoom_min = 4;
+    this.zoom_max = 16;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -15,6 +18,7 @@ class List
     this.clicked_sprite = 0;
     this.sorted_array = [];
     this.grid = true;
+
 
     let template = `
       <div class="window_menu">
@@ -37,7 +41,7 @@ class List
     $("#spritelist").sortable({
       cursor:"move",
       tolerance: "pointer",
-      revert: 'invalid'
+      revert: '100'
     });
 
     // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
@@ -46,55 +50,10 @@ class List
     $("#spritelist").disableSelection();
   }
 
-  get_clicked_sprite()
-  {
-    return this.clicked_sprite;
-  }
 
+  get_clicked_sprite() { return this.clicked_sprite; }
 
-  toggle_grid()
-  {
-    if (this.grid)
-    {
-      this.grid = false;
-    } else {
-      this.grid = true;
-    }
-  }
-
-
-  zoom_in()
-  {
-    if (this.zoom <= 16)
-    {
-      this.zoom ++;
-      this.update_zoom();
-    } 
-  }
-
-  zoom_out()
-  {
-    if (this.zoom >= 2)
-    {
-     this.zoom --;
-     this.update_zoom();
-    }
-  }
-
-  get_zoom()
-  {
-    return this.zoom;
-  }
-
-  is_min_zoom()
-  {
-    if (this.zoom < 2) return true;
-  }
-
-  is_max_zoom()
-  {
-    if (this.zoom > 16) return true;
-  }
+  toggle_grid() { this.grid = !this.grid; }
 
   update_zoom()
   {
@@ -110,41 +69,18 @@ class List
     // this one gets called during drawing in the editor
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
-    
-    $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
 
+    $('#window-'+this.window).dialog('option', 'title', `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`);
+    let canvas = document.getElementById(all_data.current_sprite).getContext('2d', { alpha: false });
     let sprite_data = all_data.sprites[all_data.current_sprite];
-    let canvas = document.getElementById(all_data.current_sprite).getContext('2d');
-
-    let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
-
-    // first fill the whole sprite with the background color
-    canvas.fillStyle = this.config.colors[all_data.colors["t"]];
-    canvas.fillRect(0,0,this.width,this.height);
-
-    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
-    {
-      for (let j=0; j<this.pixels_y; j++)
-      {
-
-        let array_entry = sprite_data.pixels[j][i];
-
-        if (array_entry != "t")
-        {
-          let color = sprite_data.color;
-          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-          canvas.fillStyle = this.config.colors[color] ;
-          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
-        }
-      }
-    }
+    this.draw_sprite(canvas,sprite_data,all_data);
   }
+
 
   update_all(all_data)
   {
-    $(".sprite_in_list").remove();
 
+    $(".sprite_in_list").remove();
     let length = all_data.sprites.length;
     for (let i=0; i<length; i++)
     {
@@ -162,34 +98,41 @@ class List
 
       $(canvas_element).mouseup((e) => this.clicked_sprite = i);
 
-      let canvas = canvas_element.getContext('2d');
+      let canvas = canvas_element.getContext('2d', { alpha: false });
       let sprite_data = all_data.sprites[i];
-      let x_grid_step = 1;
-      if (sprite_data.multicolor) x_grid_step = 2;
+      
+      this.draw_sprite(canvas,sprite_data,all_data);
+    }
+  }
 
-      // first fill the whole sprite with the background color
-      canvas.fillStyle = this.config.colors[all_data.colors["t"]];
-      canvas.fillRect(0,0,this.width,this.height);
+  draw_sprite(canvas,sprite_data,all_data)
+  {
 
-      for (let i=0; i<this.pixels_x; i=i+x_grid_step)
+    let x_grid_step = 1;
+    if (sprite_data.multicolor) x_grid_step = 2;
+
+    // first fill the whole sprite with the background color
+    canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    canvas.fillRect(0,0,this.width,this.height);
+
+    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
+    {
+      for (let j=0; j<this.pixels_y; j++)
       {
-        for (let j=0; j<this.pixels_y; j++)
-        {
-          let array_entry = sprite_data.pixels[j][i];
+        let array_entry = sprite_data.pixels[j][i];
 
-          if (array_entry != "t")
-          {
-            let color = sprite_data.color;
-            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-            canvas.fillStyle = this.config.colors[color];
-            canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
-          }
+        if (array_entry != "t")
+        {
+          let color = sprite_data.color;
+          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
+          canvas.fillStyle = this.config.colors[color];
+          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }
       }
     }
   }
 
 
-}
+} // end class
 
 

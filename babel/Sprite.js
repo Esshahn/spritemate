@@ -155,34 +155,20 @@ class Sprite
     return sprite_colors;
   }
 
-  get_delete_color()
-  {
-    return this.all.colors.transparent;
-  }
+  get_delete_color() { return this.all.colors.transparent; }
 
-  is_multicolor()
-  {
-    return this.all.sprites[this.all.current_sprite].multicolor;
-  }
+  is_multicolor() { return this.all.sprites[this.all.current_sprite].multicolor; }
 
 
   toggle_double_x()
   {
-    if (this.all.sprites[this.all.current_sprite].double_x){
-      this.all.sprites[this.all.current_sprite].double_x = false;
-    }else{
-      this.all.sprites[this.all.current_sprite].double_x = true;
-    }
+    this.all.sprites[this.all.current_sprite].double_x = !this.all.sprites[this.all.current_sprite].double_x;
     this.save_backup();
   }
 
   toggle_double_y()
   {
-    if (this.all.sprites[this.all.current_sprite].double_y){
-      this.all.sprites[this.all.current_sprite].double_y = false;
-    }else{
-      this.all.sprites[this.all.current_sprite].double_y = true;
-    }
+    this.all.sprites[this.all.current_sprite].double_y = !this.all.sprites[this.all.current_sprite].double_y;
     this.save_backup();
   }
 
@@ -216,30 +202,15 @@ class Sprite
     }
   }
 
-  get_current_sprite()
-  {
-    return this.all.sprites[this.all.current_sprite];
-  }
+  get_current_sprite() { return this.all.sprites[this.all.current_sprite]; }
 
-  get_current_sprite_number()
-  {
-    return this.all.current_sprite;
-  }
+  get_current_sprite_number() { return this.all.current_sprite; }
 
-  get_number_of_sprites()
-  {
-    return this.all.sprites.length;
-  }
+  get_number_of_sprites() { return this.all.sprites.length; }
 
-  only_one_sprite()
-  {
-    if (this.all.sprites.length == 1) return true;
-  }
+  only_one_sprite() { if (this.all.sprites.length == 1) return true; }
 
-  get_pen()
-  {
-    return this.all.pen;
-  }
+  get_pen() { return this.all.pen; }
 
   is_pen_multicolor()
   {
@@ -251,10 +222,7 @@ class Sprite
     }
   }
 
-  set_pen(pen)
-  {
-    this.all.pen = pen;
-  }
+  set_pen(pen) { this.all.pen = pen; }
 
   set_pen_color(pencolor)
   {
@@ -267,10 +235,7 @@ class Sprite
     this.save_backup();
   }
 
-  get_all()
-  {
-    return this.all;
-  }
+  get_all() { return this.all; }
 
   set_all(all)
   {
@@ -424,17 +389,9 @@ class Sprite
 
   toggle_overlay()
   {
-    if (this.all.sprites[this.all.current_sprite].overlay)
-    {
-      this.all.sprites[this.all.current_sprite].overlay = false;
-    } else {
-      this.all.sprites[this.all.current_sprite].overlay = true;
-    }
+    this.all.sprites[this.all.current_sprite].overlay = !this.all.sprites[this.all.current_sprite].overlay;
   }
 
-  is_overlay()
-  {
-    return this.all.sprites[this.all.current_sprite].overlay;
-  }
+  is_overlay() { return this.all.sprites[this.all.current_sprite].overlay; }
 
 }

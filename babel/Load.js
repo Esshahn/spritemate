@@ -57,11 +57,9 @@ class Load
       }
   }
 
-
-  parse_file_spm(file) 
-  {
-    this.imported_file = JSON.parse(file);
-  }
+  get_imported_file() { return this.imported_file; }
+  
+  parse_file_spm(file) { this.imported_file = JSON.parse(file); }
 
   parse_file_spd(file,format) 
   {
@@ -198,10 +196,6 @@ class Load
     this.imported_file.sprites.push(sprite);
   }
 
-  get_imported_file()
-  {
-    return this.imported_file;
-  }
 
 }
 

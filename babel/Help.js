@@ -332,8 +332,8 @@ class Help
 
             <h1 id="links">Links & Resources</h1>
             <p>
-            Download & fork Spritemate on Github: <a target="_blank" href="https://github.com/Esshahn/spritemate">github.com/Esshahn/spritemate</a></p>
-            <p>Ingo Hinterding: <a target="_blank" href="http://csdb.dk/scener/?id=27239">awsm on csdb</a>, my website <a target="_blank" href="http://www.awsm.de">www.awsm.de</a> and Twitter: <a target="_blank" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
+            Download & fork Spritemate on Github: <a target="_blank" rel="noopener" href="https://github.com/Esshahn/spritemate">github.com/Esshahn/spritemate</a></p>
+            <p>Ingo Hinterding: <a target="_blank" rel="noopener" href="http://csdb.dk/scener/?id=27239">awsm on csdb</a>, my website <a target="_blank" rel="noopener" href="http://www.awsm.de">www.awsm.de</a> and Twitter: <a target="_blank" rel="noopener" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
             
         <p>Report bugs, ideas & requests to ingo (at) awsm (dot) de</p>
             

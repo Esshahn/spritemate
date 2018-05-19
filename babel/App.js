@@ -7,7 +7,6 @@
   To switch to photoshop style layers:
   - load "List_layerstyle.js" instead of "List.js" in index.html
   - comment & uncomment 2 lines of code in update_ui in this file
-  - unhide playfield window by "autoOpen: true"
 
 */
 
@@ -16,7 +15,6 @@ function init()
 {
   let sprite_app = new App(get_config());
 }
-
 
 
 
@@ -38,7 +36,7 @@ class App
     this.editor = new Editor(0,this.config);
 
     // palette
-    window_config = {name:"window_palette", title: "Palette", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
+    window_config = {name:"window_palette", title: "Colors", type: "colors", resizable: false, left: this.config.window_palette.left, top: this.config.window_palette.top, width: "auto", height: "auto" };
     this.window_palette = new Window(window_config, this.store_window.bind(this));
     this.palette = new Palette(1,this.config);
 
@@ -72,15 +70,10 @@ class App
     this.window_help = new Window(window_config);
     this.help = new Help(8,this.config);
 
-    // playfield window is hidden by autoOpen:false 
-    window_config = {name:"window_playfield", autoOpen: false, title: "Playfield", type: "preview", resizable: true, left: this.config.window_playfield.left, top: this.config.window_playfield.top, width: this.config.window_playfield.width, height: this.config.window_playfield.height };
-    this.window_playfield = new Window(window_config, this.store_window.bind(this));
-    this.playfield = new Playfield(9,this.config);
-
     // menu
     window_config = {name:"window_menu", title: "Menu", type: "menu", resizable: false, left: this.config.window_menu.left, top: this.config.window_menu.top, width: "auto", height: "auto" };
     this.window_menu = new Window(window_config, this.store_window.bind(this));
-    this.menu = new Menu(10,this.config);
+    this.menu = new Menu(9,this.config);
  
     this.load = new Load(this.config, { onLoad: this.update_loaded_file.bind(this) });
 
@@ -141,7 +134,6 @@ class App
     this.preview.update(  all);
     this.list.update(     all);
     this.palette.update(  all);
-    //this.playfield.update(  all);
     this.update_ui();
   }
 
@@ -209,20 +201,6 @@ class App
       $('#icon-editor-zoom-in').fadeTo("fast", 0.33);
     } else {
       $('#icon-editor-zoom-in').fadeTo("fast", 1);
-    }
-
-    if (this.playfield.is_min_zoom())
-    {
-      $('#icon-playfield-zoom-out').fadeTo("fast", 0.33);
-    } else {
-      $('#icon-playfield-zoom-out').fadeTo("fast", 1);
-    }
-
-    if (this.playfield.is_max_zoom())
-    {
-      $('#icon-playfield-zoom-in').fadeTo("fast", 0.33);
-    } else {
-      $('#icon-playfield-zoom-in').fadeTo("fast", 1);
     }
 
     if (this.list.is_min_zoom())
@@ -325,8 +303,6 @@ class App
     this.init_ui_fade("icon-list-zoom-out");
     this.init_ui_fade("icon-editor-zoom-in");
     this.init_ui_fade("icon-editor-zoom-out");
-    this.init_ui_fade("icon-playfield-zoom-in");
-    this.init_ui_fade("icon-playfield-zoom-out");
     this.init_ui_fade("icon-preview-zoom-in");
     this.init_ui_fade("icon-preview-zoom-out");
     this.init_ui_fade("icon-preview-overlay");
@@ -372,7 +348,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "a")
         {
           console.time('performance');
-          for(let i=0; i<=100;i++) this.update();
+          for(let i=0; i<=1000;i++) this.update();
           console.timeEnd('performance');
         
         }
@@ -395,11 +371,10 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "q")
         {
-          // TODO: delete when done with playfield programming
-          this.playfield.update(  this.sprite.get_all());
+          this.sprite.set_all(example_sprite);
+          this.list.update_all(this.sprite.get_all());
+          this.update();
         }
-
-        
 
         if (e.key == "d")
         {
@@ -906,31 +881,6 @@ PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              
       this.update();
     });
 
-
-/*
-
-      PLAYFIELD
- */
-
-
-
-    $('#icon-playfield-zoom-in').mouseup((e) =>
-    {     
-      this.playfield.zoom_in();
-      this.playfield.update(this.sprite.get_all());
-      this.config.window_playfield.zoom = this.playfield.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
-
-    $('#icon-playfield-zoom-out').mouseup((e) =>
-    {     
-      this.playfield.zoom_out();
-      this.playfield.update(this.sprite.get_all());
-      this.config.window_playfield.zoom = this.playfield.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
 
   }
 

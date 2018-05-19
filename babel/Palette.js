@@ -107,10 +107,7 @@ class Palette
     this.active_color = this.colors.indexOf(picked_color);
   }
 
-  get_color()
-  {
-    return this.active_color;
-  }
+  get_color() { return this.active_color; }
 
   set_colors(colors)
   {

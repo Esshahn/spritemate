@@ -10,7 +10,7 @@ class Info
 
     let template = `
     <div id="info">
-        <img autofocus src="img/logo.png" id="logo">
+        <img autofocus src="img/logo.png" id="logo" alt="spritemate">
         <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
@@ -18,9 +18,12 @@ class Info
 
             <h1>V1.07</h1>
             <p>
-            - added sprite number tooltip for sprites in the spritelist<br/>
-            - menu palette can now be moved and position is saved<br/>
-            - updated to jquery 3.3.1, code cleanup
+            - added sprite number tooltips for sprites in the sprite list<br/>
+            - the menu palette can now be moved around and the position is saved<br/>
+            - updated to jquery 3.3.1, code cleanup (removed playfield code)<br/>
+            - the tools in the sprite list window are now fixed to the top<br/>
+            - some tweaks to the window design<br/>
+            - some icons have been refined
             </p>
 
             <h1>V1.06</h1>

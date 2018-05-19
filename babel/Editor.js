@@ -1,15 +1,18 @@
 
 
-class Editor
+class Editor extends Window_Controls
 {
 
   constructor(window,config)
   {
+    super();
     this.config = config;
     this.grid = this.config.window_editor.grid;
     this.window = window;
     this.canvas_element = document.createElement('canvas');
     this.zoom = this.config.window_editor.zoom;
+    this.zoom_min = 10;
+    this.zoom_max = 26;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -42,33 +45,8 @@ class Editor
     $("#window-"+this.window).append(template);
     $("#editor-canvas").append(this.canvas_element);
 
-    this.canvas = this.canvas_element.getContext('2d');
+    this.canvas = this.canvas_element.getContext('2d', { alpha: false });
    
-  }
-
-  get_width()
-  {
-    return this.width;
-  }
-
-  get_height()
-  {
-    return this.height;
-  }
-
-  toggle_grid()
-  {
-    if (this.grid)
-    {
-      this.grid = false;
-    }else{
-      this.grid = true;
-    }
-  }
-
-  get_grid()
-  {
-    return this.grid;
   }
 
   update(all_data)
@@ -196,44 +174,11 @@ class Editor
   }
 
 
- zoom_in()
-  {
-    if (this.zoom <= 26)
-    {
-      this.zoom += 2;
-      this.update_zoom();
-    } 
-  }
+  toggle_grid() { this.grid = !this.grid; }
 
-  zoom_out()
-  {
-    if (this.zoom >= 10)
-    {
-     this.zoom -= 2;
-     this.update_zoom();
-    }
-  }
+  get_grid() { return this.grid; }
 
-  get_zoom()
-  {
-    return this.zoom;
-  }
 
-  is_min_zoom()
-  {
-    if (this.zoom <= 8) return true;
-  }
-
-  is_max_zoom()
-  {
-    if (this.zoom >= 28) return true;
-  }
-
-  update_zoom()
-  {
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
-  }
 
 }
 

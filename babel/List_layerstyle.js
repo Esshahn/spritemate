@@ -1,13 +1,16 @@
 
 
-class List
+class List extends Window_Controls
 {
 
   constructor(window,config)
   {
+    super();
     this.config = config;
     this.window = window;
-    this.zoom = this.config.window_list.zoom; 
+    this.zoom = this.config.window_list.zoom;
+    this.zoom_min = 2;
+    this.zoom_max = 16;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -44,61 +47,9 @@ class List
     $("#spritelist").disableSelection();
   }
 
-  get_clicked_sprite()
-  {
-    return this.clicked_sprite;
-  }
+  get_clicked_sprite() { return this.clicked_sprite; }
 
-
-  toggle_grid()
-  {
-    if (this.grid)
-    {
-      this.grid = false;
-    } else {
-      this.grid = true;
-    }
-  }
-
-
-  zoom_in()
-  {
-    if (this.zoom <= 16)
-    {
-      this.zoom ++;
-      this.update_zoom();
-    } 
-  }
-
-  zoom_out()
-  {
-    if (this.zoom >= 2)
-    {
-     this.zoom --;
-     this.update_zoom();
-    }
-  }
-
-  get_zoom()
-  {
-    return this.zoom;
-  }
-
-  is_min_zoom()
-  {
-    if (this.zoom < 2) return true;
-  }
-
-  is_max_zoom()
-  {
-    if (this.zoom > 16) return true;
-  }
-
-  update_zoom()
-  {
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
-  }
+  toggle_grid() { this.grid = !this.grid; }
 
   update(all_data)
   {

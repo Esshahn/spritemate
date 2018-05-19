@@ -301,19 +301,6 @@ img.center
   text-align: center;
 }
 
-#playfield
-{
-  width: 1024px;
-  height: 1024px;
-  line-height: 0px;
-}
-
-#playfield-container
-{
-  width: 100%;
-  height: 90%;
-  overflow: scroll;
-}
 
 #help
 {
@@ -480,7 +467,7 @@ img.center
   margin-right: 10px;
   padding-right: 10px;
   float: left;
-  border-right: 1px dotted #555555;
+  border-right: 1px solid rgba(0,0,0,.3);
 }
 
 
@@ -526,7 +513,7 @@ img.center
 
 .sprite_in_list:hover
 {
-  border: 1px dotted #e6007e;
+  border: 1px dotted var(--red);
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -541,13 +528,15 @@ img.center
 
 .sprite_in_list_selected
 {
-  border: 1px dotted #00b9ee;
+  border: 1px dotted var(--blue);
   box-sizing: border-box;
 }
 
 .sprite_in_list:active
 {
+  /* shadow when dragging a sprite in the sprite list */
   background-color: white;
+  box-shadow: 0px 0px 20px 2px rgba(0,0,0,.6);
 }
 
 /*
@@ -560,6 +549,8 @@ img.center
 {
    margin:0px;
    padding: 0px;
+   overflow: scroll;
+   height: 99%;
 }
 
 .sprite_layer
@@ -680,15 +671,17 @@ img.center
   margin-top: 20px;
 }
 
+
 .ui-dialog-titlebar
 {
   font-family: 'Quicksand', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
-  font-size: 60%;
+  font-size: 70%;
   text-align: center;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
+  color: #aaaaaa;
 }
 
 
@@ -700,13 +693,18 @@ img.center
 .ui-widget.ui-widget-content
 {
   border: 0px;
+<<<<<<< HEAD
   box-shadow: 0px 5px 6px 2px rgba(0,0,0,.3);
 
+=======
+  box-shadow: 0px 0px 20px 2px rgba(0,0,0,.6);
+>>>>>>> beta
 }
 
 .ui-widget-header
 {
   border: 0px;
+  background: none;
 }
 
 .ui-dialog 
@@ -717,7 +715,8 @@ img.center
 
 .ui-dialog .ui-dialog-titlebar 
 {
-  padding: 0px;
+  border-bottom: 1px solid rgba(0,0,0,.3);
+  padding: 2px;
 }
 
 .ui-dialog .ui-resizable-se, .ui-dialog .ui-resizable-sw, .ui-dialog .ui-resizable-ne, .ui-dialog .ui-resizable-nw 
@@ -732,6 +731,15 @@ img.center
     padding: .5em .5em;
 }
 
+<<<<<<< HEAD
+=======
+.list.ui-dialog-content
+{
+  /* list window should not scroll */
+  overflow: hidden;
+}
+
+>>>>>>> beta
 .colors.ui-dialog-content
 {
   /* color palette should not have any passing */
