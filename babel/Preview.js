@@ -40,6 +40,7 @@ class Preview extends Window_Controls
  
   }
 
+
   update(all_data)
   {
     this.canvas_element.width = this.width;

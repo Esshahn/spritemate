@@ -49,6 +49,10 @@ class Editor extends Window_Controls
    
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
   update(all_data)
   {
     this.canvas_element.width = this.width;
@@ -177,7 +181,6 @@ class Editor extends Window_Controls
   toggle_grid() { this.grid = !this.grid; }
 
   get_grid() { return this.grid; }
-
 
 
 }

@@ -726,6 +726,11 @@ img.center
     padding: .5em .5em;
 }
 
+.list.ui-dialog-content
+{
+  /* list window should not scroll */
+  overflow: hidden;
+}
 
 .colors.ui-dialog-content
 {
