@@ -18,7 +18,8 @@ class Info
 
             <h1>V1.08</h1>
             <p>
-            - switched individual and transparent color pickers in color palette<br/>
+            - switched individual and transparent color pickers in color palette (thx2 Steril)<br/>
+            - repo cleanup (thx2 nurpax)<br/>
             </p>
 
             <h1>V1.07</h1>
@@ -46,8 +47,12 @@ class Info
 
             <h1>V1.05</h1>
             <p>
-            - Added a brief documentation (click on help in the menu bar).
-            </p><br/>
+            - Added a brief documentation (click on help in the menu bar).<br/>
+            - Fixed an error in Kick Assembler export (thx2 nurpax)
+            </p>
+
+            <br/>
+            
             <p>I didn't get any chance to work on Spritemate for months due to my commercial stuff sucking away all my free time. Also, feedback was stopping recently, which didn't motivate me too much either. Eventually I checked the traffic for Spritemate and was suprised about the steady amount of users. So I decided to dedicate more time to this project again. In any case, if you like Spritemate, you can make a hell of a difference by letting me know, either by mail ( ingo at awsm dot de ) or by sending me a tweet ( <a href="https://twitter.com/awsm9000">@awsm9000</a> ). Let me know how I can make Spritemate better for you!</p>
 
             <h1>November 08, 2017</h1>
