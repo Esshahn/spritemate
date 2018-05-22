@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel babel --out-dir dist/js -w"
+    "start": "babel src --out-dir dist/js -w"
   },
   "author": "",
   "license": "ISC"
