@@ -1,7 +1,10 @@
 
+import jQuery from 'jquery'
+import { status } from './helper'
+
 // handles writing and reading of the local html5 storage in the browser
 
-class Storage
+export default class Storage
 {
 
   constructor(config)

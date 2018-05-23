@@ -1,6 +1,8 @@
 
+import $ from 'jquery'
+import Window_Controls from './Window_Controls'
 
-class List extends Window_Controls
+export default class List extends Window_Controls
 {
 
   constructor(window,config)

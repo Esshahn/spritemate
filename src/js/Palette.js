@@ -1,6 +1,7 @@
 
+import $ from 'jquery'
 
-class Palette
+export default class Palette
 {
   
 

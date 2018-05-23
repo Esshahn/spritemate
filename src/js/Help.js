@@ -1,6 +1,7 @@
 
+import $ from 'jquery'
 
-class Help
+export default class Help
 {
 
   constructor(window,config)

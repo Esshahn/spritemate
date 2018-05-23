@@ -1,6 +1,7 @@
 
+import $ from 'jquery'
 
-class Info
+export default class Info
 {
 
   constructor(window,config)

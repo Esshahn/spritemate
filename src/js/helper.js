@@ -1,4 +1,6 @@
 
+import $ from 'jquery'
+
 /*
 
 HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLL             PPPPPPPPPPPPPPPPP   EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   
@@ -21,7 +23,7 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 */
 
 
-function status(text,state = "normal")
+export function status(text,state = "normal")
 {
   $("#statustext").stop(true,true);
 
@@ -37,7 +39,7 @@ function status(text,state = "normal")
 }
 
 
-function tipoftheday()
+export function tipoftheday()
 {
   let tips = 
   [

@@ -1,5 +1,7 @@
 
-class Menu
+import $ from 'jquery'
+
+export default class Menu
 {
 
   constructor(window,config)
