@@ -1,4 +1,5 @@
-"use strict";
+
+import $ from 'jquery'
 
 /*
 
@@ -21,23 +22,39 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 
 */
 
-function status(text) {
-  var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
 
-  $("#statustext").stop(true, true);
+export function status(text,state = "normal")
+{
+  $("#statustext").stop(true,true);
 
-  if (state == "normal") {
+  if (state == "normal")
+  {
     $("#statustext").html(text).fadeIn(100).delay(2000).fadeOut(1000);
   }
 
-  if (state == "tip") {
+  if (state == "tip")
+  {
     $("#statustext").html(text).fadeIn(100).delay(10000).fadeOut(1000);
   }
 }
 
-function tipoftheday() {
-  var tips = ["Did you know there was a C64 in John Wick 2?", "Hold shift while clicking to delete pixels.", "You can change and define your own colors in the seetings.", "Press 'z' for undo and 'shift + z' for redo.", "You can position all windows how you like it best. Spritemate remembers that for your next visit!", "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.", "Sort your sprites by dragging them around with your mouse!", "Right click on your sprite in the editor window to save it as PNG (works in Chrome at least)."];
 
-  var chosen_tooltip = tips[Math.floor(Math.random() * tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
-  status(chosen_tooltip, "tip");
+export function tipoftheday()
+{
+  let tips = 
+  [
+  "Did you know there was a C64 in John Wick 2?",
+  "Hold shift while clicking to delete pixels.",
+  "You can change and define your own colors in the seetings.",
+  "Press 'z' for undo and 'shift + z' for redo.",
+  "You can position all windows how you like it best. Spritemate remembers that for your next visit!",
+  "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.",
+  "Sort your sprites by dragging them around with your mouse!",
+  "Right click on your sprite in the editor window to save it as PNG (works in Chrome at least)."
+  ];
+
+  let chosen_tooltip = tips[Math.floor(Math.random()*tips.length)] + "\xa0\xa0\xa0" + "<a href='#' onclick='tipoftheday();'>next tip</a>";
+  status(chosen_tooltip,"tip");
 }
+
+

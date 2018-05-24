@@ -1,6 +1,7 @@
 
+import $ from 'jquery'
 
-class Settings
+export default class Settings
 {
 
   constructor(window,config,eventhandler)

@@ -1,11 +1,13 @@
 
+import $ from 'jquery'
+
 /*
 
     Class Window
 
  */
 
-class Window
+export default class Window
 {
     constructor(config,callback)
     {

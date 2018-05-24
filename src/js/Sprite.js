@@ -1,7 +1,7 @@
 
+import jQuery from 'jquery'
 
-
-class Sprite
+export default class Sprite
 {
 
   constructor(config)

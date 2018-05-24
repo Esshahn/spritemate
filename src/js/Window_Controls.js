@@ -7,7 +7,7 @@
 
 
  */
-class Window_Controls
+export default class Window_Controls
 {
 
 
