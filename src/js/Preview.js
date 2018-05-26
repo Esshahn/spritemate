@@ -25,12 +25,12 @@ class Preview extends Window_Controls
     let template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
+          <img src="img/ui/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">
+          <img src="img/ui/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">
         </div>
         <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>
         <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>
-        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">
+        <img src="img/ui/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">
       </div>
       <div id="preview-canvas"></div>
     `;
@@ -50,7 +50,7 @@ class Preview extends Window_Controls
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // first fill the whole sprite with the background color
-    this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
     this.canvas.fillRect(0,0,this.width,this.height); 
 
     for (let i=0; i<this.pixels_x; i=i+x_grid_step)
@@ -59,10 +59,10 @@ class Preview extends Window_Controls
       {
         let array_entry = sprite_data.pixels[j][i];
 
-        if (array_entry != "t")
+        if (array_entry != 0) // transparent
         {
           let color = sprite_data.color;
-          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
+          if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
           this.canvas.fillStyle = this.config.colors[color] ;
           this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }
@@ -107,12 +107,12 @@ class Preview extends Window_Controls
         let array_entry = sprite_data.pixels[j][i];
 
         // if singlecolor only, replace the multicolor pixels with the individual color
-        if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";  
+        if (!sprite_data.multicolor && (array_entry == 2 || array_entry == 3)) array_entry = 1;  
               
         let color = sprite_data.color;
-        if (array_entry != "i") color = all_data.colors[array_entry];
+        if (array_entry != 1) color = all_data.colors[array_entry];
         
-        if (array_entry != "t")
+        if (array_entry != 0)
         {
           this.canvas.fillStyle = this.config.colors[color];
           this.canvas.fillRect(i*this.zoom, j*this.zoom, this.zoom * x_grid_step , this.zoom);

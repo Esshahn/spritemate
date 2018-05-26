@@ -170,9 +170,9 @@ class App
 
     if (this.sprite.is_overlay())
     {
-      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay-hi.png");
+      $('#icon-preview-overlay').attr("src","img/ui/icon-preview-overlay-hi.png");
     } else {
-      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay.png");
+      $('#icon-preview-overlay').attr("src","img/ui/icon-preview-overlay.png");
     }
 
     if (this.preview.is_min_zoom())
@@ -383,39 +383,39 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           {
             this.mode = "fill";
             status("Fill mode");
-            $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
-            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-            $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
+            $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+            $("#image-icon-select").attr("src","img/ui/icon-select.png");
+            $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
           } else {
             this.mode = "draw";
             status("Draw mode");
-            $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
-            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-            $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+            $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+            $("#image-icon-select").attr("src","img/ui/icon-select.png");
+            $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
           }
         }
 
         if (e.key == "1")
         {     
-          this.sprite.set_pen("i");
+          this.sprite.set_pen(1);
           this.update();
         }
 
         if (e.key == "2")
         {     
-          this.sprite.set_pen("t");
+          this.sprite.set_pen(0);
           this.update();
         }
 
         if (e.key == "3" && this.sprite.is_multicolor())
         {  
-          this.sprite.set_pen("m1");
+          this.sprite.set_pen(2);
           this.update();
         }
 
         if (e.key == "4" && this.sprite.is_multicolor())
         {    
-          this.sprite.set_pen("m2");
+          this.sprite.set_pen(3);
           this.update();
         }
 
@@ -495,9 +495,9 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     {
       this.mode = "draw";
       status("Draw mode");
-      $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
-      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-      $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
  
@@ -505,9 +505,9 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     {
       this.mode = "fill";
       status("Fill mode");
-      $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
-      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-      $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
     });
 
     $('#icon-fullscreen').mouseup((e) =>
@@ -562,27 +562,27 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
       this.update(); 
     });
 
-    $('#palette_i').mouseup((e) =>
+    $('#palette_1').mouseup((e) =>
     {     
-      this.sprite.set_pen("i");
+      this.sprite.set_pen(1);
       this.update();
     });
 
-    $('#palette_t').mouseup((e) =>
+    $('#palette_0').mouseup((e) =>
     {     
-      this.sprite.set_pen("t");
+      this.sprite.set_pen(0);
       this.update();
     });
 
-    $('#palette_m1').mouseup((e) =>
+    $('#palette_2').mouseup((e) =>
     {  
-      this.sprite.set_pen("m1");
+      this.sprite.set_pen(2);
       this.update();
     });
 
-    $('#palette_m2').mouseup((e) =>
+    $('#palette_3').mouseup((e) =>
     {    
-      this.sprite.set_pen("m2");
+      this.sprite.set_pen(3);
       this.update();
     });
         
@@ -745,7 +745,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
         if (!this.sprite.is_multicolor() &&  this.sprite.is_pen_multicolor())
         {
-          this.sprite.set_pen("i");
+          this.sprite.set_pen(1);
         }
         this.update();
       } 

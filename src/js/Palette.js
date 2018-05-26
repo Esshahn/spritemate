@@ -14,21 +14,21 @@ class Palette
     let template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
-          <div id="palette_t">
+          <div id="palette_0">
               <p>Transparent</p>
-              <div class="palette_color_item_active_colors" id="color_t" title="transparent&nbsp;(2)"></div>
+              <div class="palette_color_item_active_colors" id="color_0" title="transparent&nbsp;(2)"></div>
           </div>
-          <div id="palette_i">
+          <div id="palette_1">
               <p>Individual</p>
-              <div class="palette_color_item_active_colors" id="color_i" title="individual&nbsp;color&nbsp;(1)"></div>
+              <div class="palette_color_item_active_colors" id="color_1" title="individual&nbsp;color&nbsp;(1)"></div>
           </div>
-          <div id="palette_m1">
+          <div id="palette_2">
               <p>Multicolor 1</p>
-              <div class="palette_color_item_active_colors" id="color_m1" title="multicolor&nbsp;1&nbsp;(3)"></div>
+              <div class="palette_color_item_active_colors" id="color_2" title="multicolor&nbsp;1&nbsp;(3)"></div>
           </div>
-          <div id="palette_m2">
+          <div id="palette_3">
               <p>Multicolor 2</p>
-              <div class="palette_color_item_active_colors" id="color_m2" title="multicolor&nbsp;2&nbsp;(4)"></div>
+              <div class="palette_color_item_active_colors" id="color_3" title="multicolor&nbsp;2&nbsp;(4)"></div>
           </div>
       </div>
 
@@ -46,10 +46,10 @@ class Palette
     let sprite_is_multicolor = all_data.sprites[all_data.current_sprite].multicolor;
 
     // set the colors of the pens
-    $("#color_t").css("background-color",this.colors[all_data.colors.t]);
-    $("#color_i").css("background-color",this.colors[all_data.sprites[all_data.current_sprite].color]);
-    $("#color_m1").css("background-color",this.colors[all_data.colors.m1]);
-    $("#color_m2").css("background-color",this.colors[all_data.colors.m2]);
+    $("#color_0").css("background-color",this.colors[all_data.colors[0]]);
+    $("#color_1").css("background-color",this.colors[all_data.sprites[all_data.current_sprite].color]);
+    $("#color_2").css("background-color",this.colors[all_data.colors[2]]);
+    $("#color_3").css("background-color",this.colors[all_data.colors[3]]);
 
     // now set the right pen active
     $('#palette_spritecolors div').removeClass("palette_color_item_selected");
@@ -92,11 +92,11 @@ class Palette
   {
     if (is_multicolor)
     {
-      $('#palette_m1').show(); 
-      $('#palette_m2').show();  
+      $('#palette_2').show(); 
+      $('#palette_3').show();  
     } else {
-      $('#palette_m1').hide(); 
-      $('#palette_m2').hide();  
+      $('#palette_2').hide(); 
+      $('#palette_3').hide();  
     }
   }
 

@@ -18,6 +18,7 @@ class Info
 
             <h1>V1.08</h1>
             <p>
+            - reworked Spritemate file format, reducing file size by over 50%<br/>
             - switched individual and transparent color pickers in color palette (thx2 Steril)<br/>
             - repo cleanup (thx2 nurpax)<br/>
             </p>

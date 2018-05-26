@@ -59,7 +59,22 @@ class Load
 
   get_imported_file() { return this.imported_file; }
   
-  parse_file_spm(file) { this.imported_file = JSON.parse(file); }
+  parse_file_spm(file) 
+  { 
+
+    // the replaces are to support the older file format with t,i,m1,m2
+    file = file.replace(/"t":/g,'"0":');
+    file = file.replace(/"i":/g,'"1":');
+    file = file.replace(/"m1":/g,'"2":');
+    file = file.replace(/"m2":/g,'"3":');
+    file = file.replace(/"t"/g,'0');
+    file = file.replace(/"i"/g,'1');
+    file = file.replace(/"m1"/g,'2');
+    file = file.replace(/"m2"/g,'3');
+
+    this.imported_file = JSON.parse(file); 
+    
+  }
 
   parse_file_spd(file,format) 
   {
@@ -105,10 +120,10 @@ class Load
     
 
     this.imported_file = {};
-    this.imported_file.colors = {"t": this.color_trans, "m1": this.color_multi1, "m2": this.color_multi2};
+    this.imported_file.colors = {0: this.color_trans, 2: this.color_multi1, 3: this.color_multi2};
     this.imported_file.sprites = [];
     this.imported_file.current_sprite = 0;
-    this.imported_file.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.imported_file.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
   }
 
   convert_sprite_data_to_internal_format(sprite_number)
@@ -155,10 +170,10 @@ class Load
 
       if(this.multicolor)
       {
-        if (byte[j] == "00")  pen = "t";
-        if (byte[j] == "10")  pen = "i";
-        if (byte[j] == "01")  pen = "m1";
-        if (byte[j] == "11")  pen = "m2";
+        if (byte[j] == "00")  pen = 0;
+        if (byte[j] == "10")  pen = 1;
+        if (byte[j] == "01")  pen = 2;
+        if (byte[j] == "11")  pen = 3;
 
         binary.push( pen );
         binary.push( pen );
@@ -166,12 +181,12 @@ class Load
 
       if(!this.multicolor)
       {
-        pen = "i";
-        if (byte[j][0] == "0") pen = "t";
+        pen = 1;
+        if (byte[j][0] == "0") pen = 0;
         binary.push ( pen );
 
-        pen = "i";
-        if (byte[j][1] == "0") pen = "t";
+        pen = 1;
+        if (byte[j][1] == "0") pen = 0;
         binary.push ( pen );
       }
 

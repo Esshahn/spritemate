@@ -25,18 +25,18 @@ class Editor extends Window_Controls
     let template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
-          <img src="img/icon3/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
+          <img src="img/ui/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
+          <img src="img/ui/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
+          <img src="img/ui/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
         </div>
 
-        <img src="img/icon3/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
-        <img src="img/icon3/icon-shift-left.png" title="shift left" id="icon-shift-left">
-        <img src="img/icon3/icon-shift-right.png" title="shift right" id="icon-shift-right">
-        <img src="img/icon3/icon-shift-up.png" title="shift up" id="icon-shift-up">
-        <img src="img/icon3/icon-shift-down.png" title="shift down" id="icon-shift-down">
-        <img src="img/icon3/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
-        <img src="img/icon3/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
+        <img src="img/ui/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
+        <img src="img/ui/icon-shift-left.png" title="shift left" id="icon-shift-left">
+        <img src="img/ui/icon-shift-right.png" title="shift right" id="icon-shift-right">
+        <img src="img/ui/icon-shift-up.png" title="shift up" id="icon-shift-up">
+        <img src="img/ui/icon-shift-down.png" title="shift down" id="icon-shift-down">
+        <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
+        <img src="img/ui/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
         
       </div>
       <div id="editor-canvas"></div>
@@ -59,7 +59,7 @@ class Editor extends Window_Controls
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // first fill the whole sprite with the background color
-    this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
     this.canvas.fillRect(0,0,this.width,this.height); 
 
     // overlay from previous sprite
@@ -99,10 +99,10 @@ class Editor extends Window_Controls
       {
         let array_entry = sprite_data.pixels[j][i];
 
-        if (array_entry != "t")
+        if (array_entry != 0) // not transparent
         {
           let color = sprite_data.color;
-          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
+          if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
           this.canvas.fillStyle = this.overlay_color(this.config.colors[color],alpha);
           this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }
