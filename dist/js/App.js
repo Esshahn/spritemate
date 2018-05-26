@@ -375,22 +375,22 @@ var App = function () {
           }
 
           if (e.key == "1") {
-            _this.sprite.set_pen("i");
+            _this.sprite.set_pen(1);
             _this.update();
           }
 
           if (e.key == "2") {
-            _this.sprite.set_pen("t");
+            _this.sprite.set_pen(0);
             _this.update();
           }
 
           if (e.key == "3" && _this.sprite.is_multicolor()) {
-            _this.sprite.set_pen("m1");
+            _this.sprite.set_pen(2);
             _this.update();
           }
 
           if (e.key == "4" && _this.sprite.is_multicolor()) {
-            _this.sprite.set_pen("m2");
+            _this.sprite.set_pen(3);
             _this.update();
           }
 
@@ -517,23 +517,23 @@ var App = function () {
         _this.update();
       });
 
-      $('#palette_i').mouseup(function (e) {
-        _this.sprite.set_pen("i");
+      $('#palette_1').mouseup(function (e) {
+        _this.sprite.set_pen(1);
         _this.update();
       });
 
-      $('#palette_t').mouseup(function (e) {
-        _this.sprite.set_pen("t");
+      $('#palette_0').mouseup(function (e) {
+        _this.sprite.set_pen(0);
         _this.update();
       });
 
-      $('#palette_m1').mouseup(function (e) {
-        _this.sprite.set_pen("m1");
+      $('#palette_2').mouseup(function (e) {
+        _this.sprite.set_pen(2);
         _this.update();
       });
 
-      $('#palette_m2').mouseup(function (e) {
-        _this.sprite.set_pen("m2");
+      $('#palette_3').mouseup(function (e) {
+        _this.sprite.set_pen(3);
         _this.update();
       });
 
@@ -674,7 +674,7 @@ var App = function () {
         if (!_this.dragging) {
           _this.sprite.set_current_sprite(_this.list.get_clicked_sprite());
           if (!_this.sprite.is_multicolor() && _this.sprite.is_pen_multicolor()) {
-            _this.sprite.set_pen("i");
+            _this.sprite.set_pen(1);
           }
           _this.update();
         }

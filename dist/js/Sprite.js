@@ -12,11 +12,11 @@ var Sprite = function () {
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    this.all.colors = { "t": 11, "m1": 8, "m2": 6 };
+    this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
 
     this.all.sprites = [];
     this.all.current_sprite = 0;
-    this.all.pen = "i"; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
     this.backup_position = -1;
     this.copy_sprite = {};
@@ -41,13 +41,13 @@ var Sprite = function () {
       for (var i = 0; i < this.height; i++) {
         var line = [];
         for (var j = 0; j < this.width; j++) {
-          line.push("t");
+          line.push(0);
         }sprite.pixels.push(line);
       }
       this.all.sprites.push(sprite);
       this.all.current_sprite = this.all.sprites.length - 1;
 
-      if (!multicolor && this.is_pen_multicolor()) this.set_pen("i");
+      if (!multicolor && this.is_pen_multicolor()) this.set_pen(1);
 
       this.save_backup();
     }
@@ -62,7 +62,7 @@ var Sprite = function () {
       for (var i = 0; i < this.height; i++) {
         var line = [];
         for (var j = 0; j < this.width; j++) {
-          line.push("t");
+          line.push(0);
         }pixels.push(line);
       }
       this.all.sprites[this.all.current_sprite].pixels = pixels;
@@ -148,17 +148,12 @@ var Sprite = function () {
     // used to update the palette with the right colors
     {
       var sprite_colors = {
-        "i": this.all.sprites[this.all.current_sprite].color,
-        "t": this.all.colors.t,
-        "m1": this.all.colors.m1,
-        "m2": this.all.colors.m2
+        0: this.all.colors[0],
+        1: this.all.sprites[this.all.current_sprite].color,
+        2: this.all.colors[2],
+        3: this.all.colors[3]
       };
       return sprite_colors;
-    }
-  }, {
-    key: "get_delete_color",
-    value: function get_delete_color() {
-      return this.all.colors.transparent;
     }
   }, {
     key: "is_multicolor",
@@ -182,7 +177,7 @@ var Sprite = function () {
     value: function toggle_multicolor() {
       if (this.all.sprites[this.all.current_sprite].multicolor) {
         this.all.sprites[this.all.current_sprite].multicolor = false;
-        if (this.is_pen_multicolor()) this.set_pen("i");
+        if (this.is_pen_multicolor()) this.set_pen(1);
       } else {
         this.all.sprites[this.all.current_sprite].multicolor = true;
       }
@@ -201,7 +196,7 @@ var Sprite = function () {
         this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = this.all.pen;
       } else {
         // shift is hold down, so we delete with transparent color
-        this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = "t";
+        this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = 0;
       }
     }
   }, {
@@ -232,7 +227,7 @@ var Sprite = function () {
   }, {
     key: "is_pen_multicolor",
     value: function is_pen_multicolor() {
-      if (this.all.pen === "m1" || this.all.pen === "m2") {
+      if (this.all.pen === 2 || this.all.pen === 3) {
         return true;
       } else {
         return false;
@@ -246,7 +241,7 @@ var Sprite = function () {
   }, {
     key: "set_pen_color",
     value: function set_pen_color(pencolor) {
-      if (this.all.pen == "i") {
+      if (this.all.pen == 1) {
         this.all.sprites[this.all.current_sprite].color = pencolor;
       } else {
         this.all.colors[this.all.pen] = pencolor;

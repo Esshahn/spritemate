@@ -50,19 +50,20 @@ var Preview = function (_Window_Controls) {
       if (sprite_data.multicolor) x_grid_step = 2;
 
       // first fill the whole sprite with the background color
-      this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+      this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
       this.canvas.fillRect(0, 0, this.width, this.height);
 
       for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
         for (var j = 0; j < this.pixels_y; j++) {
           var array_entry = sprite_data.pixels[j][i];
 
-          if (array_entry != "t") {
-            var color = sprite_data.color;
-            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-            this.canvas.fillStyle = this.config.colors[color];
-            this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
-          }
+          if (array_entry != 0) // transparent
+            {
+              var color = sprite_data.color;
+              if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+              this.canvas.fillStyle = this.config.colors[color];
+              this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
+            }
         }
       }
 
@@ -100,12 +101,12 @@ var Preview = function (_Window_Controls) {
           var array_entry = sprite_data.pixels[j][i];
 
           // if singlecolor only, replace the multicolor pixels with the individual color
-          if (!sprite_data.multicolor && (array_entry == "m1" || array_entry == "m2")) array_entry = "i";
+          if (!sprite_data.multicolor && (array_entry == 2 || array_entry == 3)) array_entry = 1;
 
           var color = sprite_data.color;
-          if (array_entry != "i") color = all_data.colors[array_entry];
+          if (array_entry != 1) color = all_data.colors[array_entry];
 
-          if (array_entry != "t") {
+          if (array_entry != 0) {
             this.canvas.fillStyle = this.config.colors[color];
             this.canvas.fillRect(i * this.zoom, j * this.zoom, this.zoom * x_grid_step, this.zoom);
           }

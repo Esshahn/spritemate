@@ -59,7 +59,7 @@ class Editor extends Window_Controls
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // first fill the whole sprite with the background color
-    this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+    this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
     this.canvas.fillRect(0,0,this.width,this.height); 
 
     // overlay from previous sprite
@@ -99,10 +99,10 @@ class Editor extends Window_Controls
       {
         let array_entry = sprite_data.pixels[j][i];
 
-        if (array_entry != "t")
+        if (array_entry != 0) // not transparent
         {
           let color = sprite_data.color;
-          if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
+          if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
           this.canvas.fillStyle = this.overlay_color(this.config.colors[color],alpha);
           this.canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
         }

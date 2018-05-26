@@ -397,25 +397,25 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "1")
         {     
-          this.sprite.set_pen("i");
+          this.sprite.set_pen(1);
           this.update();
         }
 
         if (e.key == "2")
         {     
-          this.sprite.set_pen("t");
+          this.sprite.set_pen(0);
           this.update();
         }
 
         if (e.key == "3" && this.sprite.is_multicolor())
         {  
-          this.sprite.set_pen("m1");
+          this.sprite.set_pen(2);
           this.update();
         }
 
         if (e.key == "4" && this.sprite.is_multicolor())
         {    
-          this.sprite.set_pen("m2");
+          this.sprite.set_pen(3);
           this.update();
         }
 
@@ -562,27 +562,27 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
       this.update(); 
     });
 
-    $('#palette_i').mouseup((e) =>
+    $('#palette_1').mouseup((e) =>
     {     
-      this.sprite.set_pen("i");
+      this.sprite.set_pen(1);
       this.update();
     });
 
-    $('#palette_t').mouseup((e) =>
+    $('#palette_0').mouseup((e) =>
     {     
-      this.sprite.set_pen("t");
+      this.sprite.set_pen(0);
       this.update();
     });
 
-    $('#palette_m1').mouseup((e) =>
+    $('#palette_2').mouseup((e) =>
     {  
-      this.sprite.set_pen("m1");
+      this.sprite.set_pen(2);
       this.update();
     });
 
-    $('#palette_m2').mouseup((e) =>
+    $('#palette_3').mouseup((e) =>
     {    
-      this.sprite.set_pen("m2");
+      this.sprite.set_pen(3);
       this.update();
     });
         
@@ -745,7 +745,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
         if (!this.sprite.is_multicolor() &&  this.sprite.is_pen_multicolor())
         {
-          this.sprite.set_pen("i");
+          this.sprite.set_pen(1);
         }
         this.update();
       } 

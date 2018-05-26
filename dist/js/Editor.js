@@ -53,7 +53,7 @@ var Editor = function (_Window_Controls) {
       if (sprite_data.multicolor) x_grid_step = 2;
 
       // first fill the whole sprite with the background color
-      this.canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+      this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
       this.canvas.fillRect(0, 0, this.width, this.height);
 
       // overlay from previous sprite
@@ -94,12 +94,13 @@ var Editor = function (_Window_Controls) {
         for (var j = 0; j < this.pixels_y; j++) {
           var array_entry = sprite_data.pixels[j][i];
 
-          if (array_entry != "t") {
-            var color = sprite_data.color;
-            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-            this.canvas.fillStyle = this.overlay_color(this.config.colors[color], alpha);
-            this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
-          }
+          if (array_entry != 0) // not transparent
+            {
+              var color = sprite_data.color;
+              if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+              this.canvas.fillStyle = this.overlay_color(this.config.colors[color], alpha);
+              this.canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
+            }
         }
       }
     }

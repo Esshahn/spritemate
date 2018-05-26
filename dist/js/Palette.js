@@ -12,7 +12,7 @@ var Palette = function () {
     this.active_color = 3; // 1 = white on the c64
     this.window = window;
 
-    var template = "\n      <div id=\"palette_all_colors\"></div>\n      <div id=\"palette_spritecolors\">\n          <div id=\"palette_t\">\n              <p>Transparent</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_t\" title=\"transparent&nbsp;(2)\"></div>\n          </div>\n          <div id=\"palette_i\">\n              <p>Individual</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_i\" title=\"individual&nbsp;color&nbsp;(1)\"></div>\n          </div>\n          <div id=\"palette_m1\">\n              <p>Multicolor 1</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_m1\" title=\"multicolor&nbsp;1&nbsp;(3)\"></div>\n          </div>\n          <div id=\"palette_m2\">\n              <p>Multicolor 2</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_m2\" title=\"multicolor&nbsp;2&nbsp;(4)\"></div>\n          </div>\n      </div>\n\n    ";
+    var template = "\n      <div id=\"palette_all_colors\"></div>\n      <div id=\"palette_spritecolors\">\n          <div id=\"palette_0\">\n              <p>Transparent</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_0\" title=\"transparent&nbsp;(2)\"></div>\n          </div>\n          <div id=\"palette_1\">\n              <p>Individual</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_1\" title=\"individual&nbsp;color&nbsp;(1)\"></div>\n          </div>\n          <div id=\"palette_2\">\n              <p>Multicolor 1</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_2\" title=\"multicolor&nbsp;1&nbsp;(3)\"></div>\n          </div>\n          <div id=\"palette_3\">\n              <p>Multicolor 2</p>\n              <div class=\"palette_color_item_active_colors\" id=\"color_3\" title=\"multicolor&nbsp;2&nbsp;(4)\"></div>\n          </div>\n      </div>\n\n    ";
 
     $("#window-" + this.window).append(template);
 
@@ -25,10 +25,10 @@ var Palette = function () {
       var sprite_is_multicolor = all_data.sprites[all_data.current_sprite].multicolor;
 
       // set the colors of the pens
-      $("#color_t").css("background-color", this.colors[all_data.colors.t]);
-      $("#color_i").css("background-color", this.colors[all_data.sprites[all_data.current_sprite].color]);
-      $("#color_m1").css("background-color", this.colors[all_data.colors.m1]);
-      $("#color_m2").css("background-color", this.colors[all_data.colors.m2]);
+      $("#color_0").css("background-color", this.colors[all_data.colors[0]]);
+      $("#color_1").css("background-color", this.colors[all_data.sprites[all_data.current_sprite].color]);
+      $("#color_2").css("background-color", this.colors[all_data.colors[2]]);
+      $("#color_3").css("background-color", this.colors[all_data.colors[3]]);
 
       // now set the right pen active
       $('#palette_spritecolors div').removeClass("palette_color_item_selected");
@@ -65,11 +65,11 @@ var Palette = function () {
     key: "set_multicolor",
     value: function set_multicolor(is_multicolor) {
       if (is_multicolor) {
-        $('#palette_m1').show();
-        $('#palette_m2').show();
+        $('#palette_2').show();
+        $('#palette_3').show();
       } else {
-        $('#palette_m1').hide();
-        $('#palette_m2').hide();
+        $('#palette_2').hide();
+        $('#palette_3').hide();
       }
     }
   }, {

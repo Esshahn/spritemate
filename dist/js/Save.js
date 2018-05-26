@@ -161,7 +161,7 @@ var Save = function () {
         data.push(1, this.savedata.sprites.length - 1, 0); // number of sprites
       }
 
-      data.push(this.savedata.colors.t, this.savedata.colors.m1, this.savedata.colors.m2); // colors
+      data.push(this.savedata.colors[0], this.savedata.colors[2], this.savedata.colors[3]); // colors
 
       var byte = "";
       var bit = "";
@@ -184,15 +184,15 @@ var Save = function () {
             var pen = spritedata[i + k];
 
             if (is_multicolor) {
-              if (pen == "i") bit = "10";
-              if (pen == "t") bit = "00";
-              if (pen == "m1") bit = "01";
-              if (pen == "m2") bit = "11";
+              if (pen == 1) bit = "10";
+              if (pen == 0) bit = "00";
+              if (pen == 2) bit = "01";
+              if (pen == 3) bit = "11";
             }
 
             if (!is_multicolor) {
               bit = "1";
-              if (pen == "t") bit = "0";
+              if (pen == 0) bit = "0";
             }
 
             byte = byte + bit;
@@ -278,15 +278,15 @@ var Save = function () {
             var pen = spritedata[i + k];
 
             if (is_multicolor) {
-              if (pen == "i") bit = "10";
-              if (pen == "t") bit = "00";
-              if (pen == "m1") bit = "01";
-              if (pen == "m2") bit = "11";
+              if (pen == 1) bit = "10";
+              if (pen == 0) bit = "00";
+              if (pen == 2) bit = "01";
+              if (pen == 3) bit = "11";
             }
 
             if (!is_multicolor) {
               bit = "1";
-              if (pen == "t") bit = "0";
+              if (pen == 0) bit = "0";
             }
 
             byte = byte + bit;

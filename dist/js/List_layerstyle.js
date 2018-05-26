@@ -70,7 +70,7 @@ var List = function (_Window_Controls) {
       if (sprite_data.multicolor) x_grid_step = 2;
 
       // first fill the whole sprite with the background color
-      canvas.fillStyle = this.config.colors[all_data.colors["t"]];
+      canvas.fillStyle = this.config.colors[all_data.colors[0]];
       canvas.fillRect(0, 0, this.width, this.height);
 
       for (var i = 0; i < this.pixels_x; i = i + x_grid_step) {
@@ -78,12 +78,13 @@ var List = function (_Window_Controls) {
 
           var array_entry = sprite_data.pixels[j][i];
 
-          if (array_entry != "t") {
-            var color = sprite_data.color;
-            if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-            canvas.fillStyle = this.config.colors[color];
-            canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
-          }
+          if (array_entry != 0) // transparent
+            {
+              var color = sprite_data.color;
+              if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+              canvas.fillStyle = this.config.colors[color];
+              canvas.fillRect(i * this.zoom, j * this.zoom, x_grid_step * this.zoom, this.zoom);
+            }
         }
       }
     }
@@ -116,19 +117,20 @@ var List = function (_Window_Controls) {
         if (sprite_data.multicolor) x_grid_step = 2;
 
         // first fill the whole sprite with the background color
-        canvas.fillStyle = _this2.config.colors[all_data.colors["t"]];
+        canvas.fillStyle = _this2.config.colors[all_data.colors[0]];
         canvas.fillRect(0, 0, _this2.width, _this2.height);
 
         for (var _i = 0; _i < _this2.pixels_x; _i = _i + x_grid_step) {
           for (var j = 0; j < _this2.pixels_y; j++) {
             var array_entry = sprite_data.pixels[j][_i];
 
-            if (array_entry != "t") {
-              var color = sprite_data.color;
-              if (array_entry != "i" && sprite_data.multicolor) color = all_data.colors[array_entry];
-              canvas.fillStyle = _this2.config.colors[color];
-              canvas.fillRect(_i * _this2.zoom, j * _this2.zoom, x_grid_step * _this2.zoom, _this2.zoom);
-            }
+            if (array_entry != 0) // transparent
+              {
+                var color = sprite_data.color;
+                if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+                canvas.fillStyle = _this2.config.colors[color];
+                canvas.fillRect(_i * _this2.zoom, j * _this2.zoom, x_grid_step * _this2.zoom, _this2.zoom);
+              }
           }
         }
       };
