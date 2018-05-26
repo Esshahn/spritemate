@@ -170,9 +170,9 @@ class App
 
     if (this.sprite.is_overlay())
     {
-      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay-hi.png");
+      $('#icon-preview-overlay').attr("src","img/ui/icon-preview-overlay-hi.png");
     } else {
-      $('#icon-preview-overlay').attr("src","img/icon3/icon-preview-overlay.png");
+      $('#icon-preview-overlay').attr("src","img/ui/icon-preview-overlay.png");
     }
 
     if (this.preview.is_min_zoom())
@@ -383,15 +383,15 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           {
             this.mode = "fill";
             status("Fill mode");
-            $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
-            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-            $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
+            $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+            $("#image-icon-select").attr("src","img/ui/icon-select.png");
+            $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
           } else {
             this.mode = "draw";
             status("Draw mode");
-            $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
-            $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-            $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+            $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+            $("#image-icon-select").attr("src","img/ui/icon-select.png");
+            $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
           }
         }
 
@@ -495,9 +495,9 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     {
       this.mode = "draw";
       status("Draw mode");
-      $("#image-icon-draw").attr("src","img/icon3/icon-draw-hi.png");
-      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-      $("#image-icon-fill").attr("src","img/icon3/icon-fill.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
  
@@ -505,9 +505,9 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
     {
       this.mode = "fill";
       status("Fill mode");
-      $("#image-icon-draw").attr("src","img/icon3/icon-draw.png");
-      $("#image-icon-select").attr("src","img/icon3/icon-select.png");
-      $("#image-icon-fill").attr("src","img/icon3/icon-fill-hi.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
     });
 
     $('#icon-fullscreen').mouseup((e) =>

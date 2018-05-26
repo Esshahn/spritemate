@@ -97,52 +97,52 @@ class Help
                     <th>Decription</th>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-load.png" class="icon"></td>
+                    <td><img src="img/ui/icon-load.png" class="icon"></td>
                     <td></td>
                     <td>Loads a file. Supported formats: Spritemate (SPM), SpritePad (SPD, SPR)</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-save.png" class="icon"></td>
+                    <td><img src="img/ui/icon-save.png" class="icon"></td>
                     <td></td>
                     <td>Saves a file. Supported formats: Spritemate (SPM), SpritePad 2.0 & 1.8.1 (SPD), ASM source (TXT)</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-undo.png" class="icon"></td>
+                    <td><img src="img/ui/icon-undo.png" class="icon"></td>
                     <td>z</td>
                     <td>Undo. For when you screwed up.</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-redo.png" class="icon"></td>
+                    <td><img src="img/ui/icon-redo.png" class="icon"></td>
                     <td>shift + z</td>
                     <td>Redo. For when you realized it wasn't that bad</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-draw.png" class="icon"></td>
+                    <td><img src="img/ui/icon-draw.png" class="icon"></td>
                     <td>d (toggle)</td>
                     <td>Draw pixels. Hold shift to delete pixels.</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-fill.png" class="icon"></td>
+                    <td><img src="img/ui/icon-fill.png" class="icon"></td>
                     <td>d (toggle)</td>
                     <td>Flood fill</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-fullscreen.png" class="icon"></td>
+                    <td><img src="img/ui/icon-fullscreen.png" class="icon"></td>
                     <td>f</td>
                     <td>Toggle fullscreen window mode</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-settings.png" class="icon"></td>
+                    <td><img src="img/ui/icon-settings.png" class="icon"></td>
                     <td></td>
                     <td>Open Settings window to change the color palette</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-help.png" class="icon"></td>
+                    <td><img src="img/ui/icon-help.png" class="icon"></td>
                     <td></td>
                     <td>Shows the documentation which you are reading right now</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-info.png" class="icon"></td>
+                    <td><img src="img/ui/icon-info.png" class="icon"></td>
                     <td></td>
                     <td>Displays the splash window</td>
                 </tr>
@@ -159,47 +159,47 @@ class Help
                     <th>Description</th>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-multicolor.png" class="icon"></td>
+                    <td><img src="img/ui/icon-multicolor.png" class="icon"></td>
                     <td>m</td>
                     <td>Toggle between singlecolor and multicolor mode</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-shift-left.png" class="icon"></td>
+                    <td><img src="img/ui/icon-shift-left.png" class="icon"></td>
                     <td></td>
                     <td>Shift sprite left</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-shift-right.png" class="icon"></td>
+                    <td><img src="img/ui/icon-shift-right.png" class="icon"></td>
                     <td></td>
                     <td>Shift sprite right</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-shift-up.png" class="icon"></td>
+                    <td><img src="img/ui/icon-shift-up.png" class="icon"></td>
                     <td></td>
                     <td>Shift sprite up</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-shift-down.png" class="icon"></td>
+                    <td><img src="img/ui/icon-shift-down.png" class="icon"></td>
                     <td></td>
                     <td>Shift sprite down</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-flip-horizontal.png" class="icon"></td>
+                    <td><img src="img/ui/icon-flip-horizontal.png" class="icon"></td>
                     <td></td>
                     <td>Flip sprite horizontal</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-flip-vertical.png" class="icon"></td>
+                    <td><img src="img/ui/icon-flip-vertical.png" class="icon"></td>
                     <td></td>
                     <td>Flip sprite vertical</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-grid.png" class="icon"></td>
+                    <td><img src="img/ui/icon-grid.png" class="icon"></td>
                     <td></td>
                     <td>Toggles grid display on/off</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-zoom-in.png" class="icon"><img src="img/icon3/icon-zoom-out.png" class="icon"></td>
+                    <td><img src="img/ui/icon-zoom-in.png" class="icon"><img src="img/ui/icon-zoom-out.png" class="icon"></td>
                     <td></td>
                     <td>Zooms window in/out</td>
                 </tr>
@@ -221,17 +221,17 @@ class Help
                     <th>Description</th>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-preview-x2.png" class="icon"></td>
+                    <td><img src="img/ui/icon-preview-x2.png" class="icon"></td>
                     <td></td>
                     <td>Stretches sprite horizontally</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-preview-y2.png" class="icon"></td>
+                    <td><img src="img/ui/icon-preview-y2.png" class="icon"></td>
                     <td></td>
                     <td>Stretches sprite vertically</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-zoom-in.png" class="icon"><img src="img/icon3/icon-zoom-out.png" class="icon"></td>
+                    <td><img src="img/ui/icon-zoom-in.png" class="icon"><img src="img/ui/icon-zoom-out.png" class="icon"></td>
                     <td></td>
                     <td>Zooms window in/out</td>
                 </tr>
@@ -248,32 +248,32 @@ class Help
                     <th>Description</th>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-list-new.png" class="icon"></td>
+                    <td><img src="img/ui/icon-list-new.png" class="icon"></td>
                     <td></td>
                     <td>Create new sprite</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-list-delete.png" class="icon"></td>
+                    <td><img src="img/ui/icon-list-delete.png" class="icon"></td>
                     <td></td>
                     <td>Remove selected sprite</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-list-copy.png" class="icon"></td>
+                    <td><img src="img/ui/icon-list-copy.png" class="icon"></td>
                     <td></td>
                     <td>Copy sprite</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-list-paste.png" class="icon"></td>
+                    <td><img src="img/ui/icon-list-paste.png" class="icon"></td>
                     <td></td>
                     <td>Paste sprite</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-grid.png" class="icon"></td>
+                    <td><img src="img/ui/icon-grid.png" class="icon"></td>
                     <td></td>
                     <td>Toggles grid display on/off</td>
                 </tr>
                 <tr>
-                    <td><img src="img/icon3/icon-zoom-in.png" class="icon"><img src="img/icon3/icon-zoom-out.png" class="icon"></td>
+                    <td><img src="img/ui/icon-zoom-in.png" class="icon"><img src="img/ui/icon-zoom-out.png" class="icon"></td>
                     <td></td>
                     <td>Zooms window in/out</td>
                 </tr>

@@ -32,7 +32,7 @@ var Preview = function (_Window_Controls) {
     _this.canvas_element.height = _this.height;
     _this.canvas = _this.canvas_element.getContext('2d');
 
-    var template = '\n      <div class="window_menu">\n        <div class="icons-zoom-area">\n          <img src="img/icon3/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/icon3/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        <img src="img/icon3/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">\n      </div>\n      <div id="preview-canvas"></div>\n    ';
+    var template = '\n      <div class="window_menu">\n        <div class="icons-zoom-area">\n          <img src="img/ui/icon-zoom-in.png" id="icon-preview-zoom-in" title="zoom in">\n          <img src="img/ui/icon-zoom-out.png" id="icon-preview-zoom-out" title="zoom out">\n        </div>\n        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>\n        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>\n        <img src="img/ui/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">\n      </div>\n      <div id="preview-canvas"></div>\n    ';
 
     $("#window-" + _this.window).append(template);
     $("#preview-canvas").append(_this.canvas_element);

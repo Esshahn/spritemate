@@ -23,14 +23,14 @@ class List extends Window_Controls
     let template = `
       <div class="window_menu">
       <div class="icons-zoom-area">
-          <img src="img/icon3/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
-          <img src="img/icon3/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
-          <img src="img/icon3/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
+          <img src="img/ui/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
+          <img src="img/ui/icon-zoom-out.png" id="icon-list-zoom-out" title="zoom out">
+          <img src="img/ui/icon-grid.png" id="icon-list-grid" title="toggle grid borders">
       </div>
-        <img src="img/icon3/icon-list-new.png" id="icon-list-new" title="new sprite">
-        <img src="img/icon3/icon-list-delete.png" id="icon-list-delete" title="remove sprite">
-        <img src="img/icon3/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
-        <img src="img/icon3/icon-list-paste.png" id="icon-list-paste" title="paste sprite">
+        <img src="img/ui/icon-list-new.png" id="icon-list-new" title="new sprite">
+        <img src="img/ui/icon-list-delete.png" id="icon-list-delete" title="remove sprite">
+        <img src="img/ui/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
+        <img src="img/ui/icon-list-paste.png" id="icon-list-paste" title="paste sprite">
       </div>
       <div id="spritelist"></div>
     `;
