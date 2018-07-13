@@ -608,7 +608,14 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
 */
 
+    // prevent scrolling of canvas on mobile
+    $('#editor').on('touchmove', function(e)
+    {
+      e.preventDefault();
+    });
+
     $('#editor').mousedown((e) => {
+
       if (this.mode == "draw")
       {
         this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
