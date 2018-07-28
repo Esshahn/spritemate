@@ -371,7 +371,8 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "q")
         {
-          //this.sprite.set_all(example_sprite);
+          this.sprite.set_all(example_sprite);
+          // example sprite is defined in the config.js
           this.list.update_all(this.sprite.get_all());
           this.update();
         }
@@ -397,13 +398,13 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "1")
         {     
-          this.sprite.set_pen(1);
+          this.sprite.set_pen(0);
           this.update();
         }
 
         if (e.key == "2")
         {     
-          this.sprite.set_pen(0);
+          this.sprite.set_pen(1);
           this.update();
         }
 

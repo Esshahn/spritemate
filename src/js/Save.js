@@ -277,9 +277,9 @@ class Save
 
     data += "\n"+comment+" generated with spritemate on " + new Date().toLocaleString();
 
-    data += "\n\nLDA #" + this.savedata.colors.m1 + " "+comment+" sprite multicolor 1";
+    data += "\n\nLDA #" + this.savedata.colors[2] + " "+comment+" sprite multicolor 1";
     data += "\nSTA $D025";
-    data += "\nLDA #" + this.savedata.colors.m2 + " "+comment+" sprite multicolor 2";
+    data += "\nLDA #" + this.savedata.colors[3] + " "+comment+" sprite multicolor 2";
     data += "\nSTA $D026";
     data += "\n";
     

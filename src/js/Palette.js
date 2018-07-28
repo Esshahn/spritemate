@@ -16,11 +16,11 @@ class Palette
       <div id="palette_spritecolors">
           <div id="palette_0">
               <p>Transparent</p>
-              <div class="palette_color_item_active_colors" id="color_0" title="transparent&nbsp;(2)"></div>
+              <div class="palette_color_item_active_colors" id="color_0" title="transparent&nbsp;(1)"></div>
           </div>
           <div id="palette_1">
               <p>Individual</p>
-              <div class="palette_color_item_active_colors" id="color_1" title="individual&nbsp;color&nbsp;(1)"></div>
+              <div class="palette_color_item_active_colors" id="color_1" title="individual&nbsp;color&nbsp;(2)"></div>
           </div>
           <div id="palette_2">
               <p>Multicolor 1</p>
