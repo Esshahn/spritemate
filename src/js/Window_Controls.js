@@ -7,9 +7,11 @@
 
 
  */
-class Window_Controls
-{
 
+import $ from 'jquery'
+
+export default class Window_Controls
+{
 
   get_width() { return this.width; }
 

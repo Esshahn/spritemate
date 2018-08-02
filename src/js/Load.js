@@ -1,6 +1,7 @@
+import $ from 'jquery'
+import { status } from './helper'
 
-
-class Load
+export default class Load
 {
 
   constructor(config,eventhandler)

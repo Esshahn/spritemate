@@ -10,11 +10,26 @@
 
 */
 
+import $ from "jquery";
+import jQuery from "jquery";
+import '../css/jquery-ui.css';
+import '../css/stylesheet.css';
 
-function init()
-{
-  let sprite_app = new App(get_config());
-}
+import List from "./List";
+import Info from "./Info";
+import Help from "./Help";
+import Menu from "./Menu";
+import Load from "./Load";
+import Save from "./Save";
+import Settings from "./Settings";
+import Editor from "./Editor";
+import Palette from "./Palette";
+import Preview from "./Preview";
+import Sprite from "./Sprite";
+import Storage from "./Storage";
+import Window from "./Window";
+import { get_config } from "./config.js";
+import { tipoftheday, status } from './helper'
 
 
 
@@ -892,4 +907,9 @@ PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              
   }
 
 }
+
+
+$(function() {
+  new App(get_config());
+});
 

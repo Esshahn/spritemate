@@ -5,7 +5,9 @@
 
  */
 
-class Window
+import $ from 'jquery'
+
+export default class Window
 {
     constructor(config,callback)
     {

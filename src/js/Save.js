@@ -1,4 +1,7 @@
-class Save
+import $ from 'jquery'
+import { status } from './helper'
+
+export default class Save
 {
 
   constructor(window,config,eventhandler)

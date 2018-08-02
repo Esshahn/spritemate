@@ -3,15 +3,29 @@
   "version": "1.0.8",
   "description": "browser based sprite editor for the commodore 64",
   "homepage": "http://www.awsm.de",
+  "author": "Ingo Hinterding",
+  "license": "ISC",
   "main": "App.js",
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-preset-env": "^1.5.2"
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.5.2",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel src/js --out-dir dist/js -w"
+    "start": "webpack-dev-server -d",
+    "build": "webpack --mode production"
   },
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "copy-webpack-plugin": "^4.5.2",
+    "eslint": "^5.2.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "jquery": "^3.3.1",
+    "mini-css-extract-plugin": "^0.4.1",
+    "webpack-jquery-ui": "^2.0.1"
+  }
 }
