@@ -1,6 +1,6 @@
+import $ from 'jquery'
 
-
-class Info
+export default class Info
 {
 
   constructor(window,config)
@@ -18,6 +18,7 @@ class Info
 
             <h1>V1.08</h1>
             <p>
+            - migrated Spritemate to use webpack (thx2 nurpax)<br />
             - reworked Spritemate file format, reducing file size by over 50%<br/>
             - switched individual and transparent color pickers in color palette (thx2 Steril)<br/>
             - repo cleanup (thx2 nurpax)<br/>

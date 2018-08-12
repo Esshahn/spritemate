@@ -1,6 +1,6 @@
+import $ from 'jquery'
 
-
-class Help
+export default class Help
 {
 
   constructor(window,config)
@@ -331,6 +331,7 @@ class Help
         <div class="spacer"></div>
 
             <h1 id="links">Links & Resources</h1>
+            <p><a href="https://youtu.be/n59axaEQDWE" target="_blank">Spritemate video tutorial</a> on YouTube</p>
             <p>
             Download & fork Spritemate on Github: <a target="_blank" rel="noopener" href="https://github.com/Esshahn/spritemate">github.com/Esshahn/spritemate</a></p>
             <p>Ingo Hinterding: <a target="_blank" rel="noopener" href="http://csdb.dk/scener/?id=27239">awsm on csdb</a>, my website <a target="_blank" rel="noopener" href="http://www.awsm.de">www.awsm.de</a> and Twitter: <a target="_blank" rel="noopener" href="http://www.twitter.com/awsm9000/">@awsm9000</a></p>
