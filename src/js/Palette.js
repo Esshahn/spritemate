@@ -75,7 +75,7 @@ export default class Palette
 
     for (let i=0; i<this.colors.length; i++)
     {
-      let picker_div = `<div class="palette_color_item" id="palette_color_`+this.colors[i]+`" title="`+this.colors[i]+`" style="background-color:`+this.colors[i]+`;"></div>`; 
+      let picker_div = `<div class="palette_color_item" id="palette_color_`+this.colors[i]+`" title="$`+i.toString(16)+`&nbsp;/&nbsp;`+this.colors[i]+`" style="background-color:`+this.colors[i]+`;"></div>`; 
       
       x++; 
       if (x == 2)

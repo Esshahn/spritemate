@@ -19,8 +19,9 @@ export default class Info
 
             <h1>V1.08</h1>
             <p>
-            - new logo (never liked the old one)<br/>
-            - added main menu, making room for more features<br/>
+            - color tooltip now also shows the C64 color value (thx2 nurpax)<br/>
+            - spritemate has a new logo now<br/>
+            - added menu bar, making room for more features<br/>
             - fixed keyboard becoming unresponsive after a modal was opened<br/>
             - slightly tweaked save window<br/>
             - migrated Spritemate to use webpack (thx2 nurpax)<br />

@@ -217,8 +217,8 @@ export default class Save
 
           if (is_multicolor)
           {
-            if (pen == 1) bit = "10";
             if (pen == 0) bit = "00";
+            if (pen == 1) bit = "10";
             if (pen == 2) bit = "01";
             if (pen == 3) bit = "11"; 
           }
@@ -320,8 +320,8 @@ export default class Save
 
           if (is_multicolor)
           {
-            if (pen == 1) bit = "10";
             if (pen == 0) bit = "00";
+            if (pen == 1) bit = "10";
             if (pen == 2) bit = "01";
             if (pen == 3) bit = "11"; 
           }

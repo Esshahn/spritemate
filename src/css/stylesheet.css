@@ -800,10 +800,10 @@ img.center
   color: #aaaaaa;
   width: 100%; 
   padding: 10px 0px 10px 40px;
-  background: -webkit-linear-gradient(#000000, #222222); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(#000000, #222222); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(#000000, #222222); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(#000000, #222222); /* Standard syntax */
+  background: -webkit-linear-gradient(#222222, #000000); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#222222, #000000); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#222222, #000000); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#222222, #000000); /* Standard syntax */
   box-shadow: 0px 0px 20px 2px rgba(0,0,0,.6);
 }
 

@@ -94,7 +94,7 @@ class App
 
     this.is_drawing = false;
     this.oldpos = {x: 0, y: 0}; // used when drawing and moving the mouse in editor
-    this.sprite.new(this.palette.get_color());
+    this.sprite.new_sprite(this.palette.get_color());
 
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
@@ -585,6 +585,14 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.save.set_save_data(this.sprite.get_all());
     });
 
+    $('#menubar-new').mouseup((e) =>
+    {
+      confirm("Are you sure?");
+      this.sprite = new Sprite(this.config);
+      this.sprite.new_sprite(this.palette.get_color());
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
 
     $('#menubar-undo').mouseup((e) =>
     {
@@ -867,7 +875,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
    $('#icon-list-new').mouseup((e) =>
     {      
-      this.sprite.new(this.palette.get_color(), this.sprite.is_multicolor());
+      this.sprite.new_sprite(this.palette.get_color(), this.sprite.is_multicolor());
       this.list.update_all(this.sprite.get_all());
       this.update();
     });

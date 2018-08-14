@@ -21,7 +21,8 @@ export default class Sprite
     this.copy_sprite = {};   
   }
 
-  new(color = 1,multicolor = false)
+
+  new_sprite(color = 1,multicolor = false)
   {
     
     const sprite =
