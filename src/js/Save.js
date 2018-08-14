@@ -13,11 +13,10 @@ export default class Save
 
     let template = `
     <div id="window-save">
-      <h1>Save Data</h1>
-      <h2>The file will be saved to your default download location</h2>
 
       <div class="center">
         Filename: <input autofocus type="text" id="filename" name="filename" value="${this.default_filename}">
+        <p>The file will be saved to your browser's default download location.</p>
       </div>
       <br/>
       <fieldset>
@@ -42,6 +41,11 @@ export default class Save
           <button id="button-save-source-acme">ACME syntax</button>
         </div>
         <p>A text file containing the sprite data in assembly language.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>PNG image</legend>
+        <p>To save a sprite as a PNG image, "right click" on the sprite in the PREVIEW window. Your browser will display a "save image as..." option in the context menu. The size of the PNG can be set with the zoom levels of the PREVIEW window.</p>
       </fieldset>
 
       <div id="button-row">

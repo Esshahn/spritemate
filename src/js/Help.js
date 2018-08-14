@@ -3,14 +3,15 @@ import $ from 'jquery'
 export default class Help
 {
 
-  constructor(window,config)
+  constructor(window,config,eventhandler)
   {
     this.config = config;
     this.window = window;
+    this.eventhandler = eventhandler;
 
     let template = `
     <div id="help">
-        <img autofocus src="img/logo.png" class="center">
+        <img autofocus src="img/logo-menu.svg" width="300px" class="center" id="logo" alt="spritemate">
         <div id="help-container">
             <h1>Documentation</h1>
             <ol>
@@ -206,7 +207,7 @@ export default class Help
                 <tr>
                     <td></td>
                     <td>1,2,3,4</td>
-                    <td>Select individual color, transparent, multicolor 1 or multicolor 2</td>
+                    <td>Select transparent, individual color, multicolor 1 or multicolor 2</td>
                 </tr>
             </table>
 
@@ -229,6 +230,11 @@ export default class Help
                     <td><img src="img/ui/icon-preview-y2.png" class="icon"></td>
                     <td></td>
                     <td>Stretches sprite vertically</td>
+                </tr>
+                <tr>
+                    <td><img src="img/ui/icon-preview-overlay.png" class="icon"></td>
+                    <td></td>
+                    <td>Overlays the next sprite</td>
                 </tr>
                 <tr>
                     <td><img src="img/ui/icon-zoom-in.png" class="icon"><img src="img/ui/icon-zoom-out.png" class="icon"></td>
@@ -325,7 +331,7 @@ export default class Help
                 <li>Rearrange sprites in the sprite list by dragging them around with the mouse</li>
                 <li>You can define and work with your own color palette. Open settings, choose "custom" and change the values. They will be stored in the browser for you</li>
                 <li>The Spritemate JSON file format is great for editing data in the text editor or use with custom tools</li>
-                <li>Right click on the sprite in the editor and you can save the picture as PNG file!</li>
+                <li>Right click on the sprite in the preview and you can save the picture as PNG file!</li>
             </ul>
 
         <div class="spacer"></div>
@@ -345,7 +351,11 @@ export default class Help
     $("#window-"+this.window).append(template);
 
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-help').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
+    $('#button-help').mouseup((e) => 
+    {
+        $("#window-"+this.window).dialog( "close" );
+        this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+    });
 
    
   }

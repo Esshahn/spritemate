@@ -1,4 +1,9 @@
+/*
 
+Spritemate stylesheet
+
+
+ */
 
 :root 
 {
@@ -29,7 +34,6 @@ a
 a:hover
 {
   color: var(--red);
-  border-bottom: 1px dotted var(--red);
 }
 
 body, html
@@ -311,7 +315,7 @@ img.center
 {
   padding: 12px;
   height: 400px;
-  overflow: scroll;
+  overflow: auto;
   margin: 24px 0px 24px 0px;
 }
 
@@ -489,13 +493,6 @@ img.center
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
 
-
-
-.window_menu .right
-{
-  float: right;
-  color: var(--blue);
-}
 
 
 /*
@@ -735,13 +732,13 @@ img.center
 
 .colors.ui-dialog-content
 {
-  /* color palette should not have any passing */
+  /* color palette should not have any padding */
   padding: 0px;
 }
 
 .menu.ui-dialog-content
 {
-  /* menu should not have any passing */
+  /* menu should not have any padding */
   padding: 0px;
 }
 
@@ -795,3 +792,81 @@ img.center
   image-rendering: pixelated;                 /* Awesome future-browsers       */
   -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
 }
+
+
+#menubar 
+{
+  user-select:none;
+  color: #aaaaaa;
+  width: 100%; 
+  padding: 10px 0px 10px 40px;
+  background: -webkit-linear-gradient(#000000, #222222); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#000000, #222222); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#000000, #222222); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#000000, #222222); /* Standard syntax */
+  box-shadow: 0px 0px 20px 2px rgba(0,0,0,.6);
+}
+
+#menubar div
+{
+  display:inline-block;
+  vertical-align:top;
+}
+
+/* Menu label (no hover) */
+#menubar .menuLabel
+{
+  padding:4px 8px 4px 8px;
+  margin-right:10px;
+  margin-left:-8px
+}
+
+/* Menu label (hover) */
+#menubar .menuLabel:hover
+{
+  background-color: var(--blue);
+  color: #dddddd;
+}
+
+/* Drop-down menu */
+#menubar div div
+{
+  position:absolute;
+  display:block;
+  min-width:180px;
+  overflow:auto;
+  background:#111111;
+  box-shadow: 0px 10px 10px rgba(0,0,0,.8);
+  z-index:1000;
+  padding:4px 2px 2px 0px;
+  margin-left:-8px;
+  margin-top:4px
+}
+
+
+/* Drop-down menu (hidden) */
+#menubar span:not(.activeMenu) + div{visibility:hidden}
+
+/* Menu item */
+#menubar div div a
+{
+  color:#dddddd;
+  text-decoration:none;
+  display:block;
+  padding: 4px 4px 4px 20px;
+  margin:4px 0 4px;
+}
+
+#menubar div div a:hover
+{
+  background:var(--blue);
+  color: #fff;
+}
+
+
+/* Hotkey documentation in a menu item */
+#menubar div div a .hotkey{position:absolute;right:9px;color:rgba(200,200,200,.5)}
+
+
+/* Line between menu items */
+#menubar div div hr{border:none;height:1px;background:rgba(200,200,200,.15);margin:5px -2px 5px -30px}

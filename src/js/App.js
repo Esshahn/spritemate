@@ -30,7 +30,7 @@ import Storage from "./Storage";
 import Window from "./Window";
 import { get_config } from "./config.js";
 import { tipoftheday, status } from './helper'
-
+import { menubar } from './menubar'
 
 
 class App
@@ -66,9 +66,9 @@ class App
     this.list = new List(3,this.config);
 
     // info
-    window_config = {name:"window_info", title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
+    window_config = {name:"window_info", title: "Spritemate", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 680, height: "auto" };
     this.window_info = new Window(window_config);
-    this.info = new Info(4,this.config);
+    this.info = new Info(4,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     // save
     window_config = {name:"window_save", title: "Save", type: "file", escape: true, modal: true, resizable: false, autoOpen: false, width: 580, height: "auto" };
@@ -81,9 +81,9 @@ class App
     this.settings = new Settings(7,this.config, { onLoad: this.update_config.bind(this) });
 
     // help
-    window_config = {name:"window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 640, height: "auto" };
+    window_config = {name:"window_help", title: "Help", type: "info", escape: true, modal: true, resizable: false, autoOpen: false, width: 680, height: "auto" };
     this.window_help = new Window(window_config);
-    this.help = new Help(8,this.config);
+    this.help = new Help(8,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     // menu
     window_config = {name:"window_menu", title: "Menu", type: "menu", resizable: false, left: this.config.window_menu.left, top: this.config.window_menu.top, width: "auto", height: "auto" };
@@ -102,11 +102,11 @@ class App
     $( document ).tooltip({show: {delay: 1000}}); // initializes tooltip handling in jquery
      
     tipoftheday();
+    menubar();
     
     this.list.update_all(this.sprite.get_all());
     this.update();
     this.user_interaction();
-
 
     if (this.storage.is_updated_version()) $("#window-4").dialog( "open");
 
@@ -261,6 +261,7 @@ class App
     this.storage.write(this.config);
     this.list.update_all(this.sprite.get_all());
     this.update();
+    this.regain_keyboard_controls();
     status("Configuration updated.");
   }
 
@@ -539,12 +540,87 @@ MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNN
 
     $('#icon-info').mouseup((e) =>
     {
+      this.allow_keyboard_shortcuts = false;
       $("#window-4").dialog( "open");
     });
 
     $('#icon-help').mouseup((e) =>
     {
+      this.allow_keyboard_shortcuts = false;
       $("#window-8").dialog( "open");
+    });
+
+
+/*
+
+MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN        NNNNNNNNUUUUUUUU     UUUUUUUUBBBBBBBBBBBBBBBBB               AAA               RRRRRRRRRRRRRRRRR   
+M:::::::M             M:::::::ME::::::::::::::::::::EN:::::::N       N::::::NU::::::U     U::::::UB::::::::::::::::B             A:::A              R::::::::::::::::R  
+M::::::::M           M::::::::ME::::::::::::::::::::EN::::::::N      N::::::NU::::::U     U::::::UB::::::BBBBBB:::::B           A:::::A             R::::::RRRRRR:::::R 
+M:::::::::M         M:::::::::MEE::::::EEEEEEEEE::::EN:::::::::N     N::::::NUU:::::U     U:::::UUBB:::::B     B:::::B         A:::::::A            RR:::::R     R:::::R
+M::::::::::M       M::::::::::M  E:::::E       EEEEEEN::::::::::N    N::::::N U:::::U     U:::::U   B::::B     B:::::B        A:::::::::A             R::::R     R:::::R
+M:::::::::::M     M:::::::::::M  E:::::E             N:::::::::::N   N::::::N U:::::D     D:::::U   B::::B     B:::::B       A:::::A:::::A            R::::R     R:::::R
+M:::::::M::::M   M::::M:::::::M  E::::::EEEEEEEEEE   N:::::::N::::N  N::::::N U:::::D     D:::::U   B::::BBBBBB:::::B       A:::::A A:::::A           R::::RRRRRR:::::R 
+M::::::M M::::M M::::M M::::::M  E:::::::::::::::E   N::::::N N::::N N::::::N U:::::D     D:::::U   B:::::::::::::BB       A:::::A   A:::::A          R:::::::::::::RR  
+M::::::M  M::::M::::M  M::::::M  E:::::::::::::::E   N::::::N  N::::N:::::::N U:::::D     D:::::U   B::::BBBBBB:::::B     A:::::A     A:::::A         R::::RRRRRR:::::R 
+M::::::M   M:::::::M   M::::::M  E::::::EEEEEEEEEE   N::::::N   N:::::::::::N U:::::D     D:::::U   B::::B     B:::::B   A:::::AAAAAAAAA:::::A        R::::R     R:::::R
+M::::::M    M:::::M    M::::::M  E:::::E             N::::::N    N::::::::::N U:::::D     D:::::U   B::::B     B:::::B  A:::::::::::::::::::::A       R::::R     R:::::R
+M::::::M     MMMMM     M::::::M  E:::::E       EEEEEEN::::::N     N:::::::::N U::::::U   U::::::U   B::::B     B:::::B A:::::AAAAAAAAAAAAA:::::A      R::::R     R:::::R
+M::::::M               M::::::MEE::::::EEEEEEEE:::::EN::::::N      N::::::::N U:::::::UUU:::::::U BB:::::BBBBBB::::::BA:::::A             A:::::A   RR:::::R     R:::::R
+M::::::M               M::::::ME::::::::::::::::::::EN::::::N       N:::::::N  UU:::::::::::::UU  B:::::::::::::::::BA:::::A               A:::::A  R::::::R     R:::::R
+M::::::M               M::::::ME::::::::::::::::::::EN::::::N        N::::::N    UU:::::::::UU    B::::::::::::::::BA:::::A                 A:::::A R::::::R     R:::::R
+MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN      UUUUUUUUU      BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAARRRRRRRR     RRRRRRR
+
+
+ */
+
+    $('#menubar-load').mouseup((e) =>
+    {
+      $("#input-load").trigger("click");
+    });
+
+    $('#menubar-save').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-5").dialog( "open");
+      this.save.set_save_data(this.sprite.get_all());
+    });
+
+
+    $('#menubar-undo').mouseup((e) =>
+    {
+      this.sprite.undo();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+    $('#menubar-redo').mouseup((e) =>
+    {
+      this.sprite.redo();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+    $('#menubar-help').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-8").dialog( "open");
+    });
+
+    $('#menubar-info').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-4").dialog( "open");
+    });
+
+    $('#menubar-settings').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-7").dialog( "open");
+    });
+
+    $('#menubar-fullscreen').mouseup((e) =>
+    {
+      this.toggle_fullscreen();
     });
 
 

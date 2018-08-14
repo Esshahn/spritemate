@@ -11,11 +11,43 @@
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
     <link rel="manifest" href="img/favicon/manifest.json">
     <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
-
 </head>
 
 <body>
 <div id="container">
+    <div id="menubar">
+        <div>
+            <span class="menuLabel">Spritemate</span>
+            <div class="menuDropDown">
+                <a id="menubar-info">About</a>
+                <a id="menubar-settings">Settings</a>
+            </div>
+        </div>
+        <div>
+            <span class="menuLabel">File</span>
+                <div class="menuDropDown">
+                    <a id="menubar-load">Load...<span class="hotkey">Ctrl+O</span></a>
+                    <a id="menubar-save">Save...</a>
+                </div>
+        </div>
+        <div>
+            <span class="menuLabel">Edit</span>
+            <div class="menuDropDown">
+                <a id="menubar-undo">Undo<span class="hotkey">z</span></a>
+                <a id="menubar-redo">Redo<span class="hotkey">Z</span></a>
+                <hr>
+            </div>
+        </div>
+        <div>
+            <span class="menuLabel">Window</span>
+                <div class="menuDropDown">
+                    <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">f</span></a>
+                </div>
+        </div>
+        <div>
+            <span class="menuLabel" id="menubar-help">Help</span>
+        </div>
+    </div>
     <div id="app"></div>
     <div id="statusbar">
         <div id="statustext"></div>
