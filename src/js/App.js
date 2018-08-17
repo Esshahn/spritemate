@@ -1,4 +1,4 @@
-// ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=KEYS
+// ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=TOOLS
 
 
 
@@ -29,7 +29,7 @@ import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
 import { get_config } from "./config.js";
-import { tipoftheday, status } from './helper'
+import { tipoftheday, status, toggle_fullscreen } from './helper'
 import { menubar } from './menubar'
 
 
@@ -86,7 +86,7 @@ class App
     this.help = new Help(8,this.config, { onLoad: this.regain_keyboard_controls.bind(this) });
 
     // menu
-    window_config = {name:"window_menu", title: "Menu", type: "menu", resizable: false, left: this.config.window_menu.left, top: this.config.window_menu.top, width: "auto", height: "auto" };
+    window_config = {name:"window_menu", title: "Tools", type: "menu", resizable: false, left: this.config.window_menu.left, top: this.config.window_menu.top, width: "auto", height: "auto" };
     this.window_menu = new Window(window_config, this.store_window.bind(this));
     this.menu = new Menu(9,this.config);
  
@@ -112,33 +112,6 @@ class App
 
   }
 
-
-
-  toggle_fullscreen() 
-  {
-    if (!document.fullscreenElement &&    // alternative standard method
-        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    }
-  }
 
 
   update()
@@ -382,9 +355,10 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "f")
         {
-          this.toggle_fullscreen();
+          toggle_fullscreen();
         }
 
+        /*
         if (e.key == "q")
         {
           this.sprite.set_all(example_sprite);
@@ -392,6 +366,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.list.update_all(this.sprite.get_all());
           this.update();
         }
+        */
 
         if (e.key == "d")
         {
@@ -458,97 +433,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
     });
 
 
-/*
 
-MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN        NNNNNNNN   UUUUUUUU     UUUUUUUU
-M:::::::M             M:::::::M   E::::::::::::::::::::E   N:::::::N       N::::::N   U::::::U     U::::::U
-M::::::::M           M::::::::M   E::::::::::::::::::::E   N::::::::N      N::::::N   U::::::U     U::::::U
-M:::::::::M         M:::::::::M   EE::::::EEEEEEEEE::::E   N:::::::::N     N::::::N   UU:::::U     U:::::UU
-M::::::::::M       M::::::::::M     E:::::E       EEEEEE   N::::::::::N    N::::::N    U:::::U     U:::::U 
-M:::::::::::M     M:::::::::::M     E:::::E                N:::::::::::N   N::::::N    U:::::D     D:::::U 
-M:::::::M::::M   M::::M:::::::M     E::::::EEEEEEEEEE      N:::::::N::::N  N::::::N    U:::::D     D:::::U 
-M::::::M M::::M M::::M M::::::M     E:::::::::::::::E      N::::::N N::::N N::::::N    U:::::D     D:::::U 
-M::::::M  M::::M::::M  M::::::M     E:::::::::::::::E      N::::::N  N::::N:::::::N    U:::::D     D:::::U 
-M::::::M   M:::::::M   M::::::M     E::::::EEEEEEEEEE      N::::::N   N:::::::::::N    U:::::D     D:::::U 
-M::::::M    M:::::M    M::::::M     E:::::E                N::::::N    N::::::::::N    U:::::D     D:::::U 
-M::::::M     MMMMM     M::::::M     E:::::E       EEEEEE   N::::::N     N:::::::::N    U::::::U   U::::::U 
-M::::::M               M::::::M   EE::::::EEEEEEEE:::::E   N::::::N      N::::::::N    U:::::::UUU:::::::U 
-M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N       N:::::::N     UU:::::::::::::UU  
-M::::::M               M::::::M   E::::::::::::::::::::E   N::::::N        N::::::N       UU:::::::::UU    
-MMMMMMMM               MMMMMMMM   EEEEEEEEEEEEEEEEEEEEEE   NNNNNNNN         NNNNNNN         UUUUUUUUU  
-
-
-
-*/
-
-    $('#icon-load').mouseup((e) =>
-    {
-      $("#input-load").trigger("click");
-    });
-
-    $('#icon-save').mouseup((e) =>
-    {
-      this.allow_keyboard_shortcuts = false;
-      $("#window-5").dialog( "open");
-      this.save.set_save_data(this.sprite.get_all());
-    });
-
-
-    $('#icon-undo').mouseup((e) =>
-    {
-      this.sprite.undo();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-    $('#icon-redo').mouseup((e) =>
-    {
-      this.sprite.redo();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-    $('#icon-draw').mouseup((e) =>
-    {
-      this.mode = "draw";
-      status("Draw mode");
-      $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
-      $("#image-icon-select").attr("src","img/ui/icon-select.png");
-      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
-    });
-
- 
-    $('#icon-fill').mouseup((e) =>
-    {
-      this.mode = "fill";
-      status("Fill mode");
-      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
-      $("#image-icon-select").attr("src","img/ui/icon-select.png");
-      $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
-    });
-
-    $('#icon-fullscreen').mouseup((e) =>
-    {
-      this.toggle_fullscreen();
-    });
-
-    $('#icon-settings').mouseup((e) =>
-    {
-      $("#window-7").dialog( "open");
-      this.allow_keyboard_shortcuts = false;
-    });
-
-    $('#icon-info').mouseup((e) =>
-    {
-      this.allow_keyboard_shortcuts = false;
-      $("#window-4").dialog( "open");
-    });
-
-    $('#icon-help').mouseup((e) =>
-    {
-      this.allow_keyboard_shortcuts = false;
-      $("#window-8").dialog( "open");
-    });
 
 
 /*
@@ -573,12 +458,36 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
  */
 
-    $('#menubar-load').mouseup((e) =>
+/*
+
+  SPRITEMATE
+
+*/
+
+    $('#menubar-info').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-4").dialog( "open");
+    });
+
+    $('#menubar-settings').mouseup((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-7").dialog( "open");
+    });
+
+/*
+
+  FILE
+
+*/
+
+    $('#menubar-load,#icon-load').mouseup((e) =>
     {
       $("#input-load").trigger("click");
     });
 
-    $('#menubar-save').mouseup((e) =>
+    $('#menubar-save,#icon-save').mouseup((e) =>
     {
       this.allow_keyboard_shortcuts = false;
       $("#window-5").dialog( "open");
@@ -594,19 +503,209 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     });
 
-    $('#menubar-undo').mouseup((e) =>
+/*
+
+  EDIT
+
+*/
+
+    $('#menubar-undo,#icon-undo').mouseup((e) =>
     {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $('#menubar-redo').mouseup((e) =>
+    $('#menubar-redo,#icon-redo').mouseup((e) =>
     {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
+
+    $('#menubar-new-sprite,#icon-list-new').mouseup((e) =>
+    {      
+      this.sprite.new_sprite(this.palette.get_color(), this.sprite.is_multicolor());
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+   $('#menubar-kill,#icon-list-delete').mouseup((e) =>
+    {     
+      this.sprite.delete();
+      this.list.update_all(this.sprite.get_all());
+      this.update(); 
+    });
+
+   $('#menubar-copy,#icon-list-copy').mouseup((e) =>
+    {  
+      this.sprite.copy();
+      this.update_ui();
+      status("Sprite copied.");
+    });
+
+   $('#menubar-paste,#icon-list-paste').mouseup((e) =>
+    {   
+      if (!this.sprite.is_copy_empty())
+      {
+        this.sprite.paste(); 
+        this.update();
+        status("Sprite pasted.");
+      } else {
+        status("Nothing to copy.","error");
+      }
+    });
+
+/*
+
+  SPRITE
+
+*/
+
+    $('#menubar-shift-left,#icon-shift-left').mouseup((e) =>
+    {
+      this.sprite.shift_horizontal("left");
+      this.update();
+    });
+
+    $('#menubar-shift-right,#icon-shift-right').mouseup((e) =>
+    {
+      this.sprite.shift_horizontal("right");
+      this.update();
+    });
+
+    $('#menubar-shift-up,#icon-shift-up').mouseup((e) =>
+    {
+      this.sprite.shift_vertical("up");
+      this.update();
+    });
+
+    $('#menubar-shift-down,#icon-shift-down').mouseup((e) =>
+    {
+      this.sprite.shift_vertical("down");
+      this.update();
+    });
+
+    $('#menubar-flip-horizontal,#icon-flip-horizontal').mouseup((e) =>
+    {
+      this.sprite.flip_horizontal();
+      this.update();
+    });
+
+    $('#menubar-flip-vertical,#icon-flip-vertical').mouseup((e) =>
+    {
+      this.sprite.flip_vertical();
+      this.update();
+    });
+
+    $('#menubar-colormode,#icon-multicolor').mouseup((e) =>
+    {
+      this.sprite.toggle_multicolor();
+      this.update();
+    });
+
+   $('#menubar-stretch-x,#icon-preview-x').mouseup((e) =>
+    {     
+      this.sprite.toggle_double_x();
+      $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
+      this.update();
+    });
+
+   $('#menubar-stretch-y,#icon-preview-y').mouseup((e) =>
+    {     
+      this.sprite.toggle_double_y();
+      $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+      this.update();
+    });
+
+    $('#menubar-overlay,#icon-preview-overlay').mousedown((e) =>
+    {     
+      this.sprite.toggle_overlay();
+      this.update();
+    });
+
+/*
+
+  VIEW
+
+*/
+
+    $('#menubar-fullscreen').mouseup((e) =>
+    {
+      toggle_fullscreen();
+    });
+
+    $('#menubar-editor-zoom-in,#icon-editor-zoom-in').mouseup((e) =>
+    {     
+      this.editor.zoom_in();
+      this.config.window_editor.zoom = this.editor.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#menubar-editor-zoom-out,#icon-editor-zoom-out').mouseup((e) =>
+    {     
+      this.editor.zoom_out();
+      this.config.window_editor.zoom = this.editor.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#menubar-editor-grid,#icon-editor-grid').mouseup((e) =>
+    {
+      this.editor.toggle_grid();
+      this.config.window_editor.grid = this.editor.get_grid();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#menubar-preview-zoom-in,#icon-preview-zoom-in').mouseup((e) =>
+    {     
+      this.preview.zoom_in();
+      this.config.window_preview.zoom = this.preview.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#menubar-preview-zoom-out,#icon-preview-zoom-out').mouseup((e) =>
+    {     
+      this.preview.zoom_out();
+      this.config.window_preview.zoom = this.preview.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    });
+
+    $('#menubar-list-grid,#icon-list-grid').mouseup((e) =>
+    {     
+      this.list.toggle_grid();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+    $('#menubar-list-zoom-in,#icon-list-zoom-in').mouseup((e) =>
+    {     
+      this.list.zoom_in();
+      this.config.window_list.zoom = this.list.get_zoom();
+      this.storage.write(this.config);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+    $('#menubar-list-zoom-out,#icon-list-zoom-out').mouseup((e) =>
+    {     
+      this.list.zoom_out();
+      this.config.window_list.zoom = this.list.get_zoom();
+      this.storage.write(this.config);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    });
+
+/* 
+
+  HELP
+
+*/
+
 
     $('#menubar-help').mouseup((e) =>
     {
@@ -614,22 +713,76 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       $("#window-8").dialog( "open");
     });
 
-    $('#menubar-info').mouseup((e) =>
+
+
+/*
+
+TTTTTTTTTTTTTTTTTTTTTTT      OOOOOOOOO         OOOOOOOOO      LLLLLLLLLLL                 SSSSSSSSSSSSSSS 
+T:::::::::::::::::::::T    OO:::::::::OO     OO:::::::::OO    L:::::::::L               SS:::::::::::::::S
+T:::::::::::::::::::::T  OO:::::::::::::OO OO:::::::::::::OO  L:::::::::L              S:::::SSSSSS::::::S
+T:::::TT:::::::TT:::::T O:::::::OOO:::::::O:::::::OOO:::::::O LL:::::::LL              S:::::S     SSSSSSS
+TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L                S:::::S            
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                S:::::S            
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                 S::::SSSS         
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                  SS::::::SSSSS    
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                    SSS::::::::SS  
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                       SSSSSS::::S 
+        T:::::T         O:::::O     O:::::O:::::O     O:::::O   L:::::L                            S:::::S
+        T:::::T         O::::::O   O::::::O::::::O   O::::::O   L:::::L         LLLLLL             S:::::S
+      TT:::::::TT       O:::::::OOO:::::::O:::::::OOO:::::::O LL:::::::LLLLLLLLL:::::L SSSSSSS     S:::::S
+      T:::::::::T        OO:::::::::::::OO OO:::::::::::::OO  L::::::::::::::::::::::L S::::::SSSSSS:::::S
+      T:::::::::T          OO:::::::::OO     OO:::::::::OO    L::::::::::::::::::::::L S:::::::::::::::SS 
+      TTTTTTTTTTT            OOOOOOOOO         OOOOOOOOO      LLLLLLLLLLLLLLLLLLLLLLLL  SSSSSSSSSSSSSSS  
+
+
+
+*/
+
+
+    $('#icon-draw').mouseup((e) =>
+    {
+      this.mode = "draw";
+      status("Draw mode");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+    });
+
+ 
+    $('#icon-fill').mouseup((e) =>
+    {
+      this.mode = "fill";
+      status("Fill mode");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
+    });
+
+    /*
+    $('#icon-fullscreen').mouseup((e) =>
+    {
+      toggle_fullscreen();
+    });
+
+    $('#icon-settings').mouseup((e) =>
+    {
+      $("#window-7").dialog( "open");
+      this.allow_keyboard_shortcuts = false;
+    });
+
+    $('#icon-info').mouseup((e) =>
     {
       this.allow_keyboard_shortcuts = false;
       $("#window-4").dialog( "open");
     });
 
-    $('#menubar-settings').mouseup((e) =>
+    $('#icon-help').mouseup((e) =>
     {
       this.allow_keyboard_shortcuts = false;
-      $("#window-7").dialog( "open");
+      $("#window-8").dialog( "open");
     });
+    */
 
-    $('#menubar-fullscreen').mouseup((e) =>
-    {
-      this.toggle_fullscreen();
-    });
 
 
 
@@ -756,72 +909,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     });
 
-    $('#icon-shift-left').mouseup((e) =>
-    {
-      this.sprite.shift_horizontal("left");
-      this.update();
-    });
 
-    $('#icon-shift-right').mouseup((e) =>
-    {
-      this.sprite.shift_horizontal("right");
-      this.update();
-    });
-
-    $('#icon-shift-up').mouseup((e) =>
-    {
-      this.sprite.shift_vertical("up");
-      this.update();
-    });
-
-    $('#icon-shift-down').mouseup((e) =>
-    {
-      this.sprite.shift_vertical("down");
-      this.update();
-    });
-
-    $('#icon-flip-horizontal').mouseup((e) =>
-    {
-      this.sprite.flip_horizontal();
-      this.update();
-    });
-
-    $('#icon-flip-vertical').mouseup((e) =>
-    {
-      this.sprite.flip_vertical();
-      this.update();
-    });
-
-    $('#icon-multicolor').mouseup((e) =>
-    {
-      this.sprite.toggle_multicolor();
-      this.update();
-    });
-
-
-    $('#icon-editor-zoom-in').mouseup((e) =>
-    {     
-      this.editor.zoom_in();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
-
-    $('#icon-editor-zoom-out').mouseup((e) =>
-    {     
-      this.editor.zoom_out();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
-
-    $('#icon-editor-grid').mouseup((e) =>
-    {
-      this.editor.toggle_grid();
-      this.config.window_editor.grid = this.editor.get_grid();
-      this.storage.write(this.config);
-      this.update();
-    });
 
 
 /*
@@ -873,120 +961,6 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       }
     });
 
-   $('#icon-list-new').mouseup((e) =>
-    {      
-      this.sprite.new_sprite(this.palette.get_color(), this.sprite.is_multicolor());
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-   $('#icon-list-delete').mouseup((e) =>
-    {     
-      this.sprite.delete();
-      this.list.update_all(this.sprite.get_all());
-      this.update(); 
-    });
-
-   $('#icon-list-copy').mouseup((e) =>
-    {  
-      this.sprite.copy();
-      this.update_ui();
-      status("Sprite copied.");
-    });
-
-   $('#icon-list-paste').mouseup((e) =>
-    {   
-      if (!this.sprite.is_copy_empty())
-      {
-        this.sprite.paste(); 
-        this.update();
-        status("Sprite pasted.");
-      } else {
-        status("Nothing to copy.","error");
-      }
-    });
-
-   $('#icon-list-grid').mouseup((e) =>
-    {     
-      this.list.toggle_grid();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-    $('#icon-list-zoom-in').mouseup((e) =>
-    {     
-      this.list.zoom_in();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-    $('#icon-list-zoom-out').mouseup((e) =>
-    {     
-      this.list.zoom_out();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    });
-
-/*
-
-PPPPPPPPPPPPPPPPP     RRRRRRRRRRRRRRRRR     EEEEEEEEEEEEEEEEEEEEEE  VVVVVVVV           VVVVVVVV
-P::::::::::::::::P    R::::::::::::::::R    E::::::::::::::::::::E  V::::::V           V::::::V
-P::::::PPPPPP:::::P   R::::::RRRRRR:::::R   E::::::::::::::::::::E  V::::::V           V::::::V
-PP:::::P     P:::::P  RR:::::R     R:::::R  EE::::::EEEEEEEEE::::E  V::::::V           V::::::V
-  P::::P     P:::::P    R::::R     R:::::R    E:::::E       EEEEEE   V:::::V           V:::::V 
-  P::::P     P:::::P    R::::R     R:::::R    E:::::E                 V:::::V         V:::::V  
-  P::::PPPPPP:::::P     R::::RRRRRR:::::R     E::::::EEEEEEEEEE        V:::::V       V:::::V   
-  P:::::::::::::PP      R:::::::::::::RR      E:::::::::::::::E         V:::::V     V:::::V    
-  P::::PPPPPPPPP        R::::RRRRRR:::::R     E:::::::::::::::E          V:::::V   V:::::V     
-  P::::P                R::::R     R:::::R    E::::::EEEEEEEEEE           V:::::V V:::::V      
-  P::::P                R::::R     R:::::R    E:::::E                      V:::::V:::::V       
-  P::::P                R::::R     R:::::R    E:::::E       EEEEEE          V:::::::::V        
-PP::::::PP            RR:::::R     R:::::R  EE::::::EEEEEEEE:::::E           V:::::::V         
-P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E            V:::::V          
-P::::::::P            R::::::R     R:::::R  E::::::::::::::::::::E             V:::V           
-PPPPPPPPPP            RRRRRRRR     RRRRRRR  EEEEEEEEEEEEEEEEEEEEEE              VVV           
-
-*/
-
-   $('#icon-preview-x').mouseup((e) =>
-    {     
-      this.sprite.toggle_double_x();
-      $('#icon-preview-x').toggleClass('icon-preview-x2-hi');
-      this.update();
-    });
-
-   $('#icon-preview-y').mouseup((e) =>
-    {     
-      this.sprite.toggle_double_y();
-      $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
-      this.update();
-    });
-
-    $('#icon-preview-zoom-in').mouseup((e) =>
-    {     
-      this.preview.zoom_in();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
-
-    $('#icon-preview-zoom-out').mouseup((e) =>
-    {     
-      this.preview.zoom_out();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    });
-
-    $('#icon-preview-overlay').mousedown((e) =>
-    {     
-      this.sprite.toggle_overlay();
-      this.update();
-    });
 
   }
 

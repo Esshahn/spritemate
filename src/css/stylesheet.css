@@ -854,7 +854,6 @@ img.center
   text-decoration:none;
   display:block;
   padding: 4px 4px 4px 20px;
-  margin:4px 0 4px;
 }
 
 #menubar div div a:hover
@@ -867,6 +866,8 @@ img.center
 /* Hotkey documentation in a menu item */
 #menubar div div a .hotkey{position:absolute;right:9px;color:rgba(200,200,200,.5)}
 
+/* Label documentation in a menu item */
+#menubar div div .label{padding: 4px 4px 4px 14px;color:rgba(200,200,200,.5)}
 
 /* Line between menu items */
-#menubar div div hr{border:none;height:1px;background:rgba(200,200,200,.15);margin:5px -2px 5px -30px}
+#menubar div div hr{border:none;height:1px;background:rgba(200,200,200,.15);}

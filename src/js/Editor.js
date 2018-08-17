@@ -28,7 +28,7 @@ export default class Editor extends Window_Controls
         <div class="icons-zoom-area">
           <img src="img/ui/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
           <img src="img/ui/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
-          <img src="img/ui/icon-grid.png" id="icon-editor-grid" title="toggle grid borders">
+          <img src="img/ui/icon-grid.png" id="icon-editor-grid" title="toggle grid">
         </div>
 
         <img src="img/ui/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
