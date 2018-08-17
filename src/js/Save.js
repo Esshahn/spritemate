@@ -44,6 +44,12 @@ export default class Save
       </fieldset>
 
       <fieldset>
+        <legend>BASIC // *.bas</legend>
+        <button id="button-save-basic">Save as BASIC 2.0</button>
+        <p>The file is a text file that you can copy & paste into VICE.</p>
+      </fieldset>
+
+      <fieldset>
         <legend>PNG image</legend>
         <p>To save a sprite as a PNG image, "right click" on the sprite in the PREVIEW window. Your browser will display a "save image as..." option in the context menu. The size of the PNG can be set with the zoom levels of the PREVIEW window.</p>
       </fieldset>
@@ -60,8 +66,9 @@ export default class Save
     $('#button-save-spm').mouseup((e) => this.save_spm());
     $('#button-save-spd').mouseup((e) => this.save_spd("new"));
     $('#button-save-spd-old').mouseup((e) => this.save_spd("old"));
-    $('#button-save-source-kick').mouseup((e) => this.save_source("kick"));
-    $('#button-save-source-acme').mouseup((e) => this.save_source("acme"));
+    $('#button-save-source-kick').mouseup((e) => this.save_assembly("kick"));
+    $('#button-save-source-acme').mouseup((e) => this.save_assembly("acme"));
+    $('#button-save-basic').mouseup((e) => this.save_basic());
 
     $( "#filename" ).keyup((e) => 
     {
@@ -74,6 +81,7 @@ export default class Save
         $('#button-save-spd-old').prop('disabled', true).addClass("error");
         $('#button-save-source-kick').prop('disabled', true).addClass("error");
         $('#button-save-source-acme').prop('disabled', true).addClass("error");
+        $('#button-save-basic').prop('disabled', true).addClass("error");
       }else{
         $("#filename").removeClass("error");
         $('#button-save-spm').prop('disabled', false).removeClass("error");
@@ -81,6 +89,7 @@ export default class Save
         $('#button-save-spd-old').prop('disabled', false).removeClass("error");
         $('#button-save-source-kick').prop('disabled', false).removeClass("error");
         $('#button-save-source-acme').prop('disabled', false).removeClass("error");
+        $('#button-save-basic').prop('disabled', false).removeClass("error");
       }
     });
 
@@ -90,36 +99,10 @@ export default class Save
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
 
-  save_spm()
+
+  save_file_to_disk(file,filename)
   {
-      let filename = this.default_filename + ".spm";
-      var file = new Blob([JSON.stringify(this.savedata)], {type: "text/plain"});
-      if (window.navigator.msSaveOrOpenBlob) // IE10+
-          window.navigator.msSaveOrOpenBlob(file, filename);
-      else { // Others
-          var a = document.createElement("a"),
-                  url = URL.createObjectURL(file);
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function() {
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);  
-          }, 0); 
-      }
-
-      status("File has been saved.");
-      this.close_window();
-  }
-
-  save_source(format)
-  {
-
-    let filename = this.default_filename + ".txt";
-    var data = this.create_source(format);
-    var file = new Blob([data], {type: "text/plain"});
-
+      
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
     else { // Others
@@ -136,40 +119,73 @@ export default class Save
     }
 
     status("File has been saved.");
+  }
+
+
+  save_spm()
+  {
+    let filename = this.default_filename + ".spm";
+    let data = JSON.stringify(this.savedata);
+    // these regular expressions are used to make the outpult file
+    // easier to read with line breaks
+    data = data.replace(/],/g,'],\n').replace(/\[\[/g,'[\n[').replace(/]]/g,']\n]');
+    let file = new Blob([data], {type: "text/plain"});
+    this.save_file_to_disk(file,filename);
+    this.close_window();
+  }
+
+  save_assembly(format)
+  {
+    let filename = this.default_filename + ".txt";
+    var data = this.create_assembly(format);
+    let file = new Blob([data], {type: "text/plain"});
+    this.save_file_to_disk(file,filename);
     this.close_window();
   }
 
   save_spd(format)
   {
-      let filename = this.default_filename + ".spd";
-      var hexdata = this.create_spd_array(format);
-      var bytes = new Uint8Array(hexdata);
-      var file = new Blob([bytes], {type: "application/octet-stream"});
-
-      if (window.navigator.msSaveOrOpenBlob) // IE10+
-          window.navigator.msSaveOrOpenBlob(file, filename);
-      else { // Others
-          var a = document.createElement("a"),
-                  url = URL.createObjectURL(file);
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function() {
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);  
-          }, 0); 
-      }
-
-      status("File has been saved.");
-      this.close_window();
+    let filename = this.default_filename + ".spd";
+    var hexdata = this.create_spd_array(format);
+    var bytes = new Uint8Array(hexdata);
+    var file = new Blob([bytes], {type: "application/octet-stream"});
+    this.save_file_to_disk(file,filename);
+    this.close_window();
   }
+
+  save_basic()
+  {
+    let filename = this.default_filename + ".bas";
+    var data = this.create_basic();
+    let file = new Blob([data], {type: "text/plain"});
+    this.save_file_to_disk(file,filename);
+    this.close_window();
+  }
+
+
+/*
+
+   SSSSSSSSSSSSSSS PPPPPPPPPPPPPPPPP   DDDDDDDDDDDDD        
+ SS:::::::::::::::SP::::::::::::::::P  D::::::::::::DDD     
+S:::::SSSSSS::::::SP::::::PPPPPP:::::P D:::::::::::::::DD   
+S:::::S     SSSSSSSPP:::::P     P:::::PDDD:::::DDDDD:::::D  
+S:::::S              P::::P     P:::::P  D:::::D    D:::::D 
+S:::::S              P::::P     P:::::P  D:::::D     D:::::D
+ S::::SSSS           P::::PPPPPP:::::P   D:::::D     D:::::D
+  SS::::::SSSSS      P:::::::::::::PP    D:::::D     D:::::D
+    SSS::::::::SS    P::::PPPPPPPPP      D:::::D     D:::::D
+       SSSSSS::::S   P::::P              D:::::D     D:::::D
+            S:::::S  P::::P              D:::::D     D:::::D
+            S:::::S  P::::P              D:::::D    D:::::D 
+SSSSSSS     S:::::SPP::::::PP          DDD:::::DDDDD:::::D  
+S::::::SSSSSS:::::SP::::::::P          D:::::::::::::::DD   
+S:::::::::::::::SS P::::::::P          D::::::::::::DDD     
+ SSSSSSSSSSSSSSS   PPPPPPPPPP          DDDDDDDDDDDDD        
+
+ */
 
   create_spd_array(format)
   {
-
-    // WIZBALL!!
-    // var data = new Array(83,80,68,1,0,16,0,11,1,0,0,0,0,255,0,3,254,192,3,105,128,13,20,224,13,52,224,14,235,208,62,190,168,59,215,232,45,65,120,52,0,28,45,65,116,43,215,212,58,189,84,10,150,80,10,169,80,14,150,80,2,169,64,2,85,64,0,149,0,0,0,0,133,0,24,40,125,72,104,68,56,43,88,48,64,62,108,112,59,84,39,39,42,127,83,107,70,58,46,92,53,67,63,111,122,61,87,2,2,2,3,3,3,3,3,2,2,4,5,8,3,8,3,3,128,128,128,128,128,144,128,128,128,144,128,128,128,144,128,128,128);
 
     // SPD file format information
     // bytes 00,01,02 = "SPD"
@@ -265,28 +281,50 @@ export default class Save
     return data;
   }
 
+/*
 
-  create_source(format)
+               AAA                 SSSSSSSSSSSSSSS MMMMMMMM               MMMMMMMM
+              A:::A              SS:::::::::::::::SM:::::::M             M:::::::M
+             A:::::A            S:::::SSSSSS::::::SM::::::::M           M::::::::M
+            A:::::::A           S:::::S     SSSSSSSM:::::::::M         M:::::::::M
+           A:::::::::A          S:::::S            M::::::::::M       M::::::::::M
+          A:::::A:::::A         S:::::S            M:::::::::::M     M:::::::::::M
+         A:::::A A:::::A         S::::SSSS         M:::::::M::::M   M::::M:::::::M
+        A:::::A   A:::::A         SS::::::SSSSS    M::::::M M::::M M::::M M::::::M
+       A:::::A     A:::::A          SSS::::::::SS  M::::::M  M::::M::::M  M::::::M
+      A:::::AAAAAAAAA:::::A            SSSSSS::::S M::::::M   M:::::::M   M::::::M
+     A:::::::::::::::::::::A                S:::::SM::::::M    M:::::M    M::::::M
+    A:::::AAAAAAAAAAAAA:::::A               S:::::SM::::::M     MMMMM     M::::::M
+   A:::::A             A:::::A  SSSSSSS     S:::::SM::::::M               M::::::M
+  A:::::A               A:::::A S::::::SSSSSS:::::SM::::::M               M::::::M
+ A:::::A                 A:::::AS:::::::::::::::SS M::::::M               M::::::M
+AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMMMM
+
+
+ */
+
+  create_assembly(format)
   {
 
-    var comment = ";";
+    var comment = "; ";
     var prefix = "!";
     var label_suffix = "";
 
     if (format == "kick")
     {
-      comment = "//";
+      comment = "// ";
       prefix = ".";
       label_suffix =":";
     }
 
     var data = "";
 
-    data += "\n"+comment+" generated with spritemate on " + new Date().toLocaleString();
+    data += "\n" + comment + this.savedata.sprites.length + " sprites generated with spritemate on " + new Date().toLocaleString();
+    data += "\n" + comment + "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
 
-    data += "\n\nLDA #" + this.savedata.colors[2] + " "+comment+" sprite multicolor 1";
+    data += "\n\nLDA #$" + ("0" + this.savedata.colors[2].toString(16)).slice(-2) + " "+comment+"sprite multicolor 1";
     data += "\nSTA $D025";
-    data += "\nLDA #" + this.savedata.colors[3] + " "+comment+" sprite multicolor 2";
+    data += "\nLDA #$" + ("0" + this.savedata.colors[3].toString(16)).slice(-2) + " "+comment+"sprite multicolor 2";
     data += "\nSTA $D026";
     data += "\n";
     
@@ -297,12 +335,21 @@ export default class Save
     {
 
       var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
-      
       var is_multicolor = this.savedata.sprites[j].multicolor;
       var stepping = 1; 
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
-      data +="\n\nsprite_" + (j+1) + label_suffix + "\n";
+      data += "\n\n" + comment + "sprite " + (j+1);
+      if(is_multicolor)
+      {
+        data += " / " + "multicolor";
+      }else{
+        data += " / " + "singlecolor";
+      }
+
+      data += " / color: " + "$" +("0" + this.savedata.sprites[j].color.toString(16)).slice(-2);
+      data += "\nsprite_" + (j+1) + label_suffix + "\n";
+      
       // iterate through the pixel data array 
       // and create a hex values based on multicolor or singlecolor
       for(var i=0; i<spritedata.length; i=i+8)
@@ -353,6 +400,174 @@ export default class Save
     
     return data;
   }
+
+/*
+
+BBBBBBBBBBBBBBBBB               AAA                 SSSSSSSSSSSSSSS IIIIIIIIII      CCCCCCCCCCCCC
+B::::::::::::::::B             A:::A              SS:::::::::::::::SI::::::::I   CCC::::::::::::C
+B::::::BBBBBB:::::B           A:::::A            S:::::SSSSSS::::::SI::::::::I CC:::::::::::::::C
+BB:::::B     B:::::B         A:::::::A           S:::::S     SSSSSSSII::::::IIC:::::CCCCCCCC::::C
+  B::::B     B:::::B        A:::::::::A          S:::::S              I::::I C:::::C       CCCCCC
+  B::::B     B:::::B       A:::::A:::::A         S:::::S              I::::IC:::::C              
+  B::::BBBBBB:::::B       A:::::A A:::::A         S::::SSSS           I::::IC:::::C              
+  B:::::::::::::BB       A:::::A   A:::::A         SS::::::SSSSS      I::::IC:::::C              
+  B::::BBBBBB:::::B     A:::::A     A:::::A          SSS::::::::SS    I::::IC:::::C              
+  B::::B     B:::::B   A:::::AAAAAAAAA:::::A            SSSSSS::::S   I::::IC:::::C              
+  B::::B     B:::::B  A:::::::::::::::::::::A                S:::::S  I::::IC:::::C              
+  B::::B     B:::::B A:::::AAAAAAAAAAAAA:::::A               S:::::S  I::::I C:::::C       CCCCCC
+BB:::::BBBBBB::::::BA:::::A             A:::::A  SSSSSSS     S:::::SII::::::IIC:::::CCCCCCCC::::C
+B:::::::::::::::::BA:::::A               A:::::A S::::::SSSSSS:::::SI::::::::I CC:::::::::::::::C
+B::::::::::::::::BA:::::A                 A:::::AS:::::::::::::::SS I::::::::I   CCC::::::::::::C
+BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII      CCCCCCCCCCCCC
+
+ */
+
+  create_basic()
+  {
+    let line_number = 10;
+    let line_inc = 10;
+    let data = "";
+    let max_sprites = Math.min(8,this.savedata.sprites.length); // display up to 8 sprites
+
+    data += line_number + ' print chr$(147)';
+    line_number+=line_inc;
+    data += "\n" + line_number + ' print "generated with spritemate"';
+    line_number+=line_inc;
+    data += "\n" + line_number + ' print "' + max_sprites + " of " + this.savedata.sprites.length + ' sprites displayed."';
+    line_number+=line_inc;
+    data += "\n" + line_number + " poke 53285,"+this.savedata.colors[2]+": rem multicolor 1";
+    line_number+=line_inc;
+    data += "\n" + line_number + " poke 53286,"+this.savedata.colors[3]+": rem multicolor 2";
+    line_number+=line_inc;
+    data += "\n" + line_number + " poke 53269,255 : rem set all 8 sprites visible";
+    line_number+=line_inc;
+    data += "\n" + line_number + " for x=12800 to 12800+"+(this.savedata.sprites.length*64-1)+": read y: poke x,y: next x: rem sprite generation";
+    line_number+=line_inc;
+
+    
+    let multicolor_byte = 0;
+    let double_x_byte = 0;
+    let double_y_byte = 0;
+
+    for (let j=0; j<max_sprites; j++)  // iterate through all sprites
+    { 
+      data += "\n" + line_number + " :: rem sprite "+j;
+      line_number+=line_inc;
+      data += "\n" + line_number + " poke "+ (53287+j) + "," + this.savedata.sprites[j].color + ": rem color = " + this.savedata.sprites[j].color;
+      line_number+=line_inc;
+
+      data += "\n" + line_number + " poke "+ (2040+j) + "," + (200+j) + ": rem pointer";
+      line_number+=line_inc;
+
+      let xpos = (j*48+24+20);
+      let ypos = 120;
+
+      if (j>=4){
+        xpos -= 4*48;
+        ypos += 52;
+      }
+
+      data += "\n" + line_number + " poke "+ (53248+j*2) + ", " + xpos + ": rem x pos";
+      line_number+=line_inc;
+
+      data += "\n" + line_number + " poke "+ (53249+j*2) + ", " + ypos + ": rem y pos";
+      line_number+=line_inc;
+
+      // this bit manipulation is brilliant Ingo
+      if (this.savedata.sprites[j].multicolor) multicolor_byte = multicolor_byte | 1<<j;
+      if (this.savedata.sprites[j].double_x) double_x_byte = double_x_byte | 1<<j;
+      if (this.savedata.sprites[j].double_y) double_y_byte = double_y_byte | 1<<j;
+
+    } 
+    
+    data += "\n" + line_number + " poke 53276, " + multicolor_byte + ": rem multicolor";
+    line_number+=line_inc;
+    data += "\n" + line_number + " poke 53277, " + double_x_byte + ": rem width";
+    line_number+=line_inc;
+    data += "\n" + line_number + " poke 53271, " + double_y_byte + ": rem height";
+    line_number+=line_inc;
+    
+    let byte = "";
+    let bit = "";
+
+    line_number=1000;
+    for (let j=0; j<this.savedata.sprites.length; j++)  // iterate through all sprites
+    {
+
+      var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      var is_multicolor = this.savedata.sprites[j].multicolor;
+      var stepping = 1; 
+      if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
+
+      data += "\n" + line_number + " :: rem sprite " + (j+1);
+      line_number+=line_inc;
+
+      if(is_multicolor)
+      {
+        data += " / " + "multicolor";
+      }else{
+        data += " / " + "singlecolor";
+      }
+
+      data += " / color: " + this.savedata.sprites[j].color;
+      
+      
+      // iterate through the pixel data array 
+      // and create a hex values based on multicolor or singlecolor
+      for(var i=0; i<spritedata.length; i=i+8)
+      {
+
+        if (i%128 == 0)
+        {
+          data += "\n" + line_number + " data ";
+          line_number+=line_inc;
+        }
+
+        for (let k=0; k<8; k=k+stepping)
+        {
+          let pen = spritedata[i+k];
+
+          if (is_multicolor)
+          {
+            if (pen == 0) bit = "00";
+            if (pen == 1) bit = "10";
+            if (pen == 2) bit = "01";
+            if (pen == 3) bit = "11"; 
+          }
+
+          if (!is_multicolor)
+          {
+            bit = "1";
+            if (pen == 0) bit = "0";
+          } 
+         
+          byte = byte + bit;
+        }
+
+        let hex = parseInt(byte, 2).toString(10);
+        data += hex +",";
+        byte = "";
+
+      }
+      
+      
+      // finally, we add multicolor and color info for byte 64
+      var high_nibble = "0000";
+      if (is_multicolor) high_nibble = "1000";
+
+      var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
+      
+      let color_byte = parseInt(high_nibble + low_nibble, 2).toString(10);
+      data += color_byte; // should be the individual color
+      
+    }
+
+    data += "\n";
+    data = data.replace(/,\n/g,'\n'); // removes all commas at the end of a DATA line
+    
+    return data;
+  }
+
 
   set_save_data(savedata)
   {

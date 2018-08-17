@@ -19,6 +19,7 @@ export default class Info
 
             <h1>V1.08</h1>
             <p>
+            - export sprite data as BASIC2.0 listing<br/>
             - color tooltip now also shows the C64 color value (thx2 nurpax)<br/>
             - spritemate has a new logo now<br/>
             - added menu bar, making room for more features<br/>
@@ -26,6 +27,8 @@ export default class Info
             - slightly tweaked save window<br/>
             - migrated Spritemate to use webpack (thx2 nurpax)<br />
             - reworked Spritemate file format, reducing file size by over 50%<br/>
+            - added line breaks in SPM file format for better readability<br/>
+            - added more info to the assembly export formats<br/>
             - switched individual and transparent color pickers in color palette (thx2 Steril)<br/>
             - repo cleanup (thx2 nurpax)<br/>
             </p>
