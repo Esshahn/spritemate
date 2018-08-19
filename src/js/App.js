@@ -495,13 +495,39 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     });
 
     $('#menubar-new').mouseup((e) =>
-    {
-      confirm("Are you sure?");
-      this.sprite = new Sprite(this.config);
-      this.sprite.new_sprite(this.palette.get_color());
-      this.list.update_all(this.sprite.get_all());
-      this.update();
+    {     
+      $( "#dialog-confirm" ).css('visibility','visible');
+      $( "#dialog-confirm" ).dialog( "open");
     });
+
+    // confirm dialog for "new"
+    // I failed to add a proper styling to this. It hilarious.
+    $( "#dialog-confirm" ).dialog({
+      resizable: false, autoOpen: false, height: "auto", width: 400, modal: true, dialogClass: "no-close",
+      buttons: {
+            "Ok": {
+                    click: () => 
+                    {
+                        this.sprite = new Sprite(this.config);
+                        this.sprite.new_sprite(this.palette.get_color());
+                        this.list.update_all(this.sprite.get_all());
+                        this.update();
+                        $('#dialog-confirm').dialog("close");
+                        status("New file created.");
+                    },
+                    text: 'Ok', class: 'confirm-button'
+                },
+            "Cancel": {
+                    click: () => {
+                        $('#dialog-confirm').dialog("close");
+                    },
+                    text: 'Cancel', class: 'confirm-button'
+                }
+          }
+    });
+
+
+   
 
 /*
 
