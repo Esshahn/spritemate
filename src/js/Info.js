@@ -19,6 +19,7 @@ export default class Info
 
             <h1>V1.08</h1>
             <p>
+            - added option to start a new file<br/>
             - export sprite data as BASIC2.0 listing<br/>
             - color tooltip now also shows the C64 color value (thx2 nurpax)<br/>
             - spritemate has a new logo now<br/>

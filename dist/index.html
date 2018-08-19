@@ -26,29 +26,77 @@
         <div>
             <span class="menuLabel">File</span>
                 <div class="menuDropDown">
-                    <a id="menubar-new">New<span class="hotkey">Ctrl+O</span></a>
-                    <a id="menubar-load">Load...<span class="hotkey">Ctrl+O</span></a>
-                    <a id="menubar-save">Save...</a>
+                    <a id="menubar-new">New file<span class="hotkey"></span></a>
+                    <a id="menubar-load">Load file...<span class="hotkey"></span></a>
+                    <a id="menubar-save">Save file...</a>
                 </div>
         </div>
         <div>
             <span class="menuLabel">Edit</span>
             <div class="menuDropDown">
                 <a id="menubar-undo">Undo<span class="hotkey">z</span></a>
-                <a id="menubar-redo">Redo<span class="hotkey">Z</span></a>
+                <a id="menubar-redo">Redo<span class="hotkey">shift+z</span></a>
                 <hr>
+                <a id="menubar-new-sprite">New sprite<span class="hotkey"></span></a>
+                <a id="menubar-copy">Copy sprite<span class="hotkey"></span></a>
+                <a id="menubar-paste">Paste sprite<span class="hotkey"></span></a>
+                <hr>
+                <a id="menubar-kill">Kill sprite<span class="hotkey"></span></a>
+                
             </div>
         </div>
         <div>
-            <span class="menuLabel">Window</span>
+            <span class="menuLabel">Sprite</span>
+            <div class="menuDropDown">
+                
+                <a id="menubar-colormode">Toggle color mode<span class="hotkey">m</span></a>
+                <hr>
+                <a id="menubar-shift-left">Shift left<span class="hotkey"></span></a>
+                <a id="menubar-shift-right">Shift right<span class="hotkey"></span></a>
+                <a id="menubar-shift-up">Shift up<span class="hotkey"></span></a>
+                <a id="menubar-shift-down">Shift down<span class="hotkey"></span></a>
+                <hr>
+                <a id="menubar-flip-horizontal">Flip horizontal<span class="hotkey"></span></a>
+                <a id="menubar-flip-vertical">Flip vertical<span class="hotkey"></span></a>
+                <hr>
+                <a id="menubar-stretch-x">Double width<span class="hotkey"></span></a>
+                <a id="menubar-stretch-y">Double height<span class="hotkey"></span></a>
+                <hr>
+                <a id="menubar-overlay">Toggle overlay<span class="hotkey"></span></a>
+            </div>
+        </div>
+        <div>
+            <span class="menuLabel">View</span>
                 <div class="menuDropDown">
                     <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">f</span></a>
+                    <hr>
+                    <span class="label">Editor Window</span>
+                    <a id="menubar-editor-grid">Toggle Grid<span class="hotkey"></span></a>
+                    <a id="menubar-editor-zoom-in">Zoom in<span class="hotkey"></span></a>
+                    <a id="menubar-editor-zoom-out">Zoom out<span class="hotkey"></span></a>
+                    <hr>
+                    <span class="label">Preview Window</span>
+                    <a id="menubar-preview-zoom-in">Zoom in<span class="hotkey"></span></a>
+                    <a id="menubar-preview-zoom-out">Zoom out<span class="hotkey"></span></a>
+                    <hr>
+                    <span class="label">Sprite List Window</span>
+                    <a id="menubar-list-grid">Toggle sprite borders<span class="hotkey"></span></a>
+                    <a id="menubar-list-zoom-in">Zoom in<span class="hotkey"></span></a>
+                    <a id="menubar-list-zoom-out">Zoom out<span class="hotkey"></span></a>
                 </div>
         </div>
         <div>
-            <span class="menuLabel" id="menubar-help">Help</span>
+            <span class="menuLabel">Help</span>
+                <div class="menuDropDown">
+                    <a id="menubar-help">Help<span class="hotkey"></span></a>
+                    <hr>
+                    <a href="https://github.com/Esshahn/spritemate" target="_blank">Visit Github repository<span class="hotkey"></span></a>
+                    <a href="https://www.awsm.de" target="_blank">Visit awsm website<span class="hotkey"></span></a>
+                    <a href="https://twitter.com/awsm9000" target="_blank">awsm on Twitter<span class="hotkey"></span></a>
+                </div>
         </div>
     </div>
+    <div id="dialog-confirm" title="New File">All current data will be erased. Are you sure?</div>
     <div id="app"></div>
     <div id="statusbar">
         <div id="statustext"></div>
