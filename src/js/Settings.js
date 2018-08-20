@@ -11,8 +11,7 @@ export default class Settings
     
     let template = `
     <div id="modal">
-        <h1 autofocus>Settings</h1>
-        <h2>Your settings will be saved locally to your browser storage</h2>
+        <h2 autofocus>Your settings will be saved locally to your browser storage</h2>
         <fieldset>
             <legend>Color palette</legend>
             

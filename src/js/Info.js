@@ -3,14 +3,15 @@ import $ from 'jquery'
 export default class Info
 {
 
-  constructor(window,config)
+  constructor(window,config,eventhandler)
   {
     this.config = config;
     this.window = window;
+    this.eventhandler = eventhandler;
 
     let template = `
     <div id="info">
-        <img autofocus src="img/logo.png" id="logo" alt="spritemate">
+        <img autofocus src="img/logo-menu.svg" width="300px" id="logo" alt="spritemate">
         <p>The Commodore 64 sprite editor, v${this.config.version}</p>
 
         <fieldset>
@@ -18,8 +19,17 @@ export default class Info
 
             <h1>V1.08</h1>
             <p>
+            - added option to start a new file<br/>
+            - export sprite data as BASIC2.0 listing<br/>
+            - color tooltip now also shows the C64 color value (thx2 nurpax)<br/>
+            - spritemate has a new logo now<br/>
+            - added menu bar, making room for more features<br/>
+            - fixed keyboard becoming unresponsive after a modal was opened<br/>
+            - slightly tweaked save window<br/>
             - migrated Spritemate to use webpack (thx2 nurpax)<br />
             - reworked Spritemate file format, reducing file size by over 50%<br/>
+            - added line breaks in SPM file format for better readability<br/>
+            - added more info to the assembly export formats<br/>
             - switched individual and transparent color pickers in color palette (thx2 Steril)<br/>
             - repo cleanup (thx2 nurpax)<br/>
             </p>
@@ -148,7 +158,11 @@ export default class Info
     $("#window-"+this.window).append(template);
 
     $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-info').mouseup((e) => $("#window-"+this.window).dialog( "close" ));
+    $('#button-info').mouseup((e) => 
+    {
+        $("#window-"+this.window).dialog( "close" );
+        this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+    });
 
    
   }

@@ -36,6 +36,7 @@ export default class Menu
             <img src="img/ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (d)">  
             <div class="icontext">fill</div>
         </div>
+        <!--
         <div class ="iconset" id="icon-fullscreen">
             <img src="img/ui/icon-fullscreen.png" class="icon" title="toggle fullscreen (f)">  
             <div class="icontext">fullscr.</div>
@@ -44,6 +45,7 @@ export default class Menu
             <img src="img/ui/icon-settings.png" class="icon"  title="settings">  
             <div class="icontext">settings</div>
         </div>
+        
         <div class ="iconset" id="icon-help">
             <img src="img/ui/icon-help.png" class="icon"  title="info">  
             <div class="icontext">help</div>
@@ -51,7 +53,8 @@ export default class Menu
          <div class ="iconset" id="icon-info">
             <img src="img/ui/icon-info.png" class="icon"  title="info">  
             <div class="icontext">info</div>
-        </div>   
+        </div>  
+        -->
       </div>
     `;
 

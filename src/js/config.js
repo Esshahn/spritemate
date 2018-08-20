@@ -31,29 +31,29 @@ export function get_config()
               ]},
       selected_palette: "pepto",
       window_menu: {
-              "top": 25,
-              "left": 10              
+              "top": 50,
+              "left": 20              
               },
       window_editor: {
-              "top": 25,
+              "top": 50,
               "left": 210,
               "zoom": 18,
               "grid": true
               },
       window_preview: {
-              "top": 25,
+              "top": 50,
               "left": 700,
               "zoom": 6
               },
       window_list: {
-              "top": 240,
+              "top": 280,
               "left": 700,
               "width": 440,
               "height": 200,
               "zoom": 4
               },
       window_palette: {
-              "top": 25,
+              "top": 50,
               "left": 110,
               "zoom": 1
               }
