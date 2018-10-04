@@ -91,6 +91,17 @@ Latest version: http://spritemate.com/
 * you can rearrange sprites by just dragging them to the desired position
 * you can copy & paste sprites by using the corresponding icons in the sprite list window
 
+## How to run
+
+You can use `yarn` to run this project locally
+
+```
+$ cd spritemate
+$ yarn
+$ yarn start
+
+```
+
 ## History
 
 2018-04-28
