@@ -37,8 +37,10 @@ export default class Save
       <fieldset>
         <legend>assembly source // *.txt</legend>
         <div class="fieldset right">
-          <button id="button-save-source-kick">KICK ASS syntax</button>
-          <button id="button-save-source-acme">ACME syntax</button>
+          <button id="button-save-source-kick">KICK ASS syntax (hex)</button>
+          <button id="button-save-source-kick-binary">KICK ASS syntax (binary)</button>
+          <button id="button-save-source-acme">ACME syntax (hex)</button>
+          <button id="button-save-source-acme-binary">ACME syntax (binary)</button>
         </div>
         <p>A text file containing the sprite data in assembly language.</p>
       </fieldset>
@@ -66,8 +68,10 @@ export default class Save
     $('#button-save-spm').mouseup((e) => this.save_spm());
     $('#button-save-spd').mouseup((e) => this.save_spd("new"));
     $('#button-save-spd-old').mouseup((e) => this.save_spd("old"));
-    $('#button-save-source-kick').mouseup((e) => this.save_assembly("kick"));
-    $('#button-save-source-acme').mouseup((e) => this.save_assembly("acme"));
+    $('#button-save-source-kick').mouseup((e) => this.save_assembly("kick", false));
+    $('#button-save-source-kick-binary').mouseup((e) => this.save_assembly("kick", true));
+    $('#button-save-source-acme').mouseup((e) => this.save_assembly("acme", false));
+    $('#button-save-source-acme-binary').mouseup((e) => this.save_assembly("acme", true));
     $('#button-save-basic').mouseup((e) => this.save_basic());
 
     $( "#filename" ).keyup((e) => 
@@ -134,10 +138,10 @@ export default class Save
     this.close_window();
   }
 
-  save_assembly(format)
+  save_assembly(format, encode_as_binary)
   {
     let filename = this.default_filename + ".txt";
-    var data = this.create_assembly(format);
+    var data = this.create_assembly(format, encode_as_binary);
     let file = new Blob([data], {type: "text/plain"});
     this.save_file_to_disk(file,filename);
     this.close_window();
@@ -303,7 +307,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
 
  */
 
-  create_assembly(format)
+  create_assembly(format, encode_as_binary)
   {
 
     var comment = "; ";
@@ -320,7 +324,8 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
     var data = "";
 
     data += "\n" + comment + this.savedata.sprites.length + " sprites generated with spritemate on " + new Date().toLocaleString();
-    data += "\n" + comment + "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
+    if (!encode_as_binary)
+      data += "\n" + comment + "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
 
     data += "\n\nLDA #$" + ("0" + this.savedata.colors[2].toString(16)).slice(-2) + " "+comment+"sprite multicolor 1";
     data += "\nSTA $D025";
@@ -338,6 +343,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       var is_multicolor = this.savedata.sprites[j].multicolor;
       var stepping = 1; 
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
+      var line_breaks_after = encode_as_binary ? 24 : 64;
 
       data += "\n\n" + comment + "sprite " + (j+1);
       if(is_multicolor)
@@ -351,11 +357,11 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       data += "\nsprite_" + (j+1) + label_suffix + "\n";
       
       // iterate through the pixel data array 
-      // and create a hex values based on multicolor or singlecolor
+      // and create a hex or binary values based on multicolor or singlecolor
       for(var i=0; i<spritedata.length; i=i+8)
       {
 
-        if (i%64 == 0)
+        if (i%line_breaks_after == 0)
         {
           data = data.substring(0, data.length - 1);
           data +="\n"+prefix+"byte ";
@@ -382,20 +388,30 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
           byte = byte + bit;
         }
 
-        let hex = parseInt(byte, 2).toString(16);
-        data += "$"+("0"+hex).slice(-2)+",";
+        if (encode_as_binary)
+        {
+          data += "%"+byte+",";
+        } else {
+          let hex = parseInt(byte, 2).toString(16);
+          data += "$"+("0"+hex).slice(-2)+",";
+        }
         byte = "";
 
       }
 
-      // finally, we add multicolor and color info for byte 64
-      var high_nibble = "0000";
-      if (is_multicolor) high_nibble = "1000";
+      if (encode_as_binary)
+      {
+          data = data.substring(0, data.length - 1);
+      } else {
+        // finally, we add multicolor and color info for byte 64
+        var high_nibble = "0000";
+        if (is_multicolor) high_nibble = "1000";
 
-      var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
-      
-      let color_byte = "$" +("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
-      data += color_byte; // should be the individual color
+        var low_nibble = ("000" + (this.savedata.sprites[j].color >>> 0).toString(2)).slice(-4);
+
+        let color_byte = "$" +("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
+        data += color_byte; // should be the individual color
+      }
     }
     
     return data;
