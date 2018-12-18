@@ -17,6 +17,11 @@ export default class Info
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.09</h1>
+            <p>
+            - added binary notation for assembly export (thx2 mist64!)
+            </p>
+            
             <h1>V1.08</h1>
             <p>
             - added option to start a new file<br/>

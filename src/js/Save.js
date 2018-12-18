@@ -37,12 +37,12 @@ export default class Save
       <fieldset>
         <legend>assembly source // *.txt</legend>
         <div class="fieldset right">
-          <button id="button-save-source-kick">KICK ASS syntax (hex)</button>
-          <button id="button-save-source-kick-binary">KICK ASS syntax (binary)</button>
-          <button id="button-save-source-acme">ACME syntax (hex)</button>
-          <button id="button-save-source-acme-binary">ACME syntax (binary)</button>
+          <button id="button-save-source-kick">KICK ASS (hex)</button>
+          <button id="button-save-source-kick-binary">KICK ASS (binary)</button>
+          <button id="button-save-source-acme">ACME (hex)</button>
+          <button id="button-save-source-acme-binary">ACME (binary)</button>
         </div>
-        <p>A text file containing the sprite data in assembly language.</p>
+        <p>A text file containing the sprite data in assembly language. KICK ASS and ACME are compilers with slightly different syntax. Choose "hex" to save a byte like $01 or "binary" for %00000001.</p>
       </fieldset>
 
       <fieldset>
