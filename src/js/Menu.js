@@ -32,8 +32,12 @@ export default class Menu
             <img src="img/ui/icon-draw-hi.png" class="icon" id="image-icon-draw" title="draw tool (d)">
             <div class="icontext">draw</div>
         </div>
+        <div class ="iconset" id="icon-erase">
+            <img src="img/ui/icon-erase.png" class="icon" id="image-icon-erase" title="erase tool (e)">
+            <div class="icontext">erase</div>
+        </div>
         <div class ="iconset" id="icon-fill">
-            <img src="img/ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (d)">  
+            <img src="img/ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (f)">  
             <div class="icontext">fill</div>
         </div>
         <!--

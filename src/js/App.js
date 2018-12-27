@@ -279,6 +279,7 @@ class App
     this.init_ui_fade("icon-flip-vertical");
     this.init_ui_fade("icon-multicolor");
     this.init_ui_fade("icon-draw");
+    this.init_ui_fade("icon-erase");
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
@@ -353,7 +354,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
-        if (e.key == "f")
+        if (e.key == "F")
         {
           toggle_fullscreen();
         }
@@ -370,21 +371,29 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
         if (e.key == "d")
         {
-          // toggle between draw and fill modes
-          if (this.mode == "draw")
-          {
-            this.mode = "fill";
-            status("Fill mode");
-            $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
-            $("#image-icon-select").attr("src","img/ui/icon-select.png");
-            $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
-          } else {
-            this.mode = "draw";
-            status("Draw mode");
-            $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
-            $("#image-icon-select").attr("src","img/ui/icon-select.png");
-            $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
-          }
+          this.mode = "draw";
+          status("Draw mode");
+          $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
+          $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+        }
+
+        if (e.key == "e")
+        {
+          this.mode = "erase";
+          status("Erase mode");
+          $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+          $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
+          $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+        }
+
+        if (e.key == "f")
+        {
+          this.mode = "fill";
+          status("Fill mode");
+          $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+          $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
         }
 
         if (e.key == "1")
@@ -770,7 +779,17 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       this.mode = "draw";
       status("Draw mode");
       $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
-      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+    });
+
+
+    $('#icon-erase').mouseup((e) =>
+    {
+      this.mode = "erase";
+      status("Erase mode");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
@@ -780,7 +799,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       this.mode = "fill";
       status("Fill mode");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
-      $("#image-icon-select").attr("src","img/ui/icon-select.png");
+      $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
     });
 
@@ -901,6 +920,12 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         this.is_drawing = true; // needed for mousemove drawing
       }
 
+      if (this.mode == "erase")
+      {
+        this.sprite.set_pixel(this.editor.get_pixel(e),true); // updates the sprite array at the grid position with the color chosen on the palette
+        this.is_drawing = true; // needed for mousemove drawing
+      }
+
       if (this.mode == "fill")
       {
         this.sprite.floodfill(this.editor.get_pixel(e));
@@ -910,14 +935,16 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     $('#editor').mousemove((e) => {
       
-      if (this.is_drawing && this.mode=="draw")
+      if (this.is_drawing && (this.mode=="draw" || this.mode=="erase"))
       {
         let newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
         if ( (newpos.x != this.oldpos.x) || (newpos.y != this.oldpos.y) )
         {
           let all = this.sprite.get_all();
-          this.sprite.set_pixel(newpos,e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+          let delete_trigger = e.shiftKey;
+          if (this.mode == "erase") delete_trigger = true;
+          this.sprite.set_pixel(newpos,delete_trigger); // updates the sprite array at the grid position with the color chosen on the palette
           this.editor.update(all); 
           this.preview.update(all);
           this.list.update(all); // only updates the sprite drawn onto

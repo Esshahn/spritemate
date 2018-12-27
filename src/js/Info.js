@@ -17,6 +17,13 @@ export default class Info
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.10</h1>
+            <p>
+            - added eraser tool to menu bar (hotkey "e")<br/>
+            - changed hotkey for fill to "f"<br/>
+            - changed hotkey for fullscreen to "shift+f" 
+            </p>
+
             <h1>V1.09</h1>
             <p>
             - added binary notation for assembly export (thx2 mist64!)

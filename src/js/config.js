@@ -4,7 +4,7 @@ export function get_config()
 
     let config = 
     {
-      version: 1.09,
+      version: 1.10,
       sprite_x: 24,
       sprite_y: 21,
       palettes: {
