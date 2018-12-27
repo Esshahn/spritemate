@@ -20,7 +20,7 @@ export default class Save
       </div>
       <br/>
       <fieldset>
-        <legend>spritemate // *.spm</legend>
+        <legend>Spritemate // *.spm</legend>
         <button id="button-save-spm">Save as Spritemate</button>
         <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>
       </fieldset>
@@ -35,7 +35,7 @@ export default class Save
       </fieldset>
 
       <fieldset>
-        <legend>assembly source // *.txt</legend>
+        <legend>Assembly code // *.txt</legend>
         <div class="fieldset right">
           <button id="button-save-source-kick">KICK ASS (hex)</button>
           <button id="button-save-source-kick-binary">KICK ASS (binary)</button>
@@ -48,7 +48,7 @@ export default class Save
       <fieldset>
         <legend>BASIC // *.bas</legend>
         <button id="button-save-basic">Save as BASIC 2.0</button>
-        <p>The file is a text file that you can copy & paste into VICE.</p>
+        <p>A BASIC 2.0 text file that you can copy & paste into VICE.</p>
       </fieldset>
 
       <fieldset>
