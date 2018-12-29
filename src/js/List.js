@@ -29,9 +29,10 @@ export default class List extends Window_Controls
           <img src="img/ui/icon-grid.png" id="icon-list-grid" title="toggle sprite borders">
       </div>
         <img src="img/ui/icon-list-new.png" id="icon-list-new" title="new sprite">
-        <img src="img/ui/icon-list-delete.png" id="icon-list-delete" title="remove sprite">
+        
         <img src="img/ui/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
         <img src="img/ui/icon-list-paste.png" id="icon-list-paste" title="paste sprite">
+        <img src="img/ui/icon-list-trash.png" class="icon-right" id="icon-list-delete" title="delete sprite">
       </div>
       <div id="spritelist"></div>
     `;

@@ -21,7 +21,10 @@ export default class Info
             <p>
             - added eraser tool to menu bar (hotkey "e")<br/>
             - changed hotkey for fill to "f"<br/>
-            - changed hotkey for fullscreen to "shift+f" 
+            - changed hotkey for fullscreen to "shift+f"<br/>
+            - moved "delete sprite" icon in sprite list to right side<br/>
+            - replaced "delete sprite" icon with new one (trash bin)<br/>
+            - changed menu bar behavior from "click" to "hover"
             </p>
 
             <h1>V1.09</h1>

@@ -11,7 +11,7 @@ export function menubar()
   { 
     closeAllMenus(); 
     this.classList.add('activeMenu'); 
-    e.stopPropagation() 
+    e.stopPropagation();
   }
 
   function closeAllMenus() 
@@ -27,7 +27,7 @@ export function menubar()
   // Show menu event handler
   on('load', function (event) 
   { 
-    document.getElementsByClassName('menuLabel').forEach(function(node) { node.onclick = showMenu }) 
+    document.getElementsByClassName('menuLabel').forEach(function(node) { node.onmouseover = showMenu }) 
   })
 
   // Close all open menus on click or escape
