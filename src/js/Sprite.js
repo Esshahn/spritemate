@@ -369,6 +369,13 @@ export default class Sprite
     this.save_backup();
   }
 
+  duplicate(color = 1,multicolor = false)
+  {
+    this.copy();
+    this.new_sprite(color,multicolor);
+    this.paste();
+  }
+
   can_undo()
   {
     if (this.backup_position < 1)

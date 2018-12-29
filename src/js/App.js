@@ -591,6 +591,15 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       }
     });
 
+
+    $('#menubar-duplicate,#icon-list-duplicate').mouseup((e) =>
+    {  
+      this.sprite.duplicate(this.palette.get_color(), this.sprite.is_multicolor());
+      this.list.update_all(this.sprite.get_all());
+      this.update_ui();
+      status("Sprite duplicated.");
+    });
+
 /*
 
   SPRITE

@@ -12,13 +12,14 @@ export default class Info
     let template = `
     <div id="info">
         <img autofocus src="img/logo-menu.svg" width="300px" id="logo" alt="spritemate">
-        <p>The Commodore 64 sprite editor, v${this.config.version}</p>
+        <p>The Commodore 64 sprite editor, v${this.config.version.toFixed(2)}</p>
 
         <fieldset>
             <h1>Release notes</h1>
 
             <h1>V1.10</h1>
             <p>
+            - added "duplicate sprite" option to menu bar and list view<br/>
             - added eraser tool to menu bar (hotkey "e")<br/>
             - changed hotkey for fill to "f"<br/>
             - changed hotkey for fullscreen to "shift+f"<br/>
