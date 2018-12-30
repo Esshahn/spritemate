@@ -19,6 +19,7 @@ export default class Info
 
             <h1>V1.10</h1>
             <p>
+            - changed icons for zoom & grid<br/>
             - added move tool to menu bar (hotkey 'm')<br/>
             - changed color mode hotkey from 'm' to 'c'<br/>
             - removed shift left, right, up, down icons from editor<br/>

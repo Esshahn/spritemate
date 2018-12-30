@@ -26,8 +26,7 @@ export default class Editor extends Window_Controls
     let template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/ui/icon-zoom-in.png" id="icon-editor-zoom-in" title="zoom in">
-          <img src="img/ui/icon-zoom-out.png" id="icon-editor-zoom-out" title="zoom out">
+          <img src="img/ui/icon-zoom-plus.png" id="icon-editor-zoom-in" title="zoom in"><img src="img/ui/icon-zoom-minus.png" id="icon-editor-zoom-out" title="zoom out">
           <img src="img/ui/icon-grid.png" id="icon-editor-grid" title="toggle grid">
         </div>
 
