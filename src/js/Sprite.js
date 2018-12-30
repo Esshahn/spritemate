@@ -216,12 +216,7 @@ export default class Sprite
 
   is_pen_multicolor()
   {
-    if (this.all.pen === 2 || this.all.pen === 3)
-    {
-      return true;
-    } else {
-      return false;
-    }
+    return (this.all.pen === 2 || this.all.pen === 3);
   }
 
   set_pen(pen) { this.all.pen = pen; }
@@ -355,12 +350,7 @@ export default class Sprite
 
   is_copy_empty()
   {
-    if (Object.keys(this.copy_sprite).length === 0)
-    {
-      return true;
-    } else {
-      return false;
-    }
+    return (Object.keys(this.copy_sprite).length === 0);
   }
 
   paste()
@@ -369,31 +359,21 @@ export default class Sprite
     this.save_backup();
   }
 
-  duplicate(color = 1,multicolor = false)
+  duplicate()
   {
     this.copy();
-    this.new_sprite(color,multicolor);
+    this.new_sprite();
     this.paste();
   }
 
   can_undo()
   {
-    if (this.backup_position < 1)
-    {
-      return false;
-    } else {
-      return true;
-    }
+    return (this.backup_position > 0);
   }
 
   can_redo()
   {
-    if (this.backup_position < this.backup.length-1)
-    {
-      return true;
-    } else {
-      return false;
-    }
+    return (this.backup_position < this.backup.length-1);
   }
 
   toggle_overlay()

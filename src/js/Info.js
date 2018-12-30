@@ -19,13 +19,40 @@ export default class Info
 
             <h1>V1.10</h1>
             <p>
-            - added "duplicate sprite" option to menu bar and list view<br/>
-            - added eraser tool to menu bar (hotkey "e")<br/>
-            - changed hotkey for fill to "f"<br/>
-            - changed hotkey for fullscreen to "shift+f"<br/>
-            - moved "delete sprite" icon in sprite list to right side<br/>
-            - replaced "delete sprite" icon with new one (trash bin)<br/>
-            - changed menu bar behavior from "click" to "hover"
+            - added move tool to menu bar (hotkey 'm')<br/>
+            - changed color mode hotkey from 'm' to 'c'<br/>
+            - removed shift left, right, up, down icons from editor<br/>
+            - added 'duplicate sprite' option to menu bar and list view<br/>
+            - added eraser tool to menu bar (hotkey 'e')<br/>
+            - changed hotkey for fill to 'f'<br/>
+            - changed hotkey for fullscreen to 'shift+f'<br/>
+            - moved 'delete sprite' icon in sprite list to right side<br/>
+            - replaced 'delete sprite' icon with new one (trash bin)<br/>
+            - changed menu bar behavior from 'click' to 'hover'
+            </p>
+
+            <br/>
+
+            <p>
+            This release focuses on better usabality. While technically no features were added, the overall workflow should be better now. For example, instead of having four different icons for shifting a sprite up, down, left or right, the new move tool lets you do this more intuitive now. As a side effect, less icons complicate the UI.
+            </p>
+
+            <br/>
+
+            <p>
+            The option to erase pixels has been in Spritemate before (by holding down 'shift' while drawing), but now the 'eraser' tool makes it more visible and easier to use in a one-handed workflow.
+            </p>
+
+            <br/>
+
+            <p>
+            A new option to duplicate a sprite has been introduced. This was previously possible by a combination of 'copy', 'new' and 'paste' (and the new duplicate is in fact exactly this), but this should add to a more intuitive experience.
+            </p>
+
+            <br/>
+
+            <p>
+            There are other improvements, like the visually more distinguishable 'trash' icon to delete a sprite. All combined, Spritemate should start to feel more familiar if you are used to other paint programs like Photoshop.
             </p>
 
             <h1>V1.09</h1>

@@ -31,11 +31,13 @@ export default class Editor extends Window_Controls
           <img src="img/ui/icon-grid.png" id="icon-editor-grid" title="toggle grid">
         </div>
 
-        <img src="img/ui/icon-multicolor.png" title="toggle single- & multicolor (m)" id="icon-multicolor">
+        <img src="img/ui/icon-multicolor.png" title="toggle single- & multicolor (c)" id="icon-multicolor">
+        <!--
         <img src="img/ui/icon-shift-left.png" title="shift left" id="icon-shift-left">
         <img src="img/ui/icon-shift-right.png" title="shift right" id="icon-shift-right">
         <img src="img/ui/icon-shift-up.png" title="shift up" id="icon-shift-up">
         <img src="img/ui/icon-shift-down.png" title="shift down" id="icon-shift-down">
+        -->
         <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
         <img src="img/ui/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
         
@@ -173,7 +175,6 @@ export default class Editor extends Window_Controls
     let y_grid = Math.floor(y/(this.height/this.config.sprite_y));
     return {x: x_grid, y: y_grid};
   }
-
 
   toggle_grid() { this.grid = !this.grid; }
 

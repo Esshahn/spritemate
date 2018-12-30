@@ -278,6 +278,7 @@ class App
     this.init_ui_fade("icon-flip-horizontal");
     this.init_ui_fade("icon-flip-vertical");
     this.init_ui_fade("icon-multicolor");
+    this.init_ui_fade("icon-move");
     this.init_ui_fade("icon-draw");
     this.init_ui_fade("icon-erase");
     this.init_ui_fade("icon-fill");
@@ -359,6 +360,8 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           toggle_fullscreen();
         }
 
+
+
         /*
         if (e.key == "q")
         {
@@ -369,10 +372,21 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
         */
 
+        if (e.key == "m")
+        {
+          this.mode = "move";
+          status("Move mode");
+          $("#image-icon-move").attr("src","img/ui/icon-move-hi.png");
+          $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+          $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+        }
+
         if (e.key == "d")
         {
           this.mode = "draw";
           status("Draw mode");
+          $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
@@ -382,6 +396,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         {
           this.mode = "erase";
           status("Erase mode");
+          $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
@@ -391,6 +406,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         {
           this.mode = "fill";
           status("Fill mode");
+          $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
@@ -432,7 +448,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
-        if (e.key == "m")
+        if (e.key == "c")
         { 
           this.sprite.toggle_multicolor();
           this.update();
@@ -594,7 +610,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     $('#menubar-duplicate,#icon-list-duplicate').mouseup((e) =>
     {  
-      this.sprite.duplicate(this.palette.get_color(), this.sprite.is_multicolor());
+      this.sprite.duplicate();
       this.list.update_all(this.sprite.get_all());
       this.update_ui();
       status("Sprite duplicated.");
@@ -782,11 +798,21 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
+    $('#icon-move').mouseup((e) =>
+    {
+      this.mode = "move";
+      status("Move mode");
+      $("#image-icon-move").attr("src","img/ui/icon-move-hi.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+    });
 
     $('#icon-draw').mouseup((e) =>
     {
       this.mode = "draw";
       status("Draw mode");
+      $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
@@ -797,6 +823,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     {
       this.mode = "erase";
       status("Erase mode");
+      $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
@@ -807,6 +834,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     {
       this.mode = "fill";
       status("Fill mode");
+      $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
@@ -939,6 +967,12 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       {
         this.sprite.floodfill(this.editor.get_pixel(e));
       }
+
+      if (this.mode == "move")
+      {
+        this.move_start = true;
+        this.move_start_pos = this.editor.get_pixel(e);
+      }
       this.update();
     });
 
@@ -960,6 +994,23 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
           this.oldpos = newpos;
         }
       }  
+
+      if (this.move_start)
+      {
+        let x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
+        let y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        
+        if (x_diff > 0) { this.sprite.shift_horizontal("right"); }
+        if (x_diff < 0) { this.sprite.shift_horizontal("left"); }
+        if (y_diff > 0) { this.sprite.shift_vertical("down"); }
+        if (y_diff < 0) { this.sprite.shift_vertical("up"); }
+
+        if (x_diff || y_diff)
+        {
+          this.move_start_pos = this.editor.get_pixel(e);
+          this.update();
+        }
+      }
       
     });
 
@@ -967,6 +1018,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     {
       // stop drawing pixels
       this.is_drawing = false;
+      this.move_start = false;
       this.sprite.save_backup();
       this.update();
     });

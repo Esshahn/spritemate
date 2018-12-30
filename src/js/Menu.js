@@ -28,6 +28,10 @@ export default class Menu
             <img src="img/ui/icon-redo.png" class="icon" title="redo">
             <div class="icontext">redo</div>
         </div>
+        <div class ="iconset" id="icon-move">
+            <img src="img/ui/icon-move.png" class="icon" id="image-icon-move" title="move tool (m)">
+            <div class="icontext">move</div>
+        </div>
         <div class ="iconset" id="icon-draw">
             <img src="img/ui/icon-draw-hi.png" class="icon" id="image-icon-draw" title="draw tool (d)">
             <div class="icontext">draw</div>
