@@ -18,21 +18,6 @@ export default class Info
             <h1>Release notes</h1>
 
             <h1>V1.10</h1>
-            <p>
-            - changed icons for zoom & grid<br/>
-            - added move tool to menu bar (hotkey 'm')<br/>
-            - changed color mode hotkey from 'm' to 'c'<br/>
-            - removed shift left, right, up, down icons from editor<br/>
-            - added 'duplicate sprite' option to menu bar and list view<br/>
-            - added eraser tool to menu bar (hotkey 'e')<br/>
-            - changed hotkey for fill to 'f'<br/>
-            - changed hotkey for fullscreen to 'shift+f'<br/>
-            - moved 'delete sprite' icon in sprite list to right side<br/>
-            - replaced 'delete sprite' icon with new one (trash bin)<br/>
-            - changed menu bar behavior from 'click' to 'hover'
-            </p>
-
-            <br/>
 
             <p>
             This release focuses on better usabality. While technically no features were added, the overall workflow should be better now. For example, instead of having four different icons for shifting a sprite up, down, left or right, the new move tool lets you do this more intuitive now. As a side effect, less icons complicate the UI.
@@ -55,6 +40,31 @@ export default class Info
             <p>
             There are other improvements, like the visually more distinguishable 'trash' icon to delete a sprite. All combined, Spritemate should start to feel more familiar if you are used to other paint programs like Photoshop.
             </p>
+
+            <br/>
+
+            <p>
+            - added new move tool<br/>
+            - added eraser tool<br/>
+            - added new 'duplicate sprite' option to menu and list view<br/>
+            
+            - added hotkey 'shift+c' for copy<br/>
+            - added hotkey 'shift+v' for paste<br/>
+            - added hotkey 'shift+d' for duplicate<br/>
+            - added hotkey 'e' for eraser tool<br/>
+            - added hotkey 'm' for move tool<br/>
+            - changed hotkey for fill to 'f'<br/>
+            - changed hotkey for fullscreen to 'shift+f'<br/>
+            - changed hotkey for color mode from 'm' to 'c'<br/>
+            
+            - changed icons for zoom & grid<br/>
+            - removed shift left, right, up, down icons from editor<br/>
+            - moved 'delete sprite' icon in sprite list to right side<br/>
+            - replaced 'delete sprite' icon with new one (trash bin)<br/>
+            - changed menu bar behavior from 'click' to 'hover'
+            </p>
+
+            <br/>
 
             <h1>V1.09</h1>
             <p>

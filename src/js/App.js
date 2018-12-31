@@ -454,6 +454,41 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
+        if (e.key == "N")
+        { 
+          this.sprite.new_sprite(this.palette.get_color(), this.sprite.is_multicolor());
+          this.list.update_all(this.sprite.get_all());
+          this.update();
+          status("New sprite.");
+        }
+
+        if (e.key == "C")
+        { 
+          this.sprite.copy();
+          this.update_ui();
+          status("Sprite copied.");
+        }
+
+        if (e.key == "V")
+        { 
+          if (!this.sprite.is_copy_empty())
+          {
+            this.sprite.paste(); 
+            this.update();
+            status("Sprite pasted.");
+          } else {
+            status("Nothing to copy.","error");
+          }
+        }
+
+        if (e.key == "D")
+        { 
+          this.sprite.duplicate();
+          this.list.update_all(this.sprite.get_all());
+          this.update_ui();
+          status("Sprite duplicated.");
+        }
+
       }
     });
 
