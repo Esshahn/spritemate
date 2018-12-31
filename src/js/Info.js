@@ -51,6 +51,7 @@ export default class Info
             - added hotkey 'shift+c' for copy<br/>
             - added hotkey 'shift+v' for paste<br/>
             - added hotkey 'shift+d' for duplicate<br/>
+            - added hotkey 'shift+x' for delete<br/>
             - added hotkey 'e' for eraser tool<br/>
             - added hotkey 'm' for move tool<br/>
             - changed hotkey for fill to 'f'<br/>

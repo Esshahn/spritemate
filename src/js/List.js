@@ -27,11 +27,11 @@ export default class List extends Window_Controls
           <img src="img/ui/icon-zoom-plus.png" id="icon-list-zoom-in" title="zoom in"><img src="img/ui/icon-zoom-minus.png" id="icon-list-zoom-out" title="zoom out">
           <img src="img/ui/icon-grid.png" id="icon-list-grid" title="toggle sprite borders">
       </div>
-        <img src="img/ui/icon-list-new.png" id="icon-list-new" title="new sprite">
-        <img src="img/ui/icon-list-copy.png" id="icon-list-copy" title="copy sprite">
-        <img src="img/ui/icon-list-paste.png" id="icon-list-paste" title="paste sprite">
-        <img src="img/ui/icon-list-duplicate.png" id="icon-list-duplicate" title="duplicate sprite">
-        <img src="img/ui/icon-list-trash.png" class="icon-right" id="icon-list-delete" title="delete sprite">
+        <img src="img/ui/icon-list-new.png" id="icon-list-new" title="new sprite (shift + n)">
+        <img src="img/ui/icon-list-copy.png" id="icon-list-copy" title="copy sprite (shift + c)">
+        <img src="img/ui/icon-list-paste.png" id="icon-list-paste" title="paste sprite (shift + v)">
+        <img src="img/ui/icon-list-duplicate.png" id="icon-list-duplicate" title="duplicate sprite (shift + d)">
+        <img src="img/ui/icon-list-trash.png" class="icon-right" id="icon-list-delete" title="delete sprite (shift + x)">
       </div>
       <div id="spritelist"></div>
     `;

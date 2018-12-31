@@ -489,6 +489,14 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           status("Sprite duplicated.");
         }
 
+
+        if (e.key == "X")
+        {    
+          this.sprite.delete();
+          this.list.update_all(this.sprite.get_all());
+          this.update();
+        }
+
       }
     });
 
