@@ -289,6 +289,7 @@ class App
     this.init_ui_fade("icon-list-new");
     this.init_ui_fade("icon-list-copy");
     this.init_ui_fade("icon-list-paste");
+    this.init_ui_fade("icon-list-duplicate");
     this.init_ui_fade("icon-list-grid");
     this.init_ui_fade("icon-list-zoom-in");
     this.init_ui_fade("icon-list-zoom-out");
