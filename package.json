@@ -7,18 +7,18 @@
   "license": "MIT",
   "main": "App.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Esshahn/spritemate"
+    "type": "git",
+    "url": "https://github.com/Esshahn/spritemate"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.5.2",
+    "eslint": "^5.2.0",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0",
-    "eslint": "^5.2.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
     "start": "webpack-dev-server -d",
