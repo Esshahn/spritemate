@@ -63,8 +63,8 @@ Beta version: http://beta.spritemate.com/
 | <img src="https://user-images.githubusercontent.com/434355/30785998-6ab5f36a-a16f-11e7-9694-772a8fd79331.png" > | - | Shift sprite down |
 | <img src="https://user-images.githubusercontent.com/434355/30785983-6a741e18-a16f-11e7-89e6-931b5cc52a0e.png" > | - | Flip sprite horizontal |
 | <img src="https://user-images.githubusercontent.com/434355/30785984-6a75c10a-a16f-11e7-8701-589fd6218bd5.png" > | - | Flip sprite vertical |
-| <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
-| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
+| <img src="https://user-images.githubusercontent.com/434355/50591514-83c02d00-0e90-11e9-8687-07ec5e34eb0c.png" > | - | Toggles grid display on/off |
+| <img src="https://user-images.githubusercontent.com/434355/50591507-7dca4c00-0e90-11e9-93a9-e18042027d85.png" ><img src="https://user-images.githubusercontent.com/434355/50591510-802ca600-0e90-11e9-8e1a-4304a46861d5.png" > | - | Zooms window in/out |
 |  | 1,2,3,4 | Select individual color, transparent, multicolor 1 or multicolor 2 |
 |  | shift + mouse | delete pixel |
 
@@ -75,18 +75,18 @@ Beta version: http://beta.spritemate.com/
 | <img src="https://user-images.githubusercontent.com/434355/31428737-1dd2f520-ae6c-11e7-80af-9d269fa33ac9.png" > | - | Stretches sprite horizontally |
 | <img src="https://user-images.githubusercontent.com/434355/31428740-1ff3dfc2-ae6c-11e7-97f8-0ccd8517d7ee.png" > | - | Stretches sprite vertically |
 | <img src="https://user-images.githubusercontent.com/434355/31675717-c742c2fe-b365-11e7-9b03-1caae8ee39ea.png" > | - | Overlay next sprite |
-| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
+| <img src="https://user-images.githubusercontent.com/434355/50591507-7dca4c00-0e90-11e9-93a9-e18042027d85.png" ><img src="https://user-images.githubusercontent.com/434355/50591510-802ca600-0e90-11e9-8e1a-4304a46861d5.png" > | - | Zooms window in/out |
 
 ## Sprite list window
 
 | Symbol        | Shortcut      | Function  |
 | :-------------: | ------------- | --------------- |
 | <img src="https://user-images.githubusercontent.com/434355/31494459-a8293e90-af53-11e7-9a94-6116f320e520.png" > | - | Create new sprite |
-| <img src="https://user-images.githubusercontent.com/434355/31494458-a80da95a-af53-11e7-87a3-ec6f5f82658b.png" > | - | Remove selected sprite |
+| <img src="https://user-images.githubusercontent.com/434355/50591512-81f66980-0e90-11e9-9065-6819a28245b9.png" > | - | Delete selected sprite |
 | <img src="https://user-images.githubusercontent.com/434355/31494457-a7ed60f0-af53-11e7-8ceb-db8b61a6a2db.png" > | - | Copy sprite |
 | <img src="https://user-images.githubusercontent.com/434355/31494460-a84380ac-af53-11e7-8ee1-dd733beaa912.png" > | - | Paste sprite |
-| <img src="https://user-images.githubusercontent.com/434355/30785986-6a82ef1a-a16f-11e7-92ef-bb755f6dcc8d.png" > | - | Toggles grid display on/off |
-| <img src="https://user-images.githubusercontent.com/434355/30786004-6acf03be-a16f-11e7-956d-dfdc4c412bf7.png" ><img src="https://user-images.githubusercontent.com/434355/30786006-6ad1105a-a16f-11e7-86b9-2af57883c167.png" > | - | Zooms window in/out |
+| <img src="https://user-images.githubusercontent.com/434355/50591514-83c02d00-0e90-11e9-8687-07ec5e34eb0c.png" > | - | Toggles grid display on/off |
+| <img src="https://user-images.githubusercontent.com/434355/50591507-7dca4c00-0e90-11e9-93a9-e18042027d85.png" ><img src="https://user-images.githubusercontent.com/434355/50591510-802ca600-0e90-11e9-8e1a-4304a46861d5.png" > | - | Zooms window in/out |
 | | cursor left & right | cycle through sprite list |
 
 ## Some useful hints
