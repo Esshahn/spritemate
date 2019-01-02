@@ -6,7 +6,7 @@ Latest stable version: http://spritemate.com/
 
 Beta version: http://beta.spritemate.com/
 
-Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE&t=70s
+Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE
 
 <img src="https://user-images.githubusercontent.com/434355/50591295-24ade880-0e8f-11e9-8bed-3b333692b6da.jpg" width= "80%"/>
 
