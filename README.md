@@ -49,8 +49,8 @@ Beta version: http://beta.spritemate.com/
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" > | shift + z | Redo. For when you realized it wasn't that bad |
 | <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | d | Draw pixels |
 | <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" > | f | Flood fill |
-| <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" > | e | eraser |
-| <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" > | m | move |
+| <img src="https://user-images.githubusercontent.com/434355/50591466-25934a00-0e90-11e9-8298-2bf53b6119fa.png" > | e | eraser |
+| <img src="https://user-images.githubusercontent.com/434355/50591467-27f5a400-0e90-11e9-998f-2159a6095822.png" > | m | move |
 
 ## Editor window
 
