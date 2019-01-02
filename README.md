@@ -91,8 +91,8 @@ Beta version: http://beta.spritemate.com/
 
 ## Some useful hints
 
-* you can rearrange sprites by just dragging them to the desired position
-* you can copy & paste sprites by using the corresponding icons in the sprite list window
+* Rearrange sprites by dragging them to the desired position
+* Save a sprite as PNG by right clicking on the Preview window image
 
 ## How to run
 
@@ -105,91 +105,16 @@ $ yarn start
 
 ```
 
+Or use `npm`
+
+```
+$ cd spritemate
+$ npm install
+$ npm start
+
+```
+
 ## History
 
-2018-04-28
-* merged in help window from the beta branch
-* fixed some issues with Kick Ass export (thx2 nurpax)
-
-2017-11-01
-* local config file support
-* window positions, zoom levels are saved locally
-* new settings modal with color palette options: pepto, colodore and custom
-* cursor keys rotate through the sprite list
-* minor fixes and tweaks
-
-2017-10-24
-* first public release
-
-2017-10-20
-* Keyboard shortcuts support
-* fixed a bug in sprite importer script introduced the other day
-* nicer looking tooltips
-
-2017-10-19
-* KICK ASS syntax support for source export
-* Sprite overlays are shown in editor
-* import & export sprite overlay settings from SpritePad
-* number of sprites and current sprite index shown in list window title
-* new sprites inherit the color and multicolor settings of the active sprite
-* cursor keys left & right to navigate through the sprite list
-* performance enhancements
-
-2017-10-17
-* Simple sprite overlays
-* Additional zoom levels for big screens
-* fix for Firefox, should work now
-
-2017-10-12
-* Copy & Paste for sprites
-* Symbols for Copy & Paste
-* More UI context states
-
-2017-10-10
-* flood fill
-* draw & fill modes can be switched
-* performance optimization when working with huge sprite set
-* export as ASM sourcecode
-
-2017-10-07
-* reworked toolbar/menu
-* fullscreen option
-* status bar
-
-2017-10-05
-* full import & export of SpritePad 1.8.1 and 2.0 formats
-* preview window zoom
-
-2017-10-04
-* export sprites as SPD to SpritePad
-
-2017-09-27
-* import sprites from SpritePad SPD files
-
-2017-09-23
-* Zoom in/out in the sprite list window
-* redo
-* fixed an issue where the same file could not be reloaded
-* more reliable behaviour of palette window
-
-2017-09-20
-* basic loading and saving is now working (finally!)
-* lots of reworked UI
-* lots of cleaned up code
-
-2017-09-13
-* proper C64 color restrictions are now implemented
-* lots of cleanup, still one huge pile of crap left to do right
-
-2017-09-07
-* Zoom levels for editor, preview and list view can be set in the config
-* Sprites in list view are sortable correctly when size is changing
-* Info button has a new modal with version info and links
-* sprite streching for preview window
-
-2017-09-06
-* Sorting in list view finally works
-
-2017-09-04
-* Undo implemented
+Check out the "about" menu option in Spritemate to get a release changelog.
 
