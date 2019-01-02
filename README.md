@@ -12,7 +12,7 @@ Beta version: http://beta.spritemate.com/
 * choose from the 16 colors of the C64 palette
 * draw pixels on a 24x21 pixel (singlecolor) or 12x21 pixel (multicolor) canvas
 * C64 mode restrictions (number of colors per sprite, global sprite colors)
-* delete, fill, shift left, right, up, down, flip horizontal & vertical
+* delete, fill, shift left, right, up, down, flip horizontal & vertical, move, erase
 * check your sprite in the preview window
 * display grid in editor
 * multiple sprites
@@ -20,13 +20,14 @@ Beta version: http://beta.spritemate.com/
 * stacked sprite layers (sprite overlays)
 * sprite sorting
 * undo & redo
-* copy & paste
+* copy, paste, duplicate
 * window based GUI
 * save window layout
 * import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
 * export as ASM source (KICK and ACME)
+* export as hex or binary notation source
 * keyboard shortcuts
 
 ## Backlog
@@ -46,10 +47,10 @@ Beta version: http://beta.spritemate.com/
 | <img src="https://user-images.githubusercontent.com/434355/30785997-6ab25638-a16f-11e7-9392-13c1c4b899cd.png" > | - | Saves a file.<br>Supported formats: Spritemate (SPM), SpritePad 2.0 & 1.8.1 (SPD), ASM source (TXT) |
 | <img src="https://user-images.githubusercontent.com/434355/30786005-6acf7dc6-a16f-11e7-9725-42ba4ca5bfe1.png" > | z | Undo. For when you screwed up. |
 | <img src="https://user-images.githubusercontent.com/434355/30785996-6aabec80-a16f-11e7-9345-6a0fe4ed051c.png" > | shift + z | Redo. For when you realized it wasn't that bad |
-| <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | d (toggle) | Draw pixels |
-| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" > | d (toggle) | Flood fill |
-| <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" > | f | Toggle fullscreen window mode |
-| <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" > | - | Displays the info window |
+| <img src="https://user-images.githubusercontent.com/434355/31428668-e7a4882e-ae6b-11e7-9bcc-60efe6726a92.png" > | d | Draw pixels |
+| <img src="https://user-images.githubusercontent.com/434355/30785982-6a72dbf2-a16f-11e7-9f1c-35b415d59b8e.png" > | f | Flood fill |
+| <img src="https://user-images.githubusercontent.com/434355/31428727-147bfd46-ae6c-11e7-8f04-5e383322f82a.png" > | e | eraser |
+| <img src="https://user-images.githubusercontent.com/434355/31428730-187cf6fc-ae6c-11e7-81ac-d64fce3c95f9.png" > | m | move |
 
 ## Editor window
 
