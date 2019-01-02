@@ -2,9 +2,10 @@
 Spritemate is a new sprite editor for the Commodore 64. It works with most modern browsers on Windows, Mac and Linux and is pure JavaScript and HTML - no plugins. All data is processed on client side only. Spritemate supports importing and exporting of the most common file formats for the Commodore 64 (e.g. SpritePad) and can be used as viewer and editor on almost any device with a browser.
 
 Latest stable version: http://spritemate.com/
+
 Beta version: http://beta.spritemate.com/
 
-<img src="https://user-images.githubusercontent.com/434355/31865103-30467f1e-b769-11e7-9f3e-c065b4413f82.png" width= "80%"/>
+<img src="https://user-images.githubusercontent.com/434355/50591295-24ade880-0e8f-11e9-8bed-3b333692b6da.jpg" width= "80%"/>
 
 ## Features
 
