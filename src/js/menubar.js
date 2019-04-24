@@ -6,17 +6,32 @@ export function menubar()
 
   // Polyfill
   if (HTMLCollection.prototype.forEach === undefined) { HTMLCollection.prototype.forEach = [].forEach }
+  let display_menu = false;
 
   function showMenu(e)
   { 
     closeAllMenus(); 
-    this.classList.add('activeMenu'); 
-    e.stopPropagation();
+
+    if (e.type == "click"){ display_menu = !display_menu; } 
+    
+    if (display_menu){
+      this.classList.add('activeMenu'); 
+      e.stopPropagation();
+    }
+
   }
+
 
   function closeAllMenus() 
   { 
-    document.getElementsByClassName('activeMenu').forEach(function (node) { node.classList.remove('activeMenu') }) 
+    document.getElementsByClassName('activeMenu').forEach(function (node) { node.classList.remove('activeMenu') });
+  }
+
+
+  function resetAllMenus() 
+  { 
+    display_menu = false;
+    closeAllMenus();
   }
 
   (function() 
@@ -27,11 +42,14 @@ export function menubar()
   // Show menu event handler
   on('load', function (event) 
   { 
-    document.getElementsByClassName('menuLabel').forEach(function(node) { node.onmouseover = showMenu }) 
+    document.getElementsByClassName('menuLabel').forEach(function(node) { 
+      node.onmouseover = showMenu ;
+      node.onclick = showMenu;
+    }) 
   })
 
   // Close all open menus on click or escape
-  on('click', closeAllMenus, true)
+  on('click', resetAllMenus, true)
   on('keydown', function (event) { (event.key === "Escape") && closeAllMenus() }, true)
 
   })();
