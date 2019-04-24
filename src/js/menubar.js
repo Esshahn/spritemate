@@ -1,4 +1,11 @@
+/*
 
+  I can't find the original source for the menu anymore...
+  Changes made to the code: 
+  - reacts to hover AND click
+  - toggles menu on/off on click
+
+*/
 
 export function menubar()
 {
