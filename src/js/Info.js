@@ -17,6 +17,12 @@ export default class Info
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.11</h1>
+            <p>- tweaked menu bar to react more intuitive (click to open, hover between entries)</p>
+            <p>The menu bar does seem to malfunction for some setups, but the issue currently is not reproducable. Thx2 to leissa for additional testing and finding out that turning off "content blocking" in Firefox might fix the problem. If you encounter a reproducable issue with the menu bar, please report the description here: <a href="https://github.com/Esshahn/spritemate/issues">https://github.com/Esshahn/spritemate/issues</a>
+            </p>
+            <br />
+
             <h1>V1.10</h1>
 
             <p>
