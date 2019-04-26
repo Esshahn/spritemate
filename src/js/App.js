@@ -254,6 +254,18 @@ class App
     this.allow_keyboard_shortcuts = true;
   }
 
+  update_sprite_name()
+  {
+    // checks the sprite name input box for the name 
+    // and updates the sprite name
+    this.allow_keyboard_shortcuts = true;
+    let sprite_name = $('#input-sprite-name').val();
+    sprite_name = sprite_name.replace(/[^A-Za-z0-9-_]+/g, ''); // allowed chars are characters, number, -, _
+    this.sprite.set_sprite_name(sprite_name);
+    this.list.update_all(this.sprite.get_all());
+    this.update();
+  }
+
 
   init_ui_fade(element)
   {
@@ -986,6 +998,26 @@ E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I         T:::::::::T
 EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT        
 
 */
+
+    $('#input-sprite-name').focus((e) =>
+    {
+      this.allow_keyboard_shortcuts = false;
+    });
+
+    $('#input-sprite-name').on('keyup',(e) =>
+    {
+      if (e.keyCode == 13) 
+      {
+        this.update_sprite_name();
+        $('#input-sprite-name').blur();
+      }
+    });
+
+    
+    $('#input-sprite-name').blur((e) =>
+    {
+      this.update_sprite_name();
+    });
 
     // prevent scrolling of canvas on mobile
     $('#editor').on('touchmove', function(e)

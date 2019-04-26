@@ -9,6 +9,9 @@ Spritemate stylesheet
 {
   --red:  #e6007e;
   --blue: #00b9ee;
+  --icon_outline: #111111;
+  --inactive_text: #aaaaaa;
+  --active_text: #ffffff;
 }
 
 
@@ -222,6 +225,32 @@ img.center
 
 }
 
+.ui-widget input.editor_sprite_name
+{
+  border: 1px solid var(--icon_outline);
+  min-width: 0px;
+  line-height: 10px;
+  border-radius: 16px;
+  padding: 4px 4px 4px 4px;
+  font-size: 80%;
+  margin: 2px 2px 2px 16px;
+  vertical-align: top;
+  background-color: transparent;
+  font-family: 'Courier';
+  color: var(--inactive_text);
+}
+
+.ui-widget input.editor_sprite_name:hover
+{
+  border: 1px solid var(--blue);
+  color: var(--active_text);
+}
+
+.ui-widget input.editor_sprite_name:focus
+{
+  color: var(--active_text);
+  background-color: #333333;
+}
 
 
 .ui-widget button

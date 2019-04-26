@@ -74,6 +74,7 @@ export default class Load
     file = file.replace(/"m2"/g,'3');
 
     this.imported_file = JSON.parse(file); 
+    this.imported_file = this.convert_legacy_formats(this.imported_file);
     
   }
 
@@ -148,6 +149,7 @@ export default class Load
     this.pencolor = parseInt( (this.file.charCodeAt(colorpos).toString(2).slice(-4)) , 2);
 
     var sprite = {
+      name: "sprite_"+sprite_number,
       color: this.pencolor,
       multicolor: this.multicolor,
       double_x : false,
@@ -210,6 +212,30 @@ export default class Load
     }
 
     this.imported_file.sprites.push(sprite);
+  }
+
+
+  convert_legacy_formats(file_data)
+  {
+    // this should be called after a file has been loaded
+    // it checks for older formats that might miss features
+    // and adds them, so that the file is still valid
+
+    // first will be the custom name labels
+
+    // check if sprite object has no "name" key
+    // and add it if not
+    if (!file_data.sprites[0].name)
+    {
+      let number_of_sprites = file_data.sprites.length;
+
+      for (let i = 0; i< number_of_sprites; i++)
+      {
+        file_data.sprites[i].name = "sprite_"+i;
+      }
+    }
+    
+    return file_data;
   }
 
 

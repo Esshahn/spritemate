@@ -39,9 +39,10 @@ export default class Editor extends Window_Controls
         -->
         <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
         <img src="img/ui/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
-        
+        <input type="text" class="editor_sprite_name" id="input-sprite-name" name="" value="">
       </div>
       <div id="editor-canvas"></div>
+      
     `;
 
     $("#window-"+this.window).append(template);
@@ -53,12 +54,16 @@ export default class Editor extends Window_Controls
 
   update(all_data)
   {
+    
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
     let sprite_data = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
+
+    // set the name of the sprite as the title
+    $('#input-sprite-name').val(sprite_data.name);
 
     // first fill the whole sprite with the background color
     this.canvas.fillStyle = this.config.colors[all_data.colors[0]];

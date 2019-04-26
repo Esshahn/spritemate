@@ -345,7 +345,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
       var line_breaks_after = encode_as_binary ? 24 : 64;
 
-      data += "\n\n" + comment + "sprite " + (j+1);
+      data += "\n\n" + comment + "sprite " + (j);
       if(is_multicolor)
       {
         data += " / " + "multicolor";
@@ -354,7 +354,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       }
 
       data += " / color: " + "$" +("0" + this.savedata.sprites[j].color.toString(16)).slice(-2);
-      data += "\nsprite_" + (j+1) + label_suffix + "\n";
+      data += "\n" + this.savedata.sprites[j].name + label_suffix + "\n";
       
       // iterate through the pixel data array 
       // and create a hex or binary values based on multicolor or singlecolor
@@ -467,7 +467,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
 
     for (let j=0; j<max_sprites; j++)  // iterate through all sprites
     { 
-      data += "\n" + line_number + " :: rem sprite "+j;
+      data += "\n" + line_number + " :: rem "+this.savedata.sprites[j].name;
       line_number+=line_inc;
       data += "\n" + line_number + " poke "+ (53287+j) + "," + this.savedata.sprites[j].color + ": rem color = " + this.savedata.sprites[j].color;
       line_number+=line_inc;
@@ -515,7 +515,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       var stepping = 1; 
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
-      data += "\n" + line_number + " :: rem sprite " + (j+1);
+      data += "\n" + line_number + " :: rem " + this.savedata.sprites[j].name;
       line_number+=line_inc;
 
       if(is_multicolor)

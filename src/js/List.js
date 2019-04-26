@@ -92,7 +92,7 @@ export default class List extends Window_Controls
 
       $("#spritelist").append(canvas_element);
       $(canvas_element).addClass("sprite_in_list");
-      $(canvas_element).attr('title','Sprite #' + (i + 1));
+      $(canvas_element).attr('title',all_data.sprites[i].name);
       $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
        
       if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   

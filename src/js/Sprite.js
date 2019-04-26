@@ -19,6 +19,7 @@ export default class Sprite
     this.backup = [];
     this.backup_position = -1; 
     this.copy_sprite = {};   
+    this.sprite_name_counter = 0;     // increments for every new sprite regardless of deleted sprites. Used for the default name
   }
 
 
@@ -27,6 +28,7 @@ export default class Sprite
     
     const sprite =
     {
+      "name": "sprite_"+this.sprite_name_counter,
       "color" : color,      
       "multicolor" : multicolor,
       "double_x" : false,
@@ -43,6 +45,7 @@ export default class Sprite
     }
     this.all.sprites.push(sprite);
     this.all.current_sprite = this.all.sprites.length -1;
+    this.sprite_name_counter ++;
 
     if (!multicolor && this.is_pen_multicolor()) this.set_pen(1);
 
@@ -158,6 +161,7 @@ export default class Sprite
     return sprite_colors;
   }
 
+  get_name() { return this.all.sprites[this.all.current_sprite].name; }
 
   is_multicolor() { return this.all.sprites[this.all.current_sprite].multicolor; }
 
@@ -382,5 +386,10 @@ export default class Sprite
   }
 
   is_overlay() { return this.all.sprites[this.all.current_sprite].overlay; }
+
+  set_sprite_name(sprite_name)
+  {
+    this.all.sprites[this.all.current_sprite].name = sprite_name;
+  }
 
 }
