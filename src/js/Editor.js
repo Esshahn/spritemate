@@ -39,7 +39,7 @@ export default class Editor extends Window_Controls
         -->
         <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" id="icon-flip-horizontal">
         <img src="img/ui/icon-flip-vertical.png" title="flip vertical" id="icon-flip-vertical">
-        <input type="text" class="editor_sprite_name" id="input-sprite-name" name="" value="">
+        <input type="text" class="editor_sprite_name" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>
       

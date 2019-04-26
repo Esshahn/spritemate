@@ -510,6 +510,12 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
+        if (e.key == "i")
+        {     
+          this.sprite.invert();
+          this.update();
+        }
+
       }
     });
 
@@ -731,6 +737,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     {     
       this.sprite.toggle_double_y();
       $('#icon-preview-y').toggleClass('icon-preview-y2-hi');
+      this.update();
+    });
+
+    $('#menubar-invert').mousedown((e) =>
+    {     
+      this.sprite.invert();
       this.update();
     });
 

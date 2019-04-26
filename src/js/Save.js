@@ -123,6 +123,7 @@ export default class Save
     }
 
     status("File has been saved.");
+    $('#menubar-filename-name').html(filename);
   }
 
 

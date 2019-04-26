@@ -392,4 +392,24 @@ export default class Sprite
     this.all.sprites[this.all.current_sprite].name = sprite_name;
   }
 
+  invert()
+  {
+
+    for(let y = 0; y < this.height; y ++)
+    {
+      for(let x = 0; x < this.width; x ++)
+      {
+        let pixel = this.all.sprites[this.all.current_sprite].pixels[y][x];
+        let pixel_inverted;
+        
+        if (pixel == 0) pixel_inverted = 1;
+        if (pixel == 1) pixel_inverted = 0;
+        if (pixel == 2) pixel_inverted = 3;
+        if (pixel == 3) pixel_inverted = 2;
+
+        this.all.sprites[this.all.current_sprite].pixels[y][x] = pixel_inverted;
+      } 
+    }
+  } 
+
 }

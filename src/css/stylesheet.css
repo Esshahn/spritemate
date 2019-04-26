@@ -361,6 +361,17 @@ img.center
   width: 54px;
 }
 
+#menubar-filename
+{
+  float:right;
+  padding-right: 80px;
+}
+
+#menubar-filename-name
+{
+  color: var(--active_text);
+}
+
 #statusbar
 {
   width: 100%;

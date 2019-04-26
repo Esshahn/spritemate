@@ -24,6 +24,7 @@ export default class Load
   read_file_data(fileInput)
   {
     var file = fileInput.files[0];
+    
  
       if (file.name.match(/\.(spm|spd|spr)$/)) 
       {
@@ -52,6 +53,8 @@ export default class Load
         {
           reader.readAsBinaryString(file);
         } 
+
+        $('#menubar-filename-name').html(file.name);
             
       } else {
           alert("File not supported, .spm or .spd files only");
