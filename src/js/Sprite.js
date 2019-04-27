@@ -285,6 +285,7 @@ export default class Sprite
 
   save_backup()
   {
+
     this.backup_position ++;
     this.backup[this.backup_position] = jQuery.extend(true, {}, this.all); 
   }
@@ -410,6 +411,8 @@ export default class Sprite
         this.all.sprites[this.all.current_sprite].pixels[y][x] = pixel_inverted;
       } 
     }
+
+    this.save_backup();
   } 
 
 }

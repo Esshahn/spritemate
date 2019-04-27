@@ -18,17 +18,27 @@ export default class Info
             <h1>Release notes</h1>
 
             <h1>V1.2</h1>
-            <p>- NEW: Sprites can now be named. The name will show as label name in ASM and BASIC exports (thx to Janne and MacBacon for the suggestions).</p>
-            <p>- NEW: Sprites can be inverted (hotkey 'i').</p>
-            <p>- NEW: The file name is now displayed in the top right corner of the window (thx to nurpax)</p>
+            <h2>Sprites can now be named. The name will show as label name in ASM and BASIC exports (thx to Janne and MacBacon for the suggestions).</h2>
+    
+            <p>Note that two changes were introduced with the sprite naming feature: sprites start with index number 0 instead of 1, e.g. the first sprite is called "sprite_0" instead of "sprite_1". This was necessary for consistancy and my personal sanity - internally the index number always was 0 instead of 1. The other change is that sprite data exported as ASM or BASIC file would not label the sprites by incrementing index anymore. This means that a sprite would keep its name no matter if you sort it in the sprite list to a different position (which seems obvious, but wasn't like this before).</p>
 
-            <br />
+            <p>The sprite naming feature is backwards compatible, so when you load an older SPM file, default names will be applied.</p>
+            
+            <h2>Sprites can be inverted (hotkey 'i').</h2>
+
+            <p>The sprite invert (or "negative" in SpritePad) might look a bit strange in multicolor mode, but that's no bug. In singlecolor, a 0 (transparent) gets replaced by a 1 (pixel) and vice versa, but in multicolor we have two more colors. Spritemate switches colors 3 and 4 in this case, just as SpritePad does.</p>
+
+            <h2>The file name is now displayed in the top right corner of the window (thx to nurpax)</h2>
+
+            <p>This can prove helpful when working with several files. Also a good indicator if the file hasn't been saved yet. Note that due to the nature how browsers save files and operating systems handle security, a file might save with a slightly different name if the same file name already exists in the download location (e.g. "mysprites (1).spm" instead of "mysprites.spm").</p>
 
             <h1>V1.11</h1>
-            <p>- tweaked menu bar to react more intuitive (click to open, hover between entries)</p>
+
+            <h2>Tweaked menu bar to react more intuitive (click to open, hover between entries)</h2>
+
             <p>The menu bar does seem to malfunction for some setups, but the issue currently is not reproducable. Thx2 to leissa for additional testing and finding out that turning off "content blocking" in Firefox might fix the problem. If you encounter a reproducable issue with the menu bar, please report the description here: <a href="https://github.com/Esshahn/spritemate/issues">https://github.com/Esshahn/spritemate/issues</a>
             </p>
-            <br />
+    
 
             <h1>V1.10</h1>
 
@@ -36,25 +46,19 @@ export default class Info
             This release focuses on better usabality. While technically no features were added, the overall workflow should be better now. For example, instead of having four different icons for shifting a sprite up, down, left or right, the new move tool lets you do this more intuitive now. As a side effect, less icons complicate the UI.
             </p>
 
-            <br/>
 
             <p>
             The option to erase pixels has been in Spritemate before (by holding down 'shift' while drawing), but now the 'eraser' tool makes it more visible and easier to use in a one-handed workflow.
             </p>
 
-            <br/>
-
             <p>
             A new option to duplicate a sprite has been introduced. This was previously possible by a combination of 'copy', 'new' and 'paste' (and the new duplicate is in fact exactly this), but this should add to a more intuitive experience.
             </p>
-
-            <br/>
 
             <p>
             There are other improvements, like the visually more distinguishable 'trash' icon to delete a sprite. All combined, Spritemate should start to feel more familiar if you are used to other paint programs like Photoshop.
             </p>
 
-            <br/>
 
             <p>
             - added new move tool<br/>
@@ -78,7 +82,6 @@ export default class Info
             - changed menu bar behavior from 'click' to 'hover'
             </p>
 
-            <br/>
 
             <h1>V1.09</h1>
             <p>
@@ -119,7 +122,7 @@ export default class Info
             - color palette now uses DIVs instead of CANVAS (needed for later features)<br/>
             </p>
 
-            <br/>
+ 
             
             <p>
             Although not many features had been added, it took me quite a while to finish this release. I had to revert a lot of code for a really cool new feature that I didn't get to work reliably. Because of that, I had to maintain two code branches and backport features into the stable version. I finally decided to put the new feature on hold and focus on others instead.
@@ -131,7 +134,7 @@ export default class Info
             - Fixed an error in Kick Assembler export (thx2 nurpax)
             </p>
 
-            <br/>
+
             
             <p>I didn't get any chance to work on Spritemate for months due to my commercial stuff sucking away all my free time. Also, feedback was stopping recently, which didn't motivate me too much either. Eventually I checked the traffic for Spritemate and was suprised about the steady amount of users. So I decided to dedicate more time to this project again. In any case, if you like Spritemate, you can make a hell of a difference by letting me know, either by mail ( ingo at awsm dot de ) or by sending me a tweet ( <a href="https://twitter.com/awsm9000">@awsm9000</a> ). Let me know how I can make Spritemate better for you!</p>
 
@@ -149,7 +152,7 @@ export default class Info
             Anyway, the foundation for more configuration options has been layed for future updates.
             </p>
 
-            <br/>
+ 
             - locally saved config file<br/>
             - this info modal will be displayed only once when new features are introduced<br/>
             - new settings modal<br/>
@@ -179,7 +182,7 @@ export default class Info
             Therefore some shortcuts might seem less intuitive. These functions are available by pressing keys now:
             </p>
             
-            <br/>
+  
 
             <p>
             (1,2,3,4) - set one of the four available pens/colors<br/>

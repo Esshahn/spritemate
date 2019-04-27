@@ -698,6 +698,11 @@ img.center
   text-align: center;
 }
 
+#info fieldset p
+{
+  padding-bottom: 20px
+}
+
 #info fieldset h1
 {
   font-size: 110%;
@@ -714,6 +719,8 @@ img.center
   text-align: left;
   margin: 4px;
   margin-top: 20px;
+  font-weight: bold;
+  color: white;
 }
 
 
