@@ -237,7 +237,12 @@ export default class Load
         file_data.sprites[i].name = "sprite_"+i;
       }
     }
-    
+
+    // add version number to file
+    // or update to latest version number
+    if (!file_data.version) file_data.version = this.config.version;
+    file_data.version = this.config.version;
+  
     return file_data;
   }
 

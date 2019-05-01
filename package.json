@@ -1,7 +1,7 @@
 {
   "name": "spritemate",
-  "version": "1.0.9",
-  "description": "browser based sprite editor for the Commodore 64",
+  "version": "1.2.1",
+  "description": "A browser based sprite editor for the Commodore 64",
   "homepage": "http://www.awsm.de",
   "author": "Ingo Hinterding",
   "license": "MIT",

@@ -11,6 +11,7 @@ export default class Sprite
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
+    this.all.version = this.config.version; // current version number
     this.all.colors = {0: 11, 2: 8, 3: 6}; // 0 = transparent, 2 = mc1, 3 = mc2
 
     this.all.sprites = [];
@@ -395,10 +396,19 @@ export default class Sprite
 
   invert()
   {
+    // inverts the sprite 
 
+    // prevent too much data to be inverted in multicolor mode
+    if (this.is_multicolor())
+    {
+      var stepping = 1;
+    } else {
+      var stepping = 1;
+    }
+    
     for(let y = 0; y < this.height; y ++)
     {
-      for(let x = 0; x < this.width; x ++)
+      for(let x = 0; x < this.width; x = x + stepping)
       {
         let pixel = this.all.sprites[this.all.current_sprite].pixels[y][x];
         let pixel_inverted;

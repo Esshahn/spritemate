@@ -17,6 +17,14 @@ export default class Info
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>V1.21</h1>
+            <p>
+            - Fixed a UI issue in the save dialog<br/>
+            - Fixed a bug in the sprite invert code<br/>
+            - Added Spritemate version number to SPM save data <br/>
+            - Updated to latest jQuery<br/>
+            </p>
+
             <h1>V1.2</h1>
             <h2>Sprites can now be named. The name will show as label name in ASM and BASIC exports (thx to Janne and MacBacon for the suggestions).</h2>
     

@@ -84,7 +84,9 @@ export default class Save
         $('#button-save-spd').prop('disabled', true).addClass("error");
         $('#button-save-spd-old').prop('disabled', true).addClass("error");
         $('#button-save-source-kick').prop('disabled', true).addClass("error");
+        $('#button-save-source-kick-binary').prop('disabled', true).addClass("error");
         $('#button-save-source-acme').prop('disabled', true).addClass("error");
+        $('#button-save-source-acme-binary').prop('disabled', true).addClass("error");
         $('#button-save-basic').prop('disabled', true).addClass("error");
       }else{
         $("#filename").removeClass("error");
@@ -92,7 +94,9 @@ export default class Save
         $('#button-save-spd').prop('disabled', false).removeClass("error");
         $('#button-save-spd-old').prop('disabled', false).removeClass("error");
         $('#button-save-source-kick').prop('disabled', false).removeClass("error");
+        $('#button-save-source-kick-binary').prop('disabled', false).removeClass("error");
         $('#button-save-source-acme').prop('disabled', false).removeClass("error");
+        $('#button-save-source-acme-binary').prop('disabled', false).removeClass("error");
         $('#button-save-basic').prop('disabled', false).removeClass("error");
       }
     });
