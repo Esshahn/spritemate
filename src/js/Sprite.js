@@ -349,14 +349,14 @@ export default class Sprite
     this.all.sprites[this.all.current_sprite].pixels = data;
   }
 
-  copy()
-  {
-    this.copy_sprite = jQuery.extend(true, {}, this.all.sprites[this.all.current_sprite]);
-  }
-
   is_copy_empty()
   {
     return (Object.keys(this.copy_sprite).length === 0);
+  }
+
+  copy()
+  {
+    this.copy_sprite = jQuery.extend(true, {}, this.all.sprites[this.all.current_sprite]);
   }
 
   paste()
