@@ -106,7 +106,7 @@ You can use `yarn` to run this project locally
 ```
 $ cd spritemate
 $ yarn
-$ yarn start
+$ yarn run dev
 
 ```
 
@@ -115,7 +115,7 @@ Or use `npm`
 ```
 $ cd spritemate
 $ npm install
-$ npm start
+$ npm run dev
 
 ```
 

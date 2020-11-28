@@ -1,10 +1,7 @@
-import $ from 'jquery'
+import $ from "jquery";
 
-export default class Info
-{
-
-  constructor(window,config,eventhandler)
-  {
+export default class Info {
+  constructor(window, config, eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
@@ -12,22 +9,28 @@ export default class Info
     let template = `
     <div id="info">
         <img autofocus src="img/logo-menu.svg" width="300px" id="logo" alt="spritemate">
-        <p>The Commodore 64 sprite editor, v${this.config.version.toFixed(2)}</p>
+        <p>The Commodore 64 sprite editor, v${this.config.version.toFixed(
+          2
+        )}</p>
 
         <fieldset>
             <h1>Release notes</h1>
 
             <h1>V1.21</h1>
+            <h2>This is mostly a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life and that I'm dedicating time to this project again. Hopefully I can add new features soon.</h2>
+            <br/>
             <p>
             - Fixed a UI issue in the save dialog<br/>
             - Fixed a bug in the sprite invert code<br/>
             - Added Spritemate version number to SPM save data <br/>
             - Updated to latest jQuery<br/>
+            - updated webpack<br/>
+            - cleanup & slight modernization<br/>
             </p>
 
             <h1>V1.2</h1>
             <h2>Sprites can now be named. The name will show as label name in ASM and BASIC exports (thx to Janne and MacBacon for the suggestions).</h2>
-    
+            <br/>
             <p>Note that two changes were introduced with the sprite naming feature: sprites start with index number 0 instead of 1, e.g. the first sprite is called "sprite_0" instead of "sprite_1". This was necessary for consistancy and my personal sanity - internally the index number always was 0 instead of 1. The other change is that sprite data exported as ASM or BASIC file would not label the sprites by incrementing index anymore. This means that a sprite would keep its name no matter if you sort it in the sprite list to a different position (which seems obvious, but wasn't like this before).</p>
 
             <p>The sprite naming feature is backwards compatible, so when you load an older SPM file, default names will be applied.</p>
@@ -234,20 +237,12 @@ export default class Info
         <button id="button-info">Let's go!</button>
     </div>
     `;
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
 
-    $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-info').mouseup((e) => 
-    {
-        $("#window-"+this.window).dialog( "close" );
-        this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
+    $("#button-info").mouseup((e) => {
+      $("#window-" + this.window).dialog("close");
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     });
-
-   
   }
-
-
-
 }
-
-
