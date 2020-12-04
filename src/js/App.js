@@ -25,9 +25,8 @@ import Preview from "./Preview";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
-import { get_config } from "./config.js";
+import { get_config } from "./config";
 import { tipoftheday, status, toggle_fullscreen } from "./helper";
-import { menubar } from "./menubar";
 
 class App {
   constructor(config) {
@@ -198,7 +197,6 @@ class App {
     $(document).tooltip({ show: { delay: 1000 } }); // initializes tooltip handling in jquery
 
     tipoftheday();
-    menubar();
 
     this.list.update_all(this.sprite.get_all());
     this.update();

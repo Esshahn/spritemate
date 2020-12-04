@@ -4,7 +4,11 @@ import { status } from "./helper";
 // handles writing and reading of the local html5 storage in the browser
 
 export default class Storage {
-  constructor(config) {
+  config: any = {};
+  is_new_version: boolean;
+  storage: any = {};
+
+  constructor(config: any = {}) {
     this.config = config;
     this.is_new_version = false; // will be true if the storage config has an older version number
     this.init();
@@ -20,7 +24,9 @@ export default class Storage {
       }
 
       // now we can safely read in the storage
-      this.storage = JSON.parse(localStorage.getItem("spritemate_config"));
+      this.storage = JSON.parse(
+        localStorage.getItem("spritemate_config") || "{}"
+      );
 
       if (this.config.version > this.storage.version) {
         // is the config newer than the storage version?
@@ -47,7 +53,7 @@ export default class Storage {
 
   read() {
     if (typeof Storage !== "undefined") {
-      return JSON.parse(localStorage.getItem("spritemate_config"));
+      return JSON.parse(localStorage.getItem("spritemate_config") || "{}");
     } else {
       status("I can't read from web storage.");
       this.storage = this.config;

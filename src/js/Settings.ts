@@ -1,14 +1,15 @@
-import $ from 'jquery'
+import $ from "jquery";
 
-export default class Settings
-{
+export default class Settings {
+  config: any = {};
+  window: any = {};
+  eventhandler: any = {};
 
-  constructor(window,config,eventhandler)
-  {
+  constructor(window, config, eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
-    
+
     let template = `
     <div id="modal">
         <h2 autofocus>Your settings will be saved locally to your browser storage</h2>
@@ -108,7 +109,7 @@ export default class Settings
 
     </div>
     `;
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
 
     this.config.colors = this.config.palettes[this.config.selected_palette];
 
@@ -118,84 +119,69 @@ export default class Settings
     this.selection_change();
     this.update_colors();
 
-    $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    
-    $('#button-apply').mouseup((e) => this.close_window());
-     
+    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
+
+    $("#button-apply").mouseup((e) => this.close_window());
   }
 
-  update_colors()
-  {
-    for (let i=0; i<this.config.colors.length;i++)
-    {
-      $("#colval-"+i).val(this.config.colors[i]);
-      $("#col-"+i).animate({backgroundColor: this.config.colors[i]}, 'fast');
+  update_colors() {
+    for (let i = 0; i < this.config.colors.length; i++) {
+      $("#colval-" + i).val(this.config.colors[i]);
+      $("#col-" + i).animate(
+        { backgroundColor: this.config.colors[i] },
+        "fast"
+      );
     }
   }
 
-  init_inputfields(colors)
-  {
+  init_inputfields(colors) {
     let that = this;
-    for (let i=0; i<colors.length;i++)
-    {
-      $("#colval-"+i).change(function(){
+    for (let i = 0; i < colors.length; i++) {
+      $("#colval-" + i).change(function () {
         that.update_custom_colors(i);
       });
     }
 
-    if (this.config.selected_palette != "custom")
-    {
-      $('.settings_colorvalue').prop('disabled', true).fadeTo( "fast", 0.33 );
+    if (this.config.selected_palette != "custom") {
+      $(".settings_colorvalue").prop("disabled", true).fadeTo("fast", 0.33);
     } else {
-      $('.settings_colorvalue').prop('disabled', false).fadeTo( "fast", 1 );
-    }  
+      $(".settings_colorvalue").prop("disabled", false).fadeTo("fast", 1);
+    }
   }
 
-  selection_change()
-  {
+  selection_change() {
     let that = this;
-    $("#colorpalette").change(function(){
-
-      let palette = $("#colorpalette").val();
+    $("#colorpalette").change(function () {
+      let palette: any = $("#colorpalette").val();
 
       that.config.colors = that.config.palettes[palette];
       that.config.selected_palette = palette;
 
-      if (palette != "custom")
-      {
-        $('.settings_colorvalue').prop('disabled', true).fadeTo( "fast", 0.33 );
+      if (palette != "custom") {
+        $(".settings_colorvalue").prop("disabled", true).fadeTo("fast", 0.33);
       } else {
-        $('.settings_colorvalue').prop('disabled', false).fadeTo( "fast", 1 );
+        $(".settings_colorvalue").prop("disabled", false).fadeTo("fast", 1);
       }
 
-      that.update_colors(that.config.colors);
+      that.update_colors();
     });
   }
 
-  update_custom_colors(color)
-  {
+  update_custom_colors(color) {
     // takes the value of the input field and updates both the color and the input field
-    let colvalue = $("#colval-"+color).val();
-    colvalue = "#" +("000000" + colvalue.replace(/#/g,"")).slice(-6);
+    let colvalue: any = $("#colval-" + color).val();
+    colvalue = "#" + ("000000" + colvalue.replace(/#/g, "")).slice(-6);
     this.config.palettes.custom[color] = colvalue;
     this.config.colors = this.config.palettes.custom;
     this.update_colors();
   }
 
-
-  close_window()
-  {
-      $("#window-"+this.window).dialog( "close" );
-      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+  close_window() {
+    $("#window-" + this.window).dialog("close");
+    this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 
-  get_config()
-  {
+  get_config() {
     return this.config;
   }
-
-
-
 }
-
-

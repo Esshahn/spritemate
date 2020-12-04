@@ -1,4 +1,3 @@
-
 /*
 
 HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLL             PPPPPPPPPPPPPPPPP   EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   
@@ -20,45 +19,44 @@ HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP 
 
 */
 
-import $ from 'jquery'
+import $ from "jquery";
 
-export function status(text,state = "normal")
-{
-  $("#statustext").stop(true,true);
+export function status(text, state = "normal") {
+  $("#statustext").stop(true, true);
 
-  if (state == "normal")
-  {
+  if (state == "normal") {
     $("#statustext").html(text).fadeIn(100).delay(2000).fadeOut(1000);
   }
 
-  if (state == "tip")
-  {
+  if (state == "tip") {
     $("#statustext").html(text).fadeIn(100).delay(10000).fadeOut(1000);
   }
 }
 
-
-export function tipoftheday()
-{
-  let tips = 
-  [
-  "Hold shift while clicking to delete pixels.",
-  "You can change and define your own colors in the seetings.",
-  "Press 'z' for undo and 'shift + z' for redo.",
-  "You can position all windows how you like it best. Spritemate remembers that for your next visit!",
-  "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.",
-  "Sort your sprites by dragging them around with your mouse!",
-  "Right click on your sprite in the preview window to save it as PNG (works in Chrome at least)."
+export function tipoftheday() {
+  let tips = [
+    "Hold shift while clicking to delete pixels.",
+    "You can change and define your own colors in the seetings.",
+    "Press 'z' for undo and 'shift + z' for redo.",
+    "You can position all windows how you like it best. Spritemate remembers that for your next visit!",
+    "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.",
+    "Sort your sprites by dragging them around with your mouse!",
+    "Right click on your sprite in the preview window to save it as PNG (works in Chrome at least).",
   ];
 
-  let chosen_tooltip = "Tip Of The Day: " + tips[Math.floor(Math.random()*tips.length)];
-  status(chosen_tooltip,"tip");
+  let chosen_tooltip =
+    "Tip Of The Day: " + tips[Math.floor(Math.random() * tips.length)];
+  status(chosen_tooltip, "tip");
 }
 
-export function toggle_fullscreen() 
-{
-  if (!document.fullscreenElement &&    // alternative standard method
-      !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+export function toggle_fullscreen() {
+  if (
+    !document.fullscreenElement && // alternative standard method
+    !document.mozFullScreenElement &&
+    !document.webkitFullscreenElement &&
+    !document.msFullscreenElement
+  ) {
+    // current working methods
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
     } else if (document.documentElement.msRequestFullscreen) {
@@ -66,7 +64,9 @@ export function toggle_fullscreen()
     } else if (document.documentElement.mozRequestFullScreen) {
       document.documentElement.mozRequestFullScreen();
     } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      document.documentElement.webkitRequestFullscreen(
+        Element.ALLOW_KEYBOARD_INPUT
+      );
     }
   } else {
     if (document.exitFullscreen) {
@@ -80,5 +80,3 @@ export function toggle_fullscreen()
     }
   }
 }
-
-
