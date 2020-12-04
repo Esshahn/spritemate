@@ -1,14 +1,12 @@
-import $ from 'jquery'
+import $ from "jquery";
 
+export default class Menu {
+  config: any = {};
+  window: any = {};
 
-export default class Menu
-{
-
-  constructor(window,config)
-  {
+  constructor(window, config) {
     this.config = config;
     this.window = window;
-    
 
     let template = `
     <div id="menu">
@@ -66,6 +64,6 @@ export default class Menu
       </div>
     `;
 
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
   }
 }
