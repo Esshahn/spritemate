@@ -9,6 +9,14 @@
  */
 
 export default class Window_Controls {
+  width: any;
+  height: any;
+  zoom: any;
+  zoom_min: any;
+  zoom_max: any;
+  pixels_x: any;
+  pixels_y: any;
+
   get_width() {
     return this.width;
   }
