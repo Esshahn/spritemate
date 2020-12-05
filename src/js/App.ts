@@ -29,6 +29,36 @@ import { get_config } from "./config";
 import { tipoftheday, status, toggle_fullscreen } from "./helper";
 
 class App {
+  storage: any = {};
+  config: any = {};
+  sprite: any = {};
+  editor: any;
+  window_editor: any;
+  window_palette: any;
+  palette: any;
+  window_preview: any;
+  preview: any;
+  window_list: any;
+  list: any;
+  window_info: any;
+  info: any;
+  window_save: any;
+  save: any;
+  window_settings: any;
+  settings: any;
+  window_menu: any;
+  window_help: any;
+  help: any;
+  menu: any;
+  load: any;
+  is_drawing: boolean;
+  oldpos: any;
+  mode: any;
+  allow_keyboard_shortcuts: boolean;
+  move_start: any;
+  move_start_pos: any;
+  dragging: any;
+
   constructor(config) {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
@@ -37,72 +67,71 @@ class App {
     this.sprite = new Sprite(this.config);
 
     // editor
-    let window_config = {
-      name: "window_editor",
-      title: "Editor",
-      type: "sprite",
-      resizable: false,
-      left: this.config.window_editor.left,
-      top: this.config.window_editor.top,
-      width: "auto",
-      height: "auto",
-    };
     this.window_editor = new Window(
-      window_config,
+      {
+        name: "window_editor",
+        title: "Editor",
+        type: "sprite",
+        resizable: false,
+        left: this.config.window_editor.left,
+        top: this.config.window_editor.top,
+        width: "auto",
+        height: "auto",
+      },
       this.store_window.bind(this)
     );
     this.editor = new Editor(0, this.config);
 
     // palette
-    window_config = {
-      name: "window_palette",
-      title: "Colors",
-      type: "colors",
-      resizable: false,
-      left: this.config.window_palette.left,
-      top: this.config.window_palette.top,
-      width: "auto",
-      height: "auto",
-    };
     this.window_palette = new Window(
-      window_config,
+      {
+        name: "window_palette",
+        title: "Colors",
+        type: "colors",
+        resizable: false,
+        left: this.config.window_palette.left,
+        top: this.config.window_palette.top,
+        width: "auto",
+        height: "auto",
+      },
       this.store_window.bind(this)
     );
     this.palette = new Palette(1, this.config);
 
     // preview
-    window_config = {
-      name: "window_preview",
-      title: "Preview",
-      type: "preview",
-      resizable: false,
-      left: this.config.window_preview.left,
-      top: this.config.window_preview.top,
-      width: "auto",
-      height: "auto",
-    };
     this.window_preview = new Window(
-      window_config,
+      {
+        name: "window_preview",
+        title: "Preview",
+        type: "preview",
+        resizable: false,
+        left: this.config.window_preview.left,
+        top: this.config.window_preview.top,
+        width: "auto",
+        height: "auto",
+      },
       this.store_window.bind(this)
     );
     this.preview = new Preview(2, this.config);
 
     // sprite list
-    window_config = {
-      name: "window_list",
-      title: "Sprite List",
-      type: "list",
-      resizable: true,
-      left: this.config.window_list.left,
-      top: this.config.window_list.top,
-      width: this.config.window_list.width,
-      height: this.config.window_list.height,
-    };
-    this.window_list = new Window(window_config, this.store_window.bind(this));
+    this.window_list = new Window(
+      {
+        name: "window_list",
+        title: "Sprite List",
+        type: "list",
+        resizable: true,
+        left: this.config.window_list.left,
+        top: this.config.window_list.top,
+        width: this.config.window_list.width,
+        height: this.config.window_list.height,
+      },
+      this.store_window.bind(this)
+    );
     this.list = new List(3, this.config);
 
     // info
-    window_config = {
+    this.window_info = new Window({
       name: "window_info",
       title: "Spritemate",
       type: "info",
@@ -110,16 +139,15 @@ class App {
       modal: true,
       resizable: false,
       autoOpen: false,
-      width: 680,
+      width: "680",
       height: "auto",
-    };
-    this.window_info = new Window(window_config);
+    });
     this.info = new Info(4, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // save
-    window_config = {
+    this.window_save = new Window({
       name: "window_save",
       title: "Save",
       type: "file",
@@ -127,16 +155,15 @@ class App {
       modal: true,
       resizable: false,
       autoOpen: false,
-      width: 580,
+      width: "580",
       height: "auto",
-    };
-    this.window_save = new Window(window_config);
+    });
     this.save = new Save(5, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // settings
-    window_config = {
+    this.window_settings = new Window({
       name: "window_settings,",
       title: "Settings",
       type: "settings",
@@ -144,16 +171,15 @@ class App {
       escape: true,
       resizable: false,
       autoOpen: false,
-      width: 760,
+      width: "760",
       height: "auto",
-    };
-    this.window_settings = new Window(window_config);
+    });
     this.settings = new Settings(7, this.config, {
       onLoad: this.update_config.bind(this),
     });
 
     // help
-    window_config = {
+    this.window_help = new Window({
       name: "window_help",
       title: "Help",
       type: "info",
@@ -163,24 +189,25 @@ class App {
       autoOpen: false,
       width: 680,
       height: "auto",
-    };
-    this.window_help = new Window(window_config);
+    });
     this.help = new Help(8, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // menu
-    window_config = {
-      name: "window_menu",
-      title: "Tools",
-      type: "menu",
-      resizable: false,
-      left: this.config.window_menu.left,
-      top: this.config.window_menu.top,
-      width: "auto",
-      height: "auto",
-    };
-    this.window_menu = new Window(window_config, this.store_window.bind(this));
+    this.window_menu = new Window(
+      {
+        name: "window_menu",
+        title: "Tools",
+        type: "menu",
+        resizable: false,
+        left: this.config.window_menu.left,
+        top: this.config.window_menu.top,
+        width: "auto",
+        height: "auto",
+      },
+      this.store_window.bind(this)
+    );
     this.menu = new Menu(9, this.config);
 
     this.load = new Load(this.config, {
@@ -335,7 +362,7 @@ class App {
     // checks the sprite name input box for the name
     // and updates the sprite name
     this.allow_keyboard_shortcuts = true;
-    let sprite_name = $("#input-sprite-name").val();
+    let sprite_name: any = $("#input-sprite-name").val();
     sprite_name = sprite_name.replace(/[^A-Za-z0-9-_]+/g, ""); // allowed chars are characters, number, -, _
     this.sprite.set_sprite_name(sprite_name);
     this.list.update_all(this.sprite.get_all());
@@ -641,7 +668,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     });
 
     // confirm dialog for "new"
-    // I failed to add a proper styling to this. It hilarious.
+    // I failed to add a proper styling to this. It's hilarious.
     $("#dialog-confirm").dialog({
       resizable: false,
       autoOpen: false,
@@ -649,8 +676,8 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       width: 400,
       modal: true,
       dialogClass: "no-close",
-      buttons: {
-        Ok: {
+      buttons: [
+        {
           click: () => {
             this.sprite = new Sprite(this.config);
             this.sprite.new_sprite(this.palette.get_color());
@@ -662,14 +689,14 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
           text: "Ok",
           class: "confirm-button",
         },
-        Cancel: {
+        {
           click: () => {
             $("#dialog-confirm").dialog("close");
           },
           text: "Cancel",
           class: "confirm-button",
         },
-      },
+      ],
     });
 
     /*

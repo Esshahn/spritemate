@@ -1,6 +1,15 @@
 import $ from "jquery";
 
 export default class Sprite {
+  config: any = {};
+  width: number;
+  height: number;
+  all: any = {};
+  backup: any = [];
+  backup_position: number;
+  copy_sprite: any = {};
+  sprite_name_counter: number;
+
   constructor(config) {
     this.config = config;
     this.width = config.sprite_x;
@@ -30,9 +39,9 @@ export default class Sprite {
     };
 
     for (let i = 0; i < this.height; i++) {
-      let line = [];
+      let line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(0);
-      sprite.pixels.push(line);
+      (sprite.pixels as any).push(line);
     }
     this.all.sprites.push(sprite);
     this.all.current_sprite = this.all.sprites.length - 1;
@@ -47,10 +56,10 @@ export default class Sprite {
     // fills the sprite data with the default color
     // generate a bitmap array
 
-    let pixels = [];
+    let pixels = [] as any;
 
     for (let i = 0; i < this.height; i++) {
-      let line = [];
+      let line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(0);
       pixels.push(line);
     }
@@ -62,10 +71,10 @@ export default class Sprite {
     // fills the sprite data with the default color
     // generate a bitmap array
 
-    let pixels = [];
+    let pixels = [] as any;
 
     for (let i = 0; i < this.height; i++) {
-      let line = [];
+      let line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(this.all.pen);
       pixels.push(line);
     }
@@ -123,8 +132,8 @@ export default class Sprite {
     this.save_backup();
   }
 
-  get_colors() // used to update the palette with the right colors
-  {
+  get_colors() {
+    // used to update the palette with the right colors
     let sprite_colors = {
       0: this.all.colors[0],
       1: this.all.sprites[this.all.current_sprite].color,
@@ -234,7 +243,8 @@ export default class Sprite {
     let sorted_list = sprite_order_from_dom.map(function (x) {
       return parseInt(x);
     });
-    let new_sprite_list = [];
+    let new_sprite_list = [] as any;
+    var temp_current_sprite: number = 0;
 
     for (let i = 0; i < sorted_list.length; i++) {
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
