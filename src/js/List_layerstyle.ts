@@ -1,11 +1,21 @@
-import $ from 'jquery'
-import Window_Controls from './Window_Controls'
+import $ from "jquery";
+import Window_Controls from "./Window_Controls";
 
-export default class List extends Window_Controls
-{
+export default class List extends Window_Controls {
+  config: any = {};
+  window: any = {};
+  zoom: number;
+  zoom_min: number;
+  zoom_max: number;
+  pixels_x: number;
+  pixels_y: number;
+  width: number;
+  height: number;
+  clicked_sprite: number;
+  sorted_array: any = [];
+  grid: boolean;
 
-  constructor(window,config)
-  {
+  constructor(window, config) {
     super();
     this.config = config;
     this.window = window;
@@ -35,69 +45,78 @@ export default class List extends Window_Controls
       <div id="spritelist"></div>
     `;
 
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
 
-    
     $("#spritelist").sortable({
-      cursor:"move",
+      cursor: "move",
       tolerance: "pointer",
-      revert: 'invalid'
+      revert: "invalid",
     });
-
 
     $("#spritelist").disableSelection();
   }
 
-  get_clicked_sprite() { return this.clicked_sprite; }
+  get_clicked_sprite() {
+    return this.clicked_sprite;
+  }
 
-  toggle_grid() { this.grid = !this.grid; }
+  toggle_grid() {
+    this.grid = !this.grid;
+  }
 
-  update(all_data)
-  {
-    
+  update(all_data) {
     // this one gets called during drawing in the editor
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
-    
-    $('#window-'+this.window).dialog('option', 'title', 'sprite ' + (all_data.current_sprite + 1) + " of " + all_data.sprites.length);
+
+    $("#window-" + this.window).dialog(
+      "option",
+      "title",
+      "sprite " +
+        (all_data.current_sprite + 1) +
+        " of " +
+        all_data.sprites.length
+    );
 
     let sprite_data = all_data.sprites[all_data.current_sprite];
-    let canvas = document.getElementById("canvas-"+all_data.current_sprite).getContext('2d');
+    let c: any = document.getElementById("canvas-" + all_data.current_sprite);
+    let canvas = c.getContext("2d");
 
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // first fill the whole sprite with the background color
     canvas.fillStyle = this.config.colors[all_data.colors[0]];
-    canvas.fillRect(0,0,this.width,this.height);
+    canvas.fillRect(0, 0, this.width, this.height);
 
-    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
-    {
-      for (let j=0; j<this.pixels_y; j++)
-      {
-
+    for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
+      for (let j = 0; j < this.pixels_y; j++) {
         let array_entry = sprite_data.pixels[j][i];
 
-        if (array_entry != 0) // transparent
-        {
+        if (array_entry != 0) {
+          // transparent
           let color = sprite_data.color;
-          if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
-          canvas.fillStyle = this.config.colors[color] ;
-          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
+          if (array_entry != 1 && sprite_data.multicolor)
+            color = all_data.colors[array_entry];
+          canvas.fillStyle = this.config.colors[color];
+          canvas.fillRect(
+            i * this.zoom,
+            j * this.zoom,
+            x_grid_step * this.zoom,
+            this.zoom
+          );
         }
       }
     }
   }
 
-  update_all(all_data)
-  {
+  update_all(all_data) {
     $(".sprite_layer").remove();
 
     let length = all_data.sprites.length;
-    for (let i=0; i<length; i++)
-    {
-      let canvas_element = document.createElement('canvas');
-      canvas_element.id =  "canvas-"+i;
+    for (let i = 0; i < length; i++) {
+      let canvas_element = document.createElement("canvas");
+      canvas_element.id = "canvas-" + i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
 
@@ -112,37 +131,37 @@ export default class List extends Window_Controls
       </div>`;
 
       $("#spritelist").append(template);
-      $("#"+i+" .sprite_layer_canvas").append(canvas_element);       
-      $("#"+i).mouseup((e) => this.clicked_sprite = i);
+      $("#" + i + " .sprite_layer_canvas").append(canvas_element);
+      $("#" + i).mouseup((e) => (this.clicked_sprite = i));
 
-      let canvas = canvas_element.getContext('2d');
+      let canvas: any = canvas_element.getContext("2d");
       let sprite_data = all_data.sprites[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
 
       // first fill the whole sprite with the background color
       canvas.fillStyle = this.config.colors[all_data.colors[0]];
-      canvas.fillRect(0,0,this.width,this.height);
+      canvas.fillRect(0, 0, this.width, this.height);
 
-      for (let i=0; i<this.pixels_x; i=i+x_grid_step)
-      {
-        for (let j=0; j<this.pixels_y; j++)
-        {
+      for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
+        for (let j = 0; j < this.pixels_y; j++) {
           let array_entry = sprite_data.pixels[j][i];
 
-          if (array_entry != 0) // transparent
-          {
+          if (array_entry != 0) {
+            // transparent
             let color = sprite_data.color;
-            if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+            if (array_entry != 1 && sprite_data.multicolor)
+              color = all_data.colors[array_entry];
             canvas.fillStyle = this.config.colors[color];
-            canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
+            canvas.fillRect(
+              i * this.zoom,
+              j * this.zoom,
+              x_grid_step * this.zoom,
+              this.zoom
+            );
           }
         }
       }
     }
   }
-
-
 }
-
-

@@ -1,6 +1,10 @@
 import $ from "jquery";
 
 export default class Info {
+  config: any = {};
+  window: any = {};
+  eventhandler: any = {};
+
   constructor(window, config, eventhandler) {
     this.config = config;
     this.window = window;

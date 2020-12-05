@@ -1,15 +1,25 @@
-import $ from 'jquery'
-import Window_Controls from './Window_Controls'
+import $ from "jquery";
+import Window_Controls from "./Window_Controls";
 
-export default class List extends Window_Controls
-{
+export default class List extends Window_Controls {
+  config: any = {};
+  window: any = {};
+  zoom: number;
+  zoom_min: number;
+  zoom_max: number;
+  pixels_x: number;
+  pixels_y: number;
+  width: number;
+  height: number;
+  clicked_sprite: number;
+  sorted_array: any = [];
+  grid: boolean;
 
-  constructor(window,config)
-  {
+  constructor(window, config) {
     super();
     this.config = config;
     this.window = window;
-    this.zoom = this.config.window_list.zoom; 
+    this.zoom = this.config.window_list.zoom;
     this.zoom_min = 4;
     this.zoom_max = 16;
     this.pixels_x = this.config.sprite_x;
@@ -19,7 +29,6 @@ export default class List extends Window_Controls
     this.clicked_sprite = 0;
     this.sorted_array = [];
     this.grid = true;
-
 
     let template = `
       <div class="window_menu">
@@ -36,104 +45,114 @@ export default class List extends Window_Controls
       <div id="spritelist"></div>
     `;
 
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
 
-    
     $("#spritelist").sortable({
-      cursor:"move",
+      cursor: "move",
       tolerance: "pointer",
-      revert: '100'
+      revert: "100",
     });
 
     // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
-    $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
+    $(
+      "<style type='text/css'> .list-sprite-size{ width:" +
+        this.width +
+        "px; height:" +
+        this.height +
+        "px;} </style>"
+    ).appendTo("head");
 
     $("#spritelist").disableSelection();
   }
 
-
-  get_clicked_sprite() { return this.clicked_sprite; }
-
-  toggle_grid() { this.grid = !this.grid; }
-
-  update_zoom()
-  {
-    this.width = this.pixels_x * this.zoom;
-    this.height = this.pixels_y * this.zoom;
-    $('head style:last').remove();
-    $("<style type='text/css'> .list-sprite-size{ width:"+this.width+"px; height:"+this.height+"px;} </style>").appendTo("head");
+  get_clicked_sprite() {
+    return this.clicked_sprite;
   }
 
-  update(all_data)
-  {
-    
+  toggle_grid() {
+    this.grid = !this.grid;
+  }
+
+  update_zoom() {
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
+    $("head style:last").remove();
+    $(
+      "<style type='text/css'> .list-sprite-size{ width:" +
+        this.width +
+        "px; height:" +
+        this.height +
+        "px;} </style>"
+    ).appendTo("head");
+  }
+
+  update(all_data) {
     // this one gets called during drawing in the editor
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
 
-    $('#window-'+this.window).dialog('option', 'title', `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`);
-    let canvas = document.getElementById(all_data.current_sprite).getContext('2d', { alpha: false });
+    $("#window-" + this.window).dialog(
+      "option",
+      "title",
+      `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`
+    );
+    let c: any = document.getElementById(all_data.current_sprite);
+    let canvas = c.getContext("2d", { alpha: false });
     let sprite_data = all_data.sprites[all_data.current_sprite];
-    this.draw_sprite(canvas,sprite_data,all_data);
+    this.draw_sprite(canvas, sprite_data, all_data);
   }
 
-
-  update_all(all_data)
-  {
-
+  update_all(all_data) {
     $(".sprite_in_list").remove();
     let length = all_data.sprites.length;
-    for (let i=0; i<length; i++)
-    {
-      let canvas_element = document.createElement('canvas');
-      canvas_element.id =  i;
+    for (let i = 0; i < length; i++) {
+      let canvas_element: any = document.createElement("canvas");
+      canvas_element.id = i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
 
       $("#spritelist").append(canvas_element);
       $(canvas_element).addClass("sprite_in_list");
-      $(canvas_element).attr('title',all_data.sprites[i].name);
+      $(canvas_element).attr("title", all_data.sprites[i].name);
       $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
-       
-      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");   
 
-      $(canvas_element).mouseup((e) => this.clicked_sprite = i);
+      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");
 
-      let canvas = canvas_element.getContext('2d', { alpha: false });
+      $(canvas_element).mouseup((e) => (this.clicked_sprite = i));
+
+      let canvas = canvas_element.getContext("2d", { alpha: false });
       let sprite_data = all_data.sprites[i];
-      
-      this.draw_sprite(canvas,sprite_data,all_data);
+
+      this.draw_sprite(canvas, sprite_data, all_data);
     }
   }
 
-  draw_sprite(canvas,sprite_data,all_data)
-  {
-
+  draw_sprite(canvas, sprite_data, all_data) {
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // first fill the whole sprite with the background color
     canvas.fillStyle = this.config.colors[all_data.colors[0]]; // transparent
-    canvas.fillRect(0,0,this.width,this.height);
+    canvas.fillRect(0, 0, this.width, this.height);
 
-    for (let i=0; i<this.pixels_x; i=i+x_grid_step)
-    {
-      for (let j=0; j<this.pixels_y; j++)
-      {
+    for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
+      for (let j = 0; j < this.pixels_y; j++) {
         let array_entry = sprite_data.pixels[j][i];
 
-        if (array_entry != 0) // transparent
-        {
+        if (array_entry != 0) {
+          // transparent
           let color = sprite_data.color;
-          if (array_entry != 1 && sprite_data.multicolor) color = all_data.colors[array_entry];
+          if (array_entry != 1 && sprite_data.multicolor)
+            color = all_data.colors[array_entry];
           canvas.fillStyle = this.config.colors[color];
-          canvas.fillRect(i*this.zoom, j*this.zoom, x_grid_step * this.zoom, this.zoom);  
+          canvas.fillRect(
+            i * this.zoom,
+            j * this.zoom,
+            x_grid_step * this.zoom,
+            this.zoom
+          );
         }
       }
     }
   }
-
-
 } // end class
-
-

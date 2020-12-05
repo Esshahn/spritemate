@@ -1,10 +1,11 @@
-import $ from 'jquery'
+import $ from "jquery";
 
-export default class Help
-{
+export default class Help {
+  config: any;
+  window: any;
+  eventhandler: any;
 
-  constructor(window,config,eventhandler)
-  {
+  constructor(window: any, config: any, eventhandler: any) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
@@ -348,20 +349,12 @@ export default class Help
         <button id="button-help" class="center">Close</button>
     </div>
     `;
-    $("#window-"+this.window).append(template);
+    $("#window-" + this.window).append(template);
 
-    $("#window-"+this.window).dialog({ show: 'fade', hide: 'fade' });
-    $('#button-help').mouseup((e) => 
-    {
-        $("#window-"+this.window).dialog( "close" );
-        this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
+    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
+    $("#button-help").mouseup((e) => {
+      $("#window-" + this.window).dialog("close");
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     });
-
-   
   }
-
-
-
 }
-
-

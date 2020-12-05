@@ -5,10 +5,22 @@ const webpack = require("webpack"); //to access built-in plugins
 var path = require("path");
 
 const config = {
-  entry: ["webpack-jquery-ui", "./src/js/App.js"],
+  entry: ["webpack-jquery-ui", "./src/js/App.ts"],
+  output: {
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
+  },
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
   module: {
     rules: [
-      { test: /\.txt$/, use: "raw-loader" },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: "ts-loader",
+        include: [path.resolve(__dirname, "src/js")],
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -20,7 +32,6 @@ const config = {
         test: /\.(jpe?g|png|gif)$/i,
         loader: "file-loader",
         options: {
-          name: "[name].[ext]",
           outputPath: "img/",
         },
       },
