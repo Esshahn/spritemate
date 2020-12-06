@@ -1,7 +1,6 @@
 import $ from "jquery";
 
 export default class Sprite {
-  config: any = {};
   width: number;
   height: number;
   all: any = {};
@@ -10,7 +9,7 @@ export default class Sprite {
   copy_sprite: any = {};
   sprite_name_counter: number;
 
-  constructor(config) {
+  constructor(public config) {
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;

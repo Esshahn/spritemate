@@ -1,11 +1,7 @@
 import $ from "jquery";
 
 export default class Settings {
-  config: any = {};
-  window: any = {};
-  eventhandler: any = {};
-
-  constructor(window, config, eventhandler) {
+  constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
@@ -121,7 +117,7 @@ export default class Settings {
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
 
-    $("#button-apply").mouseup((e) => this.close_window());
+    $("#button-apply").on("mouseup", (e) => this.close_window());
   }
 
   update_colors() {

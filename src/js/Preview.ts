@@ -2,19 +2,10 @@ import $ from "jquery";
 import Window_Controls from "./Window_Controls";
 
 export default class Preview extends Window_Controls {
-  config: any = {};
-  window: any = {};
   canvas_element: any = {};
-  zoom: number;
-  zoom_min: number;
-  zoom_max: number;
-  pixels_x: number;
-  pixels_y: number;
-  width: number;
-  height: number;
   canvas: any = {};
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     super();
     this.config = config;
     this.window = window;

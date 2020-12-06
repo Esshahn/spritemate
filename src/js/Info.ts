@@ -1,11 +1,7 @@
 import $ from "jquery";
 
 export default class Info {
-  config: any = {};
-  window: any = {};
-  eventhandler: any = {};
-
-  constructor(window, config, eventhandler) {
+  constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
@@ -20,16 +16,20 @@ export default class Info {
         <fieldset>
             <h1>Release notes</h1>
 
-            <h1>V1.21</h1>
+            <h1>V1.22</h1>
             <h2>This is mostly a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life and that I'm dedicating time to this project again. Hopefully I can add new features soon.</h2>
             <br/>
             <p>
+            - Rewrite of menubar, should fix annoying bug and is more responsive<br/>
             - Fixed a UI issue in the save dialog<br/>
             - Fixed a bug in the sprite invert code<br/>
             - Added Spritemate version number to SPM save data <br/>
             - Updated to latest jQuery<br/>
-            - updated webpack<br/>
-            - cleanup & slight modernization<br/>
+            - Updated webpack<br/>
+            - Cleanup & slight modernization<br/>
+            - Added <a href="https://beta.spritemate.com">beta.spritemate.com</a> for latest version<br/>
+            - Changed deploy setup to work with Netlify<br/>
+            - Converted all JavaScript to TypeScript
             </p>
 
             <h1>V1.2</h1>
@@ -244,7 +244,7 @@ export default class Info {
     $("#window-" + this.window).append(template);
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-info").mouseup((e) => {
+    $("#button-info").on("mouseup", (e) => {
       $("#window-" + this.window).dialog("close");
       this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     });

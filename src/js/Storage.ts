@@ -4,11 +4,10 @@ import { status } from "./helper";
 // handles writing and reading of the local html5 storage in the browser
 
 export default class Storage {
-  config: any = {};
   is_new_version: boolean;
   storage: any = {};
 
-  constructor(config: any = {}) {
+  constructor(public config) {
     this.config = config;
     this.is_new_version = false; // will be true if the storage config has an older version number
     this.init();

@@ -2,8 +2,6 @@ import $ from "jquery";
 import { status } from "./helper";
 
 export default class Load {
-  config: any = {};
-  eventhandler: any = {};
   imported_file: any;
   file: any;
   start_of_sprite_data: any;
@@ -17,7 +15,7 @@ export default class Load {
   pencolor: any;
   overlay: any;
 
-  constructor(config, eventhandler) {
+  constructor(public config, public eventhandler) {
     this.config = config;
     this.eventhandler = eventhandler;
     this.setup_load_input();

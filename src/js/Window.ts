@@ -7,7 +7,7 @@
 import $ from "jquery";
 
 export default class Window {
-  constructor(config: any = {}, callback: any = {}) {
+  constructor(public config, public callback?) {
     config.id = "window-" + $('div[id^="window-"]').length;
     config.position = {
       my: "left top",

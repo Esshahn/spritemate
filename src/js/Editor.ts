@@ -2,20 +2,11 @@ import $ from "jquery";
 import Window_Controls from "./Window_Controls";
 
 export default class Editor extends Window_Controls {
-  config: any = {};
   grid: boolean;
-  window: any = {};
   canvas_element: any;
   canvas: any;
-  zoom: number;
-  zoom_min: number;
-  zoom_max: number;
-  pixels_x: number;
-  pixels_y: number;
-  width: number;
-  height: number;
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     super();
     this.config = config;
     this.grid = this.config.window_editor.grid;

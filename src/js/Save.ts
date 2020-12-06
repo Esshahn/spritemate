@@ -2,13 +2,10 @@ import $ from "jquery";
 import { status } from "./helper";
 
 export default class Save {
-  config: any = {};
-  window: any = {};
-  eventhandler: any = {};
   default_filename: any;
   savedata: any;
 
-  constructor(window, config, eventhandler) {
+  constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.default_filename = "mysprites";
@@ -67,23 +64,23 @@ export default class Save {
 
     $("#window-" + this.window).append(template);
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-save-cancel").mouseup((e) => this.close_window());
-    $("#button-save-spm").mouseup((e) => this.save_spm());
-    $("#button-save-spd").mouseup((e) => this.save_spd("new"));
-    $("#button-save-spd-old").mouseup((e) => this.save_spd("old"));
-    $("#button-save-source-kick").mouseup((e) =>
+    $("#button-save-cancel").on("mouseup", (e) => this.close_window());
+    $("#button-save-spm").on("mouseup", (e) => this.save_spm());
+    $("#button-save-spd").on("mouseup", (e) => this.save_spd("new"));
+    $("#button-save-spd-old").on("mouseup", (e) => this.save_spd("old"));
+    $("#button-save-source-kick").on("mouseup", (e) =>
       this.save_assembly("kick", false)
     );
-    $("#button-save-source-kick-binary").mouseup((e) =>
+    $("#button-save-source-kick-binary").on("mouseup", (e) =>
       this.save_assembly("kick", true)
     );
-    $("#button-save-source-acme").mouseup((e) =>
+    $("#button-save-source-acme").on("mouseup", (e) =>
       this.save_assembly("acme", false)
     );
-    $("#button-save-source-acme-binary").mouseup((e) =>
+    $("#button-save-source-acme-binary").on("mouseup", (e) =>
       this.save_assembly("acme", true)
     );
-    $("#button-save-basic").mouseup((e) => this.save_basic());
+    $("#button-save-basic").on("mouseup", (e) => this.save_basic());
 
     $("#filename").keyup((e) => {
       this.default_filename = $("#filename").val();

@@ -1,10 +1,7 @@
 import $ from "jquery";
 
 export default class Menu {
-  config: any = {};
-  window: any = {};
-
-  constructor(window, config) {
+  constructor(public window, public config) {
     this.config = config;
     this.window = window;
 
