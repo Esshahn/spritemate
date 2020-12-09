@@ -326,7 +326,7 @@ class App {
     // check which data is in the object, compare with config data of that window
     // and replace the data in the config if matching
     // then save to storage
-    for (var key in obj.data) {
+    for (let key in obj.data) {
       if (this.config[obj.name].hasOwnProperty(key))
         this.config[obj.name][key] = obj.data[key];
     }

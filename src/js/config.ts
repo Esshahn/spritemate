@@ -1,4 +1,4 @@
-var example_sprite = {
+let example_sprite = {
   colors: { 0: 11, 2: 7, 3: 10 },
   sprites: [
     {

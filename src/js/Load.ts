@@ -27,17 +27,17 @@ export default class Load {
       '<input type="file" id="input-load" style="display: none">';
     let fileInput = element.firstChild;
     document.body.appendChild(fileInput);
-    var that = this;
+    let that = this;
     fileInput.addEventListener("change", function () {
       that.read_file_data(fileInput);
     });
   }
 
   read_file_data(fileInput) {
-    var file = fileInput.files[0];
+    let file = fileInput.files[0];
 
     if (file.name.match(/\.(spm|spd|spr)$/)) {
-      var reader = new FileReader();
+      let reader = new FileReader();
       reader.onload = () => {
         if (file.name.match(/\.(spm)$/)) {
           this.parse_file_spm(reader.result);
@@ -134,7 +134,7 @@ export default class Load {
 
   convert_sprite_data_to_internal_format(sprite_number) {
     // check byte 64 which is the indidual color (low nibble) and the multicolor state (high nibble)
-    var colorpos =
+    const colorpos =
       this.start_of_sprite_data + 2 + (sprite_number + 1) * this.sprite_size;
 
     // this is actually a good way to identify a bit
@@ -156,7 +156,7 @@ export default class Load {
       2
     );
 
-    var sprite = {
+    let sprite = {
       name: "sprite_" + sprite_number,
       color: this.pencolor,
       multicolor: this.multicolor,
@@ -166,7 +166,7 @@ export default class Load {
       pixels: [],
     };
 
-    var binary = [] as any;
+    let binary = [] as any;
 
     let begin_of_sprite_data =
       this.start_of_sprite_data + 3 + sprite_number * this.sprite_size;
@@ -175,7 +175,7 @@ export default class Load {
 
     for (let i = begin_of_sprite_data; i < end_of_sprite_data; i++) {
       // convert data in SPR file into binary
-      var byte: any = ("0000000" + this.file.charCodeAt(i).toString(2))
+      let byte: any = ("0000000" + this.file.charCodeAt(i).toString(2))
         .slice(-8)
         .match(/.{1,2}/g);
       for (let j = 0; j < byte.length; j++) {
@@ -203,8 +203,8 @@ export default class Load {
       }
     }
 
-    var spritedata = [] as any;
-    var line = 0;
+    let spritedata = [] as any;
+    let line = 0;
     for (let i = 0; i < binary.length; i++) {
       spritedata.push(binary[i]);
       line++;

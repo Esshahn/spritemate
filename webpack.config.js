@@ -18,15 +18,12 @@ const config = {
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: "ts-loader",
+        use: [
+          {
+            loader: "ts-loader",
+          },
+        ],
         include: [path.resolve(__dirname, "src/js")],
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
       },
       {
         test: /\.(jpe?g|png|gif)$/i,

@@ -125,12 +125,12 @@ export default class Editor extends Window_Controls {
 
   overlay_color(hex, alpha) {
     // expects a hex value like "#ff8800" and returns a rbga + alpha value like "rgba (50,20,100,0.5)"
-    var bigint = parseInt(hex.slice(-6), 16);
-    var r = (bigint >> 16) & 255;
-    var g = (bigint >> 8) & 255;
-    var b = bigint & 255;
-    var combined = r + "," + g + "," + b;
-    var result = "rgba(" + combined + "," + alpha + ")";
+    const bigint = parseInt(hex.slice(-6), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    const combined = r + "," + g + "," + b;
+    const result = "rgba(" + combined + "," + alpha + ")";
     return result;
   }
 

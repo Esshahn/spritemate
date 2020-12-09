@@ -77,19 +77,21 @@ export default class Preview extends Window_Controls {
       this.display_overlay(all_data);
 
     // set the preview window x and y stretch
+    let double_x: number;
+    let double_y: number;
     if (sprite_data.double_x) {
-      var double_x = 2;
+      double_x = 2;
       $("#icon-preview-x").addClass("icon-preview-x2-hi");
     } else {
-      var double_x = 1;
+      double_x = 1;
       $("#icon-preview-x").removeClass("icon-preview-x2-hi");
     }
 
     if (sprite_data.double_y) {
-      var double_y = 2;
+      double_y = 2;
       $("#icon-preview-y").addClass("icon-preview-y2-hi");
     } else {
-      var double_y = 1;
+      double_y = 1;
       $("#icon-preview-y").removeClass("icon-preview-y2-hi");
     }
 
