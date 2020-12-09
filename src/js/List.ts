@@ -2,20 +2,11 @@ import $ from "jquery";
 import Window_Controls from "./Window_Controls";
 
 export default class List extends Window_Controls {
-  config: any = {};
-  window: any = {};
-  zoom: number;
-  zoom_min: number;
-  zoom_max: number;
-  pixels_x: number;
-  pixels_y: number;
-  width: number;
-  height: number;
   clicked_sprite: number;
   sorted_array: any = [];
   grid: boolean;
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     super();
     this.config = config;
     this.window = window;
@@ -118,7 +109,7 @@ export default class List extends Window_Controls {
 
       if (this.grid) $(canvas_element).addClass("sprite_in_list_border");
 
-      $(canvas_element).mouseup((e) => (this.clicked_sprite = i));
+      $(canvas_element).on("mouseup", (e) => (this.clicked_sprite = i));
 
       let canvas = canvas_element.getContext("2d", { alpha: false });
       let sprite_data = all_data.sprites[i];

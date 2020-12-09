@@ -30,7 +30,6 @@ import { tipoftheday, status, toggle_fullscreen } from "./helper";
 
 class App {
   storage: any = {};
-  config: any = {};
   sprite: any = {};
   editor: any;
   window_editor: any;
@@ -59,7 +58,7 @@ class App {
   move_start_pos: any;
   dragging: any;
 
-  constructor(config) {
+  constructor(public config) {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
     this.config.colors = this.config.palettes[this.config.selected_palette];
@@ -327,7 +326,7 @@ class App {
     // check which data is in the object, compare with config data of that window
     // and replace the data in the config if matching
     // then save to storage
-    for (var key in obj.data) {
+    for (let key in obj.data) {
       if (this.config[obj.name].hasOwnProperty(key))
         this.config[obj.name][key] = obj.data[key];
     }
@@ -459,7 +458,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
 */
 
-    $(document).keydown((e) => {
+    $(document).on("keydown", (e) => {
       //console.log(e.key);
       if (this.allow_keyboard_shortcuts) {
         if (e.key == "a") {
@@ -610,22 +609,22 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
     /*
 
-MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN        NNNNNNNNUUUUUUUU     UUUUUUUUBBBBBBBBBBBBBBBBB               AAA               RRRRRRRRRRRRRRRRR   
-M:::::::M             M:::::::ME::::::::::::::::::::EN:::::::N       N::::::NU::::::U     U::::::UB::::::::::::::::B             A:::A              R::::::::::::::::R  
-M::::::::M           M::::::::ME::::::::::::::::::::EN::::::::N      N::::::NU::::::U     U::::::UB::::::BBBBBB:::::B           A:::::A             R::::::RRRRRR:::::R 
-M:::::::::M         M:::::::::MEE::::::EEEEEEEEE::::EN:::::::::N     N::::::NUU:::::U     U:::::UUBB:::::B     B:::::B         A:::::::A            RR:::::R     R:::::R
-M::::::::::M       M::::::::::M  E:::::E       EEEEEEN::::::::::N    N::::::N U:::::U     U:::::U   B::::B     B:::::B        A:::::::::A             R::::R     R:::::R
-M:::::::::::M     M:::::::::::M  E:::::E             N:::::::::::N   N::::::N U:::::D     D:::::U   B::::B     B:::::B       A:::::A:::::A            R::::R     R:::::R
-M:::::::M::::M   M::::M:::::::M  E::::::EEEEEEEEEE   N:::::::N::::N  N::::::N U:::::D     D:::::U   B::::BBBBBB:::::B       A:::::A A:::::A           R::::RRRRRR:::::R 
-M::::::M M::::M M::::M M::::::M  E:::::::::::::::E   N::::::N N::::N N::::::N U:::::D     D:::::U   B:::::::::::::BB       A:::::A   A:::::A          R:::::::::::::RR  
-M::::::M  M::::M::::M  M::::::M  E:::::::::::::::E   N::::::N  N::::N:::::::N U:::::D     D:::::U   B::::BBBBBB:::::B     A:::::A     A:::::A         R::::RRRRRR:::::R 
-M::::::M   M:::::::M   M::::::M  E::::::EEEEEEEEEE   N::::::N   N:::::::::::N U:::::D     D:::::U   B::::B     B:::::B   A:::::AAAAAAAAA:::::A        R::::R     R:::::R
-M::::::M    M:::::M    M::::::M  E:::::E             N::::::N    N::::::::::N U:::::D     D:::::U   B::::B     B:::::B  A:::::::::::::::::::::A       R::::R     R:::::R
-M::::::M     MMMMM     M::::::M  E:::::E       EEEEEEN::::::N     N:::::::::N U::::::U   U::::::U   B::::B     B:::::B A:::::AAAAAAAAAAAAA:::::A      R::::R     R:::::R
-M::::::M               M::::::MEE::::::EEEEEEEE:::::EN::::::N      N::::::::N U:::::::UUU:::::::U BB:::::BBBBBB::::::BA:::::A             A:::::A   RR:::::R     R:::::R
-M::::::M               M::::::ME::::::::::::::::::::EN::::::N       N:::::::N  UU:::::::::::::UU  B:::::::::::::::::BA:::::A               A:::::A  R::::::R     R:::::R
-M::::::M               M::::::ME::::::::::::::::::::EN::::::N        N::::::N    UU:::::::::UU    B::::::::::::::::BA:::::A                 A:::::A R::::::R     R:::::R
-MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN      UUUUUUUUU      BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAARRRRRRRR     RRRRRRR
+MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN        NNNNNNNNUUUUUUUU     UUUUUUU  
+M:::::::M             M:::::::ME::::::::::::::::::::EN:::::::N       N::::::NU::::::U     U:::::U 
+M::::::::M           M::::::::ME::::::::::::::::::::EN::::::::N      N::::::NU::::::U     U:::::U
+M:::::::::M         M:::::::::MEE::::::EEEEEEEEE::::EN:::::::::N     N::::::NUU:::::U     U:::::U
+M::::::::::M       M::::::::::M  E:::::E       EEEEEEN::::::::::N    N::::::N U:::::U     U:::::U  
+M:::::::::::M     M:::::::::::M  E:::::E             N:::::::::::N   N::::::N U:::::D     D:::::U
+M:::::::M::::M   M::::M:::::::M  E::::::EEEEEEEEEE   N:::::::N::::N  N::::::N U:::::D     D:::::U
+M::::::M M::::M M::::M M::::::M  E:::::::::::::::E   N::::::N N::::N N::::::N U:::::D     D:::::U
+M::::::M  M::::M::::M  M::::::M  E:::::::::::::::E   N::::::N  N::::N:::::::N U:::::D     D:::::U
+M::::::M   M:::::::M   M::::::M  E::::::EEEEEEEEEE   N::::::N   N:::::::::::N U:::::D     D:::::U
+M::::::M    M:::::M    M::::::M  E:::::E             N::::::N    N::::::::::N U:::::D     D:::::U
+M::::::M     MMMMM     M::::::M  E:::::E       EEEEEEN::::::N     N:::::::::N U::::::U   U::::::U
+M::::::M               M::::::MEE::::::EEEEEEEE:::::EN::::::N      N::::::::N U:::::::UUU:::::::U
+M::::::M               M::::::ME::::::::::::::::::::EN::::::N       N:::::::N  UU:::::::::::::UU
+M::::::M               M::::::ME::::::::::::::::::::EN::::::N        N::::::N    UU:::::::::UU
+MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN      UUUUUUUUU
 
 
  */
@@ -636,12 +635,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-info").mouseup((e) => {
+    $("#menubar-info").on("mouseup", (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-4").dialog("open");
     });
 
-    $("#menubar-settings").mouseup((e) => {
+    $("#menubar-settings").on("mouseup", (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-7").dialog("open");
     });
@@ -652,23 +651,21 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-load,#icon-load").mouseup((e) => {
+    $("#menubar-load,#icon-load").on("mouseup", (e) => {
       $("#input-load").trigger("click");
     });
 
-    $("#menubar-save,#icon-save").mouseup((e) => {
+    $("#menubar-save,#icon-save").on("mouseup", (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-5").dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     });
 
-    $("#menubar-new").mouseup((e) => {
+    $("#menubar-new").on("mouseup", (e) => {
       $("#dialog-confirm").css("visibility", "visible");
       $("#dialog-confirm").dialog("open");
     });
 
-    // confirm dialog for "new"
-    // I failed to add a proper styling to this. It's hilarious.
     $("#dialog-confirm").dialog({
       resizable: false,
       autoOpen: false,
@@ -705,19 +702,19 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-undo,#icon-undo").mouseup((e) => {
+    $("#menubar-undo,#icon-undo").on("mouseup", (e) => {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $("#menubar-redo,#icon-redo").mouseup((e) => {
+    $("#menubar-redo,#icon-redo").on("mouseup", (e) => {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $("#menubar-new-sprite,#icon-list-new").mouseup((e) => {
+    $("#menubar-new-sprite,#icon-list-new").on("mouseup", (e) => {
       this.sprite.new_sprite(
         this.palette.get_color(),
         this.sprite.is_multicolor()
@@ -726,19 +723,19 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     });
 
-    $("#menubar-kill,#icon-list-delete").mouseup((e) => {
+    $("#menubar-kill,#icon-list-delete").on("mouseup", (e) => {
       this.sprite.delete();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $("#menubar-copy,#icon-list-copy").mouseup((e) => {
+    $("#menubar-copy,#icon-list-copy").on("mouseup", (e) => {
       this.sprite.copy();
       this.update_ui();
       status("Sprite copied.");
     });
 
-    $("#menubar-paste,#icon-list-paste").mouseup((e) => {
+    $("#menubar-paste,#icon-list-paste").on("mouseup", (e) => {
       if (!this.sprite.is_copy_empty()) {
         this.sprite.paste();
         this.update();
@@ -748,7 +745,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       }
     });
 
-    $("#menubar-duplicate,#icon-list-duplicate").mouseup((e) => {
+    $("#menubar-duplicate,#icon-list-duplicate").on("mouseup", (e) => {
       this.sprite.duplicate();
       this.list.update_all(this.sprite.get_all());
       this.update_ui();
@@ -761,59 +758,59 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-shift-left,#icon-shift-left").mouseup((e) => {
+    $("#menubar-shift-left,#icon-shift-left").on("mouseup", (e) => {
       this.sprite.shift_horizontal("left");
       this.update();
     });
 
-    $("#menubar-shift-right,#icon-shift-right").mouseup((e) => {
+    $("#menubar-shift-right,#icon-shift-right").on("mouseup", (e) => {
       this.sprite.shift_horizontal("right");
       this.update();
     });
 
-    $("#menubar-shift-up,#icon-shift-up").mouseup((e) => {
+    $("#menubar-shift-up,#icon-shift-up").on("mouseup", (e) => {
       this.sprite.shift_vertical("up");
       this.update();
     });
 
-    $("#menubar-shift-down,#icon-shift-down").mouseup((e) => {
+    $("#menubar-shift-down,#icon-shift-down").on("mouseup", (e) => {
       this.sprite.shift_vertical("down");
       this.update();
     });
 
-    $("#menubar-flip-horizontal,#icon-flip-horizontal").mouseup((e) => {
+    $("#menubar-flip-horizontal,#icon-flip-horizontal").on("mouseup", (e) => {
       this.sprite.flip_horizontal();
       this.update();
     });
 
-    $("#menubar-flip-vertical,#icon-flip-vertical").mouseup((e) => {
+    $("#menubar-flip-vertical,#icon-flip-vertical").on("mouseup", (e) => {
       this.sprite.flip_vertical();
       this.update();
     });
 
-    $("#menubar-colormode,#icon-multicolor").mouseup((e) => {
+    $("#menubar-colormode,#icon-multicolor").on("mouseup", (e) => {
       this.sprite.toggle_multicolor();
       this.update();
     });
 
-    $("#menubar-stretch-x,#icon-preview-x").mouseup((e) => {
+    $("#menubar-stretch-x,#icon-preview-x").on("mouseup", (e) => {
       this.sprite.toggle_double_x();
       $("#icon-preview-x").toggleClass("icon-preview-x2-hi");
       this.update();
     });
 
-    $("#menubar-stretch-y,#icon-preview-y").mouseup((e) => {
+    $("#menubar-stretch-y,#icon-preview-y").on("mouseup", (e) => {
       this.sprite.toggle_double_y();
       $("#icon-preview-y").toggleClass("icon-preview-y2-hi");
       this.update();
     });
 
-    $("#menubar-invert").mousedown((e) => {
+    $("#menubar-invert").on("mousedown", (e) => {
       this.sprite.invert();
       this.update();
     });
 
-    $("#menubar-overlay,#icon-preview-overlay").mousedown((e) => {
+    $("#menubar-overlay,#icon-preview-overlay").on("mousedown", (e) => {
       this.sprite.toggle_overlay();
       this.update();
     });
@@ -824,52 +821,52 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-fullscreen").mouseup((e) => {
+    $("#menubar-fullscreen").on("mouseup", (e) => {
       toggle_fullscreen();
     });
 
-    $("#menubar-editor-zoom-in,#icon-editor-zoom-in").mouseup((e) => {
+    $("#menubar-editor-zoom-in,#icon-editor-zoom-in").on("mouseup", (e) => {
       this.editor.zoom_in();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
 
-    $("#menubar-editor-zoom-out,#icon-editor-zoom-out").mouseup((e) => {
+    $("#menubar-editor-zoom-out,#icon-editor-zoom-out").on("mouseup", (e) => {
       this.editor.zoom_out();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
 
-    $("#menubar-editor-grid,#icon-editor-grid").mouseup((e) => {
+    $("#menubar-editor-grid,#icon-editor-grid").on("mouseup", (e) => {
       this.editor.toggle_grid();
       this.config.window_editor.grid = this.editor.get_grid();
       this.storage.write(this.config);
       this.update();
     });
 
-    $("#menubar-preview-zoom-in,#icon-preview-zoom-in").mouseup((e) => {
+    $("#menubar-preview-zoom-in,#icon-preview-zoom-in").on("mouseup", (e) => {
       this.preview.zoom_in();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
 
-    $("#menubar-preview-zoom-out,#icon-preview-zoom-out").mouseup((e) => {
+    $("#menubar-preview-zoom-out,#icon-preview-zoom-out").on("mouseup", (e) => {
       this.preview.zoom_out();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     });
 
-    $("#menubar-list-grid,#icon-list-grid").mouseup((e) => {
+    $("#menubar-list-grid,#icon-list-grid").on("mouseup", (e) => {
       this.list.toggle_grid();
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $("#menubar-list-zoom-in,#icon-list-zoom-in").mouseup((e) => {
+    $("#menubar-list-zoom-in,#icon-list-zoom-in").on("mouseup", (e) => {
       this.list.zoom_in();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -877,7 +874,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     });
 
-    $("#menubar-list-zoom-out,#icon-list-zoom-out").mouseup((e) => {
+    $("#menubar-list-zoom-out,#icon-list-zoom-out").on("mouseup", (e) => {
       this.list.zoom_out();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -891,7 +888,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-help").mouseup((e) => {
+    $("#menubar-help").on("mouseup", (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-8").dialog("open");
     });
@@ -919,7 +916,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    $("#icon-move").mouseup((e) => {
+    $("#icon-move").on("mouseup", (e) => {
       this.mode = "move";
       status("Move mode");
       $("#image-icon-move").attr("src", "img/ui/icon-move-hi.png");
@@ -928,7 +925,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
     });
 
-    $("#icon-draw").mouseup((e) => {
+    $("#icon-draw").on("mouseup", (e) => {
       this.mode = "draw";
       status("Draw mode");
       $("#image-icon-move").attr("src", "img/ui/icon-move.png");
@@ -937,7 +934,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
     });
 
-    $("#icon-erase").mouseup((e) => {
+    $("#icon-erase").on("mouseup", (e) => {
       this.mode = "erase";
       status("Erase mode");
       $("#image-icon-move").attr("src", "img/ui/icon-move.png");
@@ -946,7 +943,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
     });
 
-    $("#icon-fill").mouseup((e) => {
+    $("#icon-fill").on("mouseup", (e) => {
       this.mode = "fill";
       status("Fill mode");
       $("#image-icon-move").attr("src", "img/ui/icon-move.png");
@@ -954,31 +951,6 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
       $("#image-icon-fill").attr("src", "img/ui/icon-fill-hi.png");
     });
-
-    /*
-    $('#icon-fullscreen').mouseup((e) =>
-    {
-      toggle_fullscreen();
-    });
-
-    $('#icon-settings').mouseup((e) =>
-    {
-      $("#window-7").dialog( "open");
-      this.allow_keyboard_shortcuts = false;
-    });
-
-    $('#icon-info').mouseup((e) =>
-    {
-      this.allow_keyboard_shortcuts = false;
-      $("#window-4").dialog( "open");
-    });
-
-    $('#icon-help').mouseup((e) =>
-    {
-      this.allow_keyboard_shortcuts = false;
-      $("#window-8").dialog( "open");
-    });
-    */
 
     /*
 
@@ -1001,29 +973,29 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
 */
 
-    $("#palette_all_colors").mouseup((e) => {
+    $("#palette_all_colors").on("mouseup", (e) => {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
 
-    $("#palette_1").mouseup((e) => {
+    $("#palette_1").on("mouseup", (e) => {
       this.sprite.set_pen(1);
       this.update();
     });
 
-    $("#palette_0").mouseup((e) => {
+    $("#palette_0").on("mouseup", (e) => {
       this.sprite.set_pen(0);
       this.update();
     });
 
-    $("#palette_2").mouseup((e) => {
+    $("#palette_2").on("mouseup", (e) => {
       this.sprite.set_pen(2);
       this.update();
     });
 
-    $("#palette_3").mouseup((e) => {
+    $("#palette_3").on("mouseup", (e) => {
       this.sprite.set_pen(3);
       this.update();
     });
@@ -1069,7 +1041,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       e.preventDefault();
     });
 
-    $("#editor").mousedown((e) => {
+    $("#editor").on("mousedown", (e) => {
       if (this.mode == "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
@@ -1091,7 +1063,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     });
 
-    $("#editor").mousemove((e) => {
+    $("#editor").on("mousemove", (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         let newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
@@ -1131,7 +1103,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     });
 
-    $("#editor").mouseup((e) => {
+    $("#editor").on("mouseup", (e) => {
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
@@ -1160,7 +1132,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
 */
 
-    $("#spritelist").mouseup((e) => {
+    $("#spritelist").on("mouseup", (e) => {
       if (!this.dragging) {
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {

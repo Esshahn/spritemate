@@ -2,20 +2,11 @@ import $ from "jquery";
 import Window_Controls from "./Window_Controls";
 
 export default class Editor extends Window_Controls {
-  config: any = {};
   grid: boolean;
-  window: any = {};
   canvas_element: any;
   canvas: any;
-  zoom: number;
-  zoom_min: number;
-  zoom_max: number;
-  pixels_x: number;
-  pixels_y: number;
-  width: number;
-  height: number;
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     super();
     this.config = config;
     this.grid = this.config.window_editor.grid;
@@ -134,12 +125,12 @@ export default class Editor extends Window_Controls {
 
   overlay_color(hex, alpha) {
     // expects a hex value like "#ff8800" and returns a rbga + alpha value like "rgba (50,20,100,0.5)"
-    var bigint = parseInt(hex.slice(-6), 16);
-    var r = (bigint >> 16) & 255;
-    var g = (bigint >> 8) & 255;
-    var b = bigint & 255;
-    var combined = r + "," + g + "," + b;
-    var result = "rgba(" + combined + "," + alpha + ")";
+    const bigint = parseInt(hex.slice(-6), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    const combined = r + "," + g + "," + b;
+    const result = "rgba(" + combined + "," + alpha + ")";
     return result;
   }
 

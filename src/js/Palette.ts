@@ -3,9 +3,8 @@ import $ from "jquery";
 export default class Palette {
   colors: any = {};
   active_color: number;
-  window: any = {};
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;

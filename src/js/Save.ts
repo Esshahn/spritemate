@@ -2,13 +2,10 @@ import $ from "jquery";
 import { status } from "./helper";
 
 export default class Save {
-  config: any = {};
-  window: any = {};
-  eventhandler: any = {};
   default_filename: any;
   savedata: any;
 
-  constructor(window, config, eventhandler) {
+  constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.default_filename = "mysprites";
@@ -67,23 +64,23 @@ export default class Save {
 
     $("#window-" + this.window).append(template);
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-save-cancel").mouseup((e) => this.close_window());
-    $("#button-save-spm").mouseup((e) => this.save_spm());
-    $("#button-save-spd").mouseup((e) => this.save_spd("new"));
-    $("#button-save-spd-old").mouseup((e) => this.save_spd("old"));
-    $("#button-save-source-kick").mouseup((e) =>
+    $("#button-save-cancel").on("mouseup", (e) => this.close_window());
+    $("#button-save-spm").on("mouseup", (e) => this.save_spm());
+    $("#button-save-spd").on("mouseup", (e) => this.save_spd("new"));
+    $("#button-save-spd-old").on("mouseup", (e) => this.save_spd("old"));
+    $("#button-save-source-kick").on("mouseup", (e) =>
       this.save_assembly("kick", false)
     );
-    $("#button-save-source-kick-binary").mouseup((e) =>
+    $("#button-save-source-kick-binary").on("mouseup", (e) =>
       this.save_assembly("kick", true)
     );
-    $("#button-save-source-acme").mouseup((e) =>
+    $("#button-save-source-acme").on("mouseup", (e) =>
       this.save_assembly("acme", false)
     );
-    $("#button-save-source-acme-binary").mouseup((e) =>
+    $("#button-save-source-acme-binary").on("mouseup", (e) =>
       this.save_assembly("acme", true)
     );
-    $("#button-save-basic").mouseup((e) => this.save_basic());
+    $("#button-save-basic").on("mouseup", (e) => this.save_basic());
 
     $("#filename").keyup((e) => {
       this.default_filename = $("#filename").val();
@@ -131,7 +128,7 @@ export default class Save {
       window.navigator.msSaveOrOpenBlob(file, filename);
     else {
       // Others
-      var a = document.createElement("a"),
+      let a = document.createElement("a"),
         url = URL.createObjectURL(file);
       a.href = url;
       a.download = filename;
@@ -163,7 +160,7 @@ export default class Save {
 
   save_assembly(format, encode_as_binary) {
     let filename = this.default_filename + ".txt";
-    var data = this.create_assembly(format, encode_as_binary);
+    let data = this.create_assembly(format, encode_as_binary);
     let file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
     this.close_window();
@@ -171,16 +168,16 @@ export default class Save {
 
   save_spd(format) {
     let filename = this.default_filename + ".spd";
-    var hexdata = this.create_spd_array(format);
-    var bytes = new Uint8Array(hexdata);
-    var file = new Blob([bytes], { type: "application/octet-stream" });
+    let hexdata = this.create_spd_array(format);
+    let bytes = new Uint8Array(hexdata);
+    let file = new Blob([bytes], { type: "application/octet-stream" });
     this.save_file_to_disk(file, filename);
     this.close_window();
   }
 
   save_basic() {
     let filename = this.default_filename + ".bas";
-    var data = this.create_basic();
+    let data = this.create_basic();
     let file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
     this.close_window();
@@ -220,7 +217,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
     // byte 73 = 0-3 color, 4 overlay, 7 multicolor/singlecolor
     // bytes xx = "00", "00", "01", "00" added at the end of file (SpritePad animation info)
 
-    var data = [] as any;
+    let data = [] as any;
 
     if (format == "new") {
       data.push(83, 80, 68); // the "SPD" header that identifies SPD files apparently
@@ -233,25 +230,25 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
       this.savedata.colors[3]
     ); // colors
 
-    var byte = "";
-    var bit = "";
+    let byte = "";
+    let bit = "";
 
     for (
-      var j = 0;
+      let j = 0;
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
 
-      var is_multicolor = this.savedata.sprites[j].multicolor;
-      var is_overlay = this.savedata.sprites[j].overlay;
+      let is_multicolor = this.savedata.sprites[j].multicolor;
+      let is_overlay = this.savedata.sprites[j].overlay;
 
-      var stepping = 1;
+      let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
       // iterate through the pixel data array
       // and create a hex values based on multicolor or singlecolor
-      for (var i = 0; i < spritedata.length; i = i + 8) {
+      for (let i = 0; i < spritedata.length; i = i + 8) {
         for (let k = 0; k < 8; k = k + stepping) {
           let pen = spritedata[i + k];
 
@@ -287,7 +284,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
 
       let high_nibble = multicolor + overlay;
 
-      var low_nibble = (
+      let low_nibble = (
         "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
       ).slice(-4);
 
@@ -326,9 +323,9 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
  */
 
   create_assembly(format, encode_as_binary) {
-    var comment = "; ";
-    var prefix = "!";
-    var label_suffix = "";
+    let comment = "; ";
+    let prefix = "!";
+    let label_suffix = "";
 
     if (format == "kick") {
       comment = "// ";
@@ -336,7 +333,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       label_suffix = ":";
     }
 
-    var data = "";
+    let data = "";
 
     data +=
       "\n" +
@@ -366,19 +363,19 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
     data += "\nSTA $D026";
     data += "\n";
 
-    var byte = "";
-    var bit = "";
+    let byte = "";
+    let bit = "";
 
     for (
-      var j = 0;
+      let j = 0;
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
-      var is_multicolor = this.savedata.sprites[j].multicolor;
-      var stepping = 1;
+      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      let is_multicolor = this.savedata.sprites[j].multicolor;
+      let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
-      var line_breaks_after = encode_as_binary ? 24 : 64;
+      let line_breaks_after = encode_as_binary ? 24 : 64;
 
       data += "\n\n" + comment + "sprite " + j;
       if (is_multicolor) {
@@ -395,7 +392,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
 
       // iterate through the pixel data array
       // and create a hex or binary values based on multicolor or singlecolor
-      for (var i = 0; i < spritedata.length; i = i + 8) {
+      for (let i = 0; i < spritedata.length; i = i + 8) {
         if (i % line_breaks_after == 0) {
           data = data.substring(0, data.length - 1);
           data += "\n" + prefix + "byte ";
@@ -432,10 +429,10 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         data = data.substring(0, data.length - 1);
       } else {
         // finally, we add multicolor and color info for byte 64
-        var high_nibble = "0000";
+        let high_nibble = "0000";
         if (is_multicolor) high_nibble = "1000";
 
-        var low_nibble = (
+        let low_nibble = (
           "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
         ).slice(-4);
 
@@ -606,9 +603,9 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      var spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
-      var is_multicolor = this.savedata.sprites[j].multicolor;
-      var stepping = 1;
+      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      let is_multicolor = this.savedata.sprites[j].multicolor;
+      let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
       data += "\n" + line_number + " :: rem " + this.savedata.sprites[j].name;
@@ -624,7 +621,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
 
       // iterate through the pixel data array
       // and create a hex values based on multicolor or singlecolor
-      for (var i = 0; i < spritedata.length; i = i + 8) {
+      for (let i = 0; i < spritedata.length; i = i + 8) {
         if (i % 128 == 0) {
           data += "\n" + line_number + " data ";
           line_number += line_inc;
@@ -654,10 +651,10 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       }
 
       // finally, we add multicolor and color info for byte 64
-      var high_nibble = "0000";
+      let high_nibble = "0000";
       if (is_multicolor) high_nibble = "1000";
 
-      var low_nibble = (
+      let low_nibble = (
         "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
       ).slice(-4);
 

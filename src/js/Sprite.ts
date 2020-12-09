@@ -1,7 +1,6 @@
 import $ from "jquery";
 
 export default class Sprite {
-  config: any = {};
   width: number;
   height: number;
   all: any = {};
@@ -10,7 +9,7 @@ export default class Sprite {
   copy_sprite: any = {};
   sprite_name_counter: number;
 
-  constructor(config) {
+  constructor(public config) {
     this.config = config;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
@@ -244,12 +243,11 @@ export default class Sprite {
       return parseInt(x);
     });
     let new_sprite_list = [] as any;
-    var temp_current_sprite: number = 0;
+    let temp_current_sprite: number = 0;
 
     for (let i = 0; i < sorted_list.length; i++) {
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
-      if (sorted_list[i] == this.all.current_sprite)
-        var temp_current_sprite = i;
+      if (sorted_list[i] == this.all.current_sprite) temp_current_sprite = i;
     }
 
     this.all.sprites = new_sprite_list;
@@ -302,15 +300,15 @@ export default class Sprite {
     // get target value
     let x = pos.x;
     let y = pos.y;
-    var data = this.all.sprites[this.all.current_sprite].pixels;
+    let data = this.all.sprites[this.all.current_sprite].pixels;
 
     // multicolor check
-    var stepping = 1;
-    var is_multi = this.all.sprites[this.all.current_sprite].multicolor;
+    let stepping = 1;
+    let is_multi = this.all.sprites[this.all.current_sprite].multicolor;
     if (is_multi) stepping = 2;
 
     if (is_multi && x % 2 !== 0) x = x - 1;
-    var target = data[y][x];
+    let target = data[y][x];
 
     function flow(x, y, pen) {
       // bounds check what we were passed
@@ -383,10 +381,11 @@ export default class Sprite {
     // inverts the sprite
 
     // prevent too much data to be inverted in multicolor mode
+    let stepping: number;
     if (this.is_multicolor()) {
-      var stepping = 1;
+      stepping = 1;
     } else {
-      var stepping = 1;
+      stepping = 1;
     }
 
     for (let y = 0; y < this.height; y++) {

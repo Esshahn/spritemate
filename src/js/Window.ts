@@ -7,7 +7,7 @@
 import $ from "jquery";
 
 export default class Window {
-  constructor(config: any = {}, callback: any = {}) {
+  constructor(public config, public callback?) {
     config.id = "window-" + $('div[id^="window-"]').length;
     config.position = {
       my: "left top",
@@ -44,7 +44,7 @@ export default class Window {
     if (callback) {
       $("#" + config.id).dialog({
         dragStop: function (event: any, ui: any) {
-          var obj = {
+          let obj = {
             name: config.name,
             data: { top: ui.position.top, left: ui.position.left },
           };
@@ -53,7 +53,7 @@ export default class Window {
       });
       $("#" + config.id).dialog({
         resizeStop: function (event: any, ui: any) {
-          var obj = {
+          let obj = {
             name: config.name,
             data: {
               top: ui.position.top,

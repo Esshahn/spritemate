@@ -1,11 +1,7 @@
 import $ from "jquery";
 
 export default class Help {
-  config: any;
-  window: any;
-  eventhandler: any;
-
-  constructor(window: any, config: any, eventhandler: any) {
+  constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
@@ -352,7 +348,7 @@ export default class Help {
     $("#window-" + this.window).append(template);
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-help").mouseup((e) => {
+    $("#button-help").on("mouseup", (e) => {
       $("#window-" + this.window).dialog("close");
       this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     });

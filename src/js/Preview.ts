@@ -2,19 +2,10 @@ import $ from "jquery";
 import Window_Controls from "./Window_Controls";
 
 export default class Preview extends Window_Controls {
-  config: any = {};
-  window: any = {};
   canvas_element: any = {};
-  zoom: number;
-  zoom_min: number;
-  zoom_max: number;
-  pixels_x: number;
-  pixels_y: number;
-  width: number;
-  height: number;
   canvas: any = {};
 
-  constructor(window, config) {
+  constructor(public window, public config) {
     super();
     this.config = config;
     this.window = window;
@@ -86,19 +77,21 @@ export default class Preview extends Window_Controls {
       this.display_overlay(all_data);
 
     // set the preview window x and y stretch
+    let double_x: number;
+    let double_y: number;
     if (sprite_data.double_x) {
-      var double_x = 2;
+      double_x = 2;
       $("#icon-preview-x").addClass("icon-preview-x2-hi");
     } else {
-      var double_x = 1;
+      double_x = 1;
       $("#icon-preview-x").removeClass("icon-preview-x2-hi");
     }
 
     if (sprite_data.double_y) {
-      var double_y = 2;
+      double_y = 2;
       $("#icon-preview-y").addClass("icon-preview-y2-hi");
     } else {
-      var double_y = 1;
+      double_y = 1;
       $("#icon-preview-y").removeClass("icon-preview-y2-hi");
     }
 
