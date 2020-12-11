@@ -13,9 +13,9 @@ export default class Window {
       my: "left top",
       at: "left+" + config.left + " top+" + config.top,
     };
-    if (config.top == undefined) config.position = undefined;
-    if (config.modal == undefined) config.modal = false;
-    if (config.escape == undefined) config.escape = false;
+    if (config.top === undefined) config.position = undefined;
+    if (config.modal === undefined) config.modal = false;
+    if (config.escape === undefined) config.escape = false;
 
     $("#app").append(
       "<div id='" +

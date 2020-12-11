@@ -1,6 +1,6 @@
 import $ from "jquery";
-
-export default class Info {
+import { dom } from "./helper";
+export default class About {
   constructor(public window, public config, public eventhandler) {
     this.config = config;
     this.window = window;
@@ -241,7 +241,8 @@ export default class Info {
         <button id="button-info">Let's go!</button>
     </div>
     `;
-    $("#window-" + this.window).append(template);
+
+    dom.append("#window-" + this.window, template);
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
     $("#button-info").on("mouseup", (e) => {

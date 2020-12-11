@@ -1,4 +1,4 @@
-import $ from "jquery";
+import { dom } from "./helper";
 
 export default class Palette {
   colors: any = {};
@@ -32,8 +32,7 @@ export default class Palette {
 
     `;
 
-    $("#window-" + this.window).append(template);
-
+    dom.append("#window-" + this.window, template);
     this.draw_palette();
   }
 
@@ -42,20 +41,26 @@ export default class Palette {
       all_data.sprites[all_data.current_sprite].multicolor;
 
     // set the colors of the pens
-    $("#color_0").css("background-color", this.colors[all_data.colors[0]]);
-    $("#color_1").css(
+
+    dom.css("#color_0", "background-color", this.colors[all_data.colors[0]]);
+    dom.css(
+      "#color_1",
       "background-color",
       this.colors[all_data.sprites[all_data.current_sprite].color]
     );
-    $("#color_2").css("background-color", this.colors[all_data.colors[2]]);
-    $("#color_3").css("background-color", this.colors[all_data.colors[3]]);
+    dom.css("#color_2", "background-color", this.colors[all_data.colors[2]]);
+    dom.css("#color_3", "background-color", this.colors[all_data.colors[3]]);
 
     // now set the right pen active
-    $("#palette_spritecolors div").removeClass("palette_color_item_selected");
-    $("#palette_spritecolors p").removeClass("palette_highlight_text");
 
-    $("#color_" + all_data.pen).addClass("palette_color_item_selected");
-    $("#palette_" + all_data.pen + " p").addClass("palette_highlight_text");
+    dom.remove_all_class(
+      "#palette_spritecolors div",
+      "palette_color_item_selected"
+    );
+    dom.remove_all_class("#palette_spritecolors p", "palette_highlight_text");
+
+    dom.add_class("#color_" + all_data.pen, "palette_color_item_selected");
+    dom.add_class("#palette_" + all_data.pen + " p", "palette_highlight_text");
 
     this.set_multicolor(sprite_is_multicolor);
   }
@@ -67,8 +72,11 @@ export default class Palette {
 
     */
 
-    $("#palette_all_colors").empty(); // clear all color items in case there are already some (e.g. when switching palettes)
+    // clear all color items in case there are already some (e.g. when switching palettes)
+    dom.empty("#palette_all_colors");
+
     let x = 0;
+    let picker = "";
 
     for (let i = 0; i < this.colors.length; i++) {
       let picker_div =
@@ -88,22 +96,23 @@ export default class Palette {
         picker_div += `<div style="clear:both;"></div>`; // after two colors, break to next line
       }
 
-      $("#palette_all_colors").append(picker_div);
+      picker += picker_div;
     }
+    dom.html("#palette_all_colors", picker);
   }
 
   set_multicolor(is_multicolor) {
     if (is_multicolor) {
-      $("#palette_2").show();
-      $("#palette_3").show();
+      dom.show("#palette_2");
+      dom.show("#palette_3");
     } else {
-      $("#palette_2").hide();
-      $("#palette_3").hide();
+      dom.hide("#palette_2");
+      dom.hide("#palette_3");
     }
   }
 
   set_active_color(e) {
-    let picked_color = $(e.target).prop("id").replace("palette_color_", "");
+    let picked_color = e.target.id.replace("palette_color_", "");
     this.active_color = this.colors.indexOf(picked_color);
   }
 

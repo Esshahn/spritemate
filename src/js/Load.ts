@@ -1,5 +1,4 @@
-import $ from "jquery";
-import { status } from "./helper";
+import { dom, status } from "./helper";
 
 export default class Load {
   imported_file: any;
@@ -46,7 +45,8 @@ export default class Load {
           this.parse_file_spd(reader.result);
         }
         this.eventhandler.onLoad();
-        $("#input-load").remove(); // by removing the input field and reassigning it, reloading the same file will work
+        // by removing the input field and reassigning it, reloading the same file will work
+        document.querySelector("#input-load")?.remove();
         this.setup_load_input();
       };
 
@@ -58,7 +58,7 @@ export default class Load {
         reader.readAsBinaryString(file);
       }
 
-      $("#menubar-filename-name").html(file.name);
+      dom.html("#menubar-filename-name", file.name);
     } else {
       alert("File not supported, .spm or .spd files only");
     }

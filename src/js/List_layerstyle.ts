@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
 export default class List extends Window_Controls {
@@ -36,7 +37,7 @@ export default class List extends Window_Controls {
       <div id="spritelist"></div>
     `;
 
-    $("#window-" + this.window).append(template);
+    dom.append("#window-" + this.window, template);
 
     $("#spritelist").sortable({
       cursor: "move",

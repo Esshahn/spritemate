@@ -1,5 +1,5 @@
 import $ from "jquery";
-
+import { dom } from "./helper";
 export default class Help {
   constructor(public window, public config, public eventhandler) {
     this.config = config;
@@ -345,7 +345,8 @@ export default class Help {
         <button id="button-help" class="center">Close</button>
     </div>
     `;
-    $("#window-" + this.window).append(template);
+
+    dom.append("#window-" + this.window, template);
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
     $("#button-help").on("mouseup", (e) => {
