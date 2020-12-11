@@ -13,7 +13,7 @@ import "../css/jquery-ui.css";
 import "../css/stylesheet.css";
 
 import List from "./List";
-import Info from "./Info";
+import About from "./About";
 import Help from "./Help";
 import Menu from "./Menu";
 import Load from "./Load";
@@ -39,8 +39,8 @@ class App {
   preview: any;
   window_list: any;
   list: any;
-  window_info: any;
-  info: any;
+  window_about: any;
+  about: any;
   window_save: any;
   save: any;
   window_settings: any;
@@ -130,8 +130,8 @@ class App {
     this.list = new List(3, this.config);
 
     // info
-    this.window_info = new Window({
-      name: "window_info",
+    this.window_about = new Window({
+      name: "window_about",
       title: "Spritemate",
       type: "info",
       escape: true,
@@ -141,7 +141,7 @@ class App {
       width: "680",
       height: "auto",
     });
-    this.info = new Info(4, this.config, {
+    this.about = new About(4, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 

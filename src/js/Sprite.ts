@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 export default class Sprite {
   width: number;
   height: number;
@@ -278,20 +276,20 @@ export default class Sprite {
 
   save_backup() {
     this.backup_position++;
-    this.backup[this.backup_position] = $.extend(true, {}, this.all);
+    this.backup[this.backup_position] = JSON.parse(JSON.stringify(this.all)); //$.extend(true, {}, this.all);
   }
 
   undo() {
     if (this.backup_position > 0) {
       this.backup_position--;
-      this.all = $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
     }
   }
 
   redo() {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
-      this.all = $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
     }
   }
 
@@ -333,19 +331,15 @@ export default class Sprite {
   }
 
   copy() {
-    this.copy_sprite = $.extend(
-      true,
-      {},
-      this.all.sprites[this.all.current_sprite]
-    );
+    this.copy_sprite = JSON.parse(
+      JSON.stringify(this.all.sprites[this.all.current_sprite])
+    ); //$.extend(true,{},this.all.sprites[this.all.current_sprite]);
   }
 
   paste() {
-    this.all.sprites[this.all.current_sprite] = $.extend(
-      true,
-      {},
-      this.copy_sprite
-    );
+    this.all.sprites[this.all.current_sprite] = JSON.parse(
+      JSON.stringify(this.copy_sprite)
+    ); //$.extend(true,{},this.copy_sprite);
     this.save_backup();
   }
 

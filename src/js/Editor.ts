@@ -1,9 +1,9 @@
-import $ from "jquery";
+import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
 export default class Editor extends Window_Controls {
   grid: boolean;
-  canvas_element: any;
+  canvas_element: HTMLCanvasElement;
   canvas: any;
 
   constructor(public window, public config) {
@@ -46,8 +46,8 @@ export default class Editor extends Window_Controls {
       
     `;
 
-    $("#window-" + this.window).append(template);
-    $("#editor-canvas").append(this.canvas_element);
+    dom.append("#window-" + this.window, template);
+    dom.append_element("#editor-canvas", this.canvas_element);
 
     this.canvas = this.canvas_element.getContext("2d", { alpha: false });
   }
@@ -61,7 +61,7 @@ export default class Editor extends Window_Controls {
     if (sprite_data.multicolor) x_grid_step = 2;
 
     // set the name of the sprite as the title
-    $("#input-sprite-name").val(sprite_data.name);
+    dom.val("#input-sprite-name", sprite_data.name);
 
     // first fill the whole sprite with the background color
     this.canvas.fillStyle = this.config.colors[all_data.colors[0]];

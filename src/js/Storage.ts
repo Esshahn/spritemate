@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { status } from "./helper";
 
 // handles writing and reading of the local html5 storage in the browser
@@ -30,13 +29,12 @@ export default class Storage {
       if (this.config.version > this.storage.version) {
         // is the config newer than the storage version?
         // then update the storage
-        this.storage = $.extend(true, {}, this.config);
+        this.storage = JSON.parse(JSON.stringify(this.config)); // this.storage = $.extend(true, {}, this.config);
         this.write(this.storage);
         this.is_new_version = true;
         console.log("updating storage");
       }
-
-      this.config = $.extend(true, {}, this.storage);
+      this.config = JSON.parse(JSON.stringify(this.storage)); // this.config = $.extend(true, {}, this.storage);
     } else {
       // can't access storage on the browser
     }

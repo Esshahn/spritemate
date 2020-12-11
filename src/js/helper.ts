@@ -1,15 +1,86 @@
-import $ from "jquery";
+export let dom = {
+  add_class: function (target, source) {
+    document.querySelector(target)?.classList.add(source);
+  },
+
+  append: function (target, source) {
+    let e = document.createElement("div");
+    e.innerHTML = source;
+    (document.querySelector(target) as any).appendChild(e);
+  },
+
+  append_element: function (target, source) {
+    (document.querySelector(target) as any).appendChild(source);
+  },
+
+  css: function (target, property: string, value) {
+    document.querySelector(target).style[property] = value;
+  },
+
+  empty(target) {
+    document.querySelector(target).innerHTML = "";
+  },
+
+  fade_in(
+    target,
+    delay_milliseconds: number = 0,
+    fade_milliseconds: number = 1000
+  ) {
+    const fadeTarget: any = document.querySelector(target);
+    setTimeout(function () {
+      fadeTarget.style.opacity = 0;
+      fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
+      fadeTarget.style.opacity = 1;
+    }, delay_milliseconds);
+  },
+
+  fade_out(
+    target,
+    delay_milliseconds: number = 0,
+    fade_milliseconds: number = 1000
+  ) {
+    const fadeTarget: any = document.querySelector(target);
+    setTimeout(function () {
+      fadeTarget.style.opacity = 1;
+      fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
+      fadeTarget.style.opacity = 0;
+    }, delay_milliseconds);
+  },
+
+  hide(target) {
+    document.querySelector(target).style.display = "none";
+  },
+
+  html(target, text) {
+    document.querySelector(target).innerHTML = text;
+  },
+
+  remove_all_class: function (target, source) {
+    document.querySelectorAll(target).forEach((element) => {
+      element.classList.remove(source);
+    });
+  },
+
+  remove_class: function (target, source) {
+    document.querySelector(target)?.classList.remove(source);
+  },
+
+  show(target) {
+    document.querySelector(target).style.display = "block";
+  },
+
+  val(target, value) {
+    document.querySelector(target).value = value;
+  },
+};
 
 export function status(text, state = "normal") {
-  $("#statustext").stop(true, true);
+  let delay = 2000;
+  let fade = 2000;
+  if (state == "tip") delay = 10000;
 
-  if (state == "normal") {
-    $("#statustext").html(text).fadeIn(100).delay(2000).fadeOut(1000);
-  }
-
-  if (state == "tip") {
-    $("#statustext").html(text).fadeIn(100).delay(10000).fadeOut(1000);
-  }
+  dom.html("#statustext", text);
+  dom.fade_out("#statustext", delay, fade);
 }
 
 export function tipoftheday() {
