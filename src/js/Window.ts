@@ -5,6 +5,7 @@
  */
 
 import $ from "jquery";
+import { dom } from "./helper";
 
 export default class Window {
   constructor(public config, public callback?) {
@@ -17,15 +18,8 @@ export default class Window {
     if (config.modal === undefined) config.modal = false;
     if (config.escape === undefined) config.escape = false;
 
-    $("#app").append(
-      "<div id='" +
-        config.id +
-        "' class='" +
-        config.type +
-        "' title='" +
-        config.title +
-        "'></div>"
-    );
+    let elem = `<div id="${config.id}" class="${config.type}" title="${config.title}"></div>`;
+    dom.append("#app", elem);
 
     $("#" + config.id).dialog({
       width: config.width,

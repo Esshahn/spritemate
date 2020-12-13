@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { dom } from "./helper";
 
 export default class Settings {
   constructor(public window, public config, public eventhandler) {
@@ -105,11 +106,12 @@ export default class Settings {
 
     </div>
     `;
-    $("#window-" + this.window).append(template);
+
+    dom.append("#window-" + this.window, template);
 
     this.config.colors = this.config.palettes[this.config.selected_palette];
 
-    $("#colorpalette").val(this.config.selected_palette);
+    dom.val("#colorpalette", this.config.selected_palette);
 
     this.init_inputfields(this.config.colors);
     this.selection_change();
@@ -117,12 +119,12 @@ export default class Settings {
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
 
-    $("#button-apply").on("mouseup", (e) => this.close_window());
+    dom.sel("#button-apply").onclick = (e) => this.close_window();
   }
 
   update_colors() {
     for (let i = 0; i < this.config.colors.length; i++) {
-      $("#colval-" + i).val(this.config.colors[i]);
+      dom.val("#colval-" + i, this.config.colors[i]);
       $("#col-" + i).animate(
         { backgroundColor: this.config.colors[i] },
         "fast"
@@ -133,9 +135,9 @@ export default class Settings {
   init_inputfields(colors) {
     let that = this;
     for (let i = 0; i < colors.length; i++) {
-      $("#colval-" + i).change(function () {
+      dom.sel("#colval-" + i).onchange = function () {
         that.update_custom_colors(i);
-      });
+      };
     }
 
     if (this.config.selected_palette != "custom") {
@@ -147,8 +149,8 @@ export default class Settings {
 
   selection_change() {
     let that = this;
-    $("#colorpalette").change(function () {
-      let palette: any = $("#colorpalette").val();
+    dom.sel("#colorpalette").onchange = function () {
+      let palette: any = dom.val("#colorpalette");
 
       that.config.colors = that.config.palettes[palette];
       that.config.selected_palette = palette;
@@ -160,12 +162,13 @@ export default class Settings {
       }
 
       that.update_colors();
-    });
+    };
   }
 
   update_custom_colors(color) {
     // takes the value of the input field and updates both the color and the input field
-    let colvalue: any = $("#colval-" + color).val();
+
+    let colvalue: any = dom.val("#colval-" + color);
     colvalue = "#" + ("000000" + colvalue.replace(/#/g, "")).slice(-6);
     this.config.palettes.custom[color] = colvalue;
     this.config.colors = this.config.palettes.custom;

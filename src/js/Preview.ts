@@ -1,4 +1,4 @@
-import $ from "jquery";
+import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
 export default class Preview extends Window_Controls {
@@ -26,17 +26,18 @@ export default class Preview extends Window_Controls {
     let template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/ui/icon-zoom-plus.png" id="icon-preview-zoom-in" title="zoom in"><img src="img/ui/icon-zoom-minus.png" id="icon-preview-zoom-out" title="zoom out">
+          <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
+          <img src="img/ui/icon-zoom-minus.png" class="icon-hover" id="icon-preview-zoom-out" title="zoom out">
         </div>
-        <div class="icon-preview-x2" id="icon-preview-x" title="double width"></div>
-        <div class="icon-preview-y2" id="icon-preview-y" title="double height"></div>
-        <img src="img/ui/icon-preview-overlay.png" id="icon-preview-overlay" title="overlay next sprite">
+        <img src="img/ui/icon-preview-x2.png" class="icon-hover" id="icon-preview-x" title="double width">
+        <img src="img/ui/icon-preview-y2.png" class="icon-hover" id="icon-preview-y" title="double height">
+        <img src="img/ui/icon-preview-overlay.png" class="icon-hover" id="icon-preview-overlay" title="overlay next sprite">
       </div>
       <div id="preview-canvas"></div>
     `;
 
-    $("#window-" + this.window).append(template);
-    $("#preview-canvas").append(this.canvas_element);
+    dom.append("#window-" + this.window, template);
+    dom.append_element("#preview-canvas", this.canvas_element);
   }
 
   update(all_data) {
@@ -81,22 +82,22 @@ export default class Preview extends Window_Controls {
     let double_y: number;
     if (sprite_data.double_x) {
       double_x = 2;
-      $("#icon-preview-x").addClass("icon-preview-x2-hi");
+      dom.add_class("#icon-preview-x", "icon-preview-x2-hi");
     } else {
       double_x = 1;
-      $("#icon-preview-x").removeClass("icon-preview-x2-hi");
+      dom.remove_class("#icon-preview-x", "icon-preview-x2-hi");
     }
 
     if (sprite_data.double_y) {
       double_y = 2;
-      $("#icon-preview-y").addClass("icon-preview-y2-hi");
+      dom.add_class("#icon-preview-y", "icon-preview-y2-hi");
     } else {
       double_y = 1;
-      $("#icon-preview-y").removeClass("icon-preview-y2-hi");
+      dom.remove_class("#icon-preview-y", "icon-preview-y2-hi");
     }
 
-    $("#preview").css("width", this.width * double_x);
-    $("#preview").css("height", this.height * double_y);
+    dom.css("#preview", "width", this.width * double_x + "px");
+    dom.css("#preview", "height", this.height * double_y + "px");
   }
 
   display_overlay(all_data) {

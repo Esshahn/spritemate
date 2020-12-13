@@ -2,9 +2,7 @@
 
   WINDOW CONTROLS
   Provides basic functionality for windows, mostly canvas & zoom related
-
   Inherited e.g. from Editor, List, Preview
-
 
  */
 

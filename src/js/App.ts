@@ -26,7 +26,7 @@ import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
 import { get_config } from "./config";
-import { tipoftheday, status, toggle_fullscreen } from "./helper";
+import { dom, tipoftheday, status, toggle_fullscreen } from "./helper";
 
 class App {
   storage: any = {};
@@ -233,7 +233,6 @@ class App {
 
   update() {
     let all = this.sprite.get_all();
-
     this.editor.update(all);
     this.preview.update(all);
     this.list.update(all);
@@ -267,12 +266,29 @@ class App {
     }
 
     if (this.sprite.is_overlay()) {
-      $("#icon-preview-overlay").attr(
+      dom.attr(
+        "#icon-preview-overlay",
         "src",
         "img/ui/icon-preview-overlay-hi.png"
       );
     } else {
-      $("#icon-preview-overlay").attr("src", "img/ui/icon-preview-overlay.png");
+      dom.attr(
+        "#icon-preview-overlay",
+        "src",
+        "img/ui/icon-preview-overlay.png"
+      );
+    }
+
+    if (this.sprite.is_double_x()) {
+      dom.attr("#icon-preview-x", "src", "img/ui/icon-preview-x2-hi.png");
+    } else {
+      dom.attr("#icon-preview-x", "src", "img/ui/icon-preview-x2.png");
+    }
+
+    if (this.sprite.is_double_y()) {
+      dom.attr("#icon-preview-y", "src", "img/ui/icon-preview-y2-hi.png");
+    } else {
+      dom.attr("#icon-preview-y", "src", "img/ui/icon-preview-y2.png");
     }
 
     if (this.preview.is_min_zoom()) {
@@ -369,74 +385,19 @@ class App {
   }
 
   init_ui_fade(element) {
-    $("#" + element).mouseenter((e) => {
+    dom.sel("#" + element).onmouseenter = (e) => {
       $("#" + element)
         .stop(true, true)
         .animate({ backgroundColor: "rgba(90,90,90,0.5)" }, "fast");
-    });
-    $("#" + element).mouseleave((e) => {
+    };
+    dom.sel("#" + element).onmouseleave = (e) => {
       $("#" + element)
         .stop(true, true)
         .animate({ backgroundColor: "transparent" }, "fast");
-    });
+    };
   }
 
   user_interaction() {
-    // init hover effects for all menu items
-    this.init_ui_fade("icon-load");
-    this.init_ui_fade("icon-save");
-    this.init_ui_fade("icon-undo");
-    this.init_ui_fade("icon-redo");
-    this.init_ui_fade("icon-editor-grid");
-    this.init_ui_fade("icon-shift-left");
-    this.init_ui_fade("icon-shift-right");
-    this.init_ui_fade("icon-shift-up");
-    this.init_ui_fade("icon-shift-down");
-    this.init_ui_fade("icon-flip-horizontal");
-    this.init_ui_fade("icon-flip-vertical");
-    this.init_ui_fade("icon-multicolor");
-    this.init_ui_fade("icon-move");
-    this.init_ui_fade("icon-draw");
-    this.init_ui_fade("icon-erase");
-    this.init_ui_fade("icon-fill");
-    this.init_ui_fade("icon-fullscreen");
-    this.init_ui_fade("icon-info");
-    this.init_ui_fade("icon-help");
-    this.init_ui_fade("icon-settings");
-    this.init_ui_fade("icon-list-new");
-    this.init_ui_fade("icon-list-copy");
-    this.init_ui_fade("icon-list-paste");
-    this.init_ui_fade("icon-list-duplicate");
-    this.init_ui_fade("icon-list-grid");
-    this.init_ui_fade("icon-list-zoom-in");
-    this.init_ui_fade("icon-list-zoom-out");
-    this.init_ui_fade("icon-editor-zoom-in");
-    this.init_ui_fade("icon-editor-zoom-out");
-    this.init_ui_fade("icon-preview-zoom-in");
-    this.init_ui_fade("icon-preview-zoom-out");
-    this.init_ui_fade("icon-preview-overlay");
-    this.init_ui_fade("icon-preview-x");
-    this.init_ui_fade("icon-preview-y");
-
-    // delete is a bit different
-    $("#icon-list-delete").css({ opacity: 0.2 });
-    $("#icon-list-delete").mouseenter((e) => {
-      if (!this.sprite.only_one_sprite())
-        $("#icon-list-delete").animate(
-          { backgroundColor: "rgba(0,0,0,0.5)" },
-          "fast"
-        );
-    });
-    $("#icon-list-delete").mouseleave((e) => {
-      if (!this.sprite.only_one_sprite())
-        $("#icon-list-delete").animate(
-          { backgroundColor: "transparent" },
-          "fast"
-        );
-    });
-
-    $("#icon-select").css({ opacity: 0.2 });
-
     /*
 
 KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE   YYYYYYY       YYYYYYY      SSSSSSSSSSSSSSS 
@@ -493,37 +454,37 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "m") {
           this.mode = "move";
           status("Move mode");
-          $("#image-icon-move").attr("src", "img/ui/icon-move-hi.png");
-          $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-          $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-          $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "img/ui/icon-move-hi.png");
+          dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
         }
 
         if (e.key == "d") {
           this.mode = "draw";
           status("Draw mode");
-          $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-          $("#image-icon-draw").attr("src", "img/ui/icon-draw-hi.png");
-          $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-          $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "img/ui/icon-draw-hi.png");
+          dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
         }
 
         if (e.key == "e") {
           this.mode = "erase";
           status("Erase mode");
-          $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-          $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-          $("#image-icon-erase").attr("src", "img/ui/icon-erase-hi.png");
-          $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "img/ui/icon-erase-hi.png");
+          dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
         }
 
         if (e.key == "f") {
           this.mode = "fill";
           status("Fill mode");
-          $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-          $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-          $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-          $("#image-icon-fill").attr("src", "img/ui/icon-fill-hi.png");
+          dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "img/ui/icon-fill-hi.png");
         }
 
         if (e.key == "1") {
@@ -635,15 +596,15 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-info").on("mouseup", (e) => {
+    dom.sel("#menubar-info").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-4").dialog("open");
-    });
+    };
 
-    $("#menubar-settings").on("mouseup", (e) => {
+    dom.sel("#menubar-settings").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-7").dialog("open");
-    });
+    };
 
     /*
 
@@ -651,20 +612,20 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-load,#icon-load").on("mouseup", (e) => {
+    dom.sel("#menubar-load").onclick = (e) => {
       $("#input-load").trigger("click");
-    });
+    };
 
-    $("#menubar-save,#icon-save").on("mouseup", (e) => {
+    dom.sel("#menubar-save").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-5").dialog("open");
       this.save.set_save_data(this.sprite.get_all());
-    });
+    };
 
-    $("#menubar-new").on("mouseup", (e) => {
-      $("#dialog-confirm").css("visibility", "visible");
+    dom.sel("#menubar-new").onclick = (e) => {
+      dom.css("#dialog-confirm", "visibility", "visible");
       $("#dialog-confirm").dialog("open");
-    });
+    };
 
     $("#dialog-confirm").dialog({
       resizable: false,
@@ -702,40 +663,40 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-undo,#icon-undo").on("mouseup", (e) => {
+    dom.sel("#menubar-undo").onclick = (e) => {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-redo,#icon-redo").on("mouseup", (e) => {
+    dom.sel("#menubar-redo").onclick = (e) => {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-new-sprite,#icon-list-new").on("mouseup", (e) => {
+    dom.sel("#menubar-new-sprite").onclick = (e) => {
       this.sprite.new_sprite(
         this.palette.get_color(),
         this.sprite.is_multicolor()
       );
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-kill,#icon-list-delete").on("mouseup", (e) => {
+    dom.sel("#menubar-kill").onclick = (e) => {
       this.sprite.delete();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-copy,#icon-list-copy").on("mouseup", (e) => {
+    dom.sel("#menubar-copy").onclick = (e) => {
       this.sprite.copy();
       this.update_ui();
       status("Sprite copied.");
-    });
+    };
 
-    $("#menubar-paste,#icon-list-paste").on("mouseup", (e) => {
+    dom.sel("#menubar-paste").onclick = (e) => {
       if (!this.sprite.is_copy_empty()) {
         this.sprite.paste();
         this.update();
@@ -743,14 +704,14 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       } else {
         status("Nothing to copy.", "error");
       }
-    });
+    };
 
-    $("#menubar-duplicate,#icon-list-duplicate").on("mouseup", (e) => {
+    dom.sel("#menubar-duplicate").onclick = (e) => {
       this.sprite.duplicate();
       this.list.update_all(this.sprite.get_all());
       this.update_ui();
       status("Sprite duplicated.");
-    });
+    };
 
     /*
 
@@ -758,62 +719,62 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-shift-left,#icon-shift-left").on("mouseup", (e) => {
+    dom.sel("#menubar-shift-left").onclick = (e) => {
       this.sprite.shift_horizontal("left");
       this.update();
-    });
+    };
 
-    $("#menubar-shift-right,#icon-shift-right").on("mouseup", (e) => {
+    dom.sel("#menubar-shift-right").onclick = (e) => {
       this.sprite.shift_horizontal("right");
       this.update();
-    });
+    };
 
-    $("#menubar-shift-up,#icon-shift-up").on("mouseup", (e) => {
+    dom.sel("#menubar-shift-up").onclick = (e) => {
       this.sprite.shift_vertical("up");
       this.update();
-    });
+    };
 
-    $("#menubar-shift-down,#icon-shift-down").on("mouseup", (e) => {
+    dom.sel("#menubar-shift-down").onclick = (e) => {
       this.sprite.shift_vertical("down");
       this.update();
-    });
+    };
 
-    $("#menubar-flip-horizontal,#icon-flip-horizontal").on("mouseup", (e) => {
+    dom.sel("#menubar-flip-horizontal").onclick = (e) => {
       this.sprite.flip_horizontal();
       this.update();
-    });
+    };
 
-    $("#menubar-flip-vertical,#icon-flip-vertical").on("mouseup", (e) => {
+    dom.sel("#menubar-flip-vertical").onclick = (e) => {
       this.sprite.flip_vertical();
       this.update();
-    });
+    };
 
-    $("#menubar-colormode,#icon-multicolor").on("mouseup", (e) => {
+    dom.sel("#menubar-colormode").onclick = (e) => {
       this.sprite.toggle_multicolor();
       this.update();
-    });
+    };
 
-    $("#menubar-stretch-x,#icon-preview-x").on("mouseup", (e) => {
+    dom.sel("#menubar-stretch-x").onclick = (e) => {
       this.sprite.toggle_double_x();
       $("#icon-preview-x").toggleClass("icon-preview-x2-hi");
       this.update();
-    });
+    };
 
-    $("#menubar-stretch-y,#icon-preview-y").on("mouseup", (e) => {
+    dom.sel("#menubar-stretch-y").onclick = (e) => {
       this.sprite.toggle_double_y();
       $("#icon-preview-y").toggleClass("icon-preview-y2-hi");
       this.update();
-    });
+    };
 
-    $("#menubar-invert").on("mousedown", (e) => {
+    dom.sel("#menubar-invert").onclick = (e) => {
       this.sprite.invert();
       this.update();
-    });
+    };
 
-    $("#menubar-overlay,#icon-preview-overlay").on("mousedown", (e) => {
+    dom.sel("#menubar-overlay").onclick = (e) => {
       this.sprite.toggle_overlay();
       this.update();
-    });
+    };
 
     /*
 
@@ -821,66 +782,66 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-fullscreen").on("mouseup", (e) => {
+    dom.sel("#menubar-fullscreen").onclick = (e) => {
       toggle_fullscreen();
-    });
+    };
 
-    $("#menubar-editor-zoom-in,#icon-editor-zoom-in").on("mouseup", (e) => {
+    dom.sel("#menubar-editor-zoom-in").onclick = (e) => {
       this.editor.zoom_in();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
-    });
+    };
 
-    $("#menubar-editor-zoom-out,#icon-editor-zoom-out").on("mouseup", (e) => {
+    dom.sel("#menubar-editor-zoom-out").onclick = (e) => {
       this.editor.zoom_out();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
-    });
+    };
 
-    $("#menubar-editor-grid,#icon-editor-grid").on("mouseup", (e) => {
+    dom.sel("#menubar-editor-grid").onclick = (e) => {
       this.editor.toggle_grid();
       this.config.window_editor.grid = this.editor.get_grid();
       this.storage.write(this.config);
       this.update();
-    });
+    };
 
-    $("#menubar-preview-zoom-in,#icon-preview-zoom-in").on("mouseup", (e) => {
+    dom.sel("#menubar-preview-zoom-in").onclick = (e) => {
       this.preview.zoom_in();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
-    });
+    };
 
-    $("#menubar-preview-zoom-out,#icon-preview-zoom-out").on("mouseup", (e) => {
+    dom.sel("#menubar-preview-zoom-out").onclick = (e) => {
       this.preview.zoom_out();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
-    });
+    };
 
-    $("#menubar-list-grid,#icon-list-grid").on("mouseup", (e) => {
+    dom.sel("#menubar-list-grid").onclick = (e) => {
       this.list.toggle_grid();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-list-zoom-in,#icon-list-zoom-in").on("mouseup", (e) => {
+    dom.sel("#menubar-list-zoom-in").onclick = (e) => {
       this.list.zoom_in();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#menubar-list-zoom-out,#icon-list-zoom-out").on("mouseup", (e) => {
+    dom.sel("#menubar-list-zoom-out").onclick = (e) => {
       this.list.zoom_out();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
     /* 
 
@@ -888,12 +849,52 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    $("#menubar-help").on("mouseup", (e) => {
+    dom.sel("#menubar-help").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
       $("#window-8").dialog("open");
-    });
+    };
 
     /*
+
+    PREVIEW
+
+*/
+
+    dom.sel("#icon-preview-zoom-in").onclick = (e) => {
+      this.preview.zoom_in();
+      this.config.window_preview.zoom = this.preview.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    };
+
+    dom.sel("#icon-preview-zoom-out").onclick = (e) => {
+      this.preview.zoom_out();
+      this.config.window_preview.zoom = this.preview.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    };
+
+    dom.sel("#icon-preview-x").onclick = (e) => {
+      this.sprite.toggle_double_x();
+      $("#icon-preview-x").toggleClass("icon-preview-x2-hi");
+      this.update();
+    };
+
+    dom.sel("#icon-preview-y").onclick = (e) => {
+      this.sprite.toggle_double_y();
+      $("#icon-preview-y").toggleClass("icon-preview-y2-hi");
+      this.update();
+    };
+
+    dom.sel("#icon-preview-overlay").onclick = (e) => {
+      this.sprite.toggle_overlay();
+      this.update();
+    };
+
+    /*
+
+
+    
 
 TTTTTTTTTTTTTTTTTTTTTTT      OOOOOOOOO         OOOOOOOOO      LLLLLLLLLLL                 SSSSSSSSSSSSSSS 
 T:::::::::::::::::::::T    OO:::::::::OO     OO:::::::::OO    L:::::::::L               SS:::::::::::::::S
@@ -916,41 +917,63 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    $("#icon-move").on("mouseup", (e) => {
+    dom.sel("#icon-load").onclick = (e) => {
+      $("#input-load").trigger("click");
+    };
+
+    dom.sel("#icon-save").onclick = (e) => {
+      this.allow_keyboard_shortcuts = false;
+      $("#window-5").dialog("open");
+      this.save.set_save_data(this.sprite.get_all());
+    };
+
+    dom.sel("#icon-undo").onclick = (e) => {
+      this.sprite.undo();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-redo").onclick = (e) => {
+      this.sprite.redo();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-move").onclick = (e) => {
       this.mode = "move";
       status("Move mode");
-      $("#image-icon-move").attr("src", "img/ui/icon-move-hi.png");
-      $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-      $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-      $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
-    });
+      dom.attr("#image-icon-move", "src", "img/ui/icon-move-hi.png");
+      dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
+    };
 
-    $("#icon-draw").on("mouseup", (e) => {
+    dom.sel("#icon-draw").onclick = (e) => {
       this.mode = "draw";
       status("Draw mode");
-      $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-      $("#image-icon-draw").attr("src", "img/ui/icon-draw-hi.png");
-      $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-      $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
-    });
+      dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "img/ui/icon-draw-hi.png");
+      dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
+    };
 
-    $("#icon-erase").on("mouseup", (e) => {
+    dom.sel("#icon-erase").onclick = (e) => {
       this.mode = "erase";
       status("Erase mode");
-      $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-      $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-      $("#image-icon-erase").attr("src", "img/ui/icon-erase-hi.png");
-      $("#image-icon-fill").attr("src", "img/ui/icon-fill.png");
-    });
+      dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "img/ui/icon-erase-hi.png");
+      dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
+    };
 
-    $("#icon-fill").on("mouseup", (e) => {
+    dom.sel("#icon-fill").onclick = (e) => {
       this.mode = "fill";
       status("Fill mode");
-      $("#image-icon-move").attr("src", "img/ui/icon-move.png");
-      $("#image-icon-draw").attr("src", "img/ui/icon-draw.png");
-      $("#image-icon-erase").attr("src", "img/ui/icon-erase.png");
-      $("#image-icon-fill").attr("src", "img/ui/icon-fill-hi.png");
-    });
+      dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "img/ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "img/ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "img/ui/icon-fill-hi.png");
+    };
 
     /*
 
@@ -973,32 +996,32 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
 
 */
 
-    $("#palette_all_colors").on("mouseup", (e) => {
+    dom.sel("#palette_all_colors").onclick = (e) => {
       this.palette.set_active_color(e);
       this.sprite.set_pen_color(this.palette.get_color());
       this.list.update_all(this.sprite.get_all());
       this.update();
-    });
+    };
 
-    $("#palette_1").on("mouseup", (e) => {
+    dom.sel("#palette_1").onclick = (e) => {
       this.sprite.set_pen(1);
       this.update();
-    });
+    };
 
-    $("#palette_0").on("mouseup", (e) => {
+    dom.sel("#palette_0").onclick = (e) => {
       this.sprite.set_pen(0);
       this.update();
-    });
+    };
 
-    $("#palette_2").on("mouseup", (e) => {
+    dom.sel("#palette_2").onclick = (e) => {
       this.sprite.set_pen(2);
       this.update();
-    });
+    };
 
-    $("#palette_3").on("mouseup", (e) => {
+    dom.sel("#palette_3").onclick = (e) => {
       this.sprite.set_pen(3);
       this.update();
-    });
+    };
 
     /* 
 
@@ -1020,6 +1043,42 @@ E::::::::::::::::::::E   D::::::::::::DDD      I::::::::I         T:::::::::T
 EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT        
 
 */
+
+    dom.sel("#icon-editor-zoom-in").onclick = (e) => {
+      this.editor.zoom_in();
+      this.config.window_editor.zoom = this.editor.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    };
+
+    dom.sel("#icon-editor-zoom-out").onclick = (e) => {
+      this.editor.zoom_out();
+      this.config.window_editor.zoom = this.editor.get_zoom();
+      this.storage.write(this.config);
+      this.update();
+    };
+
+    dom.sel("#icon-editor-grid").onclick = (e) => {
+      this.editor.toggle_grid();
+      this.config.window_editor.grid = this.editor.get_grid();
+      this.storage.write(this.config);
+      this.update();
+    };
+
+    dom.sel("#icon-flip-horizontal").onclick = (e) => {
+      this.sprite.flip_horizontal();
+      this.update();
+    };
+
+    dom.sel("#icon-flip-vertical").onclick = (e) => {
+      this.sprite.flip_vertical();
+      this.update();
+    };
+
+    dom.sel("#icon-multicolor").onclick = (e) => {
+      this.sprite.toggle_multicolor();
+      this.update();
+    };
 
     $("#input-sprite-name").focus((e) => {
       this.allow_keyboard_shortcuts = false;
@@ -1103,13 +1162,13 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     });
 
-    $("#editor").on("mouseup", (e) => {
+    dom.sel("#editor").onclick = (e) => {
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
       this.sprite.save_backup();
       this.update();
-    });
+    };
 
     /*
 
@@ -1132,7 +1191,67 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
 */
 
-    $("#spritelist").on("mouseup", (e) => {
+    dom.sel("#icon-list-grid").onclick = (e) => {
+      this.list.toggle_grid();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-list-zoom-in").onclick = (e) => {
+      this.list.zoom_in();
+      this.config.window_list.zoom = this.list.get_zoom();
+      this.storage.write(this.config);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-list-zoom-out").onclick = (e) => {
+      this.list.zoom_out();
+      this.config.window_list.zoom = this.list.get_zoom();
+      this.storage.write(this.config);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-list-new").onclick = (e) => {
+      this.sprite.new_sprite(
+        this.palette.get_color(),
+        this.sprite.is_multicolor()
+      );
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-list-delete").onclick = (e) => {
+      this.sprite.delete();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    };
+
+    dom.sel("#icon-list-copy").onclick = (e) => {
+      this.sprite.copy();
+      this.update_ui();
+      status("Sprite copied.");
+    };
+
+    dom.sel("#icon-list-paste").onclick = (e) => {
+      if (!this.sprite.is_copy_empty()) {
+        this.sprite.paste();
+        this.update();
+        status("Sprite pasted.");
+      } else {
+        status("Nothing to copy.", "error");
+      }
+    };
+
+    dom.sel("#icon-list-duplicate").onclick = (e) => {
+      this.sprite.duplicate();
+      this.list.update_all(this.sprite.get_all());
+      this.update_ui();
+      status("Sprite duplicated.");
+    };
+
+    dom.sel("#spritelist").onclick = (e) => {
       if (!this.dragging) {
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {
@@ -1140,7 +1259,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
         }
         this.update();
       }
-    });
+    };
 
     $("#spritelist").sortable({
       stop: (e, ui) => {

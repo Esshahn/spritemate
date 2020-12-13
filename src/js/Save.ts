@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { status } from "./helper";
+import { dom, status } from "./helper";
 
 export default class Save {
   default_filename: any;
@@ -62,25 +62,21 @@ export default class Save {
     </div> 
     `;
 
-    $("#window-" + this.window).append(template);
+    dom.append("#window-" + this.window, template);
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-save-cancel").on("mouseup", (e) => this.close_window());
-    $("#button-save-spm").on("mouseup", (e) => this.save_spm());
-    $("#button-save-spd").on("mouseup", (e) => this.save_spd("new"));
-    $("#button-save-spd-old").on("mouseup", (e) => this.save_spd("old"));
-    $("#button-save-source-kick").on("mouseup", (e) =>
-      this.save_assembly("kick", false)
-    );
-    $("#button-save-source-kick-binary").on("mouseup", (e) =>
-      this.save_assembly("kick", true)
-    );
-    $("#button-save-source-acme").on("mouseup", (e) =>
-      this.save_assembly("acme", false)
-    );
-    $("#button-save-source-acme-binary").on("mouseup", (e) =>
-      this.save_assembly("acme", true)
-    );
-    $("#button-save-basic").on("mouseup", (e) => this.save_basic());
+    dom.sel("#button-save-cancel").onclick = (e) => this.close_window();
+    dom.sel("#button-save-spm").onclick = (e) => this.save_spm();
+    dom.sel("#button-save-spd").onclick = (e) => this.save_spd("new");
+    dom.sel("#button-save-spd-old").onclick = (e) => this.save_spd("old");
+    dom.sel("#button-save-source-kick").onclick = (e) =>
+      this.save_assembly("kick", false);
+    dom.sel("#button-save-source-kick-binary").onclick = (e) =>
+      this.save_assembly("kick", true);
+    dom.sel("#button-save-source-acme").onclick = (e) =>
+      this.save_assembly("acme", false);
+    dom.sel("#button-save-source-acme-binary").onclick = (e) =>
+      this.save_assembly("acme", true);
+    dom.sel("#button-save-basic").onclick = (e) => this.save_basic();
 
     $("#filename").keyup((e) => {
       this.default_filename = $("#filename").val();
