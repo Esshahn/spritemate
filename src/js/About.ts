@@ -245,9 +245,9 @@ export default class About {
     dom.append("#window-" + this.window, template);
 
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    $("#button-info").on("mouseup", (e) => {
+    dom.sel("#button-info").onclick = (e) => {
       $("#window-" + this.window).dialog("close");
       this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
-    });
+    };
   }
 }

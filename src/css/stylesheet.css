@@ -423,6 +423,15 @@ img.center {
   height: 8px;
 }
 
+.icon-hover {
+  background: transparent;
+  transition: 0.25s ease background;
+}
+
+.icon-hover:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
 .icons-zoom-area /* zoom icons */ {
   margin-right: 10px;
   padding-right: 10px;
@@ -531,37 +540,6 @@ img.center {
 
 .sprite_layer_selected {
   border: 1px dotted var(--blue);
-}
-
-.icon-preview-x2 {
-  background-image: url("../img/ui/icon-preview-x2.png");
-  height: 25px;
-  width: 25px;
-  display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.icon-preview-x2-hi {
-  background-image: url("../img/ui/icon-preview-x2-hi.png");
-}
-
-.icon-preview-y2 {
-  background-image: url("../img/ui/icon-preview-y2.png");
-  height: 25px;
-  width: 25px;
-  display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.icon-preview-y2-hi {
-  background-image: url("../img/ui/icon-preview-y2-hi.png");
-}
-
-.icon-preview-highlight {
-  border: 2px solid var(--red);
-  opacity: 1;
 }
 
 #info fieldset {

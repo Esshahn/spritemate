@@ -9,8 +9,14 @@ export let dom = {
     (document.querySelector(target) as any).appendChild(e);
   },
 
+  /** add html element ie a canvas to target */
   append_element: function (target, source) {
     (document.querySelector(target) as any).appendChild(source);
+  },
+
+  /** changes the attribute of an element */
+  attr: function (target, attribute, value) {
+    document.querySelector(target)?.setAttribute(attribute, value);
   },
 
   css: function (target, property: string, value) {
@@ -69,8 +75,17 @@ export let dom = {
     document.querySelector(target).style.display = "block";
   },
 
-  val(target, value) {
-    document.querySelector(target).value = value;
+  /* selects an element from the dom and returns it */
+  sel(target) {
+    return document.querySelector(target);
+  },
+
+  /* if no value is given, returns the current value */
+  val(target, value?) {
+    if (value) {
+      document.querySelector(target).value = value;
+    }
+    return document.querySelector(target).value;
   },
 };
 

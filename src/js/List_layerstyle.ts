@@ -124,7 +124,7 @@ export default class List extends Window_Controls {
 
       $("#spritelist").append(template);
       $("#" + i + " .sprite_layer_canvas").append(canvas_element);
-      $("#" + i).on("mouseup", (e) => (this.clicked_sprite = i));
+      dom.sel("#" + i).onclick = (e) => (this.clicked_sprite = i);
 
       let canvas: any = canvas_element.getContext("2d");
       let sprite_data = all_data.sprites[i];

@@ -367,6 +367,14 @@ export default class Sprite {
     return this.all.sprites[this.all.current_sprite].overlay;
   }
 
+  is_double_x() {
+    return this.all.sprites[this.all.current_sprite].double_x;
+  }
+
+  is_double_y() {
+    return this.all.sprites[this.all.current_sprite].double_y;
+  }
+
   set_sprite_name(sprite_name) {
     this.all.sprites[this.all.current_sprite].name = sprite_name;
   }
