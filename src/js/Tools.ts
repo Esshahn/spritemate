@@ -1,6 +1,6 @@
 import { dom } from "./helper";
 
-export default class Menu {
+export default class Tools {
   constructor(public window, public config) {
     this.config = config;
     this.window = window;

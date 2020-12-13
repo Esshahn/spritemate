@@ -15,7 +15,7 @@ import "../css/stylesheet.css";
 import List from "./List";
 import About from "./About";
 import Help from "./Help";
-import Menu from "./Menu";
+import Tools from "./Tools";
 import Load from "./Load";
 import Save from "./Save";
 import Settings from "./Settings";
@@ -45,10 +45,10 @@ class App {
   save: any;
   window_settings: any;
   settings: any;
-  window_menu: any;
+  window_tools: any;
   window_help: any;
   help: any;
-  menu: any;
+  tools: any;
   load: any;
   is_drawing: boolean;
   oldpos: any;
@@ -193,21 +193,21 @@ class App {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
-    // menu
-    this.window_menu = new Window(
+    // tools
+    this.window_tools = new Window(
       {
-        name: "window_menu",
+        name: "window_tools",
         title: "Tools",
-        type: "menu",
+        type: "tools",
         resizable: false,
-        left: this.config.window_menu.left,
-        top: this.config.window_menu.top,
+        left: this.config.window_tools.left,
+        top: this.config.window_tools.top,
         width: "auto",
         height: "auto",
       },
       this.store_window.bind(this)
     );
-    this.menu = new Menu(9, this.config);
+    this.tools = new Tools(9, this.config);
 
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),

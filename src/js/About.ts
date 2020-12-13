@@ -26,7 +26,7 @@ export default class About {
             - Added Spritemate version number to SPM save data <br/>
             - Updated to latest jQuery<br/>
             - Updated webpack<br/>
-            - Cleanup & slight modernization<br/>
+            - Lots of cleanup & modernization<br/>
             - Added <a href="https://beta.spritemate.com">beta.spritemate.com</a> for latest version<br/>
             - Changed deploy setup to work with Netlify<br/>
             - Converted all JavaScript to TypeScript
