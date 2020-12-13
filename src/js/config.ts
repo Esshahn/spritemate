@@ -1117,7 +1117,7 @@ let example_sprite = {
 };
 export function get_config() {
   let config = {
-    version: 1.22,
+    version: 1.3,
     sprite_x: 24,
     sprite_y: 21,
     palettes: {
@@ -1177,7 +1177,7 @@ export function get_config() {
       ],
     },
     selected_palette: "pepto",
-    window_menu: {
+    window_tools: {
       top: 50,
       left: 20,
     },
