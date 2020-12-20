@@ -81,37 +81,57 @@ export default class Save {
     $("#filename").keyup((e) => {
       this.default_filename = $("#filename").val();
       if (this.default_filename.length < 1) {
-        $("#filename").addClass("error");
-        $("#button-save-spm").prop("disabled", true).addClass("error");
-        $("#button-save-spd").prop("disabled", true).addClass("error");
-        $("#button-save-spd-old").prop("disabled", true).addClass("error");
-        $("#button-save-source-kick").prop("disabled", true).addClass("error");
-        $("#button-save-source-kick-binary")
-          .prop("disabled", true)
-          .addClass("error");
-        $("#button-save-source-acme").prop("disabled", true).addClass("error");
-        $("#button-save-source-acme-binary")
-          .prop("disabled", true)
-          .addClass("error");
-        $("#button-save-basic").prop("disabled", true).addClass("error");
+        dom.add_class("#filename", "error");
+
+        dom.disabled("#button-save-spm", true);
+        dom.add_class("#button-save-spm", "error");
+
+        dom.disabled("#button-save-spd", true);
+        dom.add_class("#button-save-spd", "error");
+
+        dom.disabled("#button-save-spd-old", true);
+        dom.add_class("#button-save-spd-old", "error");
+
+        dom.disabled("#button-save-source-kick", true);
+        dom.add_class("#button-save-source-kick", "error");
+
+        dom.disabled("#button-save-source-kick-binary", true);
+        dom.add_class("#button-save-source-kick-binary", "error");
+
+        dom.disabled("#button-save-source-acme", true);
+        dom.add_class("#button-save-source-acme", "error");
+
+        dom.disabled("#button-save-source-acme-binary", true);
+        dom.add_class("#button-save-source-acme-binary", "error");
+
+        dom.disabled("#button-save-basic", true);
+        dom.add_class("#button-save-basic", "error");
       } else {
-        $("#filename").removeClass("error");
-        $("#button-save-spm").prop("disabled", false).removeClass("error");
-        $("#button-save-spd").prop("disabled", false).removeClass("error");
-        $("#button-save-spd-old").prop("disabled", false).removeClass("error");
-        $("#button-save-source-kick")
-          .prop("disabled", false)
-          .removeClass("error");
-        $("#button-save-source-kick-binary")
-          .prop("disabled", false)
-          .removeClass("error");
-        $("#button-save-source-acme")
-          .prop("disabled", false)
-          .removeClass("error");
-        $("#button-save-source-acme-binary")
-          .prop("disabled", false)
-          .removeClass("error");
-        $("#button-save-basic").prop("disabled", false).removeClass("error");
+        dom.remove_class("#filename", "error");
+
+        dom.disabled("#button-save-spm", false);
+        dom.remove_class("#button-save-spm", "error");
+
+        dom.disabled("#button-save-spd", false);
+        dom.remove_class("#button-save-spd", "error");
+
+        dom.disabled("#button-save-spd-old", false);
+        dom.remove_class("#button-save-spd-old", "error");
+
+        dom.disabled("#button-save-source-kick", false);
+        dom.remove_class("#button-save-source-kick", "error");
+
+        dom.disabled("#button-save-source-kick-binary", false);
+        dom.remove_class("#button-save-source-kick-binary", "error");
+
+        dom.disabled("#button-save-source-acme", false);
+        dom.remove_class("#button-save-source-acme", "error");
+
+        dom.disabled("#button-save-source-acme-binary", false);
+        dom.remove_class("#button-save-source-acme-binary", "error");
+
+        dom.disabled("#button-save-basic", false);
+        dom.remove_class("#button-save-basic", "error");
       }
     });
   }

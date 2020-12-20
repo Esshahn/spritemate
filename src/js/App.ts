@@ -66,71 +66,76 @@ class App {
     this.sprite = new Sprite(this.config);
 
     // editor
+    let editor_config = {
+      name: "window_editor",
+      title: "Editor",
+      type: "sprite",
+      resizable: false,
+      left: this.config.window_editor.left,
+      top: this.config.window_editor.top,
+      width: "auto",
+      height: "auto",
+      window_id: 0,
+    };
     this.window_editor = new Window(
-      {
-        name: "window_editor",
-        title: "Editor",
-        type: "sprite",
-        resizable: false,
-        left: this.config.window_editor.left,
-        top: this.config.window_editor.top,
-        width: "auto",
-        height: "auto",
-      },
+      editor_config,
       this.store_window.bind(this)
     );
-    this.editor = new Editor(0, this.config);
+    this.editor = new Editor(editor_config.window_id, this.config);
 
     // palette
+    let palette_config = {
+      name: "window_palette",
+      title: "Colors",
+      type: "colors",
+      resizable: false,
+      left: this.config.window_palette.left,
+      top: this.config.window_palette.top,
+      width: "auto",
+      height: "auto",
+      window_id: 1,
+    };
     this.window_palette = new Window(
-      {
-        name: "window_palette",
-        title: "Colors",
-        type: "colors",
-        resizable: false,
-        left: this.config.window_palette.left,
-        top: this.config.window_palette.top,
-        width: "auto",
-        height: "auto",
-      },
+      palette_config,
       this.store_window.bind(this)
     );
-    this.palette = new Palette(1, this.config);
+    this.palette = new Palette(palette_config.window_id, this.config);
 
     // preview
+    let preview_config = {
+      name: "window_preview",
+      title: "Preview",
+      type: "preview",
+      resizable: false,
+      left: this.config.window_preview.left,
+      top: this.config.window_preview.top,
+      width: "auto",
+      height: "auto",
+      window_id: 2,
+    };
     this.window_preview = new Window(
-      {
-        name: "window_preview",
-        title: "Preview",
-        type: "preview",
-        resizable: false,
-        left: this.config.window_preview.left,
-        top: this.config.window_preview.top,
-        width: "auto",
-        height: "auto",
-      },
+      preview_config,
       this.store_window.bind(this)
     );
-    this.preview = new Preview(2, this.config);
+    this.preview = new Preview(preview_config.window_id, this.config);
 
     // sprite list
-    this.window_list = new Window(
-      {
-        name: "window_list",
-        title: "Sprite List",
-        type: "list",
-        resizable: true,
-        left: this.config.window_list.left,
-        top: this.config.window_list.top,
-        width: this.config.window_list.width,
-        height: this.config.window_list.height,
-      },
-      this.store_window.bind(this)
-    );
-    this.list = new List(3, this.config);
+    let list_config = {
+      name: "window_list",
+      title: "Sprite List",
+      type: "list",
+      resizable: true,
+      left: this.config.window_list.left,
+      top: this.config.window_list.top,
+      width: this.config.window_list.width,
+      height: this.config.window_list.height,
+      window_id: 3,
+    };
+    this.window_list = new Window(list_config, this.store_window.bind(this));
+    this.list = new List(list_config.window_id, this.config);
 
     // info
-    this.window_about = new Window({
+    let about_config = {
       name: "window_about",
       title: "Spritemate",
       type: "info",
@@ -140,13 +145,15 @@ class App {
       autoOpen: false,
       width: "680",
       height: "auto",
-    });
-    this.about = new About(4, this.config, {
+      window_id: 4,
+    };
+    this.window_about = new Window(about_config);
+    this.about = new About(about_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // save
-    this.window_save = new Window({
+    let save_config = {
       name: "window_save",
       title: "Save",
       type: "file",
@@ -156,13 +163,15 @@ class App {
       autoOpen: false,
       width: "580",
       height: "auto",
-    });
-    this.save = new Save(5, this.config, {
+      window_id: 5,
+    };
+    this.window_save = new Window(save_config);
+    this.save = new Save(save_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // settings
-    this.window_settings = new Window({
+    let settings_config = {
       name: "window_settings,",
       title: "Settings",
       type: "settings",
@@ -172,13 +181,15 @@ class App {
       autoOpen: false,
       width: "760",
       height: "auto",
-    });
-    this.settings = new Settings(7, this.config, {
+      window_id: 6,
+    };
+    this.window_settings = new Window(settings_config);
+    this.settings = new Settings(settings_config.window_id, this.config, {
       onLoad: this.update_config.bind(this),
     });
 
     // help
-    this.window_help = new Window({
+    let help_config = {
       name: "window_help",
       title: "Help",
       type: "info",
@@ -188,26 +199,27 @@ class App {
       autoOpen: false,
       width: 680,
       height: "auto",
-    });
-    this.help = new Help(8, this.config, {
+      window_id: 7,
+    };
+    this.window_help = new Window(help_config);
+    this.help = new Help(help_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // tools
-    this.window_tools = new Window(
-      {
-        name: "window_tools",
-        title: "Tools",
-        type: "tools",
-        resizable: false,
-        left: this.config.window_tools.left,
-        top: this.config.window_tools.top,
-        width: "auto",
-        height: "auto",
-      },
-      this.store_window.bind(this)
-    );
-    this.tools = new Tools(9, this.config);
+    let tools_config = {
+      name: "window_tools",
+      title: "Tools",
+      type: "tools",
+      resizable: false,
+      left: this.config.window_tools.left,
+      top: this.config.window_tools.top,
+      width: "auto",
+      height: "auto",
+      window_id: 8,
+    };
+    this.window_tools = new Window(tools_config, this.store_window.bind(this));
+    this.tools = new Tools(tools_config.window_id, this.config);
 
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
@@ -228,7 +240,8 @@ class App {
     this.update();
     this.user_interaction();
 
-    if (this.storage.is_updated_version()) $("#window-4").dialog("open");
+    if (this.storage.is_updated_version())
+      $(this.window_about.get_window_id()).dialog("open");
   }
 
   update() {
@@ -242,27 +255,27 @@ class App {
 
   update_ui() {
     if (this.sprite.get_number_of_sprites() > 1) {
-      $("#icon-list-delete").fadeTo("fast", 1);
+      dom.fade("#icon-list-delete", 0.33, 1);
     } else {
-      $("#icon-list-delete").fadeTo("fast", 0.33);
+      dom.fade("#icon-list-delete", 1, 0.33);
     }
 
     if (this.sprite.is_copy_empty()) {
-      $("#icon-list-paste").fadeTo("fast", 0.33);
+      dom.fade("#icon-list-paste", 1, 0.33);
     } else {
-      $("#icon-list-paste").fadeTo("fast", 1);
+      dom.fade("#icon-list-paste", 0.33, 1);
     }
 
     if (this.sprite.can_undo()) {
-      $("#icon-undo").fadeTo("fast", 1);
+      dom.fade("#icon-undo", 0.33, 1);
     } else {
-      $("#icon-undo").fadeTo("fast", 0.33);
+      dom.fade("#icon-undo", 1, 0.33);
     }
 
     if (this.sprite.can_redo()) {
-      $("#icon-redo").fadeTo("fast", 1);
+      dom.fade("#icon-redo", 0.33, 1);
     } else {
-      $("#icon-redo").fadeTo("fast", 0.33);
+      dom.fade("#icon-redo", 1, 0.33);
     }
 
     if (this.sprite.is_overlay()) {
@@ -292,39 +305,39 @@ class App {
     }
 
     if (this.preview.is_min_zoom()) {
-      $("#icon-preview-zoom-out").fadeTo("fast", 0.33);
+      dom.fade("#icon-preview-zoom-out", 1, 0.33);
     } else {
-      $("#icon-preview-zoom-out").fadeTo("fast", 1);
+      dom.fade("#icon-preview-zoom-out", 0.33, 1);
     }
 
     if (this.preview.is_max_zoom()) {
-      $("#icon-preview-zoom-in").fadeTo("fast", 0.33);
+      dom.fade("#icon-preview-zoom-in", 1, 0.33);
     } else {
-      $("#icon-preview-zoom-in").fadeTo("fast", 1);
+      dom.fade("#icon-preview-zoom-in", 0.33, 1);
     }
 
     if (this.editor.is_min_zoom()) {
-      $("#icon-editor-zoom-out").fadeTo("fast", 0.33);
+      dom.fade("#icon-editor-zoom-out", 1, 0.33);
     } else {
-      $("#icon-editor-zoom-out").fadeTo("fast", 1);
+      dom.fade("#icon-editor-zoom-out", 0.33, 1);
     }
 
     if (this.editor.is_max_zoom()) {
-      $("#icon-editor-zoom-in").fadeTo("fast", 0.33);
+      dom.fade("#icon-editor-zoom-in", 1, 0.33);
     } else {
-      $("#icon-editor-zoom-in").fadeTo("fast", 1);
+      dom.fade("#icon-editor-zoom-in", 0.33, 1);
     }
 
     if (this.list.is_min_zoom()) {
-      $("#icon-list-zoom-out").fadeTo("fast", 0.33);
+      dom.fade("#icon-list-zoom-out", 1, 0.33);
     } else {
-      $("#icon-list-zoom-out").fadeTo("fast", 1);
+      dom.fade("#icon-list-zoom-out", 0.33, 1);
     }
 
     if (this.list.is_max_zoom()) {
-      $("#icon-list-zoom-in").fadeTo("fast", 0.33);
+      dom.fade("#icon-list-zoom-in", 1, 0.33);
     } else {
-      $("#icon-list-zoom-in").fadeTo("fast", 1);
+      dom.fade("#icon-list-zoom-in", 0.33, 1);
     }
 
     // photoshop style layer
@@ -377,7 +390,7 @@ class App {
     // checks the sprite name input box for the name
     // and updates the sprite name
     this.allow_keyboard_shortcuts = true;
-    let sprite_name: any = $("#input-sprite-name").val();
+    let sprite_name: any = dom.val("#input-sprite-name");
     sprite_name = sprite_name.replace(/[^A-Za-z0-9-_]+/g, ""); // allowed chars are characters, number, -, _
     this.sprite.set_sprite_name(sprite_name);
     this.list.update_all(this.sprite.get_all());
@@ -598,12 +611,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-info").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
-      $("#window-4").dialog("open");
+      $(this.window_about.get_window_id()).dialog("open");
     };
 
     dom.sel("#menubar-settings").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
-      $("#window-7").dialog("open");
+      $(this.window_settings.get_window_id()).dialog("open");
     };
 
     /*
@@ -618,7 +631,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-save").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
-      $("#window-5").dialog("open");
+      $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
 
@@ -756,13 +769,11 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-stretch-x").onclick = (e) => {
       this.sprite.toggle_double_x();
-      $("#icon-preview-x").toggleClass("icon-preview-x2-hi");
       this.update();
     };
 
     dom.sel("#menubar-stretch-y").onclick = (e) => {
       this.sprite.toggle_double_y();
-      $("#icon-preview-y").toggleClass("icon-preview-y2-hi");
       this.update();
     };
 
@@ -851,7 +862,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-help").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
-      $("#window-8").dialog("open");
+      $(this.window_help.get_window_id()).dialog("open");
     };
 
     /*
@@ -876,13 +887,11 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#icon-preview-x").onclick = (e) => {
       this.sprite.toggle_double_x();
-      $("#icon-preview-x").toggleClass("icon-preview-x2-hi");
       this.update();
     };
 
     dom.sel("#icon-preview-y").onclick = (e) => {
       this.sprite.toggle_double_y();
-      $("#icon-preview-y").toggleClass("icon-preview-y2-hi");
       this.update();
     };
 
@@ -923,7 +932,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
     dom.sel("#icon-save").onclick = (e) => {
       this.allow_keyboard_shortcuts = false;
-      $("#window-5").dialog("open");
+      $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
 

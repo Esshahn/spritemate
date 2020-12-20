@@ -23,6 +23,12 @@ export let dom = {
     document.querySelector(target).style[property] = value;
   },
 
+  disabled(target, state) {
+    document.querySelectorAll(target).forEach((element) => {
+      element.disabled = state;
+    });
+  },
+
   empty(target) {
     document.querySelector(target).innerHTML = "";
   },
@@ -51,6 +57,23 @@ export let dom = {
       fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
       fadeTarget.style.opacity = 0;
     }, delay_milliseconds);
+  },
+
+  /** fade opacity TARGET, FROM VALUE, TO VALUE, MILLISECONDS */
+  fade(target, from_opacity, to_opacity, fade_milliseconds: number = 200) {
+    const fadeTarget: any = document.querySelectorAll(target);
+
+    setTimeout(function () {
+      fadeTarget.forEach((element) => {
+        element.style.opacity = from_opacity;
+        element.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
+        element.style.opacity = to_opacity;
+      });
+    });
+  },
+
+  get_css: function (target, property: string) {
+    return document.querySelector(target).style[property];
   },
 
   hide(target) {

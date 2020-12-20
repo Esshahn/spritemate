@@ -141,9 +141,11 @@ export default class Settings {
     }
 
     if (this.config.selected_palette != "custom") {
-      $(".settings_colorvalue").prop("disabled", true).fadeTo("fast", 0.33);
+      dom.disabled(".settings_colorvalue", true);
+      dom.fade(".settings_colorvalue", 1, 0.33);
     } else {
-      $(".settings_colorvalue").prop("disabled", false).fadeTo("fast", 1);
+      dom.disabled(".settings_colorvalue", false);
+      dom.fade(".settings_colorvalue", 0.33, 1);
     }
   }
 
@@ -156,11 +158,12 @@ export default class Settings {
       that.config.selected_palette = palette;
 
       if (palette != "custom") {
-        $(".settings_colorvalue").prop("disabled", true).fadeTo("fast", 0.33);
+        dom.disabled(".settings_colorvalue", true);
+        dom.fade(".settings_colorvalue", 1, 0.33);
       } else {
-        $(".settings_colorvalue").prop("disabled", false).fadeTo("fast", 1);
+        dom.disabled(".settings_colorvalue", false);
+        dom.fade(".settings_colorvalue", 0.33, 1);
       }
-
       that.update_colors();
     };
   }

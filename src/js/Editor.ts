@@ -166,9 +166,8 @@ export default class Editor extends Window_Controls {
     }
   }
 
-  get_pixel(
-    e // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
-  ) {
+  // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
+  get_pixel(e) {
     let obj = this.canvas_element.getBoundingClientRect();
     let x = e.clientX - obj.left;
     let y = e.clientY - obj.top;
