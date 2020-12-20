@@ -9,7 +9,7 @@ import { dom } from "./helper";
 
 export default class Window {
   constructor(public config, public callback?) {
-    config.id = "window-" + $('div[id^="window-"]').length;
+    config.id = "window-" + config.window_id;
     config.position = {
       my: "left top",
       at: "left+" + config.left + " top+" + config.top,
@@ -21,7 +21,7 @@ export default class Window {
     let elem = `<div id="${config.id}" class="${config.type}" title="${config.title}"></div>`;
     dom.append("#app", elem);
 
-    $("#" + config.id).dialog({
+    $(this.get_window_id()).dialog({
       width: config.width,
       height: config.height,
       dialogClass: "no-close",
@@ -36,7 +36,7 @@ export default class Window {
     // in case a callback was defined for this window
     // we send the position and size information back to the app for storage
     if (callback) {
-      $("#" + config.id).dialog({
+      $(this.get_window_id()).dialog({
         dragStop: function (event: any, ui: any) {
           let obj = {
             name: config.name,
@@ -45,7 +45,7 @@ export default class Window {
           callback(obj);
         },
       });
-      $("#" + config.id).dialog({
+      $(this.get_window_id()).dialog({
         resizeStop: function (event: any, ui: any) {
           let obj = {
             name: config.name,
@@ -60,5 +60,9 @@ export default class Window {
         },
       });
     }
+  }
+
+  get_window_id() {
+    return "#" + this.config.id;
   }
 }
