@@ -232,8 +232,6 @@ class App {
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
 
-    $(document).tooltip({ show: { delay: 1000 } }); // initializes tooltip handling in jquery
-
     tipoftheday();
 
     this.list.update_all(this.sprite.get_all());
@@ -341,8 +339,8 @@ class App {
     }
 
     // photoshop style layer
-    //$('.sprite_layer').removeClass("sprite_layer_selected");
-    //$('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
+    //$-old-('.sprite_layer').removeClass("sprite_layer_selected");
+    //$-old-('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
@@ -397,19 +395,6 @@ class App {
     this.sprite.set_sprite_name(sprite_name);
     this.list.update_all(this.sprite.get_all());
     this.update();
-  }
-
-  init_ui_fade(element) {
-    dom.sel("#" + element).onmouseenter = (e) => {
-      $("#" + element)
-        .stop(true, true)
-        .animate({ backgroundColor: "rgba(90,90,90,0.5)" }, "fast");
-    };
-    dom.sel("#" + element).onmouseleave = (e) => {
-      $("#" + element)
-        .stop(true, true)
-        .animate({ backgroundColor: "transparent" }, "fast");
-    };
   }
 
   user_interaction() {

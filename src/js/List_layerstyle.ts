@@ -104,7 +104,7 @@ export default class List extends Window_Controls {
 
   update_all(all_data) {
     dom.remove_all_elements(".sprite_layer");
-    //$(".sprite_layer").remove();
+    //$-old-(".sprite_layer").remove();
 
     let length = all_data.sprites.length;
     for (let i = 0; i < length; i++) {
@@ -124,7 +124,7 @@ export default class List extends Window_Controls {
       </div>`;
 
       dom.append("#spritelist", template);
-      //$("#" + i + " .sprite_layer_canvas").append(canvas_element);
+      //$-old-("#" + i + " .sprite_layer_canvas").append(canvas_element);
       dom.append_element("#" + i + " .sprite_layer_canvas", canvas_element);
       dom.sel("#" + i).onclick = (e) => (this.clicked_sprite = i);
 
