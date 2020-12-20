@@ -96,7 +96,7 @@ export default class List extends Window_Controls {
   }
 
   update_all(all_data) {
-    $(".sprite_in_list").remove();
+    dom.remove_all_elements(".sprite_in_list");
     let length = all_data.sprites.length;
     for (let i = 0; i < length; i++) {
       let canvas_element: any = document.createElement("canvas");
@@ -104,14 +104,18 @@ export default class List extends Window_Controls {
       canvas_element.width = this.width;
       canvas_element.height = this.height;
 
-      $("#spritelist").append(canvas_element);
-      $(canvas_element).addClass("sprite_in_list");
+      dom.append_element("#spritelist", canvas_element);
+      dom.add_class(canvas_element, "sprite_in_list");
+
       $(canvas_element).attr("title", all_data.sprites[i].name);
-      $(canvas_element).addClass("list-sprite-size"); // see comment in constructor
+      dom.add_class(canvas_element, "list-sprite-size"); // see comment in constructor
 
-      if (this.grid) $(canvas_element).addClass("sprite_in_list_border");
+      if (this.grid) dom.add_class(canvas_element, "sprite_in_list_border");
 
-      $(canvas_element).on("mouseup", (e) => (this.clicked_sprite = i));
+      canvas_element.addEventListener(
+        "click",
+        (e) => (this.clicked_sprite = i)
+      );
 
       let canvas = canvas_element.getContext("2d", { alpha: false });
       let sprite_data = all_data.sprites[i];

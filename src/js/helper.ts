@@ -1,6 +1,10 @@
 export let dom = {
   add_class: function (target, source) {
-    document.querySelector(target)?.classList.add(source);
+    if (this.is_canvas(target)) {
+      target.classList.add(source);
+    } else {
+      document.querySelector(target)?.classList.add(source);
+    }
   },
 
   append: function (target, source) {
@@ -62,13 +66,15 @@ export let dom = {
   /** fade opacity TARGET, FROM VALUE, TO VALUE, MILLISECONDS */
   fade(target, from_opacity, to_opacity, fade_milliseconds: number = 200) {
     const fadeTarget: any = document.querySelectorAll(target);
-
-    setTimeout(function () {
-      fadeTarget.forEach((element) => {
-        element.style.opacity = from_opacity;
-        element.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
-        element.style.opacity = to_opacity;
-      });
+    fadeTarget.forEach((element) => {
+      if (element.style.opacity != to_opacity) {
+        setTimeout(function () {
+          element.style.opacity = from_opacity;
+          element.style.transition =
+            "opacity " + fade_milliseconds / 1000 + "s";
+          element.style.opacity = to_opacity;
+        });
+      }
     });
   },
 
@@ -84,9 +90,19 @@ export let dom = {
     document.querySelector(target).innerHTML = text;
   },
 
+  is_canvas(i) {
+    return i instanceof HTMLCanvasElement;
+  },
+
   remove_all_class: function (target, source) {
     document.querySelectorAll(target).forEach((element) => {
       element.classList.remove(source);
+    });
+  },
+
+  remove_all_elements: function (target) {
+    document.querySelectorAll(target).forEach((element) => {
+      element.remove();
     });
   },
 
@@ -98,12 +114,12 @@ export let dom = {
     document.querySelector(target).style.display = "block";
   },
 
-  /* selects an element from the dom and returns it */
+  /** selects an element from the dom and returns it */
   sel(target) {
     return document.querySelector(target);
   },
 
-  /* if no value is given, returns the current value */
+  /** if no value is given, returns the current value */
   val(target, value?) {
     if (value) {
       document.querySelector(target).value = value;
