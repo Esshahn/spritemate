@@ -78,8 +78,8 @@ export default class Save {
       this.save_assembly("acme", true);
     dom.sel("#button-save-basic").onclick = (e) => this.save_basic();
 
-    $("#filename").keyup((e) => {
-      this.default_filename = $("#filename").val();
+    dom.sel("#filename").onkeyup = (e) => {
+      this.default_filename = dom.val("#filename");
       if (this.default_filename.length < 1) {
         dom.add_class("#filename", "error");
 
@@ -133,7 +133,7 @@ export default class Save {
         dom.disabled("#button-save-basic", false);
         dom.remove_class("#button-save-basic", "error");
       }
-    });
+    };
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
@@ -157,7 +157,7 @@ export default class Save {
     }
 
     status("File has been saved.");
-    $("#menubar-filename-name").html(filename);
+    dom.html("#menubar-filename-name", filename);
   }
 
   save_spm() {

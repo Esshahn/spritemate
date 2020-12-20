@@ -232,8 +232,6 @@ class App {
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
 
-    $(document).tooltip({ show: { delay: 1000 } }); // initializes tooltip handling in jquery
-
     tipoftheday();
 
     this.list.update_all(this.sprite.get_all());
@@ -341,20 +339,22 @@ class App {
     }
 
     // photoshop style layer
-    //$('.sprite_layer').removeClass("sprite_layer_selected");
-    //$('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
+    //$-old-('.sprite_layer').removeClass("sprite_layer_selected");
+    //$-old-('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
 
     // spritepad style layer
-    $(".sprite_in_list").removeClass("sprite_in_list_selected");
+    dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
     $("#spritelist")
       .find("#" + this.sprite.get_current_sprite_number())
       .addClass("sprite_in_list_selected");
   }
 
+  /** 
+  check which data is in the object, compare with config data of that window
+  and replace the data in the config if matching
+  then save to storage 
+  */
   store_window(obj) {
-    // check which data is in the object, compare with config data of that window
-    // and replace the data in the config if matching
-    // then save to storage
     for (let key in obj.data) {
       if (this.config[obj.name].hasOwnProperty(key))
         this.config[obj.name][key] = obj.data[key];
@@ -397,19 +397,6 @@ class App {
     this.update();
   }
 
-  init_ui_fade(element) {
-    dom.sel("#" + element).onmouseenter = (e) => {
-      $("#" + element)
-        .stop(true, true)
-        .animate({ backgroundColor: "rgba(90,90,90,0.5)" }, "fast");
-    };
-    dom.sel("#" + element).onmouseleave = (e) => {
-      $("#" + element)
-        .stop(true, true)
-        .animate({ backgroundColor: "transparent" }, "fast");
-    };
-  }
-
   user_interaction() {
     /*
 
@@ -432,7 +419,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 
 */
 
-    $(document).on("keydown", (e) => {
+    document.addEventListener("keydown", (e) => {
       //console.log(e.key);
       if (this.allow_keyboard_shortcuts) {
         if (e.key == "a") {
@@ -626,7 +613,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 */
 
     dom.sel("#menubar-load").onclick = (e) => {
-      $("#input-load").trigger("click");
+      dom.sel("#input-load").click();
     };
 
     dom.sel("#menubar-save").onclick = (e) => {
@@ -927,7 +914,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 */
 
     dom.sel("#icon-load").onclick = (e) => {
-      $("#input-load").trigger("click");
+      dom.sel("#input-load").click();
     };
 
     dom.sel("#icon-save").onclick = (e) => {
@@ -1089,27 +1076,27 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
-    $("#input-sprite-name").focus((e) => {
+    dom.sel("#input-sprite-name").onfocus = (e) => {
       this.allow_keyboard_shortcuts = false;
-    });
+    };
 
-    $("#input-sprite-name").on("keyup", (e) => {
-      if (e.keyCode == 13) {
+    dom.sel("#input-sprite-name").onkeyup = (e) => {
+      if (e.key === "Enter") {
         this.update_sprite_name();
-        $("#input-sprite-name").blur();
+        dom.sel("#input-sprite-name").blur();
       }
-    });
+    };
 
-    $("#input-sprite-name").blur((e) => {
+    dom.sel("#input-sprite-name").onblur = (e) => {
       this.update_sprite_name();
-    });
+    };
 
     // prevent scrolling of canvas on mobile
-    $("#editor").on("touchmove", function (e) {
+    dom.sel("#editor").ontouchmove = (e) => {
       e.preventDefault();
-    });
+    };
 
-    $("#editor").on("mousedown", (e) => {
+    dom.sel("#editor").onmousedown = (e) => {
       if (this.mode == "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
@@ -1129,9 +1116,9 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         this.move_start_pos = this.editor.get_pixel(e);
       }
       this.update();
-    });
+    };
 
-    $("#editor").on("mousemove", (e) => {
+    dom.sel("#editor").onmousemove = (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         let newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
@@ -1169,7 +1156,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
           this.update();
         }
       }
-    });
+    };
 
     dom.sel("#editor").onclick = (e) => {
       // stop drawing pixels
