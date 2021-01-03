@@ -125,10 +125,7 @@ export default class Settings {
   update_colors() {
     for (let i = 0; i < this.config.colors.length; i++) {
       dom.val("#colval-" + i, this.config.colors[i]);
-      $("#col-" + i).animate(
-        { backgroundColor: this.config.colors[i] },
-        "fast"
-      );
+      dom.css("#col-" + i, "backgroundColor", this.config.colors[i]);
     }
   }
 

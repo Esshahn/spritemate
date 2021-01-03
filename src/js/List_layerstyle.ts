@@ -44,8 +44,9 @@ export default class List extends Window_Controls {
       tolerance: "pointer",
       revert: "invalid",
     });
-
-    $("#spritelist").disableSelection();
+    // TODO:
+    //$-old-("#spritelist").disableSelection();
+    //dom.disabled("#spritelist", true); // untested! probably not needed anyway
   }
 
   get_clicked_sprite() {

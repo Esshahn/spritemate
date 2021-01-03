@@ -46,16 +46,15 @@ export default class List extends Window_Controls {
       revert: "100",
     });
 
+    // TODO: needs to go away with new/better sorting and zooming
     // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
-    $(
-      "<style type='text/css'> .list-sprite-size{ width:" +
-        this.width +
-        "px; height:" +
-        this.height +
-        "px;} </style>"
-    ).appendTo("head");
+    document.head.insertAdjacentHTML(
+      "beforeend",
+      `<style id="zoom-sort-fix" type='text/css'>.list-sprite-size{ width: ${this.width}px; height:${this.height}px;} </style>`
+    );
 
-    $("#spritelist").disableSelection();
+    // TODO:
+    //$-old-("#spritelist").disableSelection(); // can't see the reason for this
   }
 
   get_clicked_sprite() {
@@ -69,14 +68,14 @@ export default class List extends Window_Controls {
   update_zoom() {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
-    $("head style:last").remove();
-    $(
-      "<style type='text/css'> .list-sprite-size{ width:" +
-        this.width +
-        "px; height:" +
-        this.height +
-        "px;} </style>"
-    ).appendTo("head");
+
+    // TODO: needs to go away with new/better sorting and zooming
+    let boo = document.getElementById("zoom-sort-fix") as any;
+    boo.parentNode.removeChild(boo);
+    document.head.insertAdjacentHTML(
+      "beforeend",
+      `<style id="zoom-sort-fix" type='text/css'>.list-sprite-size{ width: ${this.width}px; height:${this.height}px;} </style>`
+    );
   }
 
   update(all_data) {
@@ -107,7 +106,7 @@ export default class List extends Window_Controls {
       dom.append_element("#spritelist", canvas_element);
       dom.add_class(canvas_element, "sprite_in_list");
 
-      $(canvas_element).attr("title", all_data.sprites[i].name);
+      canvas_element.setAttribute("title", all_data.sprites[i].name);
       dom.add_class(canvas_element, "list-sprite-size"); // see comment in constructor
 
       if (this.grid) dom.add_class(canvas_element, "sprite_in_list_border");

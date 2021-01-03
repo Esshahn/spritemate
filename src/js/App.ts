@@ -344,9 +344,9 @@ class App {
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
-    $("#spritelist")
-      .find("#" + this.sprite.get_current_sprite_number())
-      .addClass("sprite_in_list_selected");
+    document
+      .getElementById(this.sprite.get_current_sprite_number())
+      ?.classList.add("sprite_in_list_selected");
   }
 
   /** 
@@ -1274,6 +1274,6 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
   }
 }
 
-$(function () {
+document.addEventListener("DOMContentLoaded", function () {
   new App(get_config());
 });
