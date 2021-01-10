@@ -28,15 +28,13 @@ export default class Palette {
               <p>Multicolor 2</p>
               <div class="palette_color_item_active_colors" id="color_3" title="multicolor&nbsp;2&nbsp;(4)"></div>
           </div>
-      </div>
-
-    `;
+      </div>`;
 
     dom.append("#window-" + this.window, template);
     this.draw_palette();
   }
 
-  update(all_data) {
+  update(all_data): void {
     const sprite_is_multicolor =
       all_data.sprites[all_data.current_sprite].multicolor;
 
@@ -65,11 +63,9 @@ export default class Palette {
     this.set_multicolor(sprite_is_multicolor);
   }
 
-  draw_palette() {
+  draw_palette(): void {
     /* 
-
     draws the colors from the config as DIVs 
-
     */
 
     // clear all color items in case there are already some (e.g. when switching palettes)
@@ -101,7 +97,7 @@ export default class Palette {
     dom.html("#palette_all_colors", picker);
   }
 
-  set_multicolor(is_multicolor) {
+  set_multicolor(is_multicolor): void {
     if (is_multicolor) {
       dom.show("#palette_2");
       dom.show("#palette_3");
@@ -111,8 +107,8 @@ export default class Palette {
     }
   }
 
-  set_active_color(e) {
-    let picked_color = e.target.id.replace("palette_color_", "");
+  set_active_color(e): void {
+    const picked_color = e.target.id.replace("palette_color_", "");
     this.active_color = this.colors.indexOf(picked_color);
   }
 
@@ -120,7 +116,7 @@ export default class Palette {
     return this.active_color;
   }
 
-  set_colors(colors) {
+  set_colors(colors): void {
     this.colors = colors;
     this.draw_palette();
   }

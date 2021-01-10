@@ -64,21 +64,21 @@ export default class Save {
 
     dom.append("#window-" + this.window, template);
     $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-    dom.sel("#button-save-cancel").onclick = (e) => this.close_window();
-    dom.sel("#button-save-spm").onclick = (e) => this.save_spm();
-    dom.sel("#button-save-spd").onclick = (e) => this.save_spd("new");
-    dom.sel("#button-save-spd-old").onclick = (e) => this.save_spd("old");
-    dom.sel("#button-save-source-kick").onclick = (e) =>
+    dom.sel("#button-save-cancel").onclick = () => this.close_window();
+    dom.sel("#button-save-spm").onclick = () => this.save_spm();
+    dom.sel("#button-save-spd").onclick = () => this.save_spd("new");
+    dom.sel("#button-save-spd-old").onclick = () => this.save_spd("old");
+    dom.sel("#button-save-source-kick").onclick = () =>
       this.save_assembly("kick", false);
-    dom.sel("#button-save-source-kick-binary").onclick = (e) =>
+    dom.sel("#button-save-source-kick-binary").onclick = () =>
       this.save_assembly("kick", true);
-    dom.sel("#button-save-source-acme").onclick = (e) =>
+    dom.sel("#button-save-source-acme").onclick = () =>
       this.save_assembly("acme", false);
-    dom.sel("#button-save-source-acme-binary").onclick = (e) =>
+    dom.sel("#button-save-source-acme-binary").onclick = () =>
       this.save_assembly("acme", true);
-    dom.sel("#button-save-basic").onclick = (e) => this.save_basic();
+    dom.sel("#button-save-basic").onclick = () => this.save_basic();
 
-    dom.sel("#filename").onkeyup = (e) => {
+    dom.sel("#filename").onkeyup = () => {
       this.default_filename = dom.val("#filename");
       if (this.default_filename.length < 1) {
         dom.add_class("#filename", "error");
@@ -138,7 +138,7 @@ export default class Save {
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
 
-  save_file_to_disk(file, filename) {
+  save_file_to_disk(file, filename): void {
     if (window.navigator.msSaveOrOpenBlob)
       // IE10+
       window.navigator.msSaveOrOpenBlob(file, filename);
@@ -160,7 +160,7 @@ export default class Save {
     dom.html("#menubar-filename-name", filename);
   }
 
-  save_spm() {
+  save_spm(): void {
     const filename = this.default_filename + ".spm";
     let data = JSON.stringify(this.savedata);
     // these regular expressions are used to make the outpult file
@@ -174,7 +174,7 @@ export default class Save {
     this.close_window();
   }
 
-  save_assembly(format, encode_as_binary) {
+  save_assembly(format, encode_as_binary): void {
     const filename = this.default_filename + ".txt";
     const data = this.create_assembly(format, encode_as_binary);
     const file = new Blob([data], { type: "text/plain" });
@@ -182,7 +182,7 @@ export default class Save {
     this.close_window();
   }
 
-  save_spd(format) {
+  save_spd(format): void {
     const filename = this.default_filename + ".spd";
     const hexdata = this.create_spd_array(format);
     const bytes = new Uint8Array(hexdata);
@@ -191,7 +191,7 @@ export default class Save {
     this.close_window();
   }
 
-  save_basic() {
+  save_basic(): void {
     const filename = this.default_filename + ".bas";
     const data = this.create_basic();
     const file = new Blob([data], { type: "text/plain" });
@@ -684,11 +684,11 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
     return data;
   }
 
-  set_save_data(savedata) {
+  set_save_data(savedata): void {
     this.savedata = savedata;
   }
 
-  close_window() {
+  close_window(): void {
     $("#window-" + this.window).dialog("close");
     this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }

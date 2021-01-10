@@ -1,5 +1,5 @@
 export const dom = {
-  add_class: function (target, source) {
+  add_class: function (target, source): void {
     if (this.is_canvas(target)) {
       target.classList.add(source);
     } else {
@@ -7,36 +7,36 @@ export const dom = {
     }
   },
 
-  append: function (target, source) {
+  append: function (target: string, source): void {
     const t = document.querySelector(target) as any;
     t.innerHTML = source;
   },
 
   /** add html element ie a canvas to target */
-  append_element: function (target, source) {
-    (document.querySelector(target) as any).appendChild(source);
+  append_element: function (target: string, source): void {
+    document.querySelector(target)?.appendChild(source);
   },
 
   /** changes the attribute of an element */
-  attr: function (target, attribute, value) {
+  attr: function (target: string, attribute, value): void {
     document.querySelector(target)?.setAttribute(attribute, value);
   },
 
-  css: function (target, property: string, value) {
+  css: function (target, property: string, value): void {
     document.querySelector(target).style[property] = value;
   },
 
-  disabled(target, state) {
+  disabled(target, state): void {
     document.querySelectorAll(target).forEach((element) => {
       element.disabled = state;
     });
   },
 
-  empty(target) {
+  empty(target): void {
     document.querySelector(target).innerHTML = "";
   },
 
-  fade_in(target, delay_milliseconds = 0, fade_milliseconds = 1000) {
+  fade_in(target, delay_milliseconds = 0, fade_milliseconds = 1000): void {
     const fadeTarget: any = document.querySelector(target);
     setTimeout(function () {
       fadeTarget.style.opacity = 0;
@@ -45,7 +45,7 @@ export const dom = {
     }, delay_milliseconds);
   },
 
-  fade_out(target, delay_milliseconds = 0, fade_milliseconds = 1000) {
+  fade_out(target, delay_milliseconds = 0, fade_milliseconds = 1000): void {
     const fadeTarget: any = document.querySelector(target);
     setTimeout(function () {
       fadeTarget.style.opacity = 1;
@@ -55,7 +55,7 @@ export const dom = {
   },
 
   /** fade opacity TARGET, FROM VALUE, TO VALUE, MILLISECONDS */
-  fade(target, from_opacity, to_opacity, fade_milliseconds = 200) {
+  fade(target, from_opacity, to_opacity, fade_milliseconds = 200): void {
     const fadeTarget: any = document.querySelectorAll(target);
     fadeTarget.forEach((element) => {
       if (element.style.opacity != to_opacity) {
@@ -73,35 +73,35 @@ export const dom = {
     return document.querySelector(target).style[property];
   },
 
-  hide(target) {
+  hide(target): void {
     document.querySelector(target).style.display = "none";
   },
 
-  html(target, text) {
+  html(target, text: string): void {
     document.querySelector(target).innerHTML = text;
   },
 
-  is_canvas(i) {
+  is_canvas(i): boolean {
     return i instanceof HTMLCanvasElement;
   },
 
-  remove_all_class: function (target, source) {
+  remove_all_class: function (target, source): void {
     document.querySelectorAll(target).forEach((element) => {
       element.classList.remove(source);
     });
   },
 
-  remove_all_elements: function (target) {
+  remove_all_elements: function (target): void {
     document.querySelectorAll(target).forEach((element) => {
       element.remove();
     });
   },
 
-  remove_class: function (target, source) {
+  remove_class: function (target, source): void {
     document.querySelector(target)?.classList.remove(source);
   },
 
-  show(target) {
+  show(target): void {
     document.querySelector(target).style.display = "block";
   },
 
@@ -119,7 +119,7 @@ export const dom = {
   },
 };
 
-export function status(text, state = "normal") {
+export function status(text: string, state = "normal"): void {
   let delay = 2000;
   const fade = 2000;
   if (state == "tip") delay = 10000;
@@ -128,7 +128,7 @@ export function status(text, state = "normal") {
   dom.fade_out("#statustext", delay, fade);
 }
 
-export function tipoftheday() {
+export function tipoftheday(): void {
   const tips = [
     "Hold shift while clicking to delete pixels.",
     "You can change and define your own colors in the seetings.",
@@ -144,7 +144,7 @@ export function tipoftheday() {
   status(chosen_tooltip, "tip");
 }
 
-export function toggle_fullscreen() {
+export function toggle_fullscreen(): void {
   if (
     !document.fullscreenElement && // alternative standard method
     !(<any>document).mozFullScreenElement &&
