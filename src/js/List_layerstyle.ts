@@ -22,7 +22,7 @@ export default class List extends Window_Controls {
     this.sorted_array = [];
     this.grid = true;
 
-    let template = `
+    const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
           <img src="img/ui/icon-zoom-in.png" id="icon-list-zoom-in" title="zoom in">
@@ -71,9 +71,9 @@ export default class List extends Window_Controls {
         all_data.sprites.length
     );
 
-    let sprite_data = all_data.sprites[all_data.current_sprite];
-    let c: any = document.getElementById("canvas-" + all_data.current_sprite);
-    let canvas = c.getContext("2d");
+    const sprite_data = all_data.sprites[all_data.current_sprite];
+    const c: any = document.getElementById("canvas-" + all_data.current_sprite);
+    const canvas = c.getContext("2d");
 
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
@@ -84,7 +84,7 @@ export default class List extends Window_Controls {
 
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        let array_entry = sprite_data.pixels[j][i];
+        const array_entry = sprite_data.pixels[j][i];
 
         if (array_entry != 0) {
           // transparent
@@ -107,14 +107,14 @@ export default class List extends Window_Controls {
     dom.remove_all_elements(".sprite_layer");
     //$-old-(".sprite_layer").remove();
 
-    let length = all_data.sprites.length;
+    const length = all_data.sprites.length;
     for (let i = 0; i < length; i++) {
-      let canvas_element = document.createElement("canvas");
+      const canvas_element = document.createElement("canvas");
       canvas_element.id = "canvas-" + i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
 
-      let template = `
+      const template = `
       <div class="sprite_layer" id="${i}">
         <div class="sprite_layer_canvas"></div>
         <div class="sprite_layer_info">
@@ -129,8 +129,8 @@ export default class List extends Window_Controls {
       dom.append_element("#" + i + " .sprite_layer_canvas", canvas_element);
       dom.sel("#" + i).onclick = (e) => (this.clicked_sprite = i);
 
-      let canvas: any = canvas_element.getContext("2d");
-      let sprite_data = all_data.sprites[i];
+      const canvas: any = canvas_element.getContext("2d");
+      const sprite_data = all_data.sprites[i];
       let x_grid_step = 1;
       if (sprite_data.multicolor) x_grid_step = 2;
 
@@ -140,7 +140,7 @@ export default class List extends Window_Controls {
 
       for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
         for (let j = 0; j < this.pixels_y; j++) {
-          let array_entry = sprite_data.pixels[j][i];
+          const array_entry = sprite_data.pixels[j][i];
 
           if (array_entry != 0) {
             // transparent

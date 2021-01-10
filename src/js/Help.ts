@@ -6,7 +6,7 @@ export default class Help {
     this.window = window;
     this.eventhandler = eventhandler;
 
-    let template = `
+    const template = `
     <div id="help">
         <img autofocus src="img/logo-menu.svg" width="300px" class="center" id="logo" alt="spritemate">
         <div id="help-container">

@@ -36,7 +36,7 @@ export default class Sprite {
     };
 
     for (let i = 0; i < this.height; i++) {
-      let line = [] as any;
+      const line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(0);
       (sprite.pixels as any).push(line);
     }
@@ -53,10 +53,10 @@ export default class Sprite {
     // fills the sprite data with the default color
     // generate a bitmap array
 
-    let pixels = [] as any;
+    const pixels = [] as any;
 
     for (let i = 0; i < this.height; i++) {
-      let line = [] as any;
+      const line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(0);
       pixels.push(line);
     }
@@ -68,10 +68,10 @@ export default class Sprite {
     // fills the sprite data with the default color
     // generate a bitmap array
 
-    let pixels = [] as any;
+    const pixels = [] as any;
 
     for (let i = 0; i < this.height; i++) {
-      let line = [] as any;
+      const line = [] as any;
       for (let j = 0; j < this.width; j++) line.push(this.all.pen);
       pixels.push(line);
     }
@@ -131,7 +131,7 @@ export default class Sprite {
 
   get_colors() {
     // used to update the palette with the right colors
-    let sprite_colors = {
+    const sprite_colors = {
       0: this.all.colors[0],
       1: this.all.sprites[this.all.current_sprite].color,
       2: this.all.colors[2],
@@ -237,11 +237,11 @@ export default class Sprite {
   }
 
   sort_spritelist(sprite_order_from_dom) {
-    let sorted_list = sprite_order_from_dom.map(function (x) {
+    const sorted_list = sprite_order_from_dom.map(function (x) {
       return parseInt(x);
     });
-    let new_sprite_list = [] as any;
-    let temp_current_sprite: number = 0;
+    const new_sprite_list = [] as any;
+    let temp_current_sprite = 0;
 
     for (let i = 0; i < sorted_list.length; i++) {
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
@@ -297,16 +297,16 @@ export default class Sprite {
     // https://stackoverflow.com/questions/22053759/multidimensional-array-fill
     // get target value
     let x = pos.x;
-    let y = pos.y;
-    let data = this.all.sprites[this.all.current_sprite].pixels;
+    const y = pos.y;
+    const data = this.all.sprites[this.all.current_sprite].pixels;
 
     // multicolor check
     let stepping = 1;
-    let is_multi = this.all.sprites[this.all.current_sprite].multicolor;
+    const is_multi = this.all.sprites[this.all.current_sprite].multicolor;
     if (is_multi) stepping = 2;
 
     if (is_multi && x % 2 !== 0) x = x - 1;
-    let target = data[y][x];
+    const target = data[y][x];
 
     function flow(x, y, pen) {
       // bounds check what we were passed
@@ -392,7 +392,7 @@ export default class Sprite {
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x = x + stepping) {
-        let pixel = this.all.sprites[this.all.current_sprite].pixels[y][x];
+        const pixel = this.all.sprites[this.all.current_sprite].pixels[y][x];
         let pixel_inverted;
 
         if (pixel == 0) pixel_inverted = 1;

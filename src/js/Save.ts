@@ -11,7 +11,7 @@ export default class Save {
     this.default_filename = "mysprites";
     this.eventhandler = eventhandler;
 
-    let template = `
+    const template = `
     <div id="window-save">
 
       <div class="center">
@@ -144,7 +144,7 @@ export default class Save {
       window.navigator.msSaveOrOpenBlob(file, filename);
     else {
       // Others
-      let a = document.createElement("a"),
+      const a = document.createElement("a"),
         url = URL.createObjectURL(file);
       a.href = url;
       a.download = filename;
@@ -161,7 +161,7 @@ export default class Save {
   }
 
   save_spm() {
-    let filename = this.default_filename + ".spm";
+    const filename = this.default_filename + ".spm";
     let data = JSON.stringify(this.savedata);
     // these regular expressions are used to make the outpult file
     // easier to read with line breaks
@@ -169,32 +169,32 @@ export default class Save {
       .replace(/],/g, "],\n")
       .replace(/\[\[/g, "[\n[")
       .replace(/]]/g, "]\n]");
-    let file = new Blob([data], { type: "text/plain" });
+    const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
     this.close_window();
   }
 
   save_assembly(format, encode_as_binary) {
-    let filename = this.default_filename + ".txt";
-    let data = this.create_assembly(format, encode_as_binary);
-    let file = new Blob([data], { type: "text/plain" });
+    const filename = this.default_filename + ".txt";
+    const data = this.create_assembly(format, encode_as_binary);
+    const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
     this.close_window();
   }
 
   save_spd(format) {
-    let filename = this.default_filename + ".spd";
-    let hexdata = this.create_spd_array(format);
-    let bytes = new Uint8Array(hexdata);
-    let file = new Blob([bytes], { type: "application/octet-stream" });
+    const filename = this.default_filename + ".spd";
+    const hexdata = this.create_spd_array(format);
+    const bytes = new Uint8Array(hexdata);
+    const file = new Blob([bytes], { type: "application/octet-stream" });
     this.save_file_to_disk(file, filename);
     this.close_window();
   }
 
   save_basic() {
-    let filename = this.default_filename + ".bas";
-    let data = this.create_basic();
-    let file = new Blob([data], { type: "text/plain" });
+    const filename = this.default_filename + ".bas";
+    const data = this.create_basic();
+    const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
     this.close_window();
   }
@@ -233,7 +233,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
     // byte 73 = 0-3 color, 4 overlay, 7 multicolor/singlecolor
     // bytes xx = "00", "00", "01", "00" added at the end of file (SpritePad animation info)
 
-    let data = [] as any;
+    const data = [] as any;
 
     if (format == "new") {
       data.push(83, 80, 68); // the "SPD" header that identifies SPD files apparently
@@ -254,10 +254,10 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      const spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
 
-      let is_multicolor = this.savedata.sprites[j].multicolor;
-      let is_overlay = this.savedata.sprites[j].overlay;
+      const is_multicolor = this.savedata.sprites[j].multicolor;
+      const is_overlay = this.savedata.sprites[j].overlay;
 
       let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
@@ -266,7 +266,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
       // and create a hex values based on multicolor or singlecolor
       for (let i = 0; i < spritedata.length; i = i + 8) {
         for (let k = 0; k < 8; k = k + stepping) {
-          let pen = spritedata[i + k];
+          const pen = spritedata[i + k];
 
           if (is_multicolor) {
             if (pen == 0) bit = "00";
@@ -283,7 +283,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
           byte = byte + bit;
         }
 
-        let hex = parseInt(byte, 2);
+        const hex = parseInt(byte, 2);
         data.push(hex);
         byte = "";
       }
@@ -298,13 +298,13 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
       let overlay = "00";
       if (is_overlay) overlay = "01";
 
-      let high_nibble = multicolor + overlay;
+      const high_nibble = multicolor + overlay;
 
-      let low_nibble = (
+      const low_nibble = (
         "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
       ).slice(-4);
 
-      let color_byte = parseInt(high_nibble + low_nibble, 2);
+      const color_byte = parseInt(high_nibble + low_nibble, 2);
       data.push(color_byte); // should be the individual color
     }
 
@@ -387,11 +387,11 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
-      let is_multicolor = this.savedata.sprites[j].multicolor;
+      const spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      const is_multicolor = this.savedata.sprites[j].multicolor;
       let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
-      let line_breaks_after = encode_as_binary ? 24 : 64;
+      const line_breaks_after = encode_as_binary ? 24 : 64;
 
       data += "\n\n" + comment + "sprite " + j;
       if (is_multicolor) {
@@ -415,7 +415,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         }
 
         for (let k = 0; k < 8; k = k + stepping) {
-          let pen = spritedata[i + k];
+          const pen = spritedata[i + k];
 
           if (is_multicolor) {
             if (pen == 0) bit = "00";
@@ -435,7 +435,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         if (encode_as_binary) {
           data += "%" + byte + ",";
         } else {
-          let hex = parseInt(byte, 2).toString(16);
+          const hex = parseInt(byte, 2).toString(16);
           data += "$" + ("0" + hex).slice(-2) + ",";
         }
         byte = "";
@@ -448,11 +448,11 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         let high_nibble = "0000";
         if (is_multicolor) high_nibble = "1000";
 
-        let low_nibble = (
+        const low_nibble = (
           "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
         ).slice(-4);
 
-        let color_byte =
+        const color_byte =
           "$" +
           ("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
         data += color_byte; // should be the individual color
@@ -485,9 +485,9 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
 
   create_basic() {
     let line_number = 10;
-    let line_inc = 10;
+    const line_inc = 10;
     let data = "";
-    let max_sprites = Math.min(8, this.savedata.sprites.length); // display up to 8 sprites
+    const max_sprites = Math.min(8, this.savedata.sprites.length); // display up to 8 sprites
 
     data += line_number + " print chr$(147)";
     line_number += line_inc;
@@ -619,8 +619,8 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       j < this.savedata.sprites.length;
       j++ // iterate through all sprites
     ) {
-      let spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
-      let is_multicolor = this.savedata.sprites[j].multicolor;
+      const spritedata = [].concat.apply([], this.savedata.sprites[j].pixels); // flatten 2d array
+      const is_multicolor = this.savedata.sprites[j].multicolor;
       let stepping = 1;
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
 
@@ -644,7 +644,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
         }
 
         for (let k = 0; k < 8; k = k + stepping) {
-          let pen = spritedata[i + k];
+          const pen = spritedata[i + k];
 
           if (is_multicolor) {
             if (pen == 0) bit = "00";
@@ -661,7 +661,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
           byte = byte + bit;
         }
 
-        let hex = parseInt(byte, 2).toString(10);
+        const hex = parseInt(byte, 2).toString(10);
         data += hex + ",";
         byte = "";
       }
@@ -670,11 +670,11 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       let high_nibble = "0000";
       if (is_multicolor) high_nibble = "1000";
 
-      let low_nibble = (
+      const low_nibble = (
         "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
       ).slice(-4);
 
-      let color_byte = parseInt(high_nibble + low_nibble, 2).toString(10);
+      const color_byte = parseInt(high_nibble + low_nibble, 2).toString(10);
       data += color_byte; // should be the individual color
     }
 

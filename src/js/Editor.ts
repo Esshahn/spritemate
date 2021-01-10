@@ -24,7 +24,7 @@ export default class Editor extends Window_Controls {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    let template = `
+    const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
           <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-editor-zoom-in" title="zoom in">
@@ -57,7 +57,7 @@ export default class Editor extends Window_Controls {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
-    let sprite_data = all_data.sprites[all_data.current_sprite];
+    const sprite_data = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
@@ -70,7 +70,7 @@ export default class Editor extends Window_Controls {
 
     // overlay from previous sprite
     if (all_data.current_sprite > 0) {
-      let previous_sprite = all_data.sprites[all_data.current_sprite - 1];
+      const previous_sprite = all_data.sprites[all_data.current_sprite - 1];
       if (previous_sprite.overlay) this.display_overlay(all_data, "previous");
     }
 
@@ -91,7 +91,7 @@ export default class Editor extends Window_Controls {
   display_overlay(all_data, mode = "", alpha = 0.4) {
     let overlay_sprite_number = 1;
     if (mode == "previous") overlay_sprite_number = -1;
-    let sprite_data =
+    const sprite_data =
       all_data.sprites[all_data.current_sprite + overlay_sprite_number];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
@@ -102,7 +102,7 @@ export default class Editor extends Window_Controls {
   fill_canvas(all_data, sprite_data, x_grid_step, alpha = 1) {
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        let array_entry = sprite_data.pixels[j][i];
+        const array_entry = sprite_data.pixels[j][i];
 
         if (array_entry != 0) {
           // not transparent
@@ -168,11 +168,11 @@ export default class Editor extends Window_Controls {
 
   // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
   get_pixel(e) {
-    let obj = this.canvas_element.getBoundingClientRect();
-    let x = e.clientX - obj.left;
-    let y = e.clientY - obj.top;
-    let x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-    let y_grid = Math.floor(y / (this.height / this.config.sprite_y));
+    const obj = this.canvas_element.getBoundingClientRect();
+    const x = e.clientX - obj.left;
+    const y = e.clientY - obj.top;
+    const x_grid = Math.floor(x / (this.width / this.config.sprite_x));
+    const y_grid = Math.floor(y / (this.height / this.config.sprite_y));
     return { x: x_grid, y: y_grid };
   }
 
