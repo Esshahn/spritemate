@@ -66,7 +66,7 @@ class App {
     this.sprite = new Sprite(this.config);
 
     // editor
-    let editor_config = {
+    const editor_config = {
       name: "window_editor",
       title: "Editor",
       type: "sprite",
@@ -84,7 +84,7 @@ class App {
     this.editor = new Editor(editor_config.window_id, this.config);
 
     // palette
-    let palette_config = {
+    const palette_config = {
       name: "window_palette",
       title: "Colors",
       type: "colors",
@@ -102,7 +102,7 @@ class App {
     this.palette = new Palette(palette_config.window_id, this.config);
 
     // preview
-    let preview_config = {
+    const preview_config = {
       name: "window_preview",
       title: "Preview",
       type: "preview",
@@ -120,7 +120,7 @@ class App {
     this.preview = new Preview(preview_config.window_id, this.config);
 
     // sprite list
-    let list_config = {
+    const list_config = {
       name: "window_list",
       title: "Sprite List",
       type: "list",
@@ -135,7 +135,7 @@ class App {
     this.list = new List(list_config.window_id, this.config);
 
     // info
-    let about_config = {
+    const about_config = {
       name: "window_about",
       title: "Spritemate",
       type: "info",
@@ -153,7 +153,7 @@ class App {
     });
 
     // save
-    let save_config = {
+    const save_config = {
       name: "window_save",
       title: "Save",
       type: "file",
@@ -171,7 +171,7 @@ class App {
     });
 
     // settings
-    let settings_config = {
+    const settings_config = {
       name: "window_settings,",
       title: "Settings",
       type: "settings",
@@ -189,7 +189,7 @@ class App {
     });
 
     // help
-    let help_config = {
+    const help_config = {
       name: "window_help",
       title: "Help",
       type: "info",
@@ -207,7 +207,7 @@ class App {
     });
 
     // tools
-    let tools_config = {
+    const tools_config = {
       name: "window_tools",
       title: "Tools",
       type: "tools",
@@ -243,7 +243,7 @@ class App {
   }
 
   update() {
-    let all = this.sprite.get_all();
+    const all = this.sprite.get_all();
     this.editor.update(all);
     this.preview.update(all);
     this.list.update(all);
@@ -355,7 +355,8 @@ class App {
   then save to storage 
   */
   store_window(obj) {
-    for (let key in obj.data) {
+    for (const key in obj.data) {
+      // eslint-disable-next-line no-prototype-builtins
       if (this.config[obj.name].hasOwnProperty(key))
         this.config[obj.name][key] = obj.data[key];
     }
@@ -390,7 +391,7 @@ class App {
     // checks the sprite name input box for the name
     // and updates the sprite name
     this.allow_keyboard_shortcuts = true;
-    let sprite_name: any = dom.val("#input-sprite-name");
+    let sprite_name: string = dom.val("#input-sprite-name");
     sprite_name = sprite_name.replace(/[^A-Za-z0-9-_]+/g, ""); // allowed chars are characters, number, -, _
     this.sprite.set_sprite_name(sprite_name);
     this.list.update_all(this.sprite.get_all());
@@ -596,12 +597,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-info").onclick = (e) => {
+    dom.sel("#menubar-info").onclick = () => {
       this.allow_keyboard_shortcuts = false;
       $(this.window_about.get_window_id()).dialog("open");
     };
 
-    dom.sel("#menubar-settings").onclick = (e) => {
+    dom.sel("#menubar-settings").onclick = () => {
       this.allow_keyboard_shortcuts = false;
       $(this.window_settings.get_window_id()).dialog("open");
     };
@@ -612,17 +613,17 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-load").onclick = (e) => {
+    dom.sel("#menubar-load").onclick = () => {
       dom.sel("#input-load").click();
     };
 
-    dom.sel("#menubar-save").onclick = (e) => {
+    dom.sel("#menubar-save").onclick = () => {
       this.allow_keyboard_shortcuts = false;
       $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
 
-    dom.sel("#menubar-new").onclick = (e) => {
+    dom.sel("#menubar-new").onclick = () => {
       dom.css("#dialog-confirm", "visibility", "visible");
       $("#dialog-confirm").dialog("open");
     };
@@ -663,19 +664,19 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-undo").onclick = (e) => {
+    dom.sel("#menubar-undo").onclick = () => {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#menubar-redo").onclick = (e) => {
+    dom.sel("#menubar-redo").onclick = () => {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#menubar-new-sprite").onclick = (e) => {
+    dom.sel("#menubar-new-sprite").onclick = () => {
       this.sprite.new_sprite(
         this.palette.get_color(),
         this.sprite.is_multicolor()
@@ -684,19 +685,19 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
-    dom.sel("#menubar-kill").onclick = (e) => {
+    dom.sel("#menubar-kill").onclick = () => {
       this.sprite.delete();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#menubar-copy").onclick = (e) => {
+    dom.sel("#menubar-copy").onclick = () => {
       this.sprite.copy();
       this.update_ui();
       status("Sprite copied.");
     };
 
-    dom.sel("#menubar-paste").onclick = (e) => {
+    dom.sel("#menubar-paste").onclick = () => {
       if (!this.sprite.is_copy_empty()) {
         this.sprite.paste();
         this.update();
@@ -706,7 +707,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       }
     };
 
-    dom.sel("#menubar-duplicate").onclick = (e) => {
+    dom.sel("#menubar-duplicate").onclick = () => {
       this.sprite.duplicate();
       this.list.update_all(this.sprite.get_all());
       this.update_ui();
@@ -719,57 +720,57 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-shift-left").onclick = (e) => {
+    dom.sel("#menubar-shift-left").onclick = () => {
       this.sprite.shift_horizontal("left");
       this.update();
     };
 
-    dom.sel("#menubar-shift-right").onclick = (e) => {
+    dom.sel("#menubar-shift-right").onclick = () => {
       this.sprite.shift_horizontal("right");
       this.update();
     };
 
-    dom.sel("#menubar-shift-up").onclick = (e) => {
+    dom.sel("#menubar-shift-up").onclick = () => {
       this.sprite.shift_vertical("up");
       this.update();
     };
 
-    dom.sel("#menubar-shift-down").onclick = (e) => {
+    dom.sel("#menubar-shift-down").onclick = () => {
       this.sprite.shift_vertical("down");
       this.update();
     };
 
-    dom.sel("#menubar-flip-horizontal").onclick = (e) => {
+    dom.sel("#menubar-flip-horizontal").onclick = () => {
       this.sprite.flip_horizontal();
       this.update();
     };
 
-    dom.sel("#menubar-flip-vertical").onclick = (e) => {
+    dom.sel("#menubar-flip-vertical").onclick = () => {
       this.sprite.flip_vertical();
       this.update();
     };
 
-    dom.sel("#menubar-colormode").onclick = (e) => {
+    dom.sel("#menubar-colormode").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
     };
 
-    dom.sel("#menubar-stretch-x").onclick = (e) => {
+    dom.sel("#menubar-stretch-x").onclick = () => {
       this.sprite.toggle_double_x();
       this.update();
     };
 
-    dom.sel("#menubar-stretch-y").onclick = (e) => {
+    dom.sel("#menubar-stretch-y").onclick = () => {
       this.sprite.toggle_double_y();
       this.update();
     };
 
-    dom.sel("#menubar-invert").onclick = (e) => {
+    dom.sel("#menubar-invert").onclick = () => {
       this.sprite.invert();
       this.update();
     };
 
-    dom.sel("#menubar-overlay").onclick = (e) => {
+    dom.sel("#menubar-overlay").onclick = () => {
       this.sprite.toggle_overlay();
       this.update();
     };
@@ -780,52 +781,52 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-fullscreen").onclick = (e) => {
+    dom.sel("#menubar-fullscreen").onclick = () => {
       toggle_fullscreen();
     };
 
-    dom.sel("#menubar-editor-zoom-in").onclick = (e) => {
+    dom.sel("#menubar-editor-zoom-in").onclick = () => {
       this.editor.zoom_in();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#menubar-editor-zoom-out").onclick = (e) => {
+    dom.sel("#menubar-editor-zoom-out").onclick = () => {
       this.editor.zoom_out();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#menubar-editor-grid").onclick = (e) => {
+    dom.sel("#menubar-editor-grid").onclick = () => {
       this.editor.toggle_grid();
       this.config.window_editor.grid = this.editor.get_grid();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#menubar-preview-zoom-in").onclick = (e) => {
+    dom.sel("#menubar-preview-zoom-in").onclick = () => {
       this.preview.zoom_in();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#menubar-preview-zoom-out").onclick = (e) => {
+    dom.sel("#menubar-preview-zoom-out").onclick = () => {
       this.preview.zoom_out();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#menubar-list-grid").onclick = (e) => {
+    dom.sel("#menubar-list-grid").onclick = () => {
       this.list.toggle_grid();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#menubar-list-zoom-in").onclick = (e) => {
+    dom.sel("#menubar-list-zoom-in").onclick = () => {
       this.list.zoom_in();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -833,7 +834,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
-    dom.sel("#menubar-list-zoom-out").onclick = (e) => {
+    dom.sel("#menubar-list-zoom-out").onclick = () => {
       this.list.zoom_out();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -847,7 +848,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-help").onclick = (e) => {
+    dom.sel("#menubar-help").onclick = () => {
       this.allow_keyboard_shortcuts = false;
       $(this.window_help.get_window_id()).dialog("open");
     };
@@ -858,31 +859,31 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#icon-preview-zoom-in").onclick = (e) => {
+    dom.sel("#icon-preview-zoom-in").onclick = () => {
       this.preview.zoom_in();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#icon-preview-zoom-out").onclick = (e) => {
+    dom.sel("#icon-preview-zoom-out").onclick = () => {
       this.preview.zoom_out();
       this.config.window_preview.zoom = this.preview.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#icon-preview-x").onclick = (e) => {
+    dom.sel("#icon-preview-x").onclick = () => {
       this.sprite.toggle_double_x();
       this.update();
     };
 
-    dom.sel("#icon-preview-y").onclick = (e) => {
+    dom.sel("#icon-preview-y").onclick = () => {
       this.sprite.toggle_double_y();
       this.update();
     };
 
-    dom.sel("#icon-preview-overlay").onclick = (e) => {
+    dom.sel("#icon-preview-overlay").onclick = () => {
       this.sprite.toggle_overlay();
       this.update();
     };
@@ -913,29 +914,29 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    dom.sel("#icon-load").onclick = (e) => {
+    dom.sel("#icon-load").onclick = () => {
       dom.sel("#input-load").click();
     };
 
-    dom.sel("#icon-save").onclick = (e) => {
+    dom.sel("#icon-save").onclick = () => {
       this.allow_keyboard_shortcuts = false;
       $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
 
-    dom.sel("#icon-undo").onclick = (e) => {
+    dom.sel("#icon-undo").onclick = () => {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#icon-redo").onclick = (e) => {
+    dom.sel("#icon-redo").onclick = () => {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#icon-move").onclick = (e) => {
+    dom.sel("#icon-move").onclick = () => {
       this.mode = "move";
       status("Move mode");
       dom.attr("#image-icon-move", "src", "img/ui/icon-move-hi.png");
@@ -944,7 +945,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
     };
 
-    dom.sel("#icon-draw").onclick = (e) => {
+    dom.sel("#icon-draw").onclick = () => {
       this.mode = "draw";
       status("Draw mode");
       dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
@@ -953,7 +954,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
     };
 
-    dom.sel("#icon-erase").onclick = (e) => {
+    dom.sel("#icon-erase").onclick = () => {
       this.mode = "erase";
       status("Erase mode");
       dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
@@ -962,7 +963,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       dom.attr("#image-icon-fill", "src", "img/ui/icon-fill.png");
     };
 
-    dom.sel("#icon-fill").onclick = (e) => {
+    dom.sel("#icon-fill").onclick = () => {
       this.mode = "fill";
       status("Fill mode");
       dom.attr("#image-icon-move", "src", "img/ui/icon-move.png");
@@ -999,22 +1000,22 @@ C:::::C              O:::::O     O:::::O  L:::::L               O:::::O     O:::
       this.update();
     };
 
-    dom.sel("#palette_1").onclick = (e) => {
+    dom.sel("#palette_1").onclick = () => {
       this.sprite.set_pen(1);
       this.update();
     };
 
-    dom.sel("#palette_0").onclick = (e) => {
+    dom.sel("#palette_0").onclick = () => {
       this.sprite.set_pen(0);
       this.update();
     };
 
-    dom.sel("#palette_2").onclick = (e) => {
+    dom.sel("#palette_2").onclick = () => {
       this.sprite.set_pen(2);
       this.update();
     };
 
-    dom.sel("#palette_3").onclick = (e) => {
+    dom.sel("#palette_3").onclick = () => {
       this.sprite.set_pen(3);
       this.update();
     };
@@ -1040,43 +1041,43 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
 */
 
-    dom.sel("#icon-editor-zoom-in").onclick = (e) => {
+    dom.sel("#icon-editor-zoom-in").onclick = () => {
       this.editor.zoom_in();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#icon-editor-zoom-out").onclick = (e) => {
+    dom.sel("#icon-editor-zoom-out").onclick = () => {
       this.editor.zoom_out();
       this.config.window_editor.zoom = this.editor.get_zoom();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#icon-editor-grid").onclick = (e) => {
+    dom.sel("#icon-editor-grid").onclick = () => {
       this.editor.toggle_grid();
       this.config.window_editor.grid = this.editor.get_grid();
       this.storage.write(this.config);
       this.update();
     };
 
-    dom.sel("#icon-flip-horizontal").onclick = (e) => {
+    dom.sel("#icon-flip-horizontal").onclick = () => {
       this.sprite.flip_horizontal();
       this.update();
     };
 
-    dom.sel("#icon-flip-vertical").onclick = (e) => {
+    dom.sel("#icon-flip-vertical").onclick = () => {
       this.sprite.flip_vertical();
       this.update();
     };
 
-    dom.sel("#icon-multicolor").onclick = (e) => {
+    dom.sel("#icon-multicolor").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
     };
 
-    dom.sel("#input-sprite-name").onfocus = (e) => {
+    dom.sel("#input-sprite-name").onfocus = () => {
       this.allow_keyboard_shortcuts = false;
     };
 
@@ -1087,7 +1088,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     };
 
-    dom.sel("#input-sprite-name").onblur = (e) => {
+    dom.sel("#input-sprite-name").onblur = () => {
       this.update_sprite_name();
     };
 
@@ -1120,10 +1121,10 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     dom.sel("#editor").onmousemove = (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
-        let newpos = this.editor.get_pixel(e);
+        const newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
-          let all = this.sprite.get_all();
+          const all = this.sprite.get_all();
           let delete_trigger = e.shiftKey;
           if (this.mode == "erase") delete_trigger = true;
           this.sprite.set_pixel(newpos, delete_trigger); // updates the sprite array at the grid position with the color chosen on the palette
@@ -1135,8 +1136,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.move_start) {
-        let x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
-        let y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        const x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
+        const y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
 
         if (x_diff > 0) {
           this.sprite.shift_horizontal("right");
@@ -1158,7 +1159,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     };
 
-    dom.sel("#editor").onclick = (e) => {
+    dom.sel("#editor").onclick = () => {
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
@@ -1187,13 +1188,13 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
 */
 
-    dom.sel("#icon-list-grid").onclick = (e) => {
+    dom.sel("#icon-list-grid").onclick = () => {
       this.list.toggle_grid();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#icon-list-zoom-in").onclick = (e) => {
+    dom.sel("#icon-list-zoom-in").onclick = () => {
       this.list.zoom_in();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -1201,7 +1202,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#icon-list-zoom-out").onclick = (e) => {
+    dom.sel("#icon-list-zoom-out").onclick = () => {
       this.list.zoom_out();
       this.config.window_list.zoom = this.list.get_zoom();
       this.storage.write(this.config);
@@ -1209,7 +1210,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#icon-list-new").onclick = (e) => {
+    dom.sel("#icon-list-new").onclick = () => {
       this.sprite.new_sprite(
         this.palette.get_color(),
         this.sprite.is_multicolor()
@@ -1218,19 +1219,19 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#icon-list-delete").onclick = (e) => {
+    dom.sel("#icon-list-delete").onclick = () => {
       this.sprite.delete();
       this.list.update_all(this.sprite.get_all());
       this.update();
     };
 
-    dom.sel("#icon-list-copy").onclick = (e) => {
+    dom.sel("#icon-list-copy").onclick = () => {
       this.sprite.copy();
       this.update_ui();
       status("Sprite copied.");
     };
 
-    dom.sel("#icon-list-paste").onclick = (e) => {
+    dom.sel("#icon-list-paste").onclick = () => {
       if (!this.sprite.is_copy_empty()) {
         this.sprite.paste();
         this.update();
@@ -1240,14 +1241,14 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       }
     };
 
-    dom.sel("#icon-list-duplicate").onclick = (e) => {
+    dom.sel("#icon-list-duplicate").onclick = () => {
       this.sprite.duplicate();
       this.list.update_all(this.sprite.get_all());
       this.update_ui();
       status("Sprite duplicated.");
     };
 
-    dom.sel("#spritelist").onclick = (e) => {
+    dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {
@@ -1258,7 +1259,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     };
 
     $("#spritelist").sortable({
-      stop: (e, ui) => {
+      stop: () => {
         this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
         this.dragging = false;
         this.list.update_all(this.sprite.get_all());
@@ -1267,7 +1268,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     });
 
     $("#spritelist").sortable({
-      start: (e, ui) => {
+      start: () => {
         this.dragging = true;
       },
     });
