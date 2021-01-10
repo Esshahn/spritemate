@@ -7,7 +7,7 @@ export default class List extends Window_Controls {
   sorted_array: any = [];
   grid: boolean;
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     super();
     this.config = config;
     this.window = window;
@@ -22,7 +22,7 @@ export default class List extends Window_Controls {
     this.sorted_array = [];
     this.grid = true;
 
-    let template = `
+    const template = `
       <div class="window_menu">
       <div class="icons-zoom-area">
           <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-list-zoom-in" title="zoom in">
@@ -70,7 +70,7 @@ export default class List extends Window_Controls {
     this.height = this.pixels_y * this.zoom;
 
     // TODO: needs to go away with new/better sorting and zooming
-    let boo = document.getElementById("zoom-sort-fix") as any;
+    const boo = document.getElementById("zoom-sort-fix") as any;
     boo.parentNode.removeChild(boo);
     document.head.insertAdjacentHTML(
       "beforeend",
@@ -88,17 +88,17 @@ export default class List extends Window_Controls {
       "title",
       `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`
     );
-    let c: any = document.getElementById(all_data.current_sprite);
-    let canvas = c.getContext("2d", { alpha: false });
-    let sprite_data = all_data.sprites[all_data.current_sprite];
+    const c: any = document.getElementById(all_data.current_sprite);
+    const canvas = c.getContext("2d", { alpha: false });
+    const sprite_data = all_data.sprites[all_data.current_sprite];
     this.draw_sprite(canvas, sprite_data, all_data);
   }
 
   update_all(all_data) {
     dom.remove_all_elements(".sprite_in_list");
-    let length = all_data.sprites.length;
+    const length = all_data.sprites.length;
     for (let i = 0; i < length; i++) {
-      let canvas_element: any = document.createElement("canvas");
+      const canvas_element: any = document.createElement("canvas");
       canvas_element.id = i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
@@ -111,13 +111,10 @@ export default class List extends Window_Controls {
 
       if (this.grid) dom.add_class(canvas_element, "sprite_in_list_border");
 
-      canvas_element.addEventListener(
-        "click",
-        (e) => (this.clicked_sprite = i)
-      );
+      canvas_element.addEventListener("click", () => (this.clicked_sprite = i));
 
-      let canvas = canvas_element.getContext("2d", { alpha: false });
-      let sprite_data = all_data.sprites[i];
+      const canvas = canvas_element.getContext("2d", { alpha: false });
+      const sprite_data = all_data.sprites[i];
 
       this.draw_sprite(canvas, sprite_data, all_data);
     }
@@ -133,7 +130,7 @@ export default class List extends Window_Controls {
 
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        let array_entry = sprite_data.pixels[j][i];
+        const array_entry = sprite_data.pixels[j][i];
 
         if (array_entry != 0) {
           // transparent

@@ -1,4 +1,4 @@
-export let dom = {
+export const dom = {
   add_class: function (target, source) {
     if (this.is_canvas(target)) {
       target.classList.add(source);
@@ -36,11 +36,7 @@ export let dom = {
     document.querySelector(target).innerHTML = "";
   },
 
-  fade_in(
-    target,
-    delay_milliseconds: number = 0,
-    fade_milliseconds: number = 1000
-  ) {
+  fade_in(target, delay_milliseconds = 0, fade_milliseconds = 1000) {
     const fadeTarget: any = document.querySelector(target);
     setTimeout(function () {
       fadeTarget.style.opacity = 0;
@@ -49,11 +45,7 @@ export let dom = {
     }, delay_milliseconds);
   },
 
-  fade_out(
-    target,
-    delay_milliseconds: number = 0,
-    fade_milliseconds: number = 1000
-  ) {
+  fade_out(target, delay_milliseconds = 0, fade_milliseconds = 1000) {
     const fadeTarget: any = document.querySelector(target);
     setTimeout(function () {
       fadeTarget.style.opacity = 1;
@@ -63,7 +55,7 @@ export let dom = {
   },
 
   /** fade opacity TARGET, FROM VALUE, TO VALUE, MILLISECONDS */
-  fade(target, from_opacity, to_opacity, fade_milliseconds: number = 200) {
+  fade(target, from_opacity, to_opacity, fade_milliseconds = 200) {
     const fadeTarget: any = document.querySelectorAll(target);
     fadeTarget.forEach((element) => {
       if (element.style.opacity != to_opacity) {
@@ -129,7 +121,7 @@ export let dom = {
 
 export function status(text, state = "normal") {
   let delay = 2000;
-  let fade = 2000;
+  const fade = 2000;
   if (state == "tip") delay = 10000;
 
   dom.html("#statustext", text);
@@ -137,7 +129,7 @@ export function status(text, state = "normal") {
 }
 
 export function tipoftheday() {
-  let tips = [
+  const tips = [
     "Hold shift while clicking to delete pixels.",
     "You can change and define your own colors in the seetings.",
     "Press 'z' for undo and 'shift + z' for redo.",
@@ -147,7 +139,7 @@ export function tipoftheday() {
     "Right click on your sprite in the preview window to save it as PNG (works in Chrome at least).",
   ];
 
-  let chosen_tooltip =
+  const chosen_tooltip =
     "Tip Of The Day: " + tips[Math.floor(Math.random() * tips.length)];
   status(chosen_tooltip, "tip");
 }

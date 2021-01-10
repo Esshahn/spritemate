@@ -4,12 +4,12 @@ export default class Palette {
   colors: any = {};
   active_color: number;
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;
 
-    let template = `
+    const template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
           <div id="palette_0">
@@ -37,7 +37,7 @@ export default class Palette {
   }
 
   update(all_data) {
-    let sprite_is_multicolor =
+    const sprite_is_multicolor =
       all_data.sprites[all_data.current_sprite].multicolor;
 
     // set the colors of the pens

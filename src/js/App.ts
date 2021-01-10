@@ -12,7 +12,6 @@ import "../css/stylesheet.css";
 
 import List from "./List";
 import About from "./About";
-import Help from "./Help";
 import Tools from "./Tools";
 import Load from "./Load";
 import Save from "./Save";
@@ -45,7 +44,6 @@ class App {
   settings: any;
   window_tools: any;
   window_help: any;
-  help: any;
   tools: any;
   load: any;
   is_drawing: boolean;
@@ -132,7 +130,7 @@ class App {
     this.window_list = new Window(list_config, this.store_window.bind(this));
     this.list = new List(list_config.window_id, this.config);
 
-    // info
+    // about
     const about_config = {
       name: "window_about",
       title: "Spritemate",
@@ -184,24 +182,6 @@ class App {
     this.window_settings = new Window(settings_config);
     this.settings = new Settings(settings_config.window_id, this.config, {
       onLoad: this.update_config.bind(this),
-    });
-
-    // help
-    const help_config = {
-      name: "window_help",
-      title: "Help",
-      type: "info",
-      escape: true,
-      modal: true,
-      resizable: false,
-      autoOpen: false,
-      width: 680,
-      height: "auto",
-      window_id: 7,
-    };
-    this.window_help = new Window(help_config);
-    this.help = new Help(help_config.window_id, this.config, {
-      onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // tools
@@ -838,17 +818,6 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.storage.write(this.config);
       this.list.update_all(this.sprite.get_all());
       this.update();
-    };
-
-    /* 
-
-  HELP
-
-*/
-
-    dom.sel("#menubar-help").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      $(this.window_help.get_window_id()).dialog("open");
     };
 
     /*

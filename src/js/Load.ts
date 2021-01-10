@@ -21,22 +21,22 @@ export default class Load {
   }
 
   setup_load_input() {
-    let element: any = document.createElement("div");
+    const element: any = document.createElement("div");
     element.innerHTML =
       '<input type="file" id="input-load" style="display: none">';
-    let fileInput = element.firstChild;
+    const fileInput = element.firstChild;
     document.body.appendChild(fileInput);
-    let that = this;
+    const that = this;
     fileInput.addEventListener("change", function () {
       that.read_file_data(fileInput);
     });
   }
 
   read_file_data(fileInput) {
-    let file = fileInput.files[0];
+    const file = fileInput.files[0];
 
     if (file.name.match(/\.(spm|spd|spr)$/)) {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = () => {
         if (file.name.match(/\.(spm)$/)) {
           this.parse_file_spm(reader.result);
@@ -138,9 +138,9 @@ export default class Load {
       this.start_of_sprite_data + 2 + (sprite_number + 1) * this.sprite_size;
 
     // this is actually a good way to identify a bit
-    let bits = ("00000000" + this.file.charCodeAt(colorpos).toString(2)).slice(
-      -8
-    );
+    const bits = (
+      "00000000" + this.file.charCodeAt(colorpos).toString(2)
+    ).slice(-8);
 
     this.multicolor = false;
 
@@ -156,7 +156,7 @@ export default class Load {
       2
     );
 
-    let sprite = {
+    const sprite = {
       name: "sprite_" + sprite_number,
       color: this.pencolor,
       multicolor: this.multicolor,
@@ -166,16 +166,16 @@ export default class Load {
       pixels: [],
     };
 
-    let binary = [] as any;
+    const binary = [] as any;
 
-    let begin_of_sprite_data =
+    const begin_of_sprite_data =
       this.start_of_sprite_data + 3 + sprite_number * this.sprite_size;
-    let end_of_sprite_data =
+    const end_of_sprite_data =
       (sprite_number + 1) * this.sprite_size + this.start_of_sprite_data + 3;
 
     for (let i = begin_of_sprite_data; i < end_of_sprite_data; i++) {
       // convert data in SPR file into binary
-      let byte: any = ("0000000" + this.file.charCodeAt(i).toString(2))
+      const byte: any = ("0000000" + this.file.charCodeAt(i).toString(2))
         .slice(-8)
         .match(/.{1,2}/g);
       for (let j = 0; j < byte.length; j++) {
@@ -229,7 +229,7 @@ export default class Load {
     // check if sprite object has no "name" key
     // and add it if not
     if (!file_data.sprites[0].name) {
-      let number_of_sprites = file_data.sprites.length;
+      const number_of_sprites = file_data.sprites.length;
 
       for (let i = 0; i < number_of_sprites; i++) {
         file_data.sprites[i].name = "sprite_" + i;

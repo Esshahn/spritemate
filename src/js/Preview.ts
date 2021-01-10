@@ -5,7 +5,7 @@ export default class Preview extends Window_Controls {
   canvas_element: any = {};
   canvas: any = {};
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     super();
     this.config = config;
     this.window = window;
@@ -23,7 +23,7 @@ export default class Preview extends Window_Controls {
     this.canvas_element.height = this.height;
     this.canvas = this.canvas_element.getContext("2d");
 
-    let template = `
+    const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
           <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
@@ -43,7 +43,7 @@ export default class Preview extends Window_Controls {
   update(all_data) {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
-    let sprite_data = all_data.sprites[all_data.current_sprite];
+    const sprite_data = all_data.sprites[all_data.current_sprite];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
@@ -53,7 +53,7 @@ export default class Preview extends Window_Controls {
 
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        let array_entry = sprite_data.pixels[j][i];
+        const array_entry = sprite_data.pixels[j][i];
 
         if (array_entry != 0) {
           // transparent
@@ -101,7 +101,7 @@ export default class Preview extends Window_Controls {
   }
 
   display_overlay(all_data) {
-    let sprite_data = all_data.sprites[all_data.current_sprite + 1];
+    const sprite_data = all_data.sprites[all_data.current_sprite + 1];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 

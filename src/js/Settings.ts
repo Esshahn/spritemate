@@ -2,12 +2,12 @@ import $ from "jquery";
 import { dom } from "./helper";
 
 export default class Settings {
-  constructor(public window, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;
 
-    let template = `
+    const template = `
     <div id="modal">
         <h2 autofocus>Your settings will be saved locally to your browser storage</h2>
         <fieldset>
@@ -130,7 +130,7 @@ export default class Settings {
   }
 
   init_inputfields(colors) {
-    let that = this;
+    const that = this;
     for (let i = 0; i < colors.length; i++) {
       dom.sel("#colval-" + i).onchange = function () {
         that.update_custom_colors(i);
@@ -147,9 +147,9 @@ export default class Settings {
   }
 
   selection_change() {
-    let that = this;
+    const that = this;
     dom.sel("#colorpalette").onchange = function () {
-      let palette: any = dom.val("#colorpalette");
+      const palette: any = dom.val("#colorpalette");
 
       that.config.colors = that.config.palettes[palette];
       that.config.selected_palette = palette;

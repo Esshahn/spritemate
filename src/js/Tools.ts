@@ -1,11 +1,11 @@
 import { dom } from "./helper";
 
 export default class Tools {
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     this.config = config;
     this.window = window;
 
-    let template = `
+    const template = `
     <div id="menu">
       <div class ="iconset icon-hover" id="icon-load">
             <img src="img/ui/icon-load.png" class="icon" title="load">
