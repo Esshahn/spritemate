@@ -18,7 +18,7 @@ export default class Window {
     if (config.modal === undefined) config.modal = false;
     if (config.escape === undefined) config.escape = false;
 
-    let elem = `<div id="${config.id}" class="${config.type}" title="${config.title}"></div>`;
+    const elem = `<div id="${config.id}" class="${config.type}" title="${config.title}"></div>`;
     dom.append("#app", elem);
 
     $(this.get_window_id()).dialog({
@@ -38,7 +38,7 @@ export default class Window {
     if (callback) {
       $(this.get_window_id()).dialog({
         dragStop: function (event: any, ui: any) {
-          let obj = {
+          const obj = {
             name: config.name,
             data: { top: ui.position.top, left: ui.position.left },
           };
@@ -47,7 +47,7 @@ export default class Window {
       });
       $(this.get_window_id()).dialog({
         resizeStop: function (event: any, ui: any) {
-          let obj = {
+          const obj = {
             name: config.name,
             data: {
               top: ui.position.top,

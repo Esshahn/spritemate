@@ -8,9 +8,8 @@ export let dom = {
   },
 
   append: function (target, source) {
-    let e = document.createElement("div");
-    e.innerHTML = source;
-    (document.querySelector(target) as any).appendChild(e);
+    const t = document.querySelector(target) as any;
+    t.innerHTML = source;
   },
 
   /** add html element ie a canvas to target */
