@@ -4,9 +4,9 @@ Spritemate is a new sprite editor for the Commodore 64. It works with most moder
 Spritemate is still in development. If you like it, let me know ;) Feel free to submit pull requests or submit ideas, bugs, requests in the issues section. Cheers!
 
 
-Latest stable version: http://spritemate.com/
+Latest stable version: https://spritemate.com/
 
-Beta version: http://beta.spritemate.com/
+Beta version: https://beta.spritemate.com/
 
 Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE
 
@@ -115,10 +115,10 @@ $ npm run dev
 
 ## Changelog
 
-### V1.22
-#### This is mostly a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life and that I'm dedicating time to this project again. Hopefully I can add new features soon.
+### V1.3
+#### This is a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life and that I'm dedicating time to this project again.
 
- 
+- Converted all JavaScript to TypeScript
 - Rewrite of menubar, should fix annoying bug and is more responsive
 - Fixed a UI issue in the save dialog
 - Fixed a bug in the sprite invert code
@@ -128,7 +128,9 @@ $ npm run dev
 - Lots of cleanup & modernization
 - Added <a href="https://beta.spritemate.com">beta.spritemate.com</a> for latest version
 - Changed deploy setup to work with Netlify
-- Converted all JavaScript to TypeScript
+- jQuery excluded from bundle.js
+
+Initially I wanted to remove jQuery and jQuery UI from this project and replace it with Vanilla JS. Build time had grown to 10 seconds, which I found quite annoying. Replicating jQuery's modal functionality was more challenging than anticipated, therefore I decided to exclude jQuery from the JS bundle again and load it from the CDN. This greatly reduced compile time to under 4 seconds. Overall the app remains extremely small, with the main App code around 20kb and jQuery around 98kb.
 
 
 ### V1.2
@@ -156,7 +158,6 @@ $ npm run dev
 
 ### V1.10
 
- 
 This release focuses on better usabality. While technically no features were added, the overall workflow should be better now. For example, instead of having four different icons for shifting a sprite up, down, left or right, the new move tool lets you do this more intuitive now. As a side effect, less icons complicate the UI.
 
 The option to erase pixels has been in Spritemate before (by holding down 'shift' while drawing), but now the 'eraser' tool makes it more visible and easier to use in a one-handed workflow.
@@ -168,7 +169,6 @@ There are other improvements, like the visually more distinguishable 'trash' ico
 - added new move tool
 - added eraser tool
 - added new 'duplicate sprite' option to menu and list view
-
 - added hotkey 'shift+c' for copy
 - added hotkey 'shift+v' for paste
 - added hotkey 'shift+d' for duplicate
@@ -178,7 +178,6 @@ There are other improvements, like the visually more distinguishable 'trash' ico
 - changed hotkey for fill to 'f'
 - changed hotkey for fullscreen to 'shift+f'
 - changed hotkey for color mode from 'm' to 'c'
-
 - changed icons for zoom & grid
 - removed shift left, right, up, down icons from editor
 - moved 'delete sprite' icon in sprite list to right side
@@ -283,7 +282,6 @@ Therefore some shortcuts might seem less intuitive. These functions are availabl
 
 #### Bug fixes and changes
 
- 
 - Tooltips on the icons now look nicer (thx2 korshun)
 - Fixed a bug in the SpritePad importer
 - small visual and bug fixes
@@ -291,7 +289,6 @@ Therefore some shortcuts might seem less intuitive. These functions are availabl
 
 ### October 19, 2017
 
- 
 - SpritePad 2.x overlay settings will be imported & exported now
 - new sprites inherit the multicolor setting of the current sprite (thx2 Wiebo)
 - sprite index & amount of sprites shown in list window title (thx2 Wiebo)
