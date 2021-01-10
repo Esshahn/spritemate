@@ -4,7 +4,7 @@ export default class Palette {
   colors: any = {};
   active_color: number;
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
     this.window = window;

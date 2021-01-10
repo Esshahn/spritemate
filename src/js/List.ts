@@ -7,7 +7,7 @@ export default class List extends Window_Controls {
   sorted_array: any = [];
   grid: boolean;
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     super();
     this.config = config;
     this.window = window;

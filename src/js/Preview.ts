@@ -5,7 +5,7 @@ export default class Preview extends Window_Controls {
   canvas_element: any = {};
   canvas: any = {};
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     super();
     this.config = config;
     this.window = window;

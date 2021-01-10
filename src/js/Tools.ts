@@ -1,7 +1,7 @@
 import { dom } from "./helper";
 
 export default class Tools {
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     this.config = config;
     this.window = window;
 

@@ -62,7 +62,7 @@ export default class Window {
     }
   }
 
-  get_window_id() {
+  get_window_id(): string {
     return "#" + this.config.id;
   }
 }

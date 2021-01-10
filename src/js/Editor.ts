@@ -6,7 +6,7 @@ export default class Editor extends Window_Controls {
   canvas_element: HTMLCanvasElement;
   canvas: any;
 
-  constructor(public window, public config) {
+  constructor(public window: number, public config) {
     super();
     this.config = config;
     this.grid = this.config.window_editor.grid;

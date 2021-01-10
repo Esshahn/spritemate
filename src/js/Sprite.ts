@@ -24,7 +24,7 @@ export default class Sprite {
     this.sprite_name_counter = 0; // increments for every new sprite regardless of deleted sprites. Used for the default name
   }
 
-  new_sprite(color = 1, multicolor = false) {
+  new_sprite(color = 1, multicolor = false): void {
     const sprite = {
       name: "sprite_" + this.sprite_name_counter,
       color: color,
@@ -49,7 +49,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  clear() {
+  clear(): void {
     // fills the sprite data with the default color
     // generate a bitmap array
 
@@ -64,7 +64,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  fill() {
+  fill(): void {
     // fills the sprite data with the default color
     // generate a bitmap array
 
@@ -79,12 +79,12 @@ export default class Sprite {
     this.save_backup();
   }
 
-  flip_vertical() {
+  flip_vertical(): void {
     this.all.sprites[this.all.current_sprite].pixels.reverse();
     this.save_backup();
   }
 
-  flip_horizontal() {
+  flip_horizontal(): void {
     const s = this.all.sprites[this.all.current_sprite];
     for (let i = 0; i < this.height; i++) s.pixels[i].reverse();
     if (s.multicolor) {
@@ -95,7 +95,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  shift_vertical(direction) {
+  shift_vertical(direction: string): void {
     const s = this.all.sprites[this.all.current_sprite];
     if (direction == "down") {
       s.pixels.unshift(s.pixels.pop());
@@ -106,7 +106,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  shift_horizontal(direction) {
+  shift_horizontal(direction: string): void {
     const s = this.all.sprites[this.all.current_sprite];
     for (let i = 0; i < this.height; i++) {
       if (direction == "right") {
@@ -140,29 +140,29 @@ export default class Sprite {
     return sprite_colors;
   }
 
-  get_name() {
+  get_name(): string {
     return this.all.sprites[this.all.current_sprite].name;
   }
 
-  is_multicolor() {
+  is_multicolor(): boolean {
     return this.all.sprites[this.all.current_sprite].multicolor;
   }
 
-  toggle_double_x() {
+  toggle_double_x(): void {
     this.all.sprites[this.all.current_sprite].double_x = !this.all.sprites[
       this.all.current_sprite
     ].double_x;
     this.save_backup();
   }
 
-  toggle_double_y() {
+  toggle_double_y(): void {
     this.all.sprites[this.all.current_sprite].double_y = !this.all.sprites[
       this.all.current_sprite
     ].double_y;
     this.save_backup();
   }
 
-  toggle_multicolor() {
+  toggle_multicolor(): void {
     if (this.all.sprites[this.all.current_sprite].multicolor) {
       this.all.sprites[this.all.current_sprite].multicolor = false;
       if (this.is_pen_multicolor()) this.set_pen(1);
@@ -172,7 +172,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  set_pixel(pos, shiftkey) {
+  set_pixel(pos, shiftkey): void {
     // writes a pixel to the sprite pixel array
 
     // multicolor check
@@ -194,31 +194,31 @@ export default class Sprite {
     return this.all.sprites[this.all.current_sprite];
   }
 
-  get_current_sprite_number() {
+  get_current_sprite_number(): number {
     return this.all.current_sprite;
   }
 
-  get_number_of_sprites() {
+  get_number_of_sprites(): number {
     return this.all.sprites.length;
   }
 
-  only_one_sprite() {
-    if (this.all.sprites.length == 1) return true;
+  only_one_sprite(): boolean {
+    return this.all.sprites.length == 1 ? true : false;
   }
 
   get_pen() {
     return this.all.pen;
   }
 
-  is_pen_multicolor() {
+  is_pen_multicolor(): boolean {
     return this.all.pen === 2 || this.all.pen === 3;
   }
 
-  set_pen(pen) {
+  set_pen(pen): void {
     this.all.pen = pen;
   }
 
-  set_pen_color(pencolor) {
+  set_pen_color(pencolor): void {
     if (this.all.pen == 1) {
       this.all.sprites[this.all.current_sprite].color = pencolor;
     } else {
@@ -231,12 +231,12 @@ export default class Sprite {
     return this.all;
   }
 
-  set_all(all) {
+  set_all(all): void {
     this.all = all;
     this.save_backup();
   }
 
-  sort_spritelist(sprite_order_from_dom) {
+  sort_spritelist(sprite_order_from_dom): void {
     const sorted_list = sprite_order_from_dom.map(function (x) {
       return parseInt(x);
     });
@@ -253,7 +253,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  set_current_sprite(spritenumber) {
+  set_current_sprite(spritenumber: string | number): void {
     if (spritenumber == "right") spritenumber = this.all.current_sprite + 1;
     if (spritenumber == "left") spritenumber = this.all.current_sprite - 1;
 
@@ -265,7 +265,7 @@ export default class Sprite {
     this.save_backup();
   }
 
-  delete() {
+  delete(): void {
     if (this.all.sprites.length > 1) {
       this.all.sprites.splice(this.all.current_sprite, 1);
       if (this.all.current_sprite == this.all.sprites.length)
@@ -274,26 +274,26 @@ export default class Sprite {
     }
   }
 
-  save_backup() {
+  save_backup(): void {
     this.backup_position++;
     this.backup[this.backup_position] = JSON.parse(JSON.stringify(this.all)); //$.extend(true, {}, this.all);
   }
 
-  undo() {
+  undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
       this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
     }
   }
 
-  redo() {
+  redo(): void {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
       this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
     }
   }
 
-  floodfill(pos) {
+  floodfill(pos): void {
     // https://stackoverflow.com/questions/22053759/multidimensional-array-fill
     // get target value
     let x = pos.x;
@@ -326,60 +326,60 @@ export default class Sprite {
     this.all.sprites[this.all.current_sprite].pixels = data;
   }
 
-  is_copy_empty() {
+  is_copy_empty(): boolean {
     return Object.keys(this.copy_sprite).length === 0;
   }
 
-  copy() {
+  copy(): void {
     this.copy_sprite = JSON.parse(
       JSON.stringify(this.all.sprites[this.all.current_sprite])
     ); //$.extend(true,{},this.all.sprites[this.all.current_sprite]);
   }
 
-  paste() {
+  paste(): void {
     this.all.sprites[this.all.current_sprite] = JSON.parse(
       JSON.stringify(this.copy_sprite)
     ); //$.extend(true,{},this.copy_sprite);
     this.save_backup();
   }
 
-  duplicate() {
+  duplicate(): void {
     this.copy();
     this.new_sprite();
     this.paste();
   }
 
-  can_undo() {
+  can_undo(): boolean {
     return this.backup_position > 0;
   }
 
-  can_redo() {
+  can_redo(): boolean {
     return this.backup_position < this.backup.length - 1;
   }
 
-  toggle_overlay() {
+  toggle_overlay(): void {
     this.all.sprites[this.all.current_sprite].overlay = !this.all.sprites[
       this.all.current_sprite
     ].overlay;
   }
 
-  is_overlay() {
+  is_overlay(): boolean {
     return this.all.sprites[this.all.current_sprite].overlay;
   }
 
-  is_double_x() {
+  is_double_x(): boolean {
     return this.all.sprites[this.all.current_sprite].double_x;
   }
 
-  is_double_y() {
+  is_double_y(): boolean {
     return this.all.sprites[this.all.current_sprite].double_y;
   }
 
-  set_sprite_name(sprite_name) {
+  set_sprite_name(sprite_name: string): void {
     this.all.sprites[this.all.current_sprite].name = sprite_name;
   }
 
-  invert() {
+  invert(): void {
     // inverts the sprite
 
     // prevent too much data to be inverted in multicolor mode

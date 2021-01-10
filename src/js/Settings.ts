@@ -2,7 +2,7 @@ import $ from "jquery";
 import { dom } from "./helper";
 
 export default class Settings {
-  constructor(public window, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.eventhandler = eventhandler;

@@ -116,7 +116,7 @@ $ npm run dev
 ## Changelog
 
 ### V1.3
-#### This is a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life and that I'm dedicating time to this project again.
+#### This is a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life that I'm dedicating time to this project again.
 
 - Converted all JavaScript to TypeScript
 - Rewrite of menubar, should fix annoying bug and is more responsive
@@ -129,6 +129,8 @@ $ npm run dev
 - Added <a href="https://beta.spritemate.com">beta.spritemate.com</a> for latest version
 - Changed deploy setup to work with Netlify
 - jQuery excluded from bundle.js
+- Release notes will only show the latest release, not all releases
+- Removed Help window, documentation will again be handled on the github repo page
 
 Initially I wanted to remove jQuery and jQuery UI from this project and replace it with Vanilla JS. Build time had grown to 10 seconds, which I found quite annoying. Replicating jQuery's modal functionality was more challenging than anticipated, therefore I decided to exclude jQuery from the JS bundle again and load it from the CDN. This greatly reduced compile time to under 4 seconds. Overall the app remains extremely small, with the main App code around 20kb and jQuery around 98kb.
 

@@ -5,7 +5,7 @@ export default class Save {
   default_filename: any;
   savedata: any;
 
-  constructor(public window, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler) {
     this.config = config;
     this.window = window;
     this.default_filename = "mysprites";
