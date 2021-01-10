@@ -1,11 +1,9 @@
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=TOOLS
 
 /*
-
   To switch to photoshop style layers:
   - load "List_layerstyle.js" instead of "List.js" in index.html
   - comment & uncomment 2 lines of code in update_ui in this file
-
 */
 
 import $ from "jquery";
