@@ -5,13 +5,16 @@ const webpack = require("webpack"); //to access built-in plugins
 var path = require("path");
 
 const config = {
-  entry: ["webpack-jquery-ui", "./src/js/App.ts"],
+  entry: ["./src/js/App.ts"],
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
   },
   resolve: {
     extensions: [".ts", ".js"],
+  },
+  externals: {
+    jquery: "jQuery",
   },
   module: {
     rules: [
