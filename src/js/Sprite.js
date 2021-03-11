@@ -192,12 +192,18 @@ export default class Sprite
   }
 
 
-  set_pixel(pos,shiftkey)
+  set_pixel(pos,shiftkey,toggle)
   {
     // writes a pixel to the sprite pixel array
     
     // multicolor check
-    if(this.all.sprites[this.all.current_sprite].multicolor && pos.x%2 !== 0) pos.x=pos.x-1;
+    if (this.all.sprites[this.all.current_sprite].multicolor && pos.x%2 !== 0) pos.x=pos.x-1;
+
+    // if the pixel is set and we are in toggle mode, then erase the pixel
+    if (toggle && this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] != 0)
+    {
+      shiftkey = true;
+    }
     
     if (!shiftkey)
     {

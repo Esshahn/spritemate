@@ -293,6 +293,7 @@ class App
     this.init_ui_fade("icon-move");
     this.init_ui_fade("icon-draw");
     this.init_ui_fade("icon-erase");
+    this.init_ui_fade("icon-toggle");
     this.init_ui_fade("icon-fill");
     this.init_ui_fade("icon-fullscreen");
     this.init_ui_fade("icon-info");
@@ -392,6 +393,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           $("#image-icon-move").attr("src","img/ui/icon-move-hi.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
         }
 
@@ -402,6 +404,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
         }
 
@@ -412,6 +415,18 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
+          $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
+          $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+        }
+
+        if (e.key == "t")
+        {
+          this.mode = "toggle";
+          status("Toggle mode");
+          $("#image-icon-move").attr("src","img/ui/icon-move.png");
+          $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+          $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-toggle").attr("src","img/ui/icon-toggle-hi.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
         }
 
@@ -422,6 +437,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           $("#image-icon-move").attr("src","img/ui/icon-move.png");
           $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
           $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+          $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
           $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
         }
 
@@ -873,6 +889,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-move").attr("src","img/ui/icon-move-hi.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
@@ -883,6 +900,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw-hi.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
@@ -894,10 +912,21 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase-hi.png");
+      $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
     });
 
- 
+    $('#icon-toggle').mouseup((e) =>
+    {
+      this.mode = "toggle";
+      status("Toggle mode");
+      $("#image-icon-move").attr("src","img/ui/icon-move.png");
+      $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
+      $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-toggle").attr("src","img/ui/icon-toggle-hi.png");
+      $("#image-icon-fill").attr("src","img/ui/icon-fill.png");
+    });
+
     $('#icon-fill').mouseup((e) =>
     {
       this.mode = "fill";
@@ -905,6 +934,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $("#image-icon-move").attr("src","img/ui/icon-move.png");
       $("#image-icon-draw").attr("src","img/ui/icon-draw.png");
       $("#image-icon-erase").attr("src","img/ui/icon-erase.png");
+      $("#image-icon-toggle").attr("src","img/ui/icon-toggle.png");
       $("#image-icon-fill").attr("src","img/ui/icon-fill-hi.png");
     });
 
@@ -1041,14 +1071,21 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
       if (this.mode == "draw")
       {
-        this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(this.editor.get_pixel(e),e.shiftKey,false); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
       }
 
       if (this.mode == "erase")
       {
-        this.sprite.set_pixel(this.editor.get_pixel(e),true); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(this.editor.get_pixel(e),true,false); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
+      }
+
+      if (this.mode == "toggle")
+      {
+        this.sprite.set_pixel(this.editor.get_pixel(e),false,true); // updates the sprite array at the grid position with the color chosen on the palette
+        this.is_drawing = true; // needed for mousemove drawing
+        this.oldpos = this.editor.get_pixel(e);
       }
 
       if (this.mode == "fill")
@@ -1066,16 +1103,21 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     $('#editor').mousemove((e) => {
       
-      if (this.is_drawing && (this.mode=="draw" || this.mode=="erase"))
+      if (this.is_drawing && (this.mode=="draw" || this.mode=="erase" || this.mode=="toggle"))
       {
         let newpos = this.editor.get_pixel(e);
+        let multiColor = this.sprite.get_current_sprite().multicolor;
         // only draw if the mouse has entered a new pixel area (just for performance)
-        if ( (newpos.x != this.oldpos.x) || (newpos.y != this.oldpos.y) )
+        if ( (multiColor && ((newpos.x | 1) != (this.oldpos.x | 1))) || 
+             (!multiColor && (newpos.x != this.oldpos.x)) ||
+             (newpos.y != this.oldpos.y) )
         {
           let all = this.sprite.get_all();
           let delete_trigger = e.shiftKey;
           if (this.mode == "erase") delete_trigger = true;
-          this.sprite.set_pixel(newpos,delete_trigger); // updates the sprite array at the grid position with the color chosen on the palette
+          let toggle_trigger = false;
+          if (this.mode == "toggle") toggle_trigger = true;
+          this.sprite.set_pixel(newpos,delete_trigger,toggle_trigger); // updates the sprite array at the grid position with the color chosen on the palette
           this.editor.update(all); 
           this.preview.update(all);
           this.list.update(all); // only updates the sprite drawn onto

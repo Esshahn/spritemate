@@ -40,6 +40,10 @@ export default class Menu
             <img src="img/ui/icon-erase.png" class="icon" id="image-icon-erase" title="erase tool (e)">
             <div class="icontext">erase</div>
         </div>
+        <div class ="iconset" id="icon-toggle">
+            <img src="img/ui/icon-toggle.png" class="icon" id="image-icon-toggle" title="toggle tool (t)">
+            <div class="icontext">toggle</div>
+        </div>
         <div class ="iconset" id="icon-fill">
             <img src="img/ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (f)">  
             <div class="icontext">fill</div>
