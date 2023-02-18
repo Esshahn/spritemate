@@ -139,9 +139,9 @@ export default class Save {
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
 
   save_file_to_disk(file, filename): void {
-    if (window.navigator.msSaveOrOpenBlob)
+    if ((window.navigator as any).msSaveOrOpenBlob)
       // IE10+
-      window.navigator.msSaveOrOpenBlob(file, filename);
+      (window.navigator as any).msSaveOrOpenBlob(file, filename);
     else {
       // Others
       const a = document.createElement("a"),
