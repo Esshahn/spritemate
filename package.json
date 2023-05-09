@@ -18,7 +18,7 @@
   "devDependencies": {
     "@types/jquery": "^3.5.4",
     "@types/jqueryui": "^1.12.13",
-    "copy-webpack-plugin": "^4.6.0",
+    "copy-webpack-plugin": "^11.0.0",
     "eslint": "^7.14.0",
     "@typescript-eslint/eslint-plugin": "4.2.0",
     "@typescript-eslint/parser": "4.2.0",
