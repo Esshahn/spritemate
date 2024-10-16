@@ -6,9 +6,6 @@
   - comment & uncomment 2 lines of code in update_ui in this file
 */
 
-import $ from "jquery";
-import 'jquery-ui';
-
 
 import "../css/jquery-ui.css";
 import "../css/stylesheet.css";

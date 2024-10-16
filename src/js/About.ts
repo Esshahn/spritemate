@@ -1,4 +1,4 @@
-import $ from "jquery";
+
 import { dom } from "./helper";
 export default class About {
   constructor(public window: number, public config, public eventhandler) {
@@ -8,7 +8,7 @@ export default class About {
 
     const template = `
     <div id="info">
-        <img autofocus src="img/logo-menu.svg" width="300px" id="logo" alt="spritemate">
+        <img autofocus src="src/img/logo-menu.svg" width="300px" id="logo" alt="spritemate">
         <p>The Commodore 64 sprite editor, v${this.config.version.toFixed(
           2
         )}</p>

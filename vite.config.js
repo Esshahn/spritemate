@@ -1,6 +1,7 @@
-const path = require('path');
+import { defineConfig } from 'vite';
+import path from 'path';
 
-module.exports = {
+export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -9,6 +10,11 @@ module.exports = {
   build: {
     outDir: 'dist',
   },
-  
-  // No need to define $ and jQuery here; it will be handled within the app itself.
-};
+  define: {
+    'window.jQuery': 'jQuery',
+    'window.$': 'jQuery',
+  },
+  optimizeDeps: {
+    include: ['jquery', 'jquery-ui']
+  }
+});

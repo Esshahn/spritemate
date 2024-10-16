@@ -25,9 +25,5 @@
     "eslint-plugin-prettier": "3.1.4",
     "prettier": "2.1.2",
     "vite": "^5.4.9"
-  },
-  "dependencies": {
-    "jquery": "^3.7.1",
-    "jquery-ui": "^1.14.0"
   }
 }
