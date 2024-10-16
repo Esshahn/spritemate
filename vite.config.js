@@ -6,5 +6,10 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-  }
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets', // Default asset directory, you can change if needed
+  },
+  base: '/', // Make sure this is correct for production
 });

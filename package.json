@@ -5,7 +5,7 @@
   "homepage": "http://www.awsm.de",
   "author": "Ingo Hinterding",
   "license": "MIT",
-  "main": "App.js",
+  "main": "App.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Esshahn/spritemate"

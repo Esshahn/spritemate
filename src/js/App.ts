@@ -258,26 +258,26 @@ class App {
       dom.attr(
         "#icon-preview-overlay",
         "src",
-        "src/img/ui/icon-preview-overlay-hi.png"
+        "ui/icon-preview-overlay-hi.png"
       );
     } else {
       dom.attr(
         "#icon-preview-overlay",
         "src",
-        "src/img/ui/icon-preview-overlay.png"
+        "ui/icon-preview-overlay.png"
       );
     }
 
     if (this.sprite.is_double_x()) {
-      dom.attr("#icon-preview-x", "src", "src/img/ui/icon-preview-x2-hi.png");
+      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2-hi.png");
     } else {
-      dom.attr("#icon-preview-x", "src", "src/img/ui/icon-preview-x2.png");
+      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2.png");
     }
 
     if (this.sprite.is_double_y()) {
-      dom.attr("#icon-preview-y", "src", "src/img/ui/icon-preview-y2-hi.png");
+      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2-hi.png");
     } else {
-      dom.attr("#icon-preview-y", "src", "src/img/ui/icon-preview-y2.png");
+      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2.png");
     }
 
     if (this.preview.is_min_zoom()) {
@@ -433,37 +433,37 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "m") {
           this.mode = "move";
           status("Move mode");
-          dom.attr("#image-icon-move", "src", "src/img/ui/icon-move-hi.png");
-          dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "ui/icon-move-hi.png");
+          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
         }
 
         if (e.key == "d") {
           this.mode = "draw";
           status("Draw mode");
-          dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw-hi.png");
-          dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "ui/icon-draw-hi.png");
+          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
         }
 
         if (e.key == "e") {
           this.mode = "erase";
           status("Erase mode");
-          dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase-hi.png");
-          dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "ui/icon-erase-hi.png");
+          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
         }
 
         if (e.key == "f") {
           this.mode = "fill";
           status("Fill mode");
-          dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill-hi.png");
+          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+          dom.attr("#image-icon-fill", "src", "ui/icon-fill-hi.png");
         }
 
         if (e.key == "1") {
@@ -906,37 +906,37 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     dom.sel("#icon-move").onclick = () => {
       this.mode = "move";
       status("Move mode");
-      dom.attr("#image-icon-move", "src", "src/img/ui/icon-move-hi.png");
-      dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+      dom.attr("#image-icon-move", "src", "ui/icon-move-hi.png");
+      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
     };
 
     dom.sel("#icon-draw").onclick = () => {
       this.mode = "draw";
       status("Draw mode");
-      dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw-hi.png");
-      dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "ui/icon-draw-hi.png");
+      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
     };
 
     dom.sel("#icon-erase").onclick = () => {
       this.mode = "erase";
       status("Erase mode");
-      dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase-hi.png");
-      dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill.png");
+      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "ui/icon-erase-hi.png");
+      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
     };
 
     dom.sel("#icon-fill").onclick = () => {
       this.mode = "fill";
       status("Fill mode");
-      dom.attr("#image-icon-move", "src", "src/img/ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "src/img/ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "src/img/ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "src/img/ui/icon-fill-hi.png");
+      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
+      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
+      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
+      dom.attr("#image-icon-fill", "src", "ui/icon-fill-hi.png");
     };
 
     /*
