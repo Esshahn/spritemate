@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: 1.3,
+    version: 1.4,
     sprite_x: 24,
     sprite_y: 21,
     palettes: {

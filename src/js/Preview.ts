@@ -26,12 +26,12 @@ export default class Preview extends Window_Controls {
     const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
-          <img src="img/ui/icon-zoom-minus.png" class="icon-hover" id="icon-preview-zoom-out" title="zoom out">
+          <img src="ui/icon-zoom-plus.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
+          <img src="ui/icon-zoom-minus.png" class="icon-hover" id="icon-preview-zoom-out" title="zoom out">
         </div>
-        <img src="img/ui/icon-preview-x2.png" class="icon-hover" id="icon-preview-x" title="double width">
-        <img src="img/ui/icon-preview-y2.png" class="icon-hover" id="icon-preview-y" title="double height">
-        <img src="img/ui/icon-preview-overlay.png" class="icon-hover" id="icon-preview-overlay" title="overlay next sprite">
+        <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-preview-x" title="double width">
+        <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-preview-y" title="double height">
+        <img src="ui/icon-preview-overlay.png" class="icon-hover" id="icon-preview-overlay" title="overlay next sprite">
       </div>
       <div id="preview-canvas"></div>
     `;
