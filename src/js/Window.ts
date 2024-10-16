@@ -1,9 +1,3 @@
-/*
-
-    Class Window
-
- */
-
 import $ from "jquery";
 import { dom } from "./helper";
 

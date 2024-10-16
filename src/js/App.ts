@@ -7,6 +7,9 @@
 */
 
 import $ from "jquery";
+import 'jquery-ui';
+
+
 import "../css/jquery-ui.css";
 import "../css/stylesheet.css";
 
