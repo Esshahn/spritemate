@@ -16,7 +16,7 @@ export default class About {
         <fieldset>
             <h1>Release notes</h1>
 
-            <h1>V1.4</h1>
+            <h1>V1.4beta</h1>
             <h2>Another housekeeping update without new features (sorry).</h2>
             <br/>
             <p>
