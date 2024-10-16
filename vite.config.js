@@ -6,15 +6,5 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-  },
-  build: {
-    outDir: 'dist',
-  },
-  define: {
-    'window.jQuery': 'jQuery',
-    'window.$': 'jQuery',
-  },
-  optimizeDeps: {
-    include: ['jquery', 'jquery-ui']
   }
 });
