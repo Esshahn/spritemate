@@ -41,6 +41,7 @@ export default class Editor extends Window_Controls {
         -->
         <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="img/ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
+        <img src="img/ui/icon-4up.png" title="toggle 4 up" class="icon-hover" id="icon-4up">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>
@@ -54,6 +55,27 @@ export default class Editor extends Window_Controls {
   }
 
   update(all_data) {
+    // check four up can be enabled.
+    if (all_data.current_sprite < all_data.sprites.length - 3) {
+      dom.show("#icon-4up");
+    } else {
+      dom.hide("#icon-4up");
+      all_data.four_up = false;
+    }
+
+    // if four up is enabled.
+    if (all_data.four_up) {
+      this.pixels_x = this.config.sprite_x * 2;
+      this.pixels_y = this.config.sprite_y * 2;
+      this.width = this.pixels_x * this.zoom;
+      this.height = this.pixels_y * this.zoom;
+    } else {
+      this.pixels_x = this.config.sprite_x;
+      this.pixels_y = this.config.sprite_y;
+      this.width = this.pixels_x * this.zoom;
+      this.height = this.pixels_y * this.zoom;
+    }
+
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
@@ -75,7 +97,7 @@ export default class Editor extends Window_Controls {
     }
 
     // current sprite
-    this.fill_canvas(all_data, sprite_data, x_grid_step, 1);
+    this.fill_canvas(all_data, all_data.current_sprite, x_grid_step, 1);
 
     // overlay from next sprite
     if (
@@ -96,13 +118,19 @@ export default class Editor extends Window_Controls {
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
 
-    this.fill_canvas(all_data, sprite_data, x_grid_step, alpha);
+    this.fill_canvas(all_data, all_data.current_sprite, x_grid_step, alpha);
   }
 
-  fill_canvas(all_data, sprite_data, x_grid_step, alpha = 1) {
+  fill_canvas(all_data, current_sprite, x_grid_step, alpha = 1) {
+    const sprite_data = all_data.sprites[current_sprite];
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        const array_entry = sprite_data.pixels[j][i];
+        let jj = Math.floor(j / 21);
+        let ii = Math.floor(i / 24);
+        let newIndex = Math.floor(jj * 2 + ii);
+
+        const array_entry =
+          all_data.sprites[current_sprite + newIndex].pixels[j % 21][i % 24];
 
         if (array_entry != 0) {
           // not transparent
@@ -167,13 +195,24 @@ export default class Editor extends Window_Controls {
   }
 
   // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
-  get_pixel(e) {
+  get_pixel(all_data, e) {
     const obj = this.canvas_element.getBoundingClientRect();
     const x = e.clientX - obj.left;
     const y = e.clientY - obj.top;
-    const x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-    const y_grid = Math.floor(y / (this.height / this.config.sprite_y));
-    return { x: x_grid, y: y_grid };
+    let x_grid = Math.floor(x / (this.width / this.config.sprite_x));
+    let y_grid = Math.floor(y / (this.height / this.config.sprite_y));
+    let sprite_offset = 0;
+
+    if (all_data.four_up) {
+      x_grid = Math.floor(x / (this.width / this.config.sprite_x / 2));
+      y_grid = Math.floor(y / (this.height / this.config.sprite_y / 2));
+      let jj = Math.floor(y_grid / 21);
+      let ii = Math.floor(x_grid / 24);
+      sprite_offset = Math.floor(jj * 2 + ii);
+      x_grid = x_grid % 24;
+      y_grid = y_grid % 21;
+    }
+    return { x: x_grid, y: y_grid, sprite_offset };
   }
 
   toggle_grid() {

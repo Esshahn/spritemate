@@ -16,6 +16,7 @@ export default class Sprite {
     this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
 
     this.all.sprites = [];
+    this.all.four_up = false;
     this.all.current_sprite = 0;
     this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
@@ -82,6 +83,10 @@ export default class Sprite {
   flip_vertical(): void {
     this.all.sprites[this.all.current_sprite].pixels.reverse();
     this.save_backup();
+  }
+
+  toggle_four_up(): void {
+    this.all.four_up = !this.all.four_up;
   }
 
   flip_horizontal(): void {
@@ -174,19 +179,25 @@ export default class Sprite {
 
   set_pixel(pos, shiftkey): void {
     // writes a pixel to the sprite pixel array
+    const { sprite_offset } = pos;
 
     // multicolor check
-    if (this.all.sprites[this.all.current_sprite].multicolor && pos.x % 2 !== 0)
+    if (
+      this.all.sprites[this.all.current_sprite + sprite_offset].multicolor &&
+      pos.x % 2 !== 0
+    )
       pos.x = pos.x - 1;
 
     if (!shiftkey) {
       // draw with selected pen
-      this.all.sprites[this.all.current_sprite].pixels[pos.y][
+      this.all.sprites[this.all.current_sprite + sprite_offset].pixels[pos.y][
         pos.x
       ] = this.all.pen;
     } else {
       // shift is hold down, so we delete with transparent color
-      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = 0;
+      this.all.sprites[this.all.current_sprite + sprite_offset].pixels[pos.y][
+        pos.x
+      ] = 0;
     }
   }
 

@@ -92,6 +92,22 @@ export default class List extends Window_Controls {
     const canvas = c.getContext("2d", { alpha: false });
     const sprite_data = all_data.sprites[all_data.current_sprite];
     this.draw_sprite(canvas, sprite_data, all_data);
+
+    if (all_data.four_up) {
+      for (let i = 1; i <= 3; i++) {
+        $("#window-" + this.window).dialog(
+          "option",
+          "title",
+          `sprite ${all_data.current_sprite + i + 1} of ${
+            all_data.sprites.length
+          }`
+        );
+        const c: any = document.getElementById(all_data.current_sprite + i);
+        const canvas = c.getContext("2d", { alpha: false });
+        const sprite_data = all_data.sprites[all_data.current_sprite + i];
+        this.draw_sprite(canvas, sprite_data, all_data);
+      }
+    }
   }
 
   update_all(all_data) {
