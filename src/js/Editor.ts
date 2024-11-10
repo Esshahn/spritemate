@@ -67,14 +67,12 @@ export default class Editor extends Window_Controls {
     if (all_data.four_up) {
       this.pixels_x = this.config.sprite_x * 2;
       this.pixels_y = this.config.sprite_y * 2;
-      this.width = this.pixels_x * this.zoom;
-      this.height = this.pixels_y * this.zoom;
     } else {
       this.pixels_x = this.config.sprite_x;
       this.pixels_y = this.config.sprite_y;
-      this.width = this.pixels_x * this.zoom;
-      this.height = this.pixels_y * this.zoom;
     }
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
 
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
