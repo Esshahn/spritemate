@@ -728,6 +728,11 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
+    dom.sel("#menubar-4up").onclick = () => {
+      this.sprite.toggle_four_up();
+      this.update();
+    };
+
     dom.sel("#menubar-colormode").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
@@ -1039,6 +1044,11 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
+    dom.sel("#icon-4up").onclick = () => {
+      this.sprite.toggle_four_up();
+      this.update();
+    };
+
     dom.sel("#icon-multicolor").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
@@ -1066,29 +1076,32 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     dom.sel("#editor").onmousedown = (e) => {
       if (this.mode == "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(
+          this.editor.get_pixel(this.sprite.all, e),
+          e.shiftKey
+        ); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
       }
 
       if (this.mode == "erase") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), true); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(this.editor.get_pixel(this.sprite.all, e), true); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
       }
 
       if (this.mode == "fill") {
-        this.sprite.floodfill(this.editor.get_pixel(e));
+        this.sprite.floodfill(this.editor.get_pixel(this.sprite.all, e));
       }
 
       if (this.mode == "move") {
         this.move_start = true;
-        this.move_start_pos = this.editor.get_pixel(e);
+        this.move_start_pos = this.editor.get_pixel(this.sprite.all, e);
       }
       this.update();
     };
 
     dom.sel("#editor").onmousemove = (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
-        const newpos = this.editor.get_pixel(e);
+        const newpos = this.editor.get_pixel(this.sprite.all, e);
         // only draw if the mouse has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
@@ -1103,8 +1116,10 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.move_start) {
-        const x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
-        const y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        const x_diff =
+          this.editor.get_pixel(this.sprite.all, e).x - this.move_start_pos.x;
+        const y_diff =
+          this.editor.get_pixel(this.sprite.all, e).y - this.move_start_pos.y;
 
         if (x_diff > 0) {
           this.sprite.shift_horizontal("right");
@@ -1120,7 +1135,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         }
 
         if (x_diff || y_diff) {
-          this.move_start_pos = this.editor.get_pixel(e);
+          this.move_start_pos = this.editor.get_pixel(this.sprite.all, e);
           this.update();
         }
       }

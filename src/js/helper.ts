@@ -102,7 +102,7 @@ export const dom = {
   },
 
   show(target): void {
-    document.querySelector(target).style.display = "block";
+    document.querySelector(target).style.display = "unset";
   },
 
   /** selects an element from the dom and returns it */
