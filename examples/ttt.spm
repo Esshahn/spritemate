@@ -1,4 +1,4 @@
-{"version":1.3,"colors":{"0":0,"2":15,"3":1},"sprites":[{"name":"sprite_0","color":14,"multicolor":true,"double_x":false,"double_y":false,"overlay":false,"pixels":[
+{"version":1.4,"colors":{"0":0,"2":15,"3":1},"sprites":[{"name":"sprite_0","color":14,"multicolor":true,"double_x":false,"double_y":false,"overlay":false,"pixels":[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -175,4 +175,4 @@
 [0,0,0,0,0,0,1,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ]}],
-"four_up":true,"current_sprite":0,"pen":2}
+"current_sprite":0,"pen":2,"multi_sprite":3}
