@@ -733,6 +733,21 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
+    dom.sel("#menubar-single").onclick = () => {
+      this.sprite.toggle_single_up();
+      this.update();
+    };
+
+    dom.sel("#menubar-2upv").onclick = () => {
+      this.sprite.toggle_two_up_v();
+      this.update();
+    };
+
+    dom.sel("#menubar-2uph").onclick = () => {
+      this.sprite.toggle_two_up_h();
+      this.update();
+    };
+
     dom.sel("#menubar-colormode").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
@@ -1044,8 +1059,23 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
+    dom.sel("#icon-2upv").onclick = () => {
+      this.sprite.toggle_two_up_v();
+      this.update();
+    };
+
+    dom.sel("#icon-2uph").onclick = () => {
+      this.sprite.toggle_two_up_h();
+      this.update();
+    };
+
     dom.sel("#icon-4up").onclick = () => {
       this.sprite.toggle_four_up();
+      this.update();
+    };
+
+    dom.sel("#icon-single").onclick = () => {
+      this.sprite.toggle_single_up();
       this.update();
     };
 

@@ -1,3 +1,5 @@
+import { MultiSpriteMode } from "./Enums";
+
 export default class Sprite {
   width: number;
   height: number;
@@ -16,7 +18,7 @@ export default class Sprite {
     this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
 
     this.all.sprites = [];
-    this.all.four_up = false;
+    this.all.multi_sprite = MultiSpriteMode.SINGLE;
     this.all.current_sprite = 0;
     this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
     this.backup = [];
@@ -86,7 +88,19 @@ export default class Sprite {
   }
 
   toggle_four_up(): void {
-    this.all.four_up = !this.all.four_up;
+    this.all.multi_sprite = MultiSpriteMode.FOUR_UP;
+  }
+
+  toggle_single_up(): void {
+    this.all.multi_sprite = MultiSpriteMode.SINGLE;
+  }
+
+  toggle_two_up_v(): void {
+    this.all.multi_sprite = MultiSpriteMode.TWO_UP_VERTICAL;
+  }
+
+  toggle_two_up_h(): void {
+    this.all.multi_sprite = MultiSpriteMode.TWO_UP_HORIZONTAL;
   }
 
   flip_horizontal(): void {

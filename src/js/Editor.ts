@@ -1,3 +1,4 @@
+import { MultiSpriteMode } from "./Enums";
 import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
@@ -41,7 +42,10 @@ export default class Editor extends Window_Controls {
         -->
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
-        <img src="ui/icon-4up.png" title="toggle 4 up" class="icon-hover" id="icon-4up">
+        <img src="ui/icon-single.png" title="single" class="icon-hover" id="icon-single">
+        <img src="ui/icon-2upv.png" title="2 up vertical" class="icon-hover" id="icon-2upv">
+        <img src="ui/icon-2uph.png" title="2 up horizontal" class="icon-hover" id="icon-2uph">
+        <img src="ui/icon-4up.png" title="4 up" class="icon-hover" id="icon-4up">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>
@@ -55,22 +59,47 @@ export default class Editor extends Window_Controls {
   }
 
   update(all_data) {
+
+
     // check four up can be enabled.
     if (all_data.current_sprite < all_data.sprites.length - 3) {
       dom.show("#icon-4up");
     } else {
       dom.hide("#icon-4up");
-      all_data.four_up = false;
+      if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP)
+        all_data.multi_sprite = MultiSpriteMode.SINGLE;
     }
 
+    if (all_data.current_sprite < all_data.sprites.length - 1) {
+      dom.show("#icon-2upv");
+      dom.show("#icon-2uph");
+    } else {
+        dom.hide("#icon-2upv");
+        dom.hide("#icon-2uph");
+        all_data.multi_sprite = MultiSpriteMode.SINGLE;
+    }
+
+    
+    // if 2 up v is enabled.
+    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
+      this.pixels_x = this.config.sprite_x;
+      this.pixels_y = this.config.sprite_y * 2;
+    } else 
+    // if 2 up h is enabled.
+    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
+      this.pixels_x = this.config.sprite_x * 2;
+      this.pixels_y = this.config.sprite_y;
+    } else 
     // if four up is enabled.
-    if (all_data.four_up) {
+    if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
       this.pixels_x = this.config.sprite_x * 2;
       this.pixels_y = this.config.sprite_y * 2;
     } else {
       this.pixels_x = this.config.sprite_x;
       this.pixels_y = this.config.sprite_y;
     }
+
+
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
 
@@ -125,7 +154,18 @@ export default class Editor extends Window_Controls {
       for (let j = 0; j < this.pixels_y; j++) {
         let jj = Math.floor(j / 21);
         let ii = Math.floor(i / 24);
-        let newIndex = Math.floor(jj * 2 + ii);
+        let newIndex = 0;
+
+        if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
+          newIndex = Math.floor(jj * 2 + ii);
+        } else
+          if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
+            newIndex = Math.floor(jj);
+          } else
+          if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
+            newIndex = Math.floor(ii);
+          } 
+       
 
         const array_entry =
           all_data.sprites[current_sprite + newIndex].pixels[j % 21][i % 24];
@@ -201,7 +241,7 @@ export default class Editor extends Window_Controls {
     let y_grid = Math.floor(y / (this.height / this.config.sprite_y));
     let sprite_offset = 0;
 
-    if (all_data.four_up) {
+    if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
       x_grid = Math.floor(x / (this.width / this.config.sprite_x / 2));
       y_grid = Math.floor(y / (this.height / this.config.sprite_y / 2));
       let jj = Math.floor(y_grid / 21);
@@ -209,7 +249,25 @@ export default class Editor extends Window_Controls {
       sprite_offset = Math.floor(jj * 2 + ii);
       x_grid = x_grid % 24;
       y_grid = y_grid % 21;
+    } else
+    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
+      x_grid = Math.floor(x / (this.width / this.config.sprite_x / 2));
+      y_grid = Math.floor(y / (this.height / this.config.sprite_y));
+      let ii = Math.floor(x_grid / 24);
+      sprite_offset = Math.floor(ii);
+      x_grid = x_grid % 24;
+      y_grid = y_grid % 21;
+      }
+    else
+    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
+      x_grid = Math.floor(x / (this.width / this.config.sprite_x));
+      y_grid = Math.floor(y / (this.height / this.config.sprite_y / 2));
+      let jj = Math.floor(y_grid / 21);
+      sprite_offset = Math.floor(jj);
+      x_grid = x_grid % 24;
+      y_grid = y_grid % 21;
     }
+    
     return { x: x_grid, y: y_grid, sprite_offset };
   }
 
