@@ -1,4 +1,3 @@
-import { MultiSpriteMode } from "./Enums";
 import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
@@ -42,10 +41,10 @@ export default class Editor extends Window_Controls {
         -->
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
-        <img src="ui/icon-single.png" title="single" class="icon-hover" id="icon-single">
-        <img src="ui/icon-2upv.png" title="2 up vertical" class="icon-hover" id="icon-2upv">
-        <img src="ui/icon-2uph.png" title="2 up horizontal" class="icon-hover" id="icon-2uph">
-        <img src="ui/icon-4up.png" title="4 up" class="icon-hover" id="icon-4up">
+        <label class="label">layout</label>
+        <input type="number" hideSpinner class="editor_layout" class="icon-hover" id="input-layout-width" name="" value="" title="layout width">
+        <label class="label">x</label>
+        <input type="number" class="editor_layout" class="icon-hover" id="input-layout-height" name="" value="" title="layout height">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>
@@ -59,47 +58,16 @@ export default class Editor extends Window_Controls {
   }
 
   update(all_data) {
-
-
-    // check four up can be enabled.
-    if (all_data.current_sprite < all_data.sprites.length - 3) {
-      dom.show("#icon-4up");
-    } else {
-      dom.hide("#icon-4up");
-      if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP)
-        all_data.multi_sprite = MultiSpriteMode.SINGLE;
+  
+    if (all_data.current_sprite > all_data.sprites.length - (all_data.multi_sprite[0] * all_data.multi_sprite[1])) {
+      all_data.multi_sprite = [1, 1];
     }
-
-    if (all_data.current_sprite < all_data.sprites.length - 1) {
-      dom.show("#icon-2upv");
-      dom.show("#icon-2uph");
-    } else {
-        dom.hide("#icon-2upv");
-        dom.hide("#icon-2uph");
-        all_data.multi_sprite = MultiSpriteMode.SINGLE;
-    }
-
+    dom.val("#input-layout-width", all_data.multi_sprite[0]);
+    dom.val("#input-layout-height", all_data.multi_sprite[1]);
     
-    // if 2 up v is enabled.
-    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
-      this.pixels_x = this.config.sprite_x;
-      this.pixels_y = this.config.sprite_y * 2;
-    } else 
-    // if 2 up h is enabled.
-    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
-      this.pixels_x = this.config.sprite_x * 2;
-      this.pixels_y = this.config.sprite_y;
-    } else 
-    // if four up is enabled.
-    if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
-      this.pixels_x = this.config.sprite_x * 2;
-      this.pixels_y = this.config.sprite_y * 2;
-    } else {
-      this.pixels_x = this.config.sprite_x;
-      this.pixels_y = this.config.sprite_y;
-    }
-
-
+    this.pixels_x = this.config.sprite_x * all_data.multi_sprite[0];
+    this.pixels_y = this.config.sprite_y * all_data.multi_sprite[1];
+   
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
 
@@ -154,19 +122,8 @@ export default class Editor extends Window_Controls {
       for (let j = 0; j < this.pixels_y; j++) {
         let jj = Math.floor(j / 21);
         let ii = Math.floor(i / 24);
-        let newIndex = 0;
-
-        if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
-          newIndex = Math.floor(jj * 2 + ii);
-        } else
-          if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
-            newIndex = Math.floor(jj);
-          } else
-          if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
-            newIndex = Math.floor(ii);
-          } 
+        let newIndex = Math.floor(jj * all_data.multi_sprite[0]  + ii);
        
-
         const array_entry =
           all_data.sprites[current_sprite + newIndex].pixels[j % 21][i % 24];
 
@@ -237,36 +194,17 @@ export default class Editor extends Window_Controls {
     const obj = this.canvas_element.getBoundingClientRect();
     const x = e.clientX - obj.left;
     const y = e.clientY - obj.top;
-    let x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-    let y_grid = Math.floor(y / (this.height / this.config.sprite_y));
+    let x_grid = Math.floor(x / (this.width / this.config.sprite_x / all_data.multi_sprite[0]));
+    let y_grid = Math.floor(y / (this.height / this.config.sprite_y / all_data.multi_sprite[1]));
     let sprite_offset = 0;
 
-    if (all_data.multi_sprite == MultiSpriteMode.FOUR_UP) {
-      x_grid = Math.floor(x / (this.width / this.config.sprite_x / 2));
-      y_grid = Math.floor(y / (this.height / this.config.sprite_y / 2));
+
       let jj = Math.floor(y_grid / 21);
       let ii = Math.floor(x_grid / 24);
-      sprite_offset = Math.floor(jj * 2 + ii);
+      sprite_offset = Math.floor(jj * all_data.multi_sprite[0] + ii);
       x_grid = x_grid % 24;
       y_grid = y_grid % 21;
-    } else
-    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_HORIZONTAL) {
-      x_grid = Math.floor(x / (this.width / this.config.sprite_x / 2));
-      y_grid = Math.floor(y / (this.height / this.config.sprite_y));
-      let ii = Math.floor(x_grid / 24);
-      sprite_offset = Math.floor(ii);
-      x_grid = x_grid % 24;
-      y_grid = y_grid % 21;
-      }
-    else
-    if (all_data.multi_sprite == MultiSpriteMode.TWO_UP_VERTICAL) {
-      x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-      y_grid = Math.floor(y / (this.height / this.config.sprite_y / 2));
-      let jj = Math.floor(y_grid / 21);
-      sprite_offset = Math.floor(jj);
-      x_grid = x_grid % 24;
-      y_grid = y_grid % 21;
-    }
+
     
     return { x: x_grid, y: y_grid, sprite_offset };
   }

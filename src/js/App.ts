@@ -376,6 +376,17 @@ class App {
     this.update();
   }
 
+  update_multi_sprite_layout() {
+    this.sprite.all.multi_sprite = [dom.val("#input-layout-width"), dom.val("#input-layout-height")];
+    if (this.sprite.all.multi_sprite[0] < 1) {
+      this.sprite.all.multi_sprite[0] = 1;
+    }
+    if (this.sprite.all.multi_sprite[1] < 1) {
+      this.sprite.all.multi_sprite[1] = 1;
+    }
+    this.update();
+  }
+
   user_interaction() {
     /*
 
@@ -728,26 +739,6 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
-    dom.sel("#menubar-4up").onclick = () => {
-      this.sprite.toggle_four_up();
-      this.update();
-    };
-
-    dom.sel("#menubar-single").onclick = () => {
-      this.sprite.toggle_single_up();
-      this.update();
-    };
-
-    dom.sel("#menubar-2upv").onclick = () => {
-      this.sprite.toggle_two_up_v();
-      this.update();
-    };
-
-    dom.sel("#menubar-2uph").onclick = () => {
-      this.sprite.toggle_two_up_h();
-      this.update();
-    };
-
     dom.sel("#menubar-colormode").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
@@ -1059,26 +1050,6 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#icon-2upv").onclick = () => {
-      this.sprite.toggle_two_up_v();
-      this.update();
-    };
-
-    dom.sel("#icon-2uph").onclick = () => {
-      this.sprite.toggle_two_up_h();
-      this.update();
-    };
-
-    dom.sel("#icon-4up").onclick = () => {
-      this.sprite.toggle_four_up();
-      this.update();
-    };
-
-    dom.sel("#icon-single").onclick = () => {
-      this.sprite.toggle_single_up();
-      this.update();
-    };
-
     dom.sel("#icon-multicolor").onclick = () => {
       this.sprite.toggle_multicolor();
       this.update();
@@ -1087,6 +1058,37 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     dom.sel("#input-sprite-name").onfocus = () => {
       this.allow_keyboard_shortcuts = false;
     };
+
+    dom.sel("#input-layout-height").onfocus = () => {
+      this.allow_keyboard_shortcuts = false;
+    };
+
+    dom.sel("#input-layout-height").onkeyup = (e) => {
+      if (e.key === "Enter") {
+        this.update_multi_sprite_layout();
+        dom.sel("#input-layout-height").blur();
+      }
+    };
+
+    dom.sel("#input-layout-height").onclick = (e) => {
+      this.update_multi_sprite_layout();
+    };
+    
+    dom.sel("#input-layout-width").onfocus = () => {
+      this.allow_keyboard_shortcuts = false;
+    };
+
+    dom.sel("#input-layout-width").onkeyup = (e) => {
+      if (e.key === "Enter") {
+        this.update_multi_sprite_layout();
+        dom.sel("#input-layout-width").blur();
+      }
+    };
+
+    dom.sel("#input-layout-width").onclick = (e) => {
+      this.update_multi_sprite_layout();
+    };
+    
 
     dom.sel("#input-sprite-name").onkeyup = (e) => {
       if (e.key === "Enter") {
