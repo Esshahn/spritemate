@@ -59,6 +59,10 @@ export default class Editor extends Window_Controls {
 
   update(all_data) {
   
+    if (!all_data.multi_sprite) {
+      all_data.multi_sprite = [1, 1];
+    }
+
     if (all_data.current_sprite > all_data.sprites.length - (all_data.multi_sprite[0] * all_data.multi_sprite[1])) {
       all_data.multi_sprite = [1, 1];
     }
