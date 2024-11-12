@@ -7,9 +7,6 @@
 */
 
 
-import "../css/jquery-ui.css";
-import "../css/stylesheet.css";
-
 import List from "./List";
 import About from "./About";
 import Tools from "./Tools";
