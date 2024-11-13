@@ -114,8 +114,7 @@ export default class Editor extends Window_Controls {
       all_data.sprites[all_data.current_sprite + overlay_sprite_number];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
-
-    this.fill_canvas(all_data, all_data.current_sprite, x_grid_step, alpha);
+    this.fill_canvas(all_data, all_data.current_sprite + overlay_sprite_number, x_grid_step, alpha);
   }
 
   fill_canvas(all_data, current_sprite, x_grid_step, alpha = 1) {
@@ -163,9 +162,9 @@ export default class Editor extends Window_Controls {
     return result;
   }
 
-  calculateProjections(m, n, L) {
-    const yy:number[] = [];
-    const xx:number[] = [];
+  calculateProjections(m: number, n: number, L: number): { xx: number[], yy: number[] } {
+    const yy: number[] = [];
+    const xx: number[] = [];
     for (let j = 1; j <= m; j++) {
         const yj = Math.max(0, Math.min(n, L - n * (j - 1)));
         yy.push(yj > 0 ? Math.min(yj, n) : 0);
