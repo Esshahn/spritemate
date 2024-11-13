@@ -83,7 +83,10 @@ export default class List extends Window_Controls {
     // when the sprite list is becoming longer
  
       let lastIndex = all_data.multi_sprite[0]*all_data.multi_sprite[1];
-      for (let i = 0; i < lastIndex; i++) {
+    for (let i = 0; i < lastIndex; i++) {
+        if (all_data.current_sprite + i >= all_data.sprites.length) {
+          continue;
+        }
         $("#window-" + this.window).dialog(
           "option",
           "title",

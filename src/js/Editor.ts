@@ -63,9 +63,7 @@ export default class Editor extends Window_Controls {
       all_data.multi_sprite = [1, 1];
     }
 
-    if (all_data.current_sprite > all_data.sprites.length - (all_data.multi_sprite[0] * all_data.multi_sprite[1])) {
-      all_data.multi_sprite = [1, 1];
-    }
+
     dom.val("#input-layout-width", all_data.multi_sprite[0]);
     dom.val("#input-layout-height", all_data.multi_sprite[1]);
     
@@ -126,8 +124,11 @@ export default class Editor extends Window_Controls {
       for (let j = 0; j < this.pixels_y; j++) {
         let jj = Math.floor(j / 21);
         let ii = Math.floor(i / 24);
-        let newIndex = Math.floor(jj * all_data.multi_sprite[0]  + ii);
-       
+        let newIndex = Math.floor(jj * all_data.multi_sprite[0] + ii);
+        if (current_sprite + newIndex >= all_data.sprites.length) {
+          continue;
+        }
+
         const array_entry =
           all_data.sprites[current_sprite + newIndex].pixels[j % 21][i % 24];
 
@@ -162,8 +163,25 @@ export default class Editor extends Window_Controls {
     return result;
   }
 
+  calculateProjections(m, n, L) {
+    const yy:number[] = [];
+    const xx:number[] = [];
+    for (let j = 1; j <= m; j++) {
+        const yj = Math.max(0, Math.min(n, L - n * (j - 1)));
+        yy.push(yj > 0 ? Math.min(yj, n) : 0);
+    }
+    for (let i = 1; i <= n; i++) {
+        const xi = Math.max(0, Math.min(m, Math.ceil((L - (i - 1)) / n)));
+        xx.push(xi > 0 ? Math.min(xi, m) : 0);
+    }
+    return { xx, yy };
+}
+
   display_grid(all_data) {
     // show a grid
+
+    // calc occupied projection limits
+    const { xx, yy } = this.calculateProjections(all_data.multi_sprite[1], all_data.multi_sprite[0], all_data.sprites.length - all_data.current_sprite);
 
     this.canvas.setLineDash([1, 1]);
     let x_grid_step = 1;
@@ -171,6 +189,7 @@ export default class Editor extends Window_Controls {
     if (all_data.sprites[all_data.current_sprite].multicolor) x_grid_step = 2;
 
     for (let i = 0; i <= this.pixels_x; i = i + x_grid_step) {
+
       // adds a vertical line in the middle
       this.canvas.strokeStyle = "#666666";
 
@@ -182,7 +201,7 @@ export default class Editor extends Window_Controls {
 
       this.canvas.beginPath();
       this.canvas.moveTo(i * this.zoom, 0);
-      this.canvas.lineTo(i * this.zoom, this.height);
+      this.canvas.lineTo(i * this.zoom, ((this.pixels_y/all_data.multi_sprite[1]) * xx[Math.floor(i / 24)]) * this.zoom);
       this.canvas.stroke();
     }
 
@@ -198,7 +217,7 @@ export default class Editor extends Window_Controls {
 
       this.canvas.beginPath();
       this.canvas.moveTo(0, i * this.zoom);
-      this.canvas.lineTo(this.width, i * this.zoom);
+      this.canvas.lineTo(((this.pixels_x/all_data.multi_sprite[0]) * yy[Math.floor(i / 21)]) * this.zoom, i * this.zoom);
       this.canvas.stroke();
     }
   }

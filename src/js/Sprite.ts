@@ -175,7 +175,12 @@ export default class Sprite {
 
   set_pixel(pos, shiftkey): void {
     // writes a pixel to the sprite pixel array
+
     const { sprite_offset } = pos;
+    
+    if ((this.all.current_sprite + sprite_offset) >= this.all.sprites.length) {
+      return;
+    }
 
     // multicolor check
     if (
