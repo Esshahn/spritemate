@@ -90,7 +90,7 @@ export default class List extends Window_Controls {
         $("#window-" + this.window).dialog(
           "option",
           "title",
-          `sprite ${all_data.current_sprite + i + 1} of ${
+          `sprite ${all_data.current_sprite + 1} of ${
             all_data.sprites.length
           }`
         );
