@@ -381,6 +381,7 @@ class App {
     if (this.sprite.all.multi_sprite[1] < 1) {
       this.sprite.all.multi_sprite[1] = 1;
     }
+    this.allow_keyboard_shortcuts = true;
     this.update();
   }
 
