@@ -133,7 +133,7 @@ export default class Editor extends Window_Controls {
 
         if (array_entry != 0) {
           // not transparent
-          let color = sprite_data.color;
+          let color = all_data.sprites[current_sprite + newIndex].color;
           if (array_entry != 1 && sprite_data.multicolor)
             color = all_data.colors[array_entry];
           this.canvas.fillStyle = this.overlay_color(
