@@ -106,7 +106,7 @@ export default class Editor extends Window_Controls {
       this.display_overlay(all_data);
 
     // grid
-    if (this.grid) this.display_grid(sprite_data);
+    if (this.grid) this.display_grid(all_data);
   }
 
   display_overlay(all_data, mode = "", alpha = 0.4) {
@@ -162,17 +162,22 @@ export default class Editor extends Window_Controls {
     return result;
   }
 
-  display_grid(sprite_data) {
+  display_grid(all_data) {
     // show a grid
 
     this.canvas.setLineDash([1, 1]);
     let x_grid_step = 1;
 
-    if (sprite_data.multicolor) x_grid_step = 2;
+    if (all_data.sprites[all_data.current_sprite].multicolor) x_grid_step = 2;
 
     for (let i = 0; i <= this.pixels_x; i = i + x_grid_step) {
       // adds a vertical line in the middle
       this.canvas.strokeStyle = "#666666";
+
+      if (all_data.multi_sprite[0] > 1) {
+        if (i % 24 == 0)
+          this.canvas.strokeStyle = "#888888";
+      } else
       if (i == this.pixels_x / 2) this.canvas.strokeStyle = "#888888";
 
       this.canvas.beginPath();
@@ -184,6 +189,11 @@ export default class Editor extends Window_Controls {
     for (let i = 0; i <= this.pixels_y; i++) {
       // adds 3 horizontal lines
       this.canvas.strokeStyle = "#666666";
+
+      if (all_data.multi_sprite[1] > 1) {
+        if (i % 21 == 0)
+          this.canvas.strokeStyle = "#888888";
+      } else
       if (i % (this.pixels_y / 3) == 0) this.canvas.strokeStyle = "#888888";
 
       this.canvas.beginPath();
