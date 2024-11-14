@@ -200,7 +200,7 @@ export default class Editor extends Window_Controls {
 
       this.canvas.beginPath();
       this.canvas.moveTo(i * this.zoom, 0);
-      this.canvas.lineTo(i * this.zoom, ((this.pixels_y/all_data.multi_sprite[1]) * xx[Math.floor((i-1) / 24)]) * this.zoom);
+      this.canvas.lineTo(i * this.zoom, ((this.pixels_y/all_data.multi_sprite[1]) * xx[Math.floor(Math.max(0, (i-1)) / 24)]) * this.zoom);
       this.canvas.stroke();
     }
 
@@ -216,7 +216,7 @@ export default class Editor extends Window_Controls {
 
       this.canvas.beginPath();
       this.canvas.moveTo(0, i * this.zoom);
-      this.canvas.lineTo(((this.pixels_x/all_data.multi_sprite[0]) * yy[Math.floor((i-1) / 21)]) * this.zoom, i * this.zoom);
+      this.canvas.lineTo(((this.pixels_x/all_data.multi_sprite[0]) * yy[Math.floor((Math.max(0, i-1)) / 21)]) * this.zoom, i * this.zoom);
       this.canvas.stroke();
     }
   }
