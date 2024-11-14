@@ -1188,12 +1188,16 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
+      this.sprite.save_backup();
+      this.update();
     };
 
     // Add pointer out handler to stop drawing when leaving the element
     dom.sel("#editor").onpointerout = (e) => {
       this.is_drawing = false;
       this.move_start = false;
+      this.sprite.save_backup();
+      this.update();
     };
 
 /*
