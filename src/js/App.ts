@@ -1196,8 +1196,6 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     dom.sel("#editor").onpointerout = (e) => {
       this.is_drawing = false;
       this.move_start = false;
-      this.sprite.save_backup();
-      this.update();
     };
 
 /*
