@@ -1104,7 +1104,18 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       e.preventDefault();
     };
 
-    dom.sel("#editor").onmousedown = (e) => {
+    const editorElement = dom.sel("#editor");
+    editorElement.style.touchAction = "none";
+
+    // Add these attributes
+    editorElement.setAttribute("touch-action", "none");
+    editorElement.setAttribute("pointer-events", "auto");
+
+    dom.sel("#editor").onpointerdown = (e) => {
+      e.target.setPointerCapture(e.pointerId);
+  
+      e.preventDefault();
+
       if (this.mode == "draw") {
         this.sprite.set_pixel(
           this.editor.get_pixel(this.sprite.all, e),
@@ -1128,8 +1139,9 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
       this.update();
     };
+    
 
-    dom.sel("#editor").onmousemove = (e) => {
+    dom.sel("#editor").onpointermove = (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         const newpos = this.editor.get_pixel(this.sprite.all, e);
         // only draw if the mouse has entered a new pixel area (just for performance)
@@ -1171,15 +1183,20 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     };
 
-    dom.sel("#editor").onclick = () => {
+    // Add pointer up handler to stop drawing
+    dom.sel("#editor").onpointerup = (e) => {
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
-      this.sprite.save_backup();
-      this.update();
     };
 
-    /*
+    // Add pointer out handler to stop drawing when leaving the element
+    dom.sel("#editor").onpointerout = (e) => {
+      this.is_drawing = false;
+      this.move_start = false;
+    };
+
+/*
 
 LLLLLLLLLLL                IIIIIIIIII      SSSSSSSSSSSSSSS    TTTTTTTTTTTTTTTTTTTTTTT
 L:::::::::L                I::::::::I    SS:::::::::::::::S   T:::::::::::::::::::::T

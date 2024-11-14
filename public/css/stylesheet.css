@@ -225,15 +225,12 @@ img.center {
 
 .ui-widget input[type="number"].editor_layout::-webkit-outer-spin-button, 
 .ui-widget input[type="number"].editor_layout::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    background: #fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKUlEQVQYlWNgwAT/sYhhKPiPT+F/LJgEsHv37v+EMGkmkuImoh2NoQAANlcun/q4OoYAAAAASUVORK5CYII=) no-repeat center center;
-    position: absolute;
+    background: #888888;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 1em;
-    border-left: 1px solid #888;
-    opacity: .5;
+    opacity: .4;
 }
 
 .ui-widget .label {
