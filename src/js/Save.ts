@@ -1,4 +1,4 @@
-import $ from "jquery";
+
 import { dom, status } from "./helper";
 
 export default class Save {

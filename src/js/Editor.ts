@@ -27,20 +27,20 @@ export default class Editor extends Window_Controls {
     const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="img/ui/icon-zoom-plus.png" class="icon-hover" id="icon-editor-zoom-in" title="zoom in">
-          <img src="img/ui/icon-zoom-minus.png" class="icon-hover" id="icon-editor-zoom-out" title="zoom out">
-          <img src="img/ui/icon-grid.png" class="icon-hover" id="icon-editor-grid" title="toggle grid">
+          <img src="ui/icon-zoom-plus.png" class="icon-hover" id="icon-editor-zoom-in" title="zoom in">
+          <img src="ui/icon-zoom-minus.png" class="icon-hover" id="icon-editor-zoom-out" title="zoom out">
+          <img src="ui/icon-grid.png" class="icon-hover" id="icon-editor-grid" title="toggle grid">
         </div>
 
-        <img src="img/ui/icon-multicolor.png" title="toggle single- & multicolor (c)" class=" icon-hover" id="icon-multicolor">
+        <img src="ui/icon-multicolor.png" title="toggle single- & multicolor (c)" class=" icon-hover" id="icon-multicolor">
         <!--
-        <img src="img/ui/icon-shift-left.png" title="shift left" class="icon-hover" id="icon-shift-left">
-        <img src="img/ui/icon-shift-right.png" title="shift right" class="icon-hover" id="icon-shift-right">
-        <img src="img/ui/icon-shift-up.png" title="shift up" class="icon-hover" id="icon-shift-up">
-        <img src="img/ui/icon-shift-down.png" title="shift down" class="icon-hover" id="icon-shift-down">
+        <img src="ui/icon-shift-left.png" title="shift left" class="icon-hover" id="icon-shift-left">
+        <img src="ui/icon-shift-right.png" title="shift right" class="icon-hover" id="icon-shift-right">
+        <img src="ui/icon-shift-up.png" title="shift up" class="icon-hover" id="icon-shift-up">
+        <img src="ui/icon-shift-down.png" title="shift down" class="icon-hover" id="icon-shift-down">
         -->
-        <img src="img/ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
-        <img src="img/ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
+        <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
+        <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>

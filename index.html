@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>spritemate - the Commodore 64 sprite editor by awsm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="Description" content="spritemate is a free online editor for Commodore 64 sprites." />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
+
+    <!-- Favicon and manifest -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+    <link rel="manifest" href="favicon/manifest.json" />
+    <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+    <!-- Google Analytics script -->
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
+      ga("create", "UA-40925561-3", "auto");
+      ga("send", "pageview");
+    </script>
+
+    <!-- Main application script -->
+    <script type="module" src="./src/js/App.ts"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="menubar">
+        <div id="menubar-filename" class="dropbtn">
+          File: <span id="menubar-filename-name">unsaved</span>
+        </div>
+        <ul>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Spritemate</a>
+            <div class="dropdown-content">
+              <a id="menubar-info">About</a>
+              <a id="menubar-settings">Settings</a>
+            </div>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">File</a>
+            <div class="dropdown-content">
+              <a id="menubar-new">New file<span class="hotkey"></span></a>
+              <a id="menubar-load">Load file...<span class="hotkey"></span></a>
+              <a id="menubar-save">Save file...</a>
+            </div>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Edit</a>
+            <div class="dropdown-content">
+              <a id="menubar-undo">Undo<span class="hotkey">z</span></a>
+              <a id="menubar-redo">Redo<span class="hotkey">shift + z</span></a>
+              <hr />
+              <a id="menubar-new-sprite">New<span class="hotkey">shift + n</span></a>
+              <a id="menubar-copy">Copy<span class="hotkey">shift + c</span></a>
+              <a id="menubar-paste">Paste<span class="hotkey">shift + v</span></a>
+              <a id="menubar-duplicate">Duplicate<span class="hotkey">shift + d</span></a>
+              <hr />
+              <a id="menubar-kill">Delete<span class="hotkey">shift + x</span></a>
+            </div>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Sprite</a>
+            <div class="dropdown-content">
+              <a id="menubar-colormode">Toggle color mode<span class="hotkey">c</span></a>
+              <hr />
+              <a id="menubar-shift-left">Shift left<span class="hotkey"></span></a>
+              <a id="menubar-shift-right">Shift right<span class="hotkey"></span></a>
+              <a id="menubar-shift-up">Shift up<span class="hotkey"></span></a>
+              <a id="menubar-shift-down">Shift down<span class="hotkey"></span></a>
+              <hr />
+              <a id="menubar-flip-horizontal">Flip horizontal<span class="hotkey"></span></a>
+              <a id="menubar-flip-vertical">Flip vertical<span class="hotkey"></span></a>
+              <hr />
+              <a id="menubar-stretch-x">Double width<span class="hotkey"></span></a>
+              <a id="menubar-stretch-y">Double height<span class="hotkey"></span></a>
+              <hr />
+              <a id="menubar-invert">Invert<span class="hotkey">i</span></a>
+              <hr />
+              <a id="menubar-overlay">Toggle overlay<span class="hotkey"></span></a>
+            </div>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">View</a>
+            <div class="dropdown-content">
+              <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">shift + f</span></a>
+              <hr />
+              <span class="label">Editor Window</span>
+              <a id="menubar-editor-grid">Toggle Grid<span class="hotkey"></span></a>
+              <a id="menubar-editor-zoom-in">Zoom in<span class="hotkey"></span></a>
+              <a id="menubar-editor-zoom-out">Zoom out<span class="hotkey"></span></a>
+              <hr />
+              <span class="label">Preview Window</span>
+              <a id="menubar-preview-zoom-in">Zoom in<span class="hotkey"></span></a>
+              <a id="menubar-preview-zoom-out">Zoom out<span class="hotkey"></span></a>
+              <hr />
+              <span class="label">Sprite List Window</span>
+              <a id="menubar-list-grid">Toggle sprite borders<span class="hotkey"></span></a>
+              <a id="menubar-list-zoom-in">Zoom in<span class="hotkey"></span></a>
+              <a id="menubar-list-zoom-out">Zoom out<span class="hotkey"></span></a>
+            </div>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn">Help</a>
+            <div class="dropdown-content">
+              <a href="https://github.com/Esshahn/spritemate" target="_blank">Help<span class="hotkey"></span></a>
+              <hr />
+              <a href="https://github.com/Esshahn/spritemate" target="_blank">Visit Github repository<span class="hotkey"></span></a>
+              <a href="http://www.awsm.de" target="_blank">Visit awsm website<span class="hotkey"></span></a>
+              <a href="https://twitter.com/awsm9000" target="_blank">awsm on Twitter<span class="hotkey"></span></a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="dialog-confirm" title="New File">
+        All current data will be erased. Are you sure?
+      </div>
+      <div id="app"></div>
+      <div id="statusbar">
+        <div id="statustext"></div>
+      </div>
+    </div>
+  </body>
+</html>

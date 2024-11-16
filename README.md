@@ -37,19 +37,9 @@ Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE
 
 ## Install & Dependencies
 
-You can use `yarn` to run this project locally
+Use `npm`
 
 ```
-$ cd spritemate
-$ yarn
-$ yarn run dev
-
-```
-
-Or use `npm`
-
-```
-$ cd spritemate
 $ npm install
 $ npm run dev
 
