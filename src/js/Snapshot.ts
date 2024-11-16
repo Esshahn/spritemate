@@ -241,7 +241,7 @@ grabcols
     const bank = this.cia2_bank(this.cia2mem[0]);
     const vid = this.viciimem[VIC_SPRITE_ADDR - VIC_BASE];
     const vidAdd = this.video_matrix_address(vid, bank);
-    const sprite_address = this.c64mem[sprite_base + vidAdd +number] * 64 + vidAdd;
+    const sprite_address = this.c64mem[sprite_base + vidAdd + number] * 64 + (bank * 16384);
     return sprite_address;
   }
 
