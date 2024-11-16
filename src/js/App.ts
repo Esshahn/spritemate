@@ -210,6 +210,7 @@ export class App {
       name: "window_snapshot",
       title: "Snapshot",
       type: "tools",
+      autoOpen: false,
       resizable: true,
       left: this.config.window_snapshot.left,
       top: this.config.window_snapshot.top,
@@ -914,6 +915,15 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
+
+    dom.sel("#icon-monitor").onclick = () => {
+      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
+        $(this.window_snapshot.get_window_id()).dialog("close");
+      } else {
+        $(this.window_snapshot.get_window_id()).dialog("open");
+      }
+    };
+   
 
     dom.sel("#icon-undo").onclick = () => {
       this.sprite.undo();

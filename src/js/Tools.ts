@@ -15,6 +15,10 @@ export default class Tools {
             <img src="ui/icon-save.png" class="icon" title="save">
             <div class="icontext">save</div>
         </div>
+        <div class ="iconset icon-hover" id="icon-monitor">
+            <img src="ui/icon-monitor.png" class="icon"  id="image-icon-monitor" title="snapshot monitor">  
+            <div class="icontext">monitor</div>
+        </div>
         <div class ="iconset icon-hover" id="icon-undo">
             <img src="ui/icon-undo.png" class="icon" title="undo">
             <div class="icontext">undo</div>
