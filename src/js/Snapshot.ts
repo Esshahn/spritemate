@@ -241,7 +241,7 @@ grabcols
     const bank = this.cia2_bank(this.cia2mem[0]);
     const vid = this.viciimem[VIC_SPRITE_ADDR - VIC_BASE];
     const vidAdd = this.video_matrix_address(vid, bank);
-    const sprite_address = this.c64mem[sprite_base + vidAdd +number] * 64;
+    const sprite_address = this.c64mem[sprite_base + vidAdd +number] * 64 + vidAdd;
     return sprite_address;
   }
 
@@ -420,12 +420,12 @@ grabcols
       }
 
       case "vid": {
-        if (this.viciimem == null) {
+        if (this.viciimem == null || this.cia2mem == null) {
           this.message("no snapshot loaded");
           return;
         }
 
-        let bank = 0;
+        let bank = this.cia2_bank(this.cia2mem[0]);
         if (command_args.length > 0) {
           bank = parseInt(command_args[0]);
         }
