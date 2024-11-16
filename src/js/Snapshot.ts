@@ -8,12 +8,12 @@ import { App } from './App';
 const VIC_BASE = 0xD000;
 const VIC_MULTICOLOR = 0xd01c; // enable bits 0-7
 const VIC_SPRITE_ENABLE = 0xd015; // bits 0-7
+const VIC_SPRITE_EXPAND_X = 0xd01d;
 const VIC_SPRITE_EXPAND_Y = 0xd017;
 const VIC_SPRITE_ADDR = 0xd018; // bits 4-7 for video matrix, and last 64 bytes for sprite addresses
-const VIC_SPRITE_EXPAND_X = 0xd01d;
-const VIC_SPRITE_MCOLOR_0 = 0xd025;
-const VIC_SPRITE_MCOLOR_1 = 0xd026;
-const VIC_SPRITE_COL0 = 0xd027;
+const VIC_SPRITE_MCOLOR_0 = 0xd025; // shared colours
+const VIC_SPRITE_MCOLOR_1 = 0xd026; // shared colours
+const VIC_SPRITE_COL0 = 0xd027; // individual colours
 const VIC_SPRITE_COL1 = 0xd028;
 const VIC_SPRITE_COL2 = 0xd029;
 const VIC_SPRITE_COL3 = 0xd02a;
@@ -21,8 +21,10 @@ const VIC_SPRITE_COL4 = 0xd02b;
 const VIC_SPRITE_COL5 = 0xd02c;
 const VIC_SPRITE_COL6 = 0xd02d;
 const VIC_SPRITE_COL7 = 0xd02e;
+const VIC_BG_COL0 = 0xd021; // sprite background
 
-const CIA2_VIC_BANK = 0xDD00; // bits 0-2 inverted
+
+const CIA2_VIC_BANK = 0xDD00; // bits 0-2 inverted for bank
 
 export default class Snapshot extends Window_Controls {
   help: string;
@@ -51,10 +53,6 @@ export default class Snapshot extends Window_Controls {
     this.help = `
 commands :
 
-grab n
-        grab a sprite
-        eg. grab 0
-
 mem n
         show memory at n
         eg. mem 0x400
@@ -67,11 +65,20 @@ vic
         show VIC-II memory
 
 vid <bank>
-        Calc video matrix address
+        calc video matrix address
+        video matrix nibble*1k + bank*16kB
         eg. vid 0
 
 cia
         show CIA-II memory
+        reports bank (last 3 bits inverted)
+
+sprites
+        show sprite memory
+
+grab n
+        grab a sprite
+        eg. grab 0
 
 `;
     const template = `
@@ -166,22 +173,29 @@ cia
     };
   }
 
-  prompt() {
+  prompt(): void {
     dom.val("#snapshot-console", dom.val("#snapshot-console") + "] ");
     const textarea = dom.sel("#snapshot-console");
     textarea.scrollTop = textarea.scrollHeight;
   }
 
-  message(message) {
-    dom.val(
-      "#snapshot-console",
-      dom.val("#snapshot-console") + message + "\n\n"
-    );
+  /* Use this for adhoc message to display the prompt */
+  message(message: string): void {
+    this.println(message);
+    this.prompt();
     const textarea = dom.sel("#snapshot-console");
     textarea.scrollTop = textarea.scrollHeight;
   }
 
-  formatMemory(address) {
+  print(message: string): void {
+   dom.val("#snapshot-console", dom.val("#snapshot-console") + message);
+  }
+
+  println(message: string | number = ""): void {
+    dom.val("#snapshot-console", dom.val("#snapshot-console") + message + "\n");
+  }
+
+  formatMemory(address: number): string {
     const convertPetsciiToAscii = (byte) => {
       if (byte >= 1 && byte <= 26) {
         return String.fromCharCode(byte + 64);
@@ -226,7 +240,7 @@ cia
     return 3-bank;
   }
 
-  command(command) {
+  command(command: string): void {
     this.connect();
     const command_parts = command.split(" ");
     const command_name = command_parts[0];
@@ -250,7 +264,7 @@ cia
     }
     switch (command_name) {
       case "grab": {
-        if (this.c64mem == null) {
+        if (this.c64mem == null || this.viciimem == null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -264,35 +278,33 @@ cia
         this.app?.list.update_all(this.app?.sprite.get_all());
         this.app?.update();
         const all = this.app?.sprite.get_all();
-        console.log(all.sprites[all.current_sprite].pixels);
         const data = all.sprites[all.current_sprite].pixels;
         all.sprites[all.current_sprite].multicolor = true;
+        all.sprites[all.current_sprite].color = this.viciimem[(sprite + VIC_SPRITE_COL0) - VIC_BASE];
+
         let posx = 0;
         let posy = 0;
         
         const spriteAddr = this.sprite_address(sprite);
-
+        const bitReversal = (x: number) =>  ((x & 1) << 1) | ((x & 2) >> 1);
+      
         for (let i = 0; i <= 62; i++) {
           const col = this.c64mem[spriteAddr + i];
           let nib = (col >> 6) & 3;
-          data[posy][posx] = nib;
-          posx++;
-          posx++;
+          data[posy][posx] = bitReversal(nib);
+          posx+=2;
 
           nib = (col >> 4) & 3;
-          data[posy][posx] = nib;
-          posx++;
-          posx++;
+          data[posy][posx] = bitReversal(nib);
+          posx+=2;
 
           nib = (col >> 2) & 3;
-          data[posy][posx] = nib;
-          posx++;
-          posx++;
+          data[posy][posx] = bitReversal(nib);
+          posx+=2;
 
           nib = col & 3;
-          data[posy][posx] = nib;
-          posx++;
-          posx++;
+          data[posy][posx] = bitReversal(nib);
+          posx+=2;
 
           if (posx >= 22) {
             posx = 0;
@@ -301,26 +313,56 @@ cia
         }
 
         this.app?.update();
-        dom.val("#snapshot-console", dom.val("#snapshot-console") + "\n\n");
+        this.println();
         break;
       }
       case "sprites": {
-        if (this.cia2mem == null) {
+        if (this.cia2mem == null || this.viciimem == null) {
           this.message("no snapshot loaded");
           return;
         }
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + "Sprite memory\n"
-        );       
+
+        this.println("Sprite enabled reg");
+        const enabled = this.viciimem[(VIC_SPRITE_ENABLE) - VIC_BASE];
+        this.println(enabled.toString(2).padStart(8, "0"));
+        this.println();
+
+        this.println("Sprite expand regs");
+        const expand_x = this.viciimem[(VIC_SPRITE_EXPAND_X) - VIC_BASE];
+        const expand_y = this.viciimem[(VIC_SPRITE_EXPAND_Y) - VIC_BASE];
+        this.println(expand_x.toString(2).padStart(8, "0"));
+        this.println(expand_y.toString(2).padStart(8, "0"));
+        this.println();
+
+
+        this.println("Sprite memory");      
         for (let i = 0; i <= 7; i++) {
           const spriteAddr = this.sprite_address(i).toString(16).padStart(4, "0");
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") + spriteAddr + " |"
-          );
+          this.print(spriteAddr + " |");
         }
-        dom.val("#snapshot-console", dom.val("#snapshot-console") + "\n\n");
+        this.println();
+        this.println();
+
+        this.println("Sprite colours");
+        for (let i = 0; i <= 7; i++) {
+          const col = this.viciimem[(i + VIC_SPRITE_COL0) - VIC_BASE];
+          this.print(col.toString(16).padStart(2, "0") + " |");
+        }
+        this.println();
+        this.println();
+
+        this.println("Sprite multi colour regs");
+        const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
+        const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
+        this.println(mcol0.toString(16).padStart(2, "0"));
+        this.println(mcol1.toString(16).padStart(2, "0"));
+        this.println();
+
+        this.println("Sprite background");
+        const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
+        this.println(bg.toString(16).padStart(2, "0"));
+        this.println();
+        
         break;
       }
       case "cia": {
@@ -328,34 +370,20 @@ cia
           this.message("no snapshot loaded");
           return;
         }
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + "CIA-II memory\n"
-        );
+       this.print("CIA-II memory\n");
         for (let i = 0; i < 16; i++) {
           if (i % 16 == 0) {
             const hexAddress = (i + CIA2_VIC_BANK).toString(16).padStart(4, "0");
-            dom.val(
-              "#snapshot-console",
-              dom.val("#snapshot-console") + hexAddress + " |"
-            );
+            this.print(hexAddress + " |");
           }
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") +
-              this.cia2mem[i].toString(16).padStart(2, "0") +
-              " "
-          );
+          this.print(this.cia2mem[i].toString(16).padStart(2, "0") + " ");
           if ((i + 1) % 16 == 0) {
-            dom.val("#snapshot-console", dom.val("#snapshot-console") + "\n\n");
+            this.println();
           }
         }
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + "CIA bank\n"
-        );
+        this.println("CIA bank");
         const bank = this.cia2_bank(this.cia2mem[0]);
-        dom.val("#snapshot-console", dom.val("#snapshot-console") + bank + "\n\n");
+        this.println(bank);
 
         break;
       }
@@ -371,16 +399,10 @@ cia
           bank = parseInt(command_args[0]);
         }
                 
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + "Video matrix memory\n"
-        );
+        this.println("Video matrix memory");
         const vid = this.viciimem[0xd018 - VIC_BASE];
         const vidAdd = this.video_matrix_address(vid, bank);
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + vidAdd.toString(16).padStart(4, "0") + "\n\n"
-        );              
+        this.println(vidAdd.toString(16).padStart(4, "0"));              
         break;
       }
       case "vic":
@@ -388,29 +410,19 @@ cia
           this.message("no snapshot loaded");
           return;
         }
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + "VIC-II memory\n"
-        );
+       this.println("VIC-II memory");
         for (let i = 0; i < 64; i++) {
           if (i % 16 == 0) {
             const hexAddress = (i + 0xd000).toString(16).padStart(4, "0");
-            dom.val(
-              "#snapshot-console",
-              dom.val("#snapshot-console") + hexAddress + " |"
-            );
+            this.print(hexAddress + " |");
           }
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") +
-              this.viciimem[i].toString(16).padStart(2, "0") +
-              " "
-          );
+          this.print(this.viciimem[i].toString(16).padStart(2, "0") + " ");
           if ((i + 1) % 16 == 0) {
-            dom.val("#snapshot-console", dom.val("#snapshot-console") + "\n");
+            this.print("\n");
           }
         }
-        dom.val("#snapshot-console", dom.val("#snapshot-console") + "\n\n");
+        this.println();
+
         break;
 
       case "edit":
@@ -455,10 +467,7 @@ cia
             return;
           }
           this.lastIndex = this.lastIndex + 16;
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") +
-            this.formatMemory(this.lastIndex) +
+          this.print(this.formatMemory(this.lastIndex) +
             "\n"
           );
           return;
@@ -468,40 +477,27 @@ cia
           address = command_args_number_hex;
         }
         if (isNaN(address)) {
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") + "bad address\n"
-          );
+          this.print("bad address\n");
           break;
         }
         if (address < 0 || address > this.c64mem.length) {
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") + "address out of range\n"
-          );
+          this.println("address out of range");
           break;
         }
-        dom.val(
-          "#snapshot-console",
-          dom.val("#snapshot-console") + this.formatMemory(address) + "\n\n"
-        );
+        this.println(this.formatMemory(address));
         this.lastIndex = address + 16;
         break;
       }
       case "help":
-        dom.val("#snapshot-console", dom.val("#snapshot-console") + this.help);
+        this.print(this.help);
         break;
 
       default:
         if (command_name.length > 0) {
-          dom.val(
-            "#snapshot-console",
-            dom.val("#snapshot-console") +
-              "bad command " +
-              command_name +
-              "\n\n"
-          );
+         this.println("bad command " +
+              command_name);
         }
+        this.println("type help");
         break;
     }
 
