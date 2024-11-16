@@ -1,6 +1,20 @@
 /*
   VICE Snapshot Monitor and Sprite Grabber
+  ----------------------------------------
+
+  Provides a retro-style monitor interface where users can issue commands to monitor and modify
+  graphical and memory data, essentially helping developers or enthusiasts dive deeper
+  into the inner workings of the Commodore 64's VIC-II graphics chip.
+
+  This tool allows users to interact with the emulator's snapshot memory. 
+  Users can type commands to explore memory areas (e.g., "mem" for memory inspection), 
+  edit specific memory values, manage color settings, and even "grab" sprite data from specific 
+  memory locations.
+  
+  For example, with commands like "grab n" or "grabcols," users can capture and 
+  load sprite data and colors into the editor, making it easy to replicate and edit sprites.
 */
+
 import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 import { App } from './App';
@@ -430,7 +444,7 @@ grabcols
        this.println("VIC-II memory");
         for (let i = 0; i < 64; i++) {
           if (i % 16 == 0) {
-            const hexAddress = (i + 0xd000).toString(16).padStart(4, "0");
+            const hexAddress = (i + VIC_BASE).toString(16).padStart(4, "0");
             this.print(hexAddress + " |");
           }
           this.print(this.viciimem[i].toString(16).padStart(2, "0") + " ");

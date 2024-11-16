@@ -1076,6 +1076,10 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.allow_keyboard_shortcuts = false;
     };
 
+    dom.sel("#snapshot-console").onblur = () => {
+      this.allow_keyboard_shortcuts = true;
+    };
+
     dom.sel("#input-sprite-name").onkeyup = (e) => {
       if (e.key === "Enter") {
         this.update_sprite_name();
