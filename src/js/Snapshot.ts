@@ -14,13 +14,6 @@ const VIC_SPRITE_ADDR = 0xd018; // bits 4-7 for video matrix, and last 64 bytes 
 const VIC_SPRITE_MCOLOR_0 = 0xd025; // shared colours
 const VIC_SPRITE_MCOLOR_1 = 0xd026; // shared colours
 const VIC_SPRITE_COL0 = 0xd027; // individual colours
-const VIC_SPRITE_COL1 = 0xd028;
-const VIC_SPRITE_COL2 = 0xd029;
-const VIC_SPRITE_COL3 = 0xd02a;
-const VIC_SPRITE_COL4 = 0xd02b;
-const VIC_SPRITE_COL5 = 0xd02c;
-const VIC_SPRITE_COL6 = 0xd02d;
-const VIC_SPRITE_COL7 = 0xd02e;
 const VIC_BG_COL0 = 0xd021; // sprite background
 
 
@@ -80,6 +73,9 @@ grab n
         grab a sprite
         eg. grab 0
 
+grabcols
+        grab sprite colors
+
 `;
     const template = `
         <div class="window_menu">
@@ -117,7 +113,7 @@ grab n
       const file = reader.result as ArrayBuffer;
       this.message("loading snapshot " + filename);
 
-      let c64word = "C64MEM";
+      let c64word = "C64MEM\0\0\0\0\0\0\0\0\0\0";
       const c64mem = new Uint8Array(file);
       let c64mem_index = -1;
       let letter_index = 0;
@@ -138,9 +134,9 @@ grab n
         return;
       }
 
-      this.c64mem = new Uint8Array(c64mem.slice(c64mem_index + 21));
+      this.c64mem = new Uint8Array(c64mem.slice(c64mem_index + 11));
 
-      c64word = "CIA2";
+      c64word = "CIA2\0\0\0\0\0\0\0\0\0\0";
       letter_index = 0;
       for (let i = c64mem_index; i < c64mem.length; i++) {
         if (c64mem[i] == c64word[letter_index].charCodeAt(0)) {
@@ -153,9 +149,9 @@ grab n
           letter_index = 0;
         }
       }
-      this.cia2mem = new Uint8Array(c64mem.slice(c64mem_index + 19));
+      this.cia2mem = new Uint8Array(c64mem.slice(c64mem_index + 9));
 
-      c64word = "VIC-II";
+      c64word = "VIC-II\0\0\0\0\0\0\0\0\0\0";
       letter_index = 0;
       for (let i = c64mem_index; i < c64mem.length; i++) {
         if (c64mem[i] == c64word[letter_index].charCodeAt(0)) {
@@ -168,7 +164,7 @@ grab n
           letter_index = 0;
         }
       }
-      this.viciimem = new Uint8Array(c64mem.slice(c64mem_index + 18));
+      this.viciimem = new Uint8Array(c64mem.slice(c64mem_index + 8));
       this.message("snapshot loaded " + c64mem.length + " bytes");
     };
   }
@@ -206,7 +202,7 @@ grab n
       return ".";
     };
     const hexAddress = address.toString(16).padStart(4, "0");
-    if (this.c64mem == null) return;
+    if (this.c64mem == null) return "";
     const mem = this.c64mem;
     const bytes = Array.from({ length: 16 }, (_, i) => mem[address + i]);
     const hexBytes = bytes
@@ -229,7 +225,7 @@ grab n
     }
     const sprite_base = 0x03f8;
     const bank = this.cia2_bank(this.cia2mem[0]);
-    const vid = this.viciimem[0xd018 - VIC_BASE];
+    const vid = this.viciimem[VIC_SPRITE_ADDR - VIC_BASE];
     const vidAdd = this.video_matrix_address(vid, bank);
     const sprite_address = this.c64mem[sprite_base + vidAdd +number] * 64;
     return sprite_address;
@@ -263,6 +259,22 @@ grab n
       return;
     }
     switch (command_name) {
+      case "grabcols": {
+        if (this.viciimem == null) {
+            this.message("no snapshot loaded");
+            return;
+          }
+        const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
+        const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
+        const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
+        const all = this.app?.sprite.get_all();
+        all.colors[0] = bg;
+        all.colors[2] = mcol0;
+        all.colors[3] = mcol1;
+        this.app?.list.update_all(this.app?.sprite.get_all());
+        this.app?.update();
+        break;
+      }
       case "grab": {
         if (this.c64mem == null || this.viciimem == null) {
           this.message("no snapshot loaded");
@@ -325,6 +337,11 @@ grab n
         this.println("Sprite enabled reg");
         const enabled = this.viciimem[(VIC_SPRITE_ENABLE) - VIC_BASE];
         this.println(enabled.toString(2).padStart(8, "0"));
+        this.println();
+
+        this.println("Sprite multicolour reg");
+        const multicol = this.viciimem[(VIC_MULTICOLOR) - VIC_BASE];
+        this.println(multicol.toString(2).padStart(8, "0"));
         this.println();
 
         this.println("Sprite expand regs");
