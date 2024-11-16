@@ -37,6 +37,7 @@ export default class Snapshot extends Window_Controls {
   help: string;
   lastCmd: string;
   lastIndex = -1;
+  lastSpriteCol = 6;
 
   fullSnapshot: Uint8Array | null;
   c64mem: Uint8Array | null;
@@ -83,8 +84,14 @@ cia
 sprites
         show sprite memory
 
-grab n
-        grab a sprite
+grabmem <n>
+        grab memory at n as a sprite, if n is not specified
+        grab next 64 bytes
+        eg. grabmem 0x400
+        eg. grammem
+
+grab <n>
+        grab a sprite (grab 0 default)
         eg. grab 0
 
 grabcols
@@ -266,29 +273,23 @@ grabcols
       args.push(0);
     }
     if (command_name == "") {
-      if (this.lastCmd === "mem") {
+      if (this.lastCmd === "mem" || this.lastCmd === "grabmem") {
         this.command(this.lastCmd);
         return;
       }
       return;
     }
     switch (command_name) {
+
       case "grabcols": {
         if (this.viciimem == null) {
             this.message("no snapshot loaded");
             return;
           }
-        const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
-        const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
-        const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
-        const all = this.app?.sprite.get_all();
-        all.colors[0] = bg;
-        all.colors[2] = mcol0;
-        all.colors[3] = mcol1;
-        this.app?.list.update_all(this.app?.sprite.get_all());
-        this.app?.update();
+        this.grabcols();
         break;
       }
+        
       case "grab": {
         if (this.c64mem == null || this.viciimem == null) {
           this.message("no snapshot loaded");
@@ -300,124 +301,72 @@ grabcols
           sprite = parseInt(command_args[0]);
         }
 
+        this.grabSprite(sprite);
+        break;
+      }
+        
+      case "grabmem": {
+        if (this.c64mem == null) {
+          this.message("no snapshot loaded");
+          return;
+        }
+        let address = command_args_number;
+
+        if (command_args.length == 0) {
+          if (this.lastIndex == -1) {
+            this.message("no address specified");
+            return;
+          }
+          address = this.lastIndex;
+        }
+        else
+        {
+          if (isNaN(address)) {
+            address = command_args_number_hex;
+          }
+          if (isNaN(address)) {
+            this.print("bad address\n");
+            break;
+          }
+          if (address < 0 || address > this.c64mem.length) {
+            this.println("address out of range");
+            break;
+          }
+        }
+      
+
         this.app?.sprite.new_sprite(1, true);
         this.app?.list.update_all(this.app?.sprite.get_all());
         this.app?.update();
         const all = this.app?.sprite.get_all();
         const data = all.sprites[all.current_sprite].pixels;
         all.sprites[all.current_sprite].multicolor = true;
-        all.sprites[all.current_sprite].color = this.viciimem[(sprite + VIC_SPRITE_COL0) - VIC_BASE];
-
-        let posx = 0;
-        let posy = 0;
-        
-        const spriteAddr = this.sprite_address(sprite);
-        const bitReversal = (x: number) =>  ((x & 1) << 1) | ((x & 2) >> 1);
-      
-        for (let i = 0; i <= 62; i++) {
-          const col = this.c64mem[spriteAddr + i];
-          let nib = (col >> 6) & 3;
-          data[posy][posx] = bitReversal(nib);
-          posx+=2;
-
-          nib = (col >> 4) & 3;
-          data[posy][posx] = bitReversal(nib);
-          posx+=2;
-
-          nib = (col >> 2) & 3;
-          data[posy][posx] = bitReversal(nib);
-          posx+=2;
-
-          nib = col & 3;
-          data[posy][posx] = bitReversal(nib);
-          posx+=2;
-
-          if (posx >= 22) {
-            posx = 0;
-            posy++;
-          }
-        }
-
-        this.app?.update();
-        this.println();
+        all.sprites[all.current_sprite].color = this.lastSpriteCol;
+        this.grabAddress(address, data);
+        this.lastIndex = address + 64;
         break;
       }
+
+        
       case "sprites": {
         if (this.cia2mem == null || this.viciimem == null) {
           this.message("no snapshot loaded");
           return;
         }
 
-        this.println("Sprite enabled reg");
-        const enabled = this.viciimem[(VIC_SPRITE_ENABLE) - VIC_BASE];
-        this.println(enabled.toString(2).padStart(8, "0"));
-        this.println();
-
-        this.println("Sprite multicolour reg");
-        const multicol = this.viciimem[(VIC_MULTICOLOR) - VIC_BASE];
-        this.println(multicol.toString(2).padStart(8, "0"));
-        this.println();
-
-        this.println("Sprite expand regs");
-        const expand_x = this.viciimem[(VIC_SPRITE_EXPAND_X) - VIC_BASE];
-        const expand_y = this.viciimem[(VIC_SPRITE_EXPAND_Y) - VIC_BASE];
-        this.println(expand_x.toString(2).padStart(8, "0"));
-        this.println(expand_y.toString(2).padStart(8, "0"));
-        this.println();
-
-
-        this.println("Sprite memory");      
-        for (let i = 0; i <= 7; i++) {
-          const spriteAddr = this.sprite_address(i).toString(16).padStart(4, "0");
-          this.print(spriteAddr + " |");
-        }
-        this.println();
-        this.println();
-
-        this.println("Sprite colours");
-        for (let i = 0; i <= 7; i++) {
-          const col = this.viciimem[(i + VIC_SPRITE_COL0) - VIC_BASE];
-          this.print(col.toString(16).padStart(2, "0") + " |");
-        }
-        this.println();
-        this.println();
-
-        this.println("Sprite multi colour regs");
-        const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
-        const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
-        this.println(mcol0.toString(16).padStart(2, "0"));
-        this.println(mcol1.toString(16).padStart(2, "0"));
-        this.println();
-
-        this.println("Sprite background");
-        const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
-        this.println(bg.toString(16).padStart(2, "0"));
-        this.println();
-        
+        this.list_sprites();
         break;
       }
+        
       case "cia": {
         if (this.cia2mem == null) {
           this.message("no snapshot loaded");
           return;
         }
-       this.print("CIA-II memory\n");
-        for (let i = 0; i < 16; i++) {
-          if (i % 16 == 0) {
-            const hexAddress = (i + CIA2_VIC_BANK).toString(16).padStart(4, "0");
-            this.print(hexAddress + " |");
-          }
-          this.print(this.cia2mem[i].toString(16).padStart(2, "0") + " ");
-          if ((i + 1) % 16 == 0) {
-            this.println();
-          }
-        }
-        this.println("CIA bank");
-        const bank = this.cia2_bank(this.cia2mem[0]);
-        this.println(bank);
-
+        this.list_cia_memory();
         break;
       }
+       
 
       case "vid": {
         if (this.viciimem == null || this.cia2mem == null) {
@@ -425,37 +374,20 @@ grabcols
           return;
         }
 
-        let bank = this.cia2_bank(this.cia2mem[0]);
-        if (command_args.length > 0) {
-          bank = parseInt(command_args[0]);
-        }
-                
-        this.println("Video matrix memory");
-        const vid = this.viciimem[0xd018 - VIC_BASE];
-        const vidAdd = this.video_matrix_address(vid, bank);
-        this.println(vidAdd.toString(16).padStart(4, "0"));              
+        this.list_vid(command_args);              
         break;
       }
+
+
       case "vic":
         if (this.viciimem == null) {
           this.message("no snapshot loaded");
           return;
         }
-       this.println("VIC-II memory");
-        for (let i = 0; i < 64; i++) {
-          if (i % 16 == 0) {
-            const hexAddress = (i + VIC_BASE).toString(16).padStart(4, "0");
-            this.print(hexAddress + " |");
-          }
-          this.print(this.viciimem[i].toString(16).padStart(2, "0") + " ");
-          if ((i + 1) % 16 == 0) {
-            this.print("\n");
-          }
-        }
-        this.println();
-
+       this.list_vic();
         break;
 
+      
       case "edit":
         if (this.c64mem == null) {
           this.message("no snapshot loaded");
@@ -487,6 +419,7 @@ grabcols
         this.message("memory edited");
         break;
 
+      
       case "mem": {
         if (this.c64mem == null) {
           this.message("no snapshot loaded");
@@ -516,9 +449,11 @@ grabcols
           break;
         }
         this.println(this.formatMemory(address));
-        this.lastIndex = address + 16;
+        this.lastIndex = address;
         break;
       }
+
+
       case "help":
         this.print(this.help);
         break;
@@ -533,6 +468,183 @@ grabcols
     }
 
     this.lastCmd = command_name;
+  }
+
+  private list_vic() {
+    if (this.viciimem == null) {
+      return;
+    }
+    this.println("VIC-II memory");
+    for (let i = 0; i < 64; i++) {
+      if (i % 16 == 0) {
+        const hexAddress = (i + VIC_BASE).toString(16).padStart(4, "0");
+        this.print(hexAddress + " |");
+      }
+      this.print(this.viciimem[i].toString(16).padStart(2, "0") + " ");
+      if ((i + 1) % 16 == 0) {
+        this.print("\n");
+      }
+    }
+    this.println();
+  }
+
+  private list_vid(command_args: string[]) {
+    if (this.viciimem == null || this.cia2mem == null) {
+      return;
+    }
+
+    let bank = this.cia2_bank(this.cia2mem[0]);
+    if (command_args.length > 0) {
+      bank = parseInt(command_args[0]);
+    }
+
+    this.println("Video matrix memory");
+    const vid = this.viciimem[0xd018 - VIC_BASE];
+    const vidAdd = this.video_matrix_address(vid, bank);
+    this.println(vidAdd.toString(16).padStart(4, "0"));
+  }
+
+  private list_cia_memory() {
+    if (this.cia2mem == null) {
+      return;
+    }
+    this.print("CIA-II memory\n");
+    for (let i = 0; i < 16; i++) {
+      if (i % 16 == 0) {
+        const hexAddress = (i + CIA2_VIC_BANK).toString(16).padStart(4, "0");
+        this.print(hexAddress + " |");
+      }
+      this.print(this.cia2mem[i].toString(16).padStart(2, "0") + " ");
+      if ((i + 1) % 16 == 0) {
+        this.println();
+      }
+    }
+    this.println("CIA bank");
+    const bank = this.cia2_bank(this.cia2mem[0]);
+    this.println(bank);
+  }
+
+  private list_sprites() {
+    if (this.cia2mem == null || this.viciimem == null) {
+      return;
+    }
+    this.println("Sprite enabled reg");
+    const enabled = this.viciimem[(VIC_SPRITE_ENABLE) - VIC_BASE];
+    this.println(enabled.toString(2).padStart(8, "0"));
+    this.println();
+
+    this.println("Sprite multicolour reg");
+    const multicol = this.viciimem[(VIC_MULTICOLOR) - VIC_BASE];
+    this.println(multicol.toString(2).padStart(8, "0"));
+    this.println();
+
+    this.println("Sprite expand regs");
+    const expand_x = this.viciimem[(VIC_SPRITE_EXPAND_X) - VIC_BASE];
+    const expand_y = this.viciimem[(VIC_SPRITE_EXPAND_Y) - VIC_BASE];
+    this.println(expand_x.toString(2).padStart(8, "0"));
+    this.println(expand_y.toString(2).padStart(8, "0"));
+    this.println();
+
+
+    this.println("Sprite memory");
+    for (let i = 0; i <= 7; i++) {
+      const spriteAddr = this.sprite_address(i).toString(16).padStart(4, "0");
+      this.print(spriteAddr + " |");
+    }
+    this.println();
+    this.println();
+
+    this.println("Sprite colours");
+    for (let i = 0; i <= 7; i++) {
+      const col = this.viciimem[(i + VIC_SPRITE_COL0) - VIC_BASE];
+      this.print(col.toString(16).padStart(2, "0") + " |");
+    }
+    this.println();
+    this.println();
+
+    this.println("Sprite multi colour regs");
+    const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
+    const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
+    this.println(mcol0.toString(16).padStart(2, "0"));
+    this.println(mcol1.toString(16).padStart(2, "0"));
+    this.println();
+
+    this.println("Sprite background");
+    const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
+    this.println(bg.toString(16).padStart(2, "0"));
+    this.println();
+  }
+
+  private grabSprite(sprite: number) {
+    if (this.viciimem == null || this.c64mem == null) {
+      return;
+    }
+    this.app?.sprite.new_sprite(1, true);
+    this.app?.list.update_all(this.app?.sprite.get_all());
+    this.app?.update();
+    const all = this.app?.sprite.get_all();
+    const data = all.sprites[all.current_sprite].pixels;
+    all.sprites[all.current_sprite].multicolor = true;
+    all.sprites[all.current_sprite].color = this.viciimem[(sprite + VIC_SPRITE_COL0) - VIC_BASE];
+    this.lastSpriteCol = all.sprites[all.current_sprite].color;
+
+    const spriteAddr = this.sprite_address(sprite);
+
+    this.grabAddress(spriteAddr, data);
+    this.lastIndex = spriteAddr + 64;    // So you can grab more around the address with grabmem.
+    this.println();
+  }
+
+  private grabAddress(spriteAddr: number, data: any) {
+    if (this.c64mem == null) {
+      return;
+    }
+
+    let posx = 0;
+    let posy = 0;
+
+    const bitReversal = (x: number) => ((x & 1) << 1) | ((x & 2) >> 1);
+
+    for (let i = 0; i <= 62; i++) {
+      const col = this.c64mem[spriteAddr + i];
+      let nib = (col >> 6) & 3;
+      data[posy][posx] = bitReversal(nib);
+      posx += 2;
+
+      nib = (col >> 4) & 3;
+      data[posy][posx] = bitReversal(nib);
+      posx += 2;
+
+      nib = (col >> 2) & 3;
+      data[posy][posx] = bitReversal(nib);
+      posx += 2;
+
+      nib = col & 3;
+      data[posy][posx] = bitReversal(nib);
+      posx += 2;
+
+      if (posx >= 22) {
+        posx = 0;
+        posy++;
+      }
+    }
+
+    this.app?.update();
+  }
+
+  private grabcols() {
+    if (this.viciimem == null) {
+      return;
+    }
+    const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];
+    const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
+    const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
+    const all = this.app?.sprite.get_all();
+    all.colors[0] = bg;
+    all.colors[2] = mcol0;
+    all.colors[3] = mcol1;
+    this.app?.list.update_all(this.app?.sprite.get_all());
+    this.app?.update();
   }
 
   update(all_data): void {
