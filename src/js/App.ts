@@ -661,6 +661,14 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       ],
     });
 
+    dom.sel("#menubar-monitor").onclick = () => {
+      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
+        $(this.window_snapshot.get_window_id()).dialog("close");
+      } else {
+        $(this.window_snapshot.get_window_id()).dialog("open");
+      }
+    };
+
     /*
 
   EDIT
@@ -915,15 +923,6 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
     };
-
-    dom.sel("#icon-monitor").onclick = () => {
-      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
-        $(this.window_snapshot.get_window_id()).dialog("close");
-      } else {
-        $(this.window_snapshot.get_window_id()).dialog("open");
-      }
-    };
-   
 
     dom.sel("#icon-undo").onclick = () => {
       this.sprite.undo();
