@@ -381,7 +381,6 @@ class App {
     if (this.sprite.all.multi_sprite[1] < 1) {
       this.sprite.all.multi_sprite[1] = 1;
     }
-    this.allow_keyboard_shortcuts = true;
     this.update();
   }
 
@@ -1061,31 +1060,32 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.allow_keyboard_shortcuts = false;
     };
 
+    dom.sel("#input-layout-height").onblur = () => {
+      this.update_multi_sprite_layout();
+      this.allow_keyboard_shortcuts = true;
+    };
+
     dom.sel("#input-layout-height").onkeyup = (e) => {
       if (e.key === "Enter") {
-        this.update_multi_sprite_layout();
         dom.sel("#input-layout-height").blur();
       }
     };
 
-    dom.sel("#input-layout-height").onclick = (e) => {
-      this.update_multi_sprite_layout();
-    };
-    
     dom.sel("#input-layout-width").onfocus = () => {
       this.allow_keyboard_shortcuts = false;
     };
 
+    dom.sel("#input-layout-width").onblur = () => {
+      this.update_multi_sprite_layout();
+      this.allow_keyboard_shortcuts = true;
+    };
+
     dom.sel("#input-layout-width").onkeyup = (e) => {
       if (e.key === "Enter") {
-        this.update_multi_sprite_layout();
         dom.sel("#input-layout-width").blur();
       }
     };
 
-    dom.sel("#input-layout-width").onclick = (e) => {
-      this.update_multi_sprite_layout();
-    };
     
 
     dom.sel("#input-sprite-name").onkeyup = (e) => {
@@ -1113,8 +1113,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     dom.sel("#editor").onpointerdown = (e) => {
       e.target.setPointerCapture(e.pointerId);
-  
       e.preventDefault();
+
 
       if (this.mode == "draw") {
         this.sprite.set_pixel(

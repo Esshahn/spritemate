@@ -42,7 +42,7 @@ export default class Editor extends Window_Controls {
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
         <label class="label">layout</label>
-        <input type="number" hideSpinner class="editor_layout" class="icon-hover" id="input-layout-width" name="" value="" title="layout width">
+        <input type="number" class="editor_layout" class="icon-hover" id="input-layout-width" name="" value="" title="layout width">
         <label class="label">x</label>
         <input type="number" class="editor_layout" class="icon-hover" id="input-layout-height" name="" value="" title="layout height">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">

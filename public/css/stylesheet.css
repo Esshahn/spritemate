@@ -225,20 +225,21 @@ img.center {
 
 .ui-widget input[type="number"].editor_layout::-webkit-outer-spin-button, 
 .ui-widget input[type="number"].editor_layout::-webkit-inner-spin-button {
-    background: #888888;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    opacity: .4;
+    appearance: none;
 }
+
+.ui-widget input[type="number"], 
+.ui-widget input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 
 .ui-widget .label {
   min-width: 0px;
   padding: 4px 0px 4px 0px;
   line-height: 16px;
   font-size: 80%;
-  margin: 2px 0px 2px 8px;
+  margin: 2px 0px 2px 2px;
   vertical-align: top;
   background-color: transparent;
   font-family: "Courier";
