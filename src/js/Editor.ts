@@ -41,6 +41,10 @@ export default class Editor extends Window_Controls {
         -->
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
+        <label class="label">layout</label>
+        <input type="number" class="editor_layout" class="icon-hover" id="input-layout-width" name="" value="" title="layout width">
+        <label class="label">x</label>
+        <input type="number" class="editor_layout" class="icon-hover" id="input-layout-height" name="" value="" title="layout height">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
       <div id="editor-canvas"></div>
@@ -54,6 +58,21 @@ export default class Editor extends Window_Controls {
   }
 
   update(all_data) {
+  
+    if (!all_data.multi_sprite) {
+      all_data.multi_sprite = [1, 1];
+    }
+
+
+    dom.val("#input-layout-width", all_data.multi_sprite[0]);
+    dom.val("#input-layout-height", all_data.multi_sprite[1]);
+    
+    this.pixels_x = this.config.sprite_x * all_data.multi_sprite[0];
+    this.pixels_y = this.config.sprite_y * all_data.multi_sprite[1];
+   
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
+
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
 
@@ -75,7 +94,7 @@ export default class Editor extends Window_Controls {
     }
 
     // current sprite
-    this.fill_canvas(all_data, sprite_data, x_grid_step, 1);
+    this.fill_canvas(all_data, all_data.current_sprite, x_grid_step, 1);
 
     // overlay from next sprite
     if (
@@ -85,7 +104,7 @@ export default class Editor extends Window_Controls {
       this.display_overlay(all_data);
 
     // grid
-    if (this.grid) this.display_grid(sprite_data);
+    if (this.grid) this.display_grid(all_data);
   }
 
   display_overlay(all_data, mode = "", alpha = 0.4) {
@@ -95,18 +114,26 @@ export default class Editor extends Window_Controls {
       all_data.sprites[all_data.current_sprite + overlay_sprite_number];
     let x_grid_step = 1;
     if (sprite_data.multicolor) x_grid_step = 2;
-
-    this.fill_canvas(all_data, sprite_data, x_grid_step, alpha);
+    this.fill_canvas(all_data, all_data.current_sprite + overlay_sprite_number, x_grid_step, alpha);
   }
 
-  fill_canvas(all_data, sprite_data, x_grid_step, alpha = 1) {
+  fill_canvas(all_data, current_sprite, x_grid_step, alpha = 1) {
+    const sprite_data = all_data.sprites[current_sprite];
     for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
       for (let j = 0; j < this.pixels_y; j++) {
-        const array_entry = sprite_data.pixels[j][i];
+        let jj = Math.floor(j / 21);
+        let ii = Math.floor(i / 24);
+        let newIndex = Math.floor(jj * all_data.multi_sprite[0] + ii);
+        if (current_sprite + newIndex >= all_data.sprites.length) {
+          continue;
+        }
+
+        const array_entry =
+          all_data.sprites[current_sprite + newIndex].pixels[j % 21][i % 24];
 
         if (array_entry != 0) {
           // not transparent
-          let color = sprite_data.color;
+          let color = all_data.sprites[current_sprite + newIndex].color;
           if (array_entry != 1 && sprite_data.multicolor)
             color = all_data.colors[array_entry];
           this.canvas.fillStyle = this.overlay_color(
@@ -135,45 +162,83 @@ export default class Editor extends Window_Controls {
     return result;
   }
 
-  display_grid(sprite_data) {
+  calculateProjections(m: number, n: number, L: number): { xx: number[], yy: number[] } {
+    const yy: number[] = [];
+    const xx: number[] = [];
+    for (let j = 1; j <= m; j++) {
+        const yj = Math.max(0, Math.min(n, L - n * (j - 1)));
+        yy.push(yj > 0 ? Math.min(yj, n) : 0);
+    }
+    for (let i = 1; i <= n; i++) {
+        const xi = Math.max(0, Math.min(m, Math.ceil((L - (i - 1)) / n)));
+        xx.push(xi > 0 ? Math.min(xi, m) : 0);
+    }
+    return { xx, yy };
+}
+
+  display_grid(all_data) {
     // show a grid
+
+    // calc occupied projection limits
+    const { xx, yy } = this.calculateProjections(all_data.multi_sprite[1], all_data.multi_sprite[0], all_data.sprites.length - all_data.current_sprite);
 
     this.canvas.setLineDash([1, 1]);
     let x_grid_step = 1;
 
-    if (sprite_data.multicolor) x_grid_step = 2;
+    if (all_data.sprites[all_data.current_sprite].multicolor) x_grid_step = 2;
 
     for (let i = 0; i <= this.pixels_x; i = i + x_grid_step) {
+
       // adds a vertical line in the middle
       this.canvas.strokeStyle = "#666666";
+
+      if (all_data.multi_sprite[0] > 1) {
+        if (i % 24 == 0)
+          this.canvas.strokeStyle = "#888888";
+      } else
       if (i == this.pixels_x / 2) this.canvas.strokeStyle = "#888888";
 
       this.canvas.beginPath();
       this.canvas.moveTo(i * this.zoom, 0);
-      this.canvas.lineTo(i * this.zoom, this.height);
+      this.canvas.lineTo(i * this.zoom, ((this.pixels_y/all_data.multi_sprite[1]) * xx[Math.floor(Math.max(0, (i-1)) / 24)]) * this.zoom);
       this.canvas.stroke();
     }
 
     for (let i = 0; i <= this.pixels_y; i++) {
       // adds 3 horizontal lines
       this.canvas.strokeStyle = "#666666";
+
+      if (all_data.multi_sprite[1] > 1) {
+        if (i % 21 == 0)
+          this.canvas.strokeStyle = "#888888";
+      } else
       if (i % (this.pixels_y / 3) == 0) this.canvas.strokeStyle = "#888888";
 
       this.canvas.beginPath();
       this.canvas.moveTo(0, i * this.zoom);
-      this.canvas.lineTo(this.width, i * this.zoom);
+      this.canvas.lineTo(((this.pixels_x/all_data.multi_sprite[0]) * yy[Math.floor((Math.max(0, i-1)) / 21)]) * this.zoom, i * this.zoom);
       this.canvas.stroke();
     }
   }
 
   // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
-  get_pixel(e) {
+  get_pixel(all_data, e) {
     const obj = this.canvas_element.getBoundingClientRect();
     const x = e.clientX - obj.left;
     const y = e.clientY - obj.top;
-    const x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-    const y_grid = Math.floor(y / (this.height / this.config.sprite_y));
-    return { x: x_grid, y: y_grid };
+    let x_grid = Math.floor(x / (this.width / this.config.sprite_x / all_data.multi_sprite[0]));
+    let y_grid = Math.floor(y / (this.height / this.config.sprite_y / all_data.multi_sprite[1]));
+    let sprite_offset = 0;
+
+
+      let jj = Math.floor(y_grid / 21);
+      let ii = Math.floor(x_grid / 24);
+      sprite_offset = Math.floor(jj * all_data.multi_sprite[0] + ii);
+      x_grid = x_grid % 24;
+      y_grid = y_grid % 21;
+
+    
+    return { x: x_grid, y: y_grid, sprite_offset };
   }
 
   toggle_grid() {

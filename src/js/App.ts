@@ -401,6 +401,17 @@ export class App {
     this.update();
   }
 
+  update_multi_sprite_layout() {
+    this.sprite.all.multi_sprite = [dom.val("#input-layout-width"), dom.val("#input-layout-height")];
+    if (this.sprite.all.multi_sprite[0] < 1) {
+      this.sprite.all.multi_sprite[0] = 1;
+    }
+    if (this.sprite.all.multi_sprite[1] < 1) {
+      this.sprite.all.multi_sprite[1] = 1;
+    }
+    this.update();
+  }
+
   user_interaction() {
     /*
 
@@ -1081,6 +1092,38 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.allow_keyboard_shortcuts = false;
     };
 
+    dom.sel("#input-layout-height").onfocus = () => {
+      this.allow_keyboard_shortcuts = false;
+    };
+
+    dom.sel("#input-layout-height").onblur = () => {
+      this.update_multi_sprite_layout();
+      this.allow_keyboard_shortcuts = true;
+    };
+
+    dom.sel("#input-layout-height").onkeyup = (e) => {
+      if (e.key === "Enter") {
+        dom.sel("#input-layout-height").blur();
+      }
+    };
+
+    dom.sel("#input-layout-width").onfocus = () => {
+      this.allow_keyboard_shortcuts = false;
+    };
+
+    dom.sel("#input-layout-width").onblur = () => {
+      this.update_multi_sprite_layout();
+      this.allow_keyboard_shortcuts = true;
+    };
+
+    dom.sel("#input-layout-width").onkeyup = (e) => {
+      if (e.key === "Enter") {
+        dom.sel("#input-layout-width").blur();
+      }
+    };
+
+    
+
     dom.sel("#snapshot-console").onfocus = () => {
       this.allow_keyboard_shortcuts = false;
     };
@@ -1105,31 +1148,46 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       e.preventDefault();
     };
 
-    dom.sel("#editor").onmousedown = (e) => {
+    const editorElement = dom.sel("#editor");
+    editorElement.style.touchAction = "none";
+
+    // Add these attributes
+    editorElement.setAttribute("touch-action", "none");
+    editorElement.setAttribute("pointer-events", "auto");
+
+    dom.sel("#editor").onpointerdown = (e) => {
+      e.target.setPointerCapture(e.pointerId);
+      e.preventDefault();
+
+
       if (this.mode == "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(
+          this.editor.get_pixel(this.sprite.all, e),
+          e.shiftKey
+        ); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
       }
 
       if (this.mode == "erase") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), true); // updates the sprite array at the grid position with the color chosen on the palette
+        this.sprite.set_pixel(this.editor.get_pixel(this.sprite.all, e), true); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
       }
 
       if (this.mode == "fill") {
-        this.sprite.floodfill(this.editor.get_pixel(e));
+        this.sprite.floodfill(this.editor.get_pixel(this.sprite.all, e));
       }
 
       if (this.mode == "move") {
         this.move_start = true;
-        this.move_start_pos = this.editor.get_pixel(e);
+        this.move_start_pos = this.editor.get_pixel(this.sprite.all, e);
       }
       this.update();
     };
+    
 
-    dom.sel("#editor").onmousemove = (e) => {
+    dom.sel("#editor").onpointermove = (e) => {
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
-        const newpos = this.editor.get_pixel(e);
+        const newpos = this.editor.get_pixel(this.sprite.all, e);
         // only draw if the mouse has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
@@ -1144,8 +1202,10 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.move_start) {
-        const x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
-        const y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        const x_diff =
+          this.editor.get_pixel(this.sprite.all, e).x - this.move_start_pos.x;
+        const y_diff =
+          this.editor.get_pixel(this.sprite.all, e).y - this.move_start_pos.y;
 
         if (x_diff > 0) {
           this.sprite.shift_horizontal("right");
@@ -1161,13 +1221,14 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         }
 
         if (x_diff || y_diff) {
-          this.move_start_pos = this.editor.get_pixel(e);
+          this.move_start_pos = this.editor.get_pixel(this.sprite.all, e);
           this.update();
         }
       }
     };
 
-    dom.sel("#editor").onclick = () => {
+    // Add pointer up handler to stop drawing
+    dom.sel("#editor").onpointerup = (e) => {
       // stop drawing pixels
       this.is_drawing = false;
       this.move_start = false;
@@ -1175,7 +1236,13 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
-    /*
+    // Add pointer out handler to stop drawing when leaving the element
+    dom.sel("#editor").onpointerout = (e) => {
+      this.is_drawing = false;
+      this.move_start = false;
+    };
+
+/*
 
 LLLLLLLLLLL                IIIIIIIIII      SSSSSSSSSSSSSSS    TTTTTTTTTTTTTTTTTTTTTTT
 L:::::::::L                I::::::::I    SS:::::::::::::::S   T:::::::::::::::::::::T

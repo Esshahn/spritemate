@@ -1,4 +1,3 @@
-
 import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
@@ -82,16 +81,25 @@ export default class List extends Window_Controls {
     // this one gets called during drawing in the editor
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
-
-    $("#window-" + this.window).dialog(
-      "option",
-      "title",
-      `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`
-    );
-    const c: any = document.getElementById(all_data.current_sprite);
-    const canvas = c.getContext("2d", { alpha: false });
-    const sprite_data = all_data.sprites[all_data.current_sprite];
-    this.draw_sprite(canvas, sprite_data, all_data);
+ 
+      let lastIndex = all_data.multi_sprite[0]*all_data.multi_sprite[1];
+    for (let i = 0; i < lastIndex; i++) {
+        if (all_data.current_sprite + i >= all_data.sprites.length) {
+          continue;
+        }
+        $("#window-" + this.window).dialog(
+          "option",
+          "title",
+          `sprite ${all_data.current_sprite + 1} of ${
+            all_data.sprites.length
+          }`
+        );
+        const c: any = document.getElementById(all_data.current_sprite + i);
+        const canvas = c.getContext("2d", { alpha: false });
+        const sprite_data = all_data.sprites[all_data.current_sprite + i];
+        this.draw_sprite(canvas, sprite_data, all_data);
+      }
+    
   }
 
   update_all(all_data) {
