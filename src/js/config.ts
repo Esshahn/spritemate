@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: 1.4,
+    version: 1.5,
     sprite_x: 24,
     sprite_y: 21,
     palettes: {
@@ -84,6 +84,11 @@ export function get_config() {
     },
     window_palette: {
       top: 50,
+      left: 110,
+      zoom: 1,
+    },
+    window_snapshot: {
+      top: 80,
       left: 110,
       zoom: 1,
     },

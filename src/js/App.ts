@@ -10,6 +10,7 @@
 import List from "./List";
 import About from "./About";
 import Tools from "./Tools";
+import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Save from "./Save";
 import Settings from "./Settings";
@@ -22,9 +23,15 @@ import Window from "./Window";
 import { get_config } from "./config";
 import { dom, tipoftheday, status, toggle_fullscreen } from "./helper";
 
-class App {
+declare global {
+  interface Window {
+    app: App;
+  }
+}
+
+export class App {
   storage: any = {};
-  sprite: any = {};
+  sprite: Sprite;
   editor: any;
   window_editor: any;
   window_palette: any;
@@ -32,7 +39,8 @@ class App {
   window_preview: any;
   preview: any;
   window_list: any;
-  list: any;
+  window_snapshot: any;
+  list: List;
   window_about: any;
   about: any;
   window_save: any;
@@ -42,6 +50,7 @@ class App {
   window_tools: any;
   window_help: any;
   tools: any;
+  snapshot: Snapshot;
   load: any;
   is_drawing: boolean;
   oldpos: any;
@@ -196,6 +205,24 @@ class App {
     this.window_tools = new Window(tools_config, this.store_window.bind(this));
     this.tools = new Tools(tools_config.window_id, this.config);
 
+
+    const snapshot_config = {
+      name: "window_snapshot",
+      title: "Snapshot",
+      type: "tools",
+      autoOpen: false,
+      resizable: true,
+      left: this.config.window_snapshot.left,
+      top: this.config.window_snapshot.top,
+      width: "760",
+      height: "auto",
+      window_id: 9,
+    }
+    this.window_snapshot = new Window(snapshot_config, this.store_window.bind(this));
+    this.snapshot = new Snapshot(snapshot_config.window_id, this.config, {
+      onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
     });
@@ -223,6 +250,7 @@ class App {
     this.preview.update(all);
     this.list.update(all);
     this.palette.update(all);
+    this.snapshot.update(all);
     this.update_ui();
   }
 
@@ -332,7 +360,7 @@ class App {
   store_window(obj) {
     for (const key in obj.data) {
       // eslint-disable-next-line no-prototype-builtins
-      if (this.config[obj.name].hasOwnProperty(key))
+      if (this.config[obj.name]?.hasOwnProperty(key))
         this.config[obj.name][key] = obj.data[key];
     }
     this.storage.write(this.config);
@@ -643,6 +671,14 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
         },
       ],
     });
+
+    dom.sel("#menubar-monitor").onclick = () => {
+      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
+        $(this.window_snapshot.get_window_id()).dialog("close");
+      } else {
+        $(this.window_snapshot.get_window_id()).dialog("open");
+      }
+    };
 
     /*
 
@@ -1088,6 +1124,14 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     
 
+    dom.sel("#snapshot-console").onfocus = () => {
+      this.allow_keyboard_shortcuts = false;
+    };
+
+    dom.sel("#snapshot-console").onblur = () => {
+      this.allow_keyboard_shortcuts = true;
+    };
+
     dom.sel("#input-sprite-name").onkeyup = (e) => {
       if (e.key === "Enter") {
         this.update_sprite_name();
@@ -1307,5 +1351,5 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  new App(get_config());
+  window.app = new App(get_config());
 });
