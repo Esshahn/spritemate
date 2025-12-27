@@ -16,11 +16,11 @@ export default class About {
         <fieldset>
             <h1>Release notes</h1>
 
-            <h1>v1.4 - 2024.11.16</h1>
-            <h2>This update should not introduce any major changes or issues and is meant to update the framework and clean up the codebase. New features will follow soon, if you like to test them early and give valuable feedback, visit <a href="https://beta.spritemate.com">https://beta.spritemate.com</a>.</h2>
+            <h1>v1.5.1 - 2025.12.27</h1>
+            <h2>Security patches.</h2>
             <br/>
             <p>
-            - Removed webpack and many dependancies. Spritemate now uses Vite<br/>
+            - Removed webpack and many dependancies. Spritemate now uses Vite.<br/>
             </p>
 
         </fieldset>
