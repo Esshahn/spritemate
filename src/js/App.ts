@@ -1,11 +1,5 @@
 // ASCII text: http://patorjk.com/software/taag/#p=display&h=2&f=Doh&t=TOOLS
 
-/*
-  To switch to photoshop style layers:
-  - load "List_layerstyle.js" instead of "List.js" in index.html
-  - comment & uncomment 2 lines of code in update_ui in this file
-*/
-
 
 import List from "./List";
 import About from "./About";
@@ -244,6 +238,61 @@ export class App {
       $(this.window_about.get_window_id()).dialog("open");
   }
 
+  // Helper method to set drawing mode and update UI icons
+  setDrawMode(mode: "move" | "draw" | "erase" | "fill"): void {
+    this.mode = mode;
+    const modeNames = {
+      move: "Move",
+      draw: "Draw",
+      erase: "Erase",
+      fill: "Fill"
+    };
+    status(`${modeNames[mode]} mode`);
+
+    // Update all icon states
+    const modes = ["move", "draw", "erase", "fill"];
+    modes.forEach(m => {
+      const suffix = m === mode ? "-hi.png" : ".png";
+      dom.attr(`#image-icon-${m}`, "src", `ui/icon-${m}${suffix}`);
+    });
+  }
+
+  // Helper method to handle zoom and grid controls for editor, preview, and list
+  handleZoomGrid(component: "editor" | "preview" | "list", action: "zoom-in" | "zoom-out" | "toggle-grid"): void {
+    const comp = this[component];
+
+    if (action === "zoom-in") {
+      comp.zoom_in();
+      this.config[`window_${component}`].zoom = comp.get_zoom();
+      this.storage.write(this.config);
+    } else if (action === "zoom-out") {
+      comp.zoom_out();
+      this.config[`window_${component}`].zoom = comp.get_zoom();
+      this.storage.write(this.config);
+    } else if (action === "toggle-grid") {
+      comp.toggle_grid();
+      if (component === "editor") {
+        this.config.window_editor.grid = comp.get_grid();
+        this.storage.write(this.config);
+      }
+    }
+
+    // Update list if needed
+    if (component === "list") {
+      this.list.update_all(this.sprite.get_all());
+    }
+
+    this.update();
+  }
+
+  // Helper method to bind multiple selectors to the same handler
+  bindEvents(selectors: string, handler: () => void): void {
+    selectors.split(',').forEach(selector => {
+      const el = dom.sel(selector.trim());
+      if (el) el.onclick = handler;
+    });
+  }
+
   update() {
     const all = this.sprite.get_all();
     this.editor.update(all);
@@ -441,41 +490,10 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           toggle_fullscreen();
         }
 
-        if (e.key == "m") {
-          this.mode = "move";
-          status("Move mode");
-          dom.attr("#image-icon-move", "src", "ui/icon-move-hi.png");
-          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-        }
-
-        if (e.key == "d") {
-          this.mode = "draw";
-          status("Draw mode");
-          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "ui/icon-draw-hi.png");
-          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-        }
-
-        if (e.key == "e") {
-          this.mode = "erase";
-          status("Erase mode");
-          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "ui/icon-erase-hi.png");
-          dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-        }
-
-        if (e.key == "f") {
-          this.mode = "fill";
-          status("Fill mode");
-          dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-          dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-          dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-          dom.attr("#image-icon-fill", "src", "ui/icon-fill-hi.png");
-        }
+        if (e.key == "m") this.setDrawMode("move");
+        if (e.key == "d") this.setDrawMode("draw");
+        if (e.key == "e") this.setDrawMode("erase");
+        if (e.key == "f") this.setDrawMode("fill");
 
         if (e.key == "1") {
           this.sprite.set_pen(0);
@@ -661,17 +679,17 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#menubar-undo").onclick = () => {
+    this.bindEvents("#menubar-undo, #icon-undo", () => {
       this.sprite.undo();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    };
+    });
 
-    dom.sel("#menubar-redo").onclick = () => {
+    this.bindEvents("#menubar-redo, #icon-redo", () => {
       this.sprite.redo();
       this.list.update_all(this.sprite.get_all());
       this.update();
-    };
+    });
 
     dom.sel("#menubar-new-sprite").onclick = () => {
       this.sprite.new_sprite(
@@ -796,48 +814,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.update();
     };
 
-    dom.sel("#menubar-editor-grid").onclick = () => {
-      this.editor.toggle_grid();
-      this.config.window_editor.grid = this.editor.get_grid();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-preview-zoom-in").onclick = () => {
-      this.preview.zoom_in();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-preview-zoom-out").onclick = () => {
-      this.preview.zoom_out();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-list-grid").onclick = () => {
-      this.list.toggle_grid();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#menubar-list-zoom-in").onclick = () => {
-      this.list.zoom_in();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#menubar-list-zoom-out").onclick = () => {
-      this.list.zoom_out();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
+    dom.sel("#menubar-editor-grid").onclick = () => this.handleZoomGrid("editor", "toggle-grid");
+    dom.sel("#menubar-preview-zoom-in").onclick = () => this.handleZoomGrid("preview", "zoom-in");
+    dom.sel("#menubar-preview-zoom-out").onclick = () => this.handleZoomGrid("preview", "zoom-out");
+    dom.sel("#menubar-list-grid").onclick = () => this.handleZoomGrid("list", "toggle-grid");
+    dom.sel("#menubar-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
+    dom.sel("#menubar-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
 
     /*
 
@@ -845,19 +827,8 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
 */
 
-    dom.sel("#icon-preview-zoom-in").onclick = () => {
-      this.preview.zoom_in();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#icon-preview-zoom-out").onclick = () => {
-      this.preview.zoom_out();
-      this.config.window_preview.zoom = this.preview.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
+    dom.sel("#icon-preview-zoom-in").onclick = () => this.handleZoomGrid("preview", "zoom-in");
+    dom.sel("#icon-preview-zoom-out").onclick = () => this.handleZoomGrid("preview", "zoom-out");
 
     dom.sel("#icon-preview-x").onclick = () => {
       this.sprite.toggle_double_x();
@@ -910,53 +881,10 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
       this.save.set_save_data(this.sprite.get_all());
     };
 
-    dom.sel("#icon-undo").onclick = () => {
-      this.sprite.undo();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#icon-redo").onclick = () => {
-      this.sprite.redo();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#icon-move").onclick = () => {
-      this.mode = "move";
-      status("Move mode");
-      dom.attr("#image-icon-move", "src", "ui/icon-move-hi.png");
-      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-    };
-
-    dom.sel("#icon-draw").onclick = () => {
-      this.mode = "draw";
-      status("Draw mode");
-      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "ui/icon-draw-hi.png");
-      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-    };
-
-    dom.sel("#icon-erase").onclick = () => {
-      this.mode = "erase";
-      status("Erase mode");
-      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "ui/icon-erase-hi.png");
-      dom.attr("#image-icon-fill", "src", "ui/icon-fill.png");
-    };
-
-    dom.sel("#icon-fill").onclick = () => {
-      this.mode = "fill";
-      status("Fill mode");
-      dom.attr("#image-icon-move", "src", "ui/icon-move.png");
-      dom.attr("#image-icon-draw", "src", "ui/icon-draw.png");
-      dom.attr("#image-icon-erase", "src", "ui/icon-erase.png");
-      dom.attr("#image-icon-fill", "src", "ui/icon-fill-hi.png");
-    };
+    dom.sel("#icon-move").onclick = () => this.setDrawMode("move");
+    dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
+    dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
+    dom.sel("#icon-fill").onclick = () => this.setDrawMode("fill");
 
     /*
 
@@ -1027,26 +955,9 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
 */
 
-    dom.sel("#icon-editor-zoom-in").onclick = () => {
-      this.editor.zoom_in();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#icon-editor-zoom-out").onclick = () => {
-      this.editor.zoom_out();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#icon-editor-grid").onclick = () => {
-      this.editor.toggle_grid();
-      this.config.window_editor.grid = this.editor.get_grid();
-      this.storage.write(this.config);
-      this.update();
-    };
+    dom.sel("#icon-editor-zoom-in").onclick = () => this.handleZoomGrid("editor", "zoom-in");
+    dom.sel("#icon-editor-zoom-out").onclick = () => this.handleZoomGrid("editor", "zoom-out");
+    dom.sel("#icon-editor-grid").onclick = () => this.handleZoomGrid("editor", "toggle-grid");
 
     dom.sel("#icon-flip-horizontal").onclick = () => {
       this.sprite.flip_horizontal();
@@ -1182,27 +1093,9 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
 */
 
-    dom.sel("#icon-list-grid").onclick = () => {
-      this.list.toggle_grid();
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#icon-list-zoom-in").onclick = () => {
-      this.list.zoom_in();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
-
-    dom.sel("#icon-list-zoom-out").onclick = () => {
-      this.list.zoom_out();
-      this.config.window_list.zoom = this.list.get_zoom();
-      this.storage.write(this.config);
-      this.list.update_all(this.sprite.get_all());
-      this.update();
-    };
+    dom.sel("#icon-list-grid").onclick = () => this.handleZoomGrid("list", "toggle-grid");
+    dom.sel("#icon-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
+    dom.sel("#icon-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
 
     dom.sel("#icon-list-new").onclick = () => {
       this.sprite.new_sprite(
