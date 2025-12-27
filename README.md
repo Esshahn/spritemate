@@ -3,7 +3,6 @@ Spritemate is a modern sprite editor for the Commodore 64. It works with most mo
 
 Spritemate is still in development. If you like it, let me know ;) Feel free to submit pull requests or submit ideas, bugs, requests in the issues section. Cheers!
 
-
 Latest stable version: https://spritemate.com/
 
 Beta version: https://beta.spritemate.com/
