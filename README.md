@@ -39,22 +39,22 @@ Try the example files in the `examples/` directory to explore features!
 * copy, paste, duplicate
 * window based GUI
 * save window layout
-* **VICE snapshot monitor for extracting sprites from memory dumps**
+* VICE snapshot monitor for extracting sprites from memory dumps
 * import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
-* **import VICE snapshot files (.vsf)**
+* import VICE snapshot files (.vsf)
 * export as ASM source (KICK and ACME)
 * export as hex or binary notation source
-* **export as BASIC 2.0 listing**
+* export as BASIC 2.0 listing
 * keyboard shortcuts
 
 ## Technology Stack
 
-* **TypeScript** - All source code converted to TypeScript (v1.3)
+* **TypeScript** - All source code converted to TypeScript 
 * **Vite** - Modern build tool with fast development server
 * **jQuery & jQuery UI** - Window management and UI components (loaded from CDN)
-* **HTML5 Canvas** - Pixel-perfect sprite rendering
+* **HTML5 Canvas** - Sprite rendering
 * **Local Storage** - Browser-based persistence for settings and window layouts
 
 No server required - runs entirely client-side in your browser.
@@ -81,7 +81,9 @@ No server required - runs entirely client-side in your browser.
 
 ## VICE Snapshot Monitor
 
-Spritemate includes a powerful VICE snapshot monitor that allows you to extract sprite data directly from VICE emulator memory dumps. This feature is perfect for analyzing existing C64 programs or extracting sprites from games.
+Spritemate includes a powerful VICE snapshot monitor written by [Elliot Tanner](https://github.com/elliot2) that allows you to extract sprite data directly from VICE emulator memory dumps. This feature is perfect for analyzing existing C64 programs or extracting sprites from games.
+
+A [tutorial video of the Snapshot Monitor](https://www.youtube.com/watch?v=UdFc7yFCZGw) can be found on youtube.
 
 ### How to Use
 
@@ -206,11 +208,13 @@ Pull requests are welcome! Please feel free to submit ideas, bugs, and feature r
 
 ## Changelog
 
+### 2025-12-27-02
+- Added VICE Snapshot Monitor for sprite extraction from memory dumps
+- Support for importing VICE snapshot files (.vsf)
+
 ### V1.3
 #### This is a housekeeping update with important new functionality and modernization.
 
-- **Added VICE Snapshot Monitor for sprite extraction from memory dumps**
-- **Support for importing VICE snapshot files (.vsf)**
 - Converted all JavaScript to TypeScript
 - Rewrite of menubar, should fix annoying bug and is more responsive
 - Fixed a UI issue in the save dialog
