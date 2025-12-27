@@ -283,15 +283,25 @@ export default class Editor extends Window_Controls {
   // Update overlay canvas size when zoom changes
   zoom_in(): void {
     super.zoom_in();
+    // Update main canvas logical size
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    // Update overlay canvas logical size
     this.overlay_canvas_element.width = this.width;
     this.overlay_canvas_element.height = this.height;
+    // Sync overlay CSS size to match main canvas rendered size
     this.syncOverlayCanvas();
   }
 
   zoom_out(): void {
     super.zoom_out();
+    // Update main canvas logical size
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    // Update overlay canvas logical size
     this.overlay_canvas_element.width = this.width;
     this.overlay_canvas_element.height = this.height;
+    // Sync overlay CSS size to match main canvas rendered size
     this.syncOverlayCanvas();
   }
 }
