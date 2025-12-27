@@ -54,7 +54,6 @@ export default class List extends Window_Controls {
     );
 
     // TODO:
-    //$-old-("#spritelist").disableSelection(); // can't see the reason for this
   }
 
   get_clicked_sprite() {

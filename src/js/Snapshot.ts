@@ -110,6 +110,7 @@ grabcols
     dom.sel("#snapshot-console").onkeyup = (e) => {
       if (e.key === "Enter") {
         const command = dom.val("#snapshot-console");
+        if (!command) return;
         const lines = command.split("\n");
         const last_line = lines[lines.length - 2];
         const last_line_trimmed_without_prompt = this.removePrompt(last_line);
@@ -127,71 +128,96 @@ grabcols
     return line;
   }
 
+  // Helper: Find memory marker in snapshot data
+  private findMemoryMarker(data: Uint8Array, marker: string, startOffset = 0): number {
+    let letterIndex = 0;
+    for (let i = startOffset; i < data.length; i++) {
+      if (data[i] === marker.charCodeAt(letterIndex)) {
+        letterIndex++;
+        if (letterIndex === marker.length) {
+          return i;
+        }
+      } else {
+        letterIndex = 0;
+      }
+    }
+    return -1;
+  }
+
+  // Helper: Parse address from command arguments
+  private parseAddress(args: string[], allowEmpty = false): number | null {
+    if (args.length === 0) {
+      if (allowEmpty && this.lastIndex !== -1) {
+        return this.lastIndex;
+      }
+      return null;
+    }
+
+    const argString = args.join(" ");
+    let address = parseInt(argString);
+    if (isNaN(address)) {
+      address = parseInt(argString, 16);
+      if (isNaN(address)) {
+        return null;
+      }
+    }
+    return address;
+  }
+
+  // Helper: Create new sprite with specified settings
+  private createNewSprite(multicolor: boolean, color: number): number[][] | null {
+    this.app?.sprite.new_sprite(1, true);
+    this.app?.list.update_all(this.app?.sprite.get_all());
+    this.app?.update();
+    const all = this.app?.sprite.get_all();
+    if (!all) return null;
+
+    all.sprites[all.current_sprite].multicolor = multicolor;
+    all.sprites[all.current_sprite].color = color;
+    return all.sprites[all.current_sprite].pixels;
+  }
+
+  // Helper: Format number as hex with specified width
+  private formatHex(value: number, width: 2 | 4): string {
+    return value.toString(16).padStart(width, "0");
+  }
+
   load_snapshot(file: File, filename: string) {
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = () => {
-      const file = reader.result as ArrayBuffer;
+      const fileData = reader.result as ArrayBuffer;
       this.message("loading snapshot " + filename);
 
-      let c64word = "C64MEM\0\0\0\0\0\0\0\0\0\0";
-      const c64mem = new Uint8Array(file);
-      let c64mem_index = -1;
-      let letter_index = 0;
-      for (let i = 0; i < c64mem.length; i++) {
-        if (c64mem[i] == c64word[letter_index].charCodeAt(0)) {
-          letter_index++;
-          if (letter_index == c64word.length) {
-            c64mem_index = i;
-            break;
-          }
-        } else {
-          letter_index = 0;
-        }
-      }
+      const c64mem = new Uint8Array(fileData);
 
-      if (c64mem_index == -1) {
+      // Find C64MEM marker
+      const c64memIndex = this.findMemoryMarker(c64mem, "C64MEM\0\0\0\0\0\0\0\0\0\0");
+      if (c64memIndex === -1) {
         this.message("snapshot not found");
         return;
       }
+      this.c64mem = new Uint8Array(c64mem.slice(c64memIndex + 11));
 
-      this.c64mem = new Uint8Array(c64mem.slice(c64mem_index + 11));
-
-      c64word = "CIA2\0\0\0\0\0\0\0\0\0\0";
-      letter_index = 0;
-      for (let i = c64mem_index; i < c64mem.length; i++) {
-        if (c64mem[i] == c64word[letter_index].charCodeAt(0)) {
-          letter_index++;
-          if (letter_index == c64word.length) {
-            c64mem_index = i;
-            break;
-          }
-        } else {
-          letter_index = 0;
-        }
+      // Find CIA2 marker
+      const cia2Index = this.findMemoryMarker(c64mem, "CIA2\0\0\0\0\0\0\0\0\0\0", c64memIndex);
+      if (cia2Index !== -1) {
+        this.cia2mem = new Uint8Array(c64mem.slice(cia2Index + 9));
       }
-      this.cia2mem = new Uint8Array(c64mem.slice(c64mem_index + 9));
 
-      c64word = "VIC-II\0\0\0\0\0\0\0\0\0\0";
-      letter_index = 0;
-      for (let i = c64mem_index; i < c64mem.length; i++) {
-        if (c64mem[i] == c64word[letter_index].charCodeAt(0)) {
-          letter_index++;
-          if (letter_index == c64word.length) {
-            c64mem_index = i;
-            break;
-          }
-        } else {
-          letter_index = 0;
-        }
+      // Find VIC-II marker
+      const vicIndex = this.findMemoryMarker(c64mem, "VIC-II\0\0\0\0\0\0\0\0\0\0", cia2Index !== -1 ? cia2Index : c64memIndex);
+      if (vicIndex !== -1) {
+        this.viciimem = new Uint8Array(c64mem.slice(vicIndex + 8));
       }
-      this.viciimem = new Uint8Array(c64mem.slice(c64mem_index + 8));
+
       this.message("snapshot loaded " + c64mem.length + " bytes");
     };
   }
 
   prompt(): void {
-    dom.val("#snapshot-console", dom.val("#snapshot-console") + "] ");
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + "] ");
     const textarea = dom.sel("#snapshot-console");
     textarea.scrollTop = textarea.scrollHeight;
   }
@@ -205,11 +231,13 @@ grabcols
   }
 
   print(message: string): void {
-   dom.val("#snapshot-console", dom.val("#snapshot-console") + message);
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + message);
   }
 
   println(message: string | number = ""): void {
-    dom.val("#snapshot-console", dom.val("#snapshot-console") + message + "\n");
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + message + "\n");
   }
 
   formatMemory(address: number): string {
@@ -222,13 +250,17 @@ grabcols
       }
       return ".";
     };
-    const hexAddress = address.toString(16).padStart(4, "0");
+
     if (this.c64mem == null) return "";
     const mem = this.c64mem;
-    const bytes = Array.from({ length: 16 }, (_, i) => mem[address + i]);
-    const hexBytes = bytes
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join(" ");
+
+    // Add bounds checking
+    const endAddress = Math.min(address + 16, mem.length);
+    const actualLength = endAddress - address;
+    const bytes = Array.from({ length: actualLength }, (_, i) => mem[address + i] || 0);
+
+    const hexAddress = this.formatHex(address, 4);
+    const hexBytes = bytes.map((byte) => this.formatHex(byte, 2)).join(" ");
     const ascii = bytes.map((byte) => convertPetsciiToAscii(byte)).join("");
     return `${hexAddress} |${hexBytes}  |${ascii}|`;
   }
@@ -310,38 +342,24 @@ grabcols
           this.message("no snapshot loaded");
           return;
         }
-        let address = command_args_number;
 
-        if (command_args.length == 0) {
-          if (this.lastIndex == -1) {
-            this.message("no address specified");
-            return;
-          }
-          address = this.lastIndex;
+        const address = this.parseAddress(command_args, true);
+        if (address === null) {
+          this.message("no address specified");
+          return;
         }
-        else
-        {
-          if (isNaN(address)) {
-            address = command_args_number_hex;
-          }
-          if (isNaN(address)) {
-            this.print("bad address\n");
-            break;
-          }
-          if (address < 0 || address > this.c64mem.length) {
-            this.println("address out of range");
-            break;
-          }
-        }
-      
 
-        this.app?.sprite.new_sprite(1, true);
-        this.app?.list.update_all(this.app?.sprite.get_all());
-        this.app?.update();
-        const all = this.app?.sprite.get_all();
-        const data = all.sprites[all.current_sprite].pixels;
-        all.sprites[all.current_sprite].multicolor = true;
-        all.sprites[all.current_sprite].color = this.lastSpriteCol;
+        if (address < 0 || address >= this.c64mem.length) {
+          this.println("address out of range");
+          break;
+        }
+
+        const data = this.createNewSprite(true, this.lastSpriteCol);
+        if (!data) {
+          this.message("failed to create sprite");
+          return;
+        }
+
         this.grabAddress(address, data);
         this.lastIndex = address + 64;
         break;
@@ -425,29 +443,25 @@ grabcols
           this.message("no snapshot loaded");
           return;
         }
-        if (command_args.length == 0) {
-          if (this.lastIndex == -1) {
-            this.message("no address specified");
-            return;
-          }
-          this.lastIndex = this.lastIndex + 16;
-          this.print(this.formatMemory(this.lastIndex) +
-            "\n"
-          );
+
+        const address = this.parseAddress(command_args, true);
+        if (address === null) {
+          this.message("no address specified");
           return;
         }
-        let address = command_args_number;
-        if (isNaN(address)) {
-          address = command_args_number_hex;
+
+        // If no args provided and we have lastIndex, increment by 16
+        if (command_args.length === 0 && this.lastIndex !== -1) {
+          this.lastIndex = this.lastIndex + 16;
+          this.print(this.formatMemory(this.lastIndex) + "\n");
+          return;
         }
-        if (isNaN(address)) {
-          this.print("bad address\n");
-          break;
-        }
-        if (address < 0 || address > this.c64mem.length) {
+
+        if (address < 0 || address >= this.c64mem.length) {
           this.println("address out of range");
           break;
         }
+
         this.println(this.formatMemory(address));
         this.lastIndex = address;
         break;
@@ -579,15 +593,15 @@ grabcols
     if (this.viciimem == null || this.c64mem == null) {
       return;
     }
-    this.app?.sprite.new_sprite(1, true);
-    this.app?.list.update_all(this.app?.sprite.get_all());
-    this.app?.update();
-    const all = this.app?.sprite.get_all();
-    const data = all.sprites[all.current_sprite].pixels;
-    all.sprites[all.current_sprite].multicolor = true;
-    all.sprites[all.current_sprite].color = this.viciimem[(sprite + VIC_SPRITE_COL0) - VIC_BASE];
-    this.lastSpriteCol = all.sprites[all.current_sprite].color;
 
+    const spriteColor = this.viciimem[(sprite + VIC_SPRITE_COL0) - VIC_BASE];
+    const data = this.createNewSprite(true, spriteColor);
+    if (!data) {
+      this.message("failed to create sprite");
+      return;
+    }
+
+    this.lastSpriteCol = spriteColor;
     const spriteAddr = this.sprite_address(sprite);
 
     this.grabAddress(spriteAddr, data);
@@ -595,8 +609,14 @@ grabcols
     this.println();
   }
 
-  private grabAddress(spriteAddr: number, data: any) {
+  private grabAddress(spriteAddr: number, data: number[][]) {
     if (this.c64mem == null) {
+      return;
+    }
+
+    // Add bounds checking
+    if (spriteAddr + 63 >= this.c64mem.length) {
+      this.message("sprite address out of bounds");
       return;
     }
 
@@ -605,7 +625,8 @@ grabcols
 
     const bitReversal = (x: number) => ((x & 1) << 1) | ((x & 2) >> 1);
 
-    for (let i = 0; i <= 62; i++) {
+    // Fix: Loop should be < 63, not <= 62 (sprites are 63 bytes)
+    for (let i = 0; i < 63; i++) {
       const col = this.c64mem[spriteAddr + i];
       let nib = (col >> 6) & 3;
       data[posy][posx] = bitReversal(nib);
@@ -640,6 +661,13 @@ grabcols
     const mcol1 = this.viciimem[(VIC_SPRITE_MCOLOR_1) - VIC_BASE];
     const bg = this.viciimem[(VIC_BG_COL0) - VIC_BASE];
     const all = this.app?.sprite.get_all();
+
+    // Fix: Add null check
+    if (!all) {
+      this.message("failed to get sprite data");
+      return;
+    }
+
     all.colors[0] = bg;
     all.colors[2] = mcol0;
     all.colors[3] = mcol1;

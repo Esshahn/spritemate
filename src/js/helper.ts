@@ -8,8 +8,10 @@ export const dom = {
   },
 
   append: function (target: string, source): void {
-    const t = document.querySelector(target) as any;
-    t.innerHTML = source;
+    const t = document.querySelector(target);
+    if (t) {
+      t.innerHTML = source;
+    }
   },
 
   /** add html element ie a canvas to target */
@@ -23,35 +25,47 @@ export const dom = {
   },
 
   css: function (target, property: string, value): void {
-    document.querySelector(target).style[property] = value;
+    const element = document.querySelector(target) as HTMLElement;
+    if (element) {
+      element.style[property] = value;
+    }
   },
 
   disabled(target, state): void {
-    document.querySelectorAll(target).forEach((element) => {
-      element.disabled = state;
+    document.querySelectorAll(target).forEach((element: any) => {
+      if (element) {
+        element.disabled = state;
+      }
     });
   },
 
   empty(target): void {
-    document.querySelector(target).innerHTML = "";
+    const element = document.querySelector(target);
+    if (element) {
+      element.innerHTML = "";
+    }
   },
 
   fade_in(target, delay_milliseconds = 0, fade_milliseconds = 1000): void {
-    const fadeTarget: any = document.querySelector(target);
-    setTimeout(function () {
-      fadeTarget.style.opacity = 0;
-      fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
-      fadeTarget.style.opacity = 1;
-    }, delay_milliseconds);
+    const fadeTarget = document.querySelector(target) as HTMLElement;
+    if (fadeTarget) {
+      setTimeout(function () {
+        fadeTarget.style.opacity = "0";
+        fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
+        fadeTarget.style.opacity = "1";
+      }, delay_milliseconds);
+    }
   },
 
   fade_out(target, delay_milliseconds = 0, fade_milliseconds = 1000): void {
-    const fadeTarget: any = document.querySelector(target);
-    setTimeout(function () {
-      fadeTarget.style.opacity = 1;
-      fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
-      fadeTarget.style.opacity = 0;
-    }, delay_milliseconds);
+    const fadeTarget = document.querySelector(target) as HTMLElement;
+    if (fadeTarget) {
+      setTimeout(function () {
+        fadeTarget.style.opacity = "1";
+        fadeTarget.style.transition = "opacity " + fade_milliseconds / 1000 + "s";
+        fadeTarget.style.opacity = "0";
+      }, delay_milliseconds);
+    }
   },
 
   /** fade opacity TARGET, FROM VALUE, TO VALUE, MILLISECONDS */
@@ -70,15 +84,22 @@ export const dom = {
   },
 
   get_css: function (target, property: string) {
-    return document.querySelector(target).style[property];
+    const element = document.querySelector(target) as HTMLElement;
+    return element ? element.style[property] : undefined;
   },
 
   hide(target): void {
-    document.querySelector(target).style.display = "none";
+    const element = document.querySelector(target) as HTMLElement;
+    if (element) {
+      element.style.display = "none";
+    }
   },
 
   html(target, text: string): void {
-    document.querySelector(target).innerHTML = text;
+    const element = document.querySelector(target);
+    if (element) {
+      element.innerHTML = text;
+    }
   },
 
   is_canvas(i): boolean {
@@ -102,7 +123,10 @@ export const dom = {
   },
 
   show(target): void {
-    document.querySelector(target).style.display = "block";
+    const element = document.querySelector(target) as HTMLElement;
+    if (element) {
+      element.style.display = "block";
+    }
   },
 
   /** selects an element from the dom and returns it */
@@ -112,10 +136,14 @@ export const dom = {
 
   /** if no value is given, returns the current value */
   val(target, value?) {
-    if (value) {
-      document.querySelector(target).value = value;
+    const element = document.querySelector(target) as HTMLInputElement;
+    if (!element) {
+      return undefined;
     }
-    return document.querySelector(target).value;
+    if (value !== undefined) {
+      element.value = value;
+    }
+    return element.value;
   },
 };
 
@@ -131,7 +159,7 @@ export function status(text: string, state = "normal"): void {
 export function tipoftheday(): void {
   const tips = [
     "Hold shift while clicking to delete pixels.",
-    "You can change and define your own colors in the seetings.",
+    "You can change and define your own colors in the settings.",
     "Press 'z' for undo and 'shift + z' for redo.",
     "You can position all windows how you like it best. Spritemate remembers that for your next visit!",
     "Exporting in SpritePad 1.8 format is ideal for using your sprites in a C64 program.",

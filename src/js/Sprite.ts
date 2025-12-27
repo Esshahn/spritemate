@@ -24,6 +24,23 @@ export default class Sprite {
     this.sprite_name_counter = 0; // increments for every new sprite regardless of deleted sprites. Used for the default name
   }
 
+  // Helper: Create pixel grid with given fill value
+  private createPixelGrid(fillValue: number = 0): number[][] {
+    return Array.from({ length: this.height }, () =>
+      Array.from({ length: this.width }, () => fillValue)
+    );
+  }
+
+  // Helper: Get current sprite reference
+  private get currentSprite() {
+    return this.all.sprites[this.all.current_sprite];
+  }
+
+  // Helper: Deep clone an object
+  private deepClone<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
   new_sprite(color = 1, multicolor = false): void {
     const sprite = {
       name: "sprite_" + this.sprite_name_counter,
@@ -32,14 +49,9 @@ export default class Sprite {
       double_x: false,
       double_y: false,
       overlay: false,
-      pixels: [],
+      pixels: this.createPixelGrid(0),
     };
 
-    for (let i = 0; i < this.height; i++) {
-      const line = [] as any;
-      for (let j = 0; j < this.width; j++) line.push(0);
-      (sprite.pixels as any).push(line);
-    }
     this.all.sprites.push(sprite);
     this.all.current_sprite = this.all.sprites.length - 1;
     this.sprite_name_counter++;
@@ -50,82 +62,53 @@ export default class Sprite {
   }
 
   clear(): void {
-    // fills the sprite data with the default color
-    // generate a bitmap array
-
-    const pixels = [] as any;
-
-    for (let i = 0; i < this.height; i++) {
-      const line = [] as any;
-      for (let j = 0; j < this.width; j++) line.push(0);
-      pixels.push(line);
-    }
-    this.all.sprites[this.all.current_sprite].pixels = pixels;
+    this.currentSprite.pixels = this.createPixelGrid(0);
     this.save_backup();
   }
 
   fill(): void {
-    // fills the sprite data with the default color
-    // generate a bitmap array
-
-    const pixels = [] as any;
-
-    for (let i = 0; i < this.height; i++) {
-      const line = [] as any;
-      for (let j = 0; j < this.width; j++) line.push(this.all.pen);
-      pixels.push(line);
-    }
-    this.all.sprites[this.all.current_sprite].pixels = pixels;
+    this.currentSprite.pixels = this.createPixelGrid(this.all.pen);
     this.save_backup();
   }
 
   flip_vertical(): void {
-    this.all.sprites[this.all.current_sprite].pixels.reverse();
+    this.currentSprite.pixels.reverse();
     this.save_backup();
   }
 
   flip_horizontal(): void {
-    const s = this.all.sprites[this.all.current_sprite];
+    const s = this.currentSprite;
     for (let i = 0; i < this.height; i++) s.pixels[i].reverse();
     if (s.multicolor) {
       for (let i = 0; i < this.height; i++)
         s.pixels[i].push(s.pixels[i].shift());
     }
-    this.all.sprites[this.all.current_sprite] = s;
     this.save_backup();
   }
 
   shift_vertical(direction: string): void {
-    const s = this.all.sprites[this.all.current_sprite];
-    if (direction == "down") {
+    const s = this.currentSprite;
+    if (direction === "down") {
       s.pixels.unshift(s.pixels.pop());
     } else {
       s.pixels.push(s.pixels.shift());
     }
-    this.all.sprites[this.all.current_sprite] = s;
     this.save_backup();
   }
 
   shift_horizontal(direction: string): void {
-    const s = this.all.sprites[this.all.current_sprite];
+    const s = this.currentSprite;
+    const steps = s.multicolor ? 2 : 1;
+
     for (let i = 0; i < this.height; i++) {
-      if (direction == "right") {
-        if (s.multicolor) {
+      for (let j = 0; j < steps; j++) {
+        if (direction === "right") {
           s.pixels[i].unshift(s.pixels[i].pop());
-          s.pixels[i].unshift(s.pixels[i].pop());
-        } else {
-          s.pixels[i].unshift(s.pixels[i].pop());
-        }
-      } else {
-        if (s.multicolor) {
-          s.pixels[i].push(s.pixels[i].shift());
-          s.pixels[i].push(s.pixels[i].shift());
         } else {
           s.pixels[i].push(s.pixels[i].shift());
         }
       }
     }
-    this.all.sprites[this.all.current_sprite] = s;
     this.save_backup();
   }
 
@@ -133,7 +116,7 @@ export default class Sprite {
     // used to update the palette with the right colors
     const sprite_colors = {
       0: this.all.colors[0],
-      1: this.all.sprites[this.all.current_sprite].color,
+      1: this.currentSprite.color,
       2: this.all.colors[2],
       3: this.all.colors[3],
     };
@@ -141,33 +124,27 @@ export default class Sprite {
   }
 
   get_name(): string {
-    return this.all.sprites[this.all.current_sprite].name;
+    return this.currentSprite.name;
   }
 
   is_multicolor(): boolean {
-    return this.all.sprites[this.all.current_sprite].multicolor;
+    return this.currentSprite.multicolor;
   }
 
   toggle_double_x(): void {
-    this.all.sprites[this.all.current_sprite].double_x = !this.all.sprites[
-      this.all.current_sprite
-    ].double_x;
+    this.currentSprite.double_x = !this.currentSprite.double_x;
     this.save_backup();
   }
 
   toggle_double_y(): void {
-    this.all.sprites[this.all.current_sprite].double_y = !this.all.sprites[
-      this.all.current_sprite
-    ].double_y;
+    this.currentSprite.double_y = !this.currentSprite.double_y;
     this.save_backup();
   }
 
   toggle_multicolor(): void {
-    if (this.all.sprites[this.all.current_sprite].multicolor) {
-      this.all.sprites[this.all.current_sprite].multicolor = false;
-      if (this.is_pen_multicolor()) this.set_pen(1);
-    } else {
-      this.all.sprites[this.all.current_sprite].multicolor = true;
+    this.currentSprite.multicolor = !this.currentSprite.multicolor;
+    if (!this.currentSprite.multicolor && this.is_pen_multicolor()) {
+      this.set_pen(1);
     }
     this.save_backup();
   }
@@ -176,22 +153,21 @@ export default class Sprite {
     // writes a pixel to the sprite pixel array
 
     // multicolor check
-    if (this.all.sprites[this.all.current_sprite].multicolor && pos.x % 2 !== 0)
+    if (this.currentSprite.multicolor && pos.x % 2 !== 0) {
       pos.x = pos.x - 1;
+    }
 
     if (!shiftkey) {
       // draw with selected pen
-      this.all.sprites[this.all.current_sprite].pixels[pos.y][
-        pos.x
-      ] = this.all.pen;
+      this.currentSprite.pixels[pos.y][pos.x] = this.all.pen;
     } else {
       // shift is hold down, so we delete with transparent color
-      this.all.sprites[this.all.current_sprite].pixels[pos.y][pos.x] = 0;
+      this.currentSprite.pixels[pos.y][pos.x] = 0;
     }
   }
 
   get_current_sprite() {
-    return this.all.sprites[this.all.current_sprite];
+    return this.currentSprite;
   }
 
   get_current_sprite_number(): number {
@@ -203,7 +179,7 @@ export default class Sprite {
   }
 
   only_one_sprite(): boolean {
-    return this.all.sprites.length == 1 ? true : false;
+    return this.all.sprites.length === 1;
   }
 
   get_pen() {
@@ -254,14 +230,21 @@ export default class Sprite {
   }
 
   set_current_sprite(spritenumber: string | number): void {
-    if (spritenumber == "right") spritenumber = this.all.current_sprite + 1;
-    if (spritenumber == "left") spritenumber = this.all.current_sprite - 1;
+    let spriteNum: number;
+
+    if (spritenumber == "right") {
+      spriteNum = this.all.current_sprite + 1;
+    } else if (spritenumber == "left") {
+      spriteNum = this.all.current_sprite - 1;
+    } else {
+      spriteNum = typeof spritenumber === "number" ? spritenumber : parseInt(spritenumber);
+    }
 
     // cycle through the list
-    if (spritenumber < 0) spritenumber = this.all.sprites.length - 1;
-    if (spritenumber > this.all.sprites.length - 1) spritenumber = 0;
+    if (spriteNum < 0) spriteNum = this.all.sprites.length - 1;
+    if (spriteNum > this.all.sprites.length - 1) spriteNum = 0;
 
-    if (typeof spritenumber == "number") this.all.current_sprite = spritenumber;
+    this.all.current_sprite = spriteNum;
     this.save_backup();
   }
 
@@ -276,20 +259,20 @@ export default class Sprite {
 
   save_backup(): void {
     this.backup_position++;
-    this.backup[this.backup_position] = JSON.parse(JSON.stringify(this.all)); //$.extend(true, {}, this.all);
+    this.backup[this.backup_position] = this.deepClone(this.all);
   }
 
   undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
-      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = this.deepClone(this.backup[this.backup_position]);
     }
   }
 
   redo(): void {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
-      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = this.deepClone(this.backup[this.backup_position]);
     }
   }
 
@@ -298,12 +281,11 @@ export default class Sprite {
     // get target value
     let x = pos.x;
     const y = pos.y;
-    const data = this.all.sprites[this.all.current_sprite].pixels;
+    const data = this.currentSprite.pixels;
 
     // multicolor check
-    let stepping = 1;
-    const is_multi = this.all.sprites[this.all.current_sprite].multicolor;
-    if (is_multi) stepping = 2;
+    const is_multi = this.currentSprite.multicolor;
+    const stepping = is_multi ? 2 : 1;
 
     if (is_multi && x % 2 !== 0) x = x - 1;
     const target = data[y][x];
@@ -312,18 +294,17 @@ export default class Sprite {
       // bounds check what we were passed
       if (y >= 0 && y < data.length && x >= 0 && x < data[y].length) {
         if (is_multi && x % 2 !== 0) x = x - 1;
-        if (data[y][x] === target && data[y][x] != pen) {
+        if (data[y][x] === target && data[y][x] !== pen) {
           data[y][x] = pen;
-          flow(x - stepping, y, pen); // check up
-          flow(x + stepping, y, pen); // check down
-          flow(x, y - 1, pen); // check left
-          flow(x, y + 1, pen); // check right
+          flow(x - stepping, y, pen); // check left
+          flow(x + stepping, y, pen); // check right
+          flow(x, y - 1, pen); // check up
+          flow(x, y + 1, pen); // check down
         }
       }
     }
 
     flow(x, y, this.all.pen);
-    this.all.sprites[this.all.current_sprite].pixels = data;
   }
 
   is_copy_empty(): boolean {
@@ -331,15 +312,11 @@ export default class Sprite {
   }
 
   copy(): void {
-    this.copy_sprite = JSON.parse(
-      JSON.stringify(this.all.sprites[this.all.current_sprite])
-    ); //$.extend(true,{},this.all.sprites[this.all.current_sprite]);
+    this.copy_sprite = this.deepClone(this.currentSprite);
   }
 
   paste(): void {
-    this.all.sprites[this.all.current_sprite] = JSON.parse(
-      JSON.stringify(this.copy_sprite)
-    ); //$.extend(true,{},this.copy_sprite);
+    this.all.sprites[this.all.current_sprite] = this.deepClone(this.copy_sprite);
     this.save_backup();
   }
 
@@ -358,49 +335,32 @@ export default class Sprite {
   }
 
   toggle_overlay(): void {
-    this.all.sprites[this.all.current_sprite].overlay = !this.all.sprites[
-      this.all.current_sprite
-    ].overlay;
+    this.currentSprite.overlay = !this.currentSprite.overlay;
   }
 
   is_overlay(): boolean {
-    return this.all.sprites[this.all.current_sprite].overlay;
+    return this.currentSprite.overlay;
   }
 
   is_double_x(): boolean {
-    return this.all.sprites[this.all.current_sprite].double_x;
+    return this.currentSprite.double_x;
   }
 
   is_double_y(): boolean {
-    return this.all.sprites[this.all.current_sprite].double_y;
+    return this.currentSprite.double_y;
   }
 
   set_sprite_name(sprite_name: string): void {
-    this.all.sprites[this.all.current_sprite].name = sprite_name;
+    this.currentSprite.name = sprite_name;
   }
 
   invert(): void {
-    // inverts the sprite
-
-    // prevent too much data to be inverted in multicolor mode
-    let stepping: number;
-    if (this.is_multicolor()) {
-      stepping = 1;
-    } else {
-      stepping = 1;
-    }
+    const INVERT_MAP: Record<number, number> = { 0: 1, 1: 0, 2: 3, 3: 2 };
 
     for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x = x + stepping) {
-        const pixel = this.all.sprites[this.all.current_sprite].pixels[y][x];
-        let pixel_inverted;
-
-        if (pixel == 0) pixel_inverted = 1;
-        if (pixel == 1) pixel_inverted = 0;
-        if (pixel == 2) pixel_inverted = 3;
-        if (pixel == 3) pixel_inverted = 2;
-
-        this.all.sprites[this.all.current_sprite].pixels[y][x] = pixel_inverted;
+      for (let x = 0; x < this.width; x++) {
+        const pixel = this.currentSprite.pixels[y][x];
+        this.currentSprite.pixels[y][x] = INVERT_MAP[pixel] ?? pixel;
       }
     }
 
