@@ -40,7 +40,7 @@ export default class Load {
     this.app = window.app;
     const file = fileInput.files[0];
 
-    if (file.name.match(/\.(spm|spd|spr|vsf)$/)) {
+    if (file.name.match(/\.(spm|spd|spr)$/)) {
       const reader = new FileReader();
       reader.onload = () => {
         if (file.name.match(/\.(spm)$/)) {
@@ -63,13 +63,9 @@ export default class Load {
         reader.readAsBinaryString(file);
       }
 
-      if (file.name.match(/\.(vsf)$/)) {
-        this.app.snapshot.load_snapshot(file, file.name);
-      }
-
       dom.html("#menubar-filename-name", file.name);
     } else {
-      alert("File not supported, .spm or .spd files only");
+      alert("File not supported, .spm, .spd or .spr files only");
     }
   }
 

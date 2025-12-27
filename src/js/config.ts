@@ -88,8 +88,10 @@ export function get_config() {
       zoom: 1,
     },
     window_snapshot: {
-      top: 80,
+      top: 400,
       left: 110,
+      width: 440,
+      height: 200,
       zoom: 1,
     },
   };

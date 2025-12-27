@@ -6,6 +6,7 @@ import About from "./About";
 import Tools from "./Tools";
 import Snapshot from "./Snapshot";
 import Load from "./Load";
+import Import from "./Import";
 import Save from "./Save";
 import Export from "./Export";
 import Settings from "./Settings";
@@ -42,6 +43,7 @@ export class App {
   save: any;
   window_export: any;
   export: any;
+  import: any;
   window_settings: any;
   settings: any;
   window_tools: any;
@@ -187,6 +189,11 @@ export class App {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
+    // import
+    this.import = new Import(this.config, {
+      onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
     // settings
     const settings_config = {
       name: "window_settings,",
@@ -229,8 +236,8 @@ export class App {
       resizable: true,
       left: this.config.window_snapshot.left,
       top: this.config.window_snapshot.top,
-      width: "760",
-      height: "auto",
+      width: this.config.window_snapshot.width,
+      height: this.config.window_snapshot.height,
       window_id: 9,
     }
     this.window_snapshot = new Window(snapshot_config, this.store_window.bind(this));
@@ -643,6 +650,10 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-load").onclick = () => {
       dom.sel("#input-load").click();
+    };
+
+    dom.sel("#menubar-import").onclick = () => {
+      dom.sel("#input-import").click();
     };
 
     dom.sel("#menubar-save").onclick = () => {
