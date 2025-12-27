@@ -1,5 +1,5 @@
 # Spritemate
-Spritemate is a new sprite editor for the Commodore 64. It works with most modern browsers on Windows, Mac and Linux and is pure JavaScript and HTML - no plugins. All data is processed on client side only. Spritemate supports importing and exporting of the most common file formats for the Commodore 64 (e.g. SpritePad) and can be used as viewer and editor on almost any device with a browser.
+Spritemate is a modern sprite editor for the Commodore 64. It works with most modern browsers on Windows, Mac and Linux and is pure JavaScript and HTML - no plugins. All data is processed on client side only. Spritemate supports importing and exporting of the most common file formats for the Commodore 64 (e.g. SpritePad) and can be used as viewer and editor on almost any device with a browser.
 
 Spritemate is still in development. If you like it, let me know ;) Feel free to submit pull requests or submit ideas, bugs, requests in the issues section. Cheers!
 
@@ -11,6 +11,17 @@ Beta version: https://beta.spritemate.com/
 Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE
 
 <img src="https://user-images.githubusercontent.com/434355/50591295-24ade880-0e8f-11e9-8bed-3b333692b6da.jpg" width= "80%"/>
+
+## Quick Start
+
+1. Visit [spritemate.com](https://spritemate.com/) (or run locally with `npm run dev`)
+2. Click the **Draw** tool (or press **D**)
+3. Select a color from the **Palette** window
+4. Draw pixels on the 24×21 canvas in the **Editor** window
+5. Watch your sprite update in real-time in the **Preview** window
+6. Save your work via **File → Save** menu
+
+Try the example files in the `examples/` directory to explore features!
 
 ## Features
 
@@ -28,22 +39,107 @@ Video of an earlier version: https://www.youtube.com/watch?v=n59axaEQDWE
 * copy, paste, duplicate
 * window based GUI
 * save window layout
+* VICE snapshot monitor for extracting sprites from memory dumps
 * import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
+* import VICE snapshot files (.vsf)
 * export as ASM source (KICK and ACME)
 * export as hex or binary notation source
+* export as BASIC 2.0 listing
 * keyboard shortcuts
+
+## Technology Stack
+
+* **TypeScript** - All source code converted to TypeScript 
+* **Vite** - Modern build tool with fast development server
+* **jQuery & jQuery UI** - Window management and UI components (loaded from CDN)
+* **HTML5 Canvas** - Sprite rendering
+* **Local Storage** - Browser-based persistence for settings and window layouts
+
+No server required - runs entirely client-side in your browser.
+
+## Supported File Formats
+
+### Import Formats
+| Format | Extension | Description |
+|--------|-----------|-------------|
+| Spritemate | `.spm` | Native JSON format (recommended for work in progress) |
+| SpritePad 2.0 | `.spd` | Binary format compatible with SpritePad 2.0 |
+| SpritePad 1.8.1 | `.spr` | Legacy binary format for SpritePad 1.8.1 |
+| VICE Snapshot | `.vsf` | Memory dump from VICE emulator (for sprite extraction) |
+
+### Export Formats
+| Format | Extension | Description |
+|--------|-----------|-------------|
+| Spritemate | `.spm` | Native JSON format (recommended) |
+| SpritePad 2.0 | `.spd` | Binary format compatible with SpritePad 2.0 |
+| SpritePad 1.8.1 | `.spd` | Legacy binary format for SpritePad 1.8.1 |
+| Assembly Source | `.txt` | KICK ASS and ACME syntax, hex and binary notation |
+| BASIC 2.0 | `.bas` | BASIC 2.0 listing for direct use on C64 |
+| PNG Image | `.png` | Right-click on preview window to save sprite as image |
+
+## VICE Snapshot Monitor
+
+Spritemate includes a powerful VICE snapshot monitor written by [Elliot Tanner](https://github.com/elliot2) that allows you to extract sprite data directly from VICE emulator memory dumps. This feature is perfect for analyzing existing C64 programs or extracting sprites from games.
+
+A [tutorial video of the Snapshot Monitor](https://www.youtube.com/watch?v=UdFc7yFCZGw) can be found on youtube.
+
+### How to Use
+
+1. In VICE emulator, save a snapshot file (`.vsf` format)
+2. In Spritemate, open the **VICE Monitor** from the menu bar
+3. Load your snapshot file
+4. Use monitor commands to inspect and extract sprites
+
+### Monitor Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `help` | Display all available commands | `help` |
+| `mem n` | Show memory at address n | `mem 0x400` |
+| `edit n v [...]` | Edit memory values | `edit 0x400 0x01 0x02` |
+| `vic` | Show VIC-II (graphics chip) memory | `vic` |
+| `vid <bank>` | Calculate video matrix address | `vid 0` |
+| `cia` | Show CIA-II memory and bank info | `cia` |
+| `sprites` | List all sprite information and colors | `sprites` |
+| `grab <n>` | Grab a specific sprite by number (0-7) | `grab 0` |
+| `grabmem <n>` | Grab 64 bytes from memory address as sprite | `grabmem 0x2000` |
+| `grabcols` | Grab sprite colors from snapshot | `grabcols` |
+
+### Use Cases
+
+* Extract sprites from commercial games for study or inspiration
+* Recover sprites from old projects without source files
+* Analyze sprite data in running C64 programs
+* Debug sprite-related issues in your own code
 
 ## Install & Dependencies
 
 Use `npm`
 
+```bash
+npm install          # Install dependencies
+npm run dev          # Start development server
+npm run build        # Build for production
 ```
-$ npm install
-$ npm run dev
+
+## Development
+
+### Project Structure
 
 ```
+spritemate/
+├── src/js/          # TypeScript source files (18 modules)
+├── dist/            # Built output
+├── public/          # Static assets (icons, CSS, fonts)
+├── examples/        # Sample sprite files
+└── index.html       # Main entry point
+```
+
+### Contributing
+
+Pull requests are welcome! Please feel free to submit ideas, bugs, and feature requests in the [issues section](https://github.com/Esshahn/spritemate/issues).
 
 
 
@@ -100,21 +196,32 @@ $ npm run dev
 ## Some useful hints
 
 * Rearrange sprites by dragging them to the desired position
-* Save a sprite as PNG by right clicking on the Preview window image
+* Save a sprite as PNG by right-clicking on the Preview window image
+* Hold **Shift** while drawing to erase pixels (or use the eraser tool)
+* Use **Arrow Keys** to navigate through your sprite list quickly
+* All window positions and zoom levels are automatically saved to local storage
+* Export to Assembly with both KICK ASS and ACME syntax support
+* Sprite names (editable) will be used as labels in ASM and BASIC exports
+* Use sprite overlays (onion-skinning) to preview animations
+* The VICE snapshot monitor can extract sprites from any C64 program
 
 
 ## Changelog
 
+### 2025-12-27-02
+- Added VICE Snapshot Monitor for sprite extraction from memory dumps
+- Support for importing VICE snapshot files (.vsf)
+
 ### V1.3
-#### This is a housekeeping update without new functionality. While you might be sad to not get new stuff, it is a sign of life that I'm dedicating time to this project again.
+#### This is a housekeeping update with important new functionality and modernization.
 
 - Converted all JavaScript to TypeScript
 - Rewrite of menubar, should fix annoying bug and is more responsive
 - Fixed a UI issue in the save dialog
 - Fixed a bug in the sprite invert code
-- Added Spritemate version number to SPM save data 
+- Added Spritemate version number to SPM save data
 - Updated to latest jQuery
-- Updated webpack
+- Updated webpack to Vite
 - Lots of cleanup & modernization
 - Added <a href="https://beta.spritemate.com">beta.spritemate.com</a> for latest version
 - Changed deploy setup to work with Netlify
