@@ -110,6 +110,7 @@ grabcols
     dom.sel("#snapshot-console").onkeyup = (e) => {
       if (e.key === "Enter") {
         const command = dom.val("#snapshot-console");
+        if (!command) return;
         const lines = command.split("\n");
         const last_line = lines[lines.length - 2];
         const last_line_trimmed_without_prompt = this.removePrompt(last_line);
@@ -191,7 +192,8 @@ grabcols
   }
 
   prompt(): void {
-    dom.val("#snapshot-console", dom.val("#snapshot-console") + "] ");
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + "] ");
     const textarea = dom.sel("#snapshot-console");
     textarea.scrollTop = textarea.scrollHeight;
   }
@@ -205,11 +207,13 @@ grabcols
   }
 
   print(message: string): void {
-   dom.val("#snapshot-console", dom.val("#snapshot-console") + message);
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + message);
   }
 
   println(message: string | number = ""): void {
-    dom.val("#snapshot-console", dom.val("#snapshot-console") + message + "\n");
+    const currentVal = dom.val("#snapshot-console") || "";
+    dom.val("#snapshot-console", currentVal + message + "\n");
   }
 
   formatMemory(address: number): string {
