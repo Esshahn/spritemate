@@ -5,6 +5,7 @@
   "homepage": "http://www.awsm.de",
   "author": "Ingo Hinterding",
   "license": "MIT",
+  "type": "module",
   "main": "App.ts",
   "repository": {
     "type": "git",
