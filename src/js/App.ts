@@ -898,15 +898,16 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    dom.sel("#icon-load").onclick = () => {
-      dom.sel("#input-load").click();
-    };
+    // Icon handlers commented out because icons are removed from Tools.ts
+    // dom.sel("#icon-load").onclick = () => {
+    //   dom.sel("#input-load").click();
+    // };
 
-    dom.sel("#icon-save").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      $(this.window_save.get_window_id()).dialog("open");
-      this.save.set_save_data(this.sprite.get_all());
-    };
+    // dom.sel("#icon-save").onclick = () => {
+    //   this.allow_keyboard_shortcuts = false;
+    //   $(this.window_save.get_window_id()).dialog("open");
+    //   this.save.set_save_data(this.sprite.get_all());
+    // };
 
     dom.sel("#icon-move").onclick = () => this.setDrawMode("move");
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
