@@ -7,6 +7,7 @@ export default class Tools {
 
     const template = `
     <div id="menu">
+    <!--
       <div class ="iconset icon-hover" id="icon-load">
             <img src="ui/icon-load.png" class="icon" title="load">
             <div class="icontext">load</div>
@@ -15,6 +16,7 @@ export default class Tools {
             <img src="ui/icon-save.png" class="icon" title="save">
             <div class="icontext">save</div>
         </div>
+    -->
         <div class ="iconset icon-hover" id="icon-undo">
             <img src="ui/icon-undo.png" class="icon" title="undo">
             <div class="icontext">undo</div>
