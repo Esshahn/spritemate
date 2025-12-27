@@ -14,6 +14,22 @@ export default class About {
         <fieldset>
             <h1>Release notes</h1>
 
+            <h1>25.12.27-03</h1>
+            <h2>The Age Of Vibe Coding</h2>
+            <p>
+            Ahhhh.... it's finally time to vibe code some life into Spritemate again.<br/>
+            Let's see how far it gets us today:<br/><br/>
+            - Cleaned up and refactored codebase and threw away around 20% of the code<br/>
+            - Nondestrucive save options are now under "Save" (Spritemate & Spritepad data)<br/>
+            - Destructive save options are now under "Export" (Assembly, BASIC, PNG)<br/>
+            - VICE snapshots can now be imported by clicking "Import VICE (*.vsf) Snapshot"<br/>
+            - When importing VICE snapshots, the monitor will be opened automatically<br/>
+            - Moved the VICE snapshot window from the "file" to the "view" menu<br/>
+            - Added the option to export the curent sprite as PNG image<br/>
+            - Added the option to export all sprites as PNG images in a ZIP file<br/>
+            - Tweaked wording of the menu items to be more concise<br/>
+            </p>
+
             <h1>25.12.27-02</h1>
             <h2>VICE Snapshot Monitor</h2>
             <p>
