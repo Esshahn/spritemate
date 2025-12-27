@@ -7,6 +7,7 @@ import Tools from "./Tools";
 import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Save from "./Save";
+import Export from "./Export";
 import Settings from "./Settings";
 import Editor from "./Editor";
 import Palette from "./Palette";
@@ -39,6 +40,8 @@ export class App {
   about: any;
   window_save: any;
   save: any;
+  window_export: any;
+  export: any;
   window_settings: any;
   settings: any;
   window_tools: any;
@@ -163,6 +166,24 @@ export class App {
     };
     this.window_save = new Window(save_config);
     this.save = new Save(save_config.window_id, this.config, {
+      onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
+    // export
+    const export_config = {
+      name: "window_export",
+      title: "Export",
+      type: "file",
+      escape: true,
+      modal: true,
+      resizable: false,
+      autoOpen: false,
+      width: "580",
+      height: "auto",
+      window_id: 7,
+    };
+    this.window_export = new Window(export_config);
+    this.export = new Export(export_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
@@ -628,6 +649,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.allow_keyboard_shortcuts = false;
       $(this.window_save.get_window_id()).dialog("open");
       this.save.set_save_data(this.sprite.get_all());
+    };
+
+    dom.sel("#menubar-export").onclick = () => {
+      this.allow_keyboard_shortcuts = false;
+      $(this.window_export.get_window_id()).dialog("open");
+      this.export.set_save_data(this.sprite.get_all());
     };
 
     dom.sel("#menubar-new").onclick = () => {

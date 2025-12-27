@@ -18,6 +18,7 @@
   "devDependencies": {
     "@types/jquery": "^3.5.31",
     "@types/jqueryui": "^1.12.23",
+    "@types/jszip": "^3.4.1",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
     "@typescript-eslint/parser": "^8.50.1",
     "eslint": "^9.39.2",
@@ -25,5 +26,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.7.4",
     "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
   }
 }
