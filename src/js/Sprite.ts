@@ -254,14 +254,21 @@ export default class Sprite {
   }
 
   set_current_sprite(spritenumber: string | number): void {
-    if (spritenumber == "right") spritenumber = this.all.current_sprite + 1;
-    if (spritenumber == "left") spritenumber = this.all.current_sprite - 1;
+    let spriteNum: number;
+
+    if (spritenumber == "right") {
+      spriteNum = this.all.current_sprite + 1;
+    } else if (spritenumber == "left") {
+      spriteNum = this.all.current_sprite - 1;
+    } else {
+      spriteNum = typeof spritenumber === "number" ? spritenumber : parseInt(spritenumber);
+    }
 
     // cycle through the list
-    if (spritenumber < 0) spritenumber = this.all.sprites.length - 1;
-    if (spritenumber > this.all.sprites.length - 1) spritenumber = 0;
+    if (spriteNum < 0) spriteNum = this.all.sprites.length - 1;
+    if (spriteNum > this.all.sprites.length - 1) spriteNum = 0;
 
-    if (typeof spritenumber == "number") this.all.current_sprite = spritenumber;
+    this.all.current_sprite = spriteNum;
     this.save_backup();
   }
 
@@ -276,20 +283,20 @@ export default class Sprite {
 
   save_backup(): void {
     this.backup_position++;
-    this.backup[this.backup_position] = JSON.parse(JSON.stringify(this.all)); //$.extend(true, {}, this.all);
+    this.backup[this.backup_position] = JSON.parse(JSON.stringify(this.all));
   }
 
   undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
-      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position]));
     }
   }
 
   redo(): void {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
-      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position])); // $.extend(true, {}, this.backup[this.backup_position]);
+      this.all = JSON.parse(JSON.stringify(this.backup[this.backup_position]));
     }
   }
 
@@ -333,13 +340,13 @@ export default class Sprite {
   copy(): void {
     this.copy_sprite = JSON.parse(
       JSON.stringify(this.all.sprites[this.all.current_sprite])
-    ); //$.extend(true,{},this.all.sprites[this.all.current_sprite]);
+    );
   }
 
   paste(): void {
     this.all.sprites[this.all.current_sprite] = JSON.parse(
       JSON.stringify(this.copy_sprite)
-    ); //$.extend(true,{},this.copy_sprite);
+    );
     this.save_backup();
   }
 

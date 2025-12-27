@@ -341,10 +341,6 @@ export class App {
       dom.fade("#icon-list-zoom-in", 0.33, 1);
     }
 
-    // photoshop style layer
-    //$-old-('.sprite_layer').removeClass("sprite_layer_selected");
-    //$-old-('#spritelist').find('#'+this.sprite.get_current_sprite_number()).addClass("sprite_layer_selected");
-
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
     document

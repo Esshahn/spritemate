@@ -70,11 +70,11 @@ export default class Storage {
         if (this.isNewerVersion(this.config.version, this.storage.version)) {
           // is the config newer than the storage version?
           // then update the storage
-          this.storage = JSON.parse(JSON.stringify(this.config)); // this.storage = $.extend(true, {}, this.config);
+          this.storage = JSON.parse(JSON.stringify(this.config));
           this.write(this.storage);
           this.is_new_version = true;
         }
-        this.config = JSON.parse(JSON.stringify(this.storage)); // this.config = $.extend(true, {}, this.storage);
+        this.config = JSON.parse(JSON.stringify(this.storage));
       } catch (error) {
         console.error("Failed to initialize storage:", error);
         status("Unable to access settings storage. Using defaults.");
