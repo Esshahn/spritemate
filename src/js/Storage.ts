@@ -12,6 +12,47 @@ export default class Storage {
     this.init();
   }
 
+  /**
+   * Compares two version strings/numbers safely.
+   * Handles both old numeric versions (e.g., 1.51) and new date-based versions (e.g., "25.12.27").
+   * @param configVersion - The version from the config (current version)
+   * @param storageVersion - The version from localStorage (stored version)
+   * @returns true if configVersion is newer than storageVersion
+   */
+  private isNewerVersion(configVersion: string | number, storageVersion: string | number): boolean {
+    // If storage version is undefined or null, config is newer
+    if (storageVersion === undefined || storageVersion === null) {
+      return true;
+    }
+
+    // Convert both to strings for consistent comparison
+    const configStr = String(configVersion);
+    const storageStr = String(storageVersion);
+
+    // Check if config version is in date format (YY.MM.DD or similar)
+    const isDateFormat = /^\d{2}\.\d{2}\.\d{2}$/.test(configStr);
+
+    if (isDateFormat) {
+      // If storage is old numeric format (e.g., 1.51), config is definitely newer
+      if (typeof storageVersion === 'number' || /^\d+\.\d+$/.test(storageStr)) {
+        return true;
+      }
+
+      // Both are date format, compare as dates
+      // Format: YY.MM.DD -> convert to YYMMDD for numeric comparison
+      const configDate = parseInt(configStr.replace(/\./g, ''), 10);
+      const storageDate = parseInt(storageStr.replace(/\./g, ''), 10);
+
+      return configDate > storageDate;
+    } else {
+      // Fallback to numeric comparison for legacy versions
+      const configNum = parseFloat(configStr);
+      const storageNum = parseFloat(storageStr);
+
+      return configNum > storageNum;
+    }
+  }
+
   init() {
     if (typeof Storage !== "undefined") {
       if (localStorage.getItem("spritemate_config") == null) {
@@ -26,13 +67,13 @@ export default class Storage {
         localStorage.getItem("spritemate_config") || "{}"
       );
 
-      if (this.config.version > this.storage.version) {
+      if (this.isNewerVersion(this.config.version, this.storage.version)) {
         // is the config newer than the storage version?
         // then update the storage
         this.storage = JSON.parse(JSON.stringify(this.config)); // this.storage = $.extend(true, {}, this.config);
         this.write(this.storage);
         this.is_new_version = true;
-        console.log("updating storage");
+        console.log("updating storage from version", this.storage.version, "to", this.config.version);
       }
       this.config = JSON.parse(JSON.stringify(this.storage)); // this.config = $.extend(true, {}, this.storage);
     } else {
