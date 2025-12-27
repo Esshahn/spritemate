@@ -348,7 +348,7 @@ export class App {
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
     document
-      .getElementById(this.sprite.get_current_sprite_number())
+      .getElementById(this.sprite.get_current_sprite_number().toString())
       ?.classList.add("sprite_in_list_selected");
   }
 
@@ -394,7 +394,7 @@ export class App {
     // checks the sprite name input box for the name
     // and updates the sprite name
     this.allow_keyboard_shortcuts = true;
-    let sprite_name: string = dom.val("#input-sprite-name");
+    let sprite_name: string = dom.val("#input-sprite-name") || "";
     sprite_name = sprite_name.replace(/[^A-Za-z0-9-_]+/g, ""); // allowed chars are characters, number, -, _
     this.sprite.set_sprite_name(sprite_name);
     this.list.update_all(this.sprite.get_all());
@@ -444,16 +444,6 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "F") {
           toggle_fullscreen();
         }
-
-        /*
-        if (e.key == "q")
-        {
-          this.sprite.set_all(example_sprite);
-          // example sprite is defined in the config.js
-          this.list.update_all(this.sprite.get_all());
-          this.update();
-        }
-        */
 
         if (e.key == "m") {
           this.mode = "move";
