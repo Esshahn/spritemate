@@ -55,35 +55,45 @@ export default class Storage {
 
   init() {
     if (typeof Storage !== "undefined") {
-      if (localStorage.getItem("spritemate_config") == null) {
-        // there is no local config, so we're creating one
-        console.log("creating local storage file...");
-        localStorage.setItem("spritemate_config", JSON.stringify(this.config));
-        this.is_new_version = true;
-      }
+      try {
+        if (localStorage.getItem("spritemate_config") == null) {
+          // there is no local config, so we're creating one
+          localStorage.setItem("spritemate_config", JSON.stringify(this.config));
+          this.is_new_version = true;
+        }
 
-      // now we can safely read in the storage
-      this.storage = JSON.parse(
-        localStorage.getItem("spritemate_config") || "{}"
-      );
+        // now we can safely read in the storage
+        this.storage = JSON.parse(
+          localStorage.getItem("spritemate_config") || "{}"
+        );
 
-      if (this.isNewerVersion(this.config.version, this.storage.version)) {
-        // is the config newer than the storage version?
-        // then update the storage
-        this.storage = JSON.parse(JSON.stringify(this.config)); // this.storage = $.extend(true, {}, this.config);
-        this.write(this.storage);
-        this.is_new_version = true;
-        console.log("updating storage from version", this.storage.version, "to", this.config.version);
+        if (this.isNewerVersion(this.config.version, this.storage.version)) {
+          // is the config newer than the storage version?
+          // then update the storage
+          this.storage = JSON.parse(JSON.stringify(this.config)); // this.storage = $.extend(true, {}, this.config);
+          this.write(this.storage);
+          this.is_new_version = true;
+        }
+        this.config = JSON.parse(JSON.stringify(this.storage)); // this.config = $.extend(true, {}, this.storage);
+      } catch (error) {
+        console.error("Failed to initialize storage:", error);
+        status("Unable to access settings storage. Using defaults.");
+        this.config = this.config; // Use default config
       }
-      this.config = JSON.parse(JSON.stringify(this.storage)); // this.config = $.extend(true, {}, this.storage);
     } else {
       // can't access storage on the browser
+      status("Local storage is not available in your browser.");
     }
   }
 
   write(data) {
     if (typeof Storage !== "undefined") {
-      localStorage.setItem("spritemate_config", JSON.stringify(data));
+      try {
+        localStorage.setItem("spritemate_config", JSON.stringify(data));
+      } catch (error) {
+        console.error("Failed to save settings:", error);
+        status("Unable to save settings. Storage may be full or disabled.");
+      }
     } else {
       status("I can't write to local web storage.");
     }
@@ -91,10 +101,17 @@ export default class Storage {
 
   read() {
     if (typeof Storage !== "undefined") {
-      return JSON.parse(localStorage.getItem("spritemate_config") || "{}");
+      try {
+        return JSON.parse(localStorage.getItem("spritemate_config") || "{}");
+      } catch (error) {
+        console.error("Failed to read settings:", error);
+        status("Unable to load settings. Using defaults.");
+        return {};
+      }
     } else {
       status("I can't read from web storage.");
       this.storage = this.config;
+      return this.config;
     }
   }
 
