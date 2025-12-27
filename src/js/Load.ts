@@ -1,4 +1,5 @@
 import { dom, status } from "./helper";
+import { App } from './App';
 
 export default class Load {
   imported_file: any;
@@ -13,14 +14,17 @@ export default class Load {
   multicolor: any;
   pencolor: any;
   overlay: any;
+  app: App | null;
 
   constructor(public config, public eventhandler) {
+    this.app = null;
     this.config = config;
     this.eventhandler = eventhandler;
     this.setup_load_input();
-  }
+  }    
 
   setup_load_input() {
+    this.app = (window as any).app;
     const element: any = document.createElement("div");
     element.innerHTML =
       '<input type="file" id="input-load" style="display: none">';
@@ -33,9 +37,10 @@ export default class Load {
   }
 
   read_file_data(fileInput) {
+    this.app = window.app;
     const file = fileInput.files[0];
 
-    if (file.name.match(/\.(spm|spd|spr)$/)) {
+    if (file.name.match(/\.(spm|spd|spr|vsf)$/)) {
       const reader = new FileReader();
       reader.onload = () => {
         if (file.name.match(/\.(spm)$/)) {
@@ -56,6 +61,10 @@ export default class Load {
 
       if (file.name.match(/\.(spd|spr)$/)) {
         reader.readAsBinaryString(file);
+      }
+
+      if (file.name.match(/\.(vsf)$/)) {
+        this.app.snapshot.load_snapshot(file, file.name);
       }
 
       dom.html("#menubar-filename-name", file.name);

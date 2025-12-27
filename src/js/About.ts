@@ -9,18 +9,22 @@ export default class About {
     const template = `
     <div id="info">
         <img autofocus src="logo-menu.svg" width="300px" id="logo" alt="spritemate">
-        <p>The Commodore 64 sprite editor, v${this.config.version.toFixed(
-          2
-        )}</p>
+        <p>The Commodore 64 sprite editor</p>
 
         <fieldset>
             <h1>Release notes</h1>
 
-            <h1>v1.4 - 2024.11.16</h1>
-            <h2>This update should not introduce any major changes or issues and is meant to update the framework and clean up the codebase. New features will follow soon, if you like to test them early and give valuable feedback, visit <a href="https://beta.spritemate.com">https://beta.spritemate.com</a>.</h2>
-            <br/>
+            <h1>25.12.27-02</h1>
+            <h2>VICE Snapshot Monitor</h2>
             <p>
-            - Removed webpack and many dependancies. Spritemate now uses Vite<br/>
+            Finally a feature release, thanks to the amazing contribution by <a target="_blank" href="https://github.com/elliot2">Elliot Tanner</a>. Spritemate now has a VICE Snapshot Monitor and sprite grabber, making it even easier to import sprites from any game. Just export a snapshot image from VICE (make sure to use the latest version) and load it into spritemate. Now from the file menu choose the VICE Snapshot Monitor and import sprite data. For a quick overview, enter "help" into the monitor and watch this <a target="_blank" href="https://www.youtube.com/watch?v=UdFc7yFCZGw">great tutorial video</a> from Elliot himself.
+            </p>
+
+            <h1>25.12.27-01</h1>
+            <h2>Security patches.</h2>
+            <p>
+            - Housecleaning to address some library updates.<br/>
+            - Switching to date based version numbering
             </p>
 
         </fieldset>
