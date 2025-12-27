@@ -5,6 +5,10 @@ export default class Editor extends Window_Controls {
   grid: boolean;
   canvas_element: HTMLCanvasElement;
   canvas: any;
+  overlay_canvas_element: HTMLCanvasElement;
+  overlay_canvas: CanvasRenderingContext2D;
+  animation_frame_id: number | null;
+  animation_offset: number;
 
   constructor(public window: number, public config) {
     super();
@@ -23,6 +27,22 @@ export default class Editor extends Window_Controls {
     this.canvas_element.id = "editor";
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
+    this.canvas_element.style.display = "block"; // Remove any inline spacing
+
+    // Initialize overlay canvas for selection animation
+    this.overlay_canvas_element = document.createElement("canvas");
+    this.overlay_canvas_element.id = "editor-overlay";
+    // Match the main canvas logical size
+    this.overlay_canvas_element.width = this.width;
+    this.overlay_canvas_element.height = this.height;
+    this.overlay_canvas_element.style.position = "absolute";
+    this.overlay_canvas_element.style.pointerEvents = "none";
+    this.overlay_canvas_element.style.left = "0";
+    this.overlay_canvas_element.style.top = "0";
+    // Will be sized to match main canvas after it's added to DOM
+    this.overlay_canvas = this.overlay_canvas_element.getContext("2d", { alpha: true })!;
+    this.animation_frame_id = null;
+    this.animation_offset = 0;
 
     const template = `
       <div class="window_menu">
@@ -43,14 +63,21 @@ export default class Editor extends Window_Controls {
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
       </div>
-      <div id="editor-canvas"></div>
-      
+      <div id="editor-canvas" style="position: relative; display: inline-block;"></div>
+
     `;
 
     dom.append("#window-" + this.window, template);
     dom.append_element("#editor-canvas", this.canvas_element);
+    dom.append_element("#editor-canvas", this.overlay_canvas_element);
 
     this.canvas = this.canvas_element.getContext("2d", { alpha: false });
+
+    // Sync overlay canvas position and size with main canvas
+    this.syncOverlayCanvas();
+
+    // Start animation loop for marching ants
+    this.startAnimationLoop();
   }
 
   update(all_data) {
@@ -171,8 +198,9 @@ export default class Editor extends Window_Controls {
     const obj = this.canvas_element.getBoundingClientRect();
     const x = e.clientX - obj.left;
     const y = e.clientY - obj.top;
-    const x_grid = Math.floor(x / (this.width / this.config.sprite_x));
-    const y_grid = Math.floor(y / (this.height / this.config.sprite_y));
+    // Use actual rendered size from getBoundingClientRect, not logical canvas size
+    const x_grid = Math.floor((x / obj.width) * this.config.sprite_x);
+    const y_grid = Math.floor((y / obj.height) * this.config.sprite_y);
     return { x: x_grid, y: y_grid };
   }
 
@@ -182,5 +210,88 @@ export default class Editor extends Window_Controls {
 
   get_grid() {
     return this.grid;
+  }
+
+  syncOverlayCanvas(): void {
+    // Both canvases are in the same parent (#editor-canvas)
+    // The overlay should have the same CSS size as the main canvas
+    const mainStyle = window.getComputedStyle(this.canvas_element);
+    this.overlay_canvas_element.style.width = mainStyle.width;
+    this.overlay_canvas_element.style.height = mainStyle.height;
+
+    // Position at 0,0 within parent (same as main canvas)
+    this.overlay_canvas_element.style.left = '0';
+    this.overlay_canvas_element.style.top = '0';
+  }
+
+  startAnimationLoop(): void {
+    const animate = () => {
+      this.animation_offset = (this.animation_offset + 0.5) % 8;
+      this.drawSelectionOverlay();
+      this.animation_frame_id = requestAnimationFrame(animate);
+    };
+    animate();
+  }
+
+  stopAnimationLoop(): void {
+    if (this.animation_frame_id !== null) {
+      cancelAnimationFrame(this.animation_frame_id);
+      this.animation_frame_id = null;
+    }
+  }
+
+  drawSelectionOverlay(): void {
+    // Clear overlay using logical canvas dimensions
+    this.overlay_canvas.clearRect(0, 0, this.width, this.height);
+
+    // Get app instance and check for active selection
+    const app = (window as any).app;
+    if (!app || !app.selection?.active || !app.selection.bounds) return;
+
+    const { x1, y1, x2, y2 } = app.selection.bounds;
+    const step = app.sprite.is_multicolor() ? 2 : 1;
+
+    // Use the same coordinate calculation as display_grid()
+    // Grid lines are drawn at: i * this.zoom
+    // We want to draw the selection box ON the grid lines, not between them
+    // strokeRect draws centered on the path, so offset by 0.5 to snap to pixel grid
+    const rectX = x1 * this.zoom + 0.5;
+    const rectY = y1 * this.zoom + 0.5;
+    // Width/height should span from x1 to x2+step (inclusive of end pixel)
+    // Subtract 1 because stroke is centered (0.5 on each side = 1 total)
+    const rectWidth = (x2 - x1 + step) * this.zoom - 1;
+    const rectHeight = (y2 - y1 + 1) * this.zoom - 1;
+
+    // Draw marching ants border
+    this.overlay_canvas.save();
+
+    // Black dashes
+    this.overlay_canvas.strokeStyle = "#000000";
+    this.overlay_canvas.lineWidth = 1;
+    this.overlay_canvas.setLineDash([4, 4]);
+    this.overlay_canvas.lineDashOffset = -this.animation_offset;
+    this.overlay_canvas.strokeRect(rectX, rectY, rectWidth, rectHeight);
+
+    // White dashes (offset by 4 to create alternating pattern)
+    this.overlay_canvas.strokeStyle = "#FFFFFF";
+    this.overlay_canvas.lineDashOffset = -this.animation_offset - 4;
+    this.overlay_canvas.strokeRect(rectX, rectY, rectWidth, rectHeight);
+
+    this.overlay_canvas.restore();
+  }
+
+  // Update overlay canvas size when zoom changes
+  zoom_in(): void {
+    super.zoom_in();
+    this.overlay_canvas_element.width = this.width;
+    this.overlay_canvas_element.height = this.height;
+    this.syncOverlayCanvas();
+  }
+
+  zoom_out(): void {
+    super.zoom_out();
+    this.overlay_canvas_element.width = this.width;
+    this.overlay_canvas_element.height = this.height;
+    this.syncOverlayCanvas();
   }
 }

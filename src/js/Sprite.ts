@@ -41,6 +41,30 @@ export default class Sprite {
     return JSON.parse(JSON.stringify(obj));
   }
 
+  // Helper: Check if there's an active selection
+  private hasActiveSelection(): boolean {
+    return (window as any).app?.selection?.active || false;
+  }
+
+  // Helper: Check if a pixel is in the selection
+  private isInSelection(x: number, y: number): boolean {
+    return (window as any).app?.isPixelInSelection(x, y) ?? true;
+  }
+
+  // Helper: Get operation bounds (selection bounds if active, else full sprite)
+  private getOperationBounds() {
+    const app = (window as any).app;
+    if (app?.selection?.active && app.selection.bounds) {
+      return app.selection.bounds;
+    }
+    return {
+      x1: 0,
+      y1: 0,
+      x2: this.width - 1,
+      y2: this.height - 1
+    };
+  }
+
   new_sprite(color = 1, multicolor = false): void {
     const sprite = {
       name: "sprite_" + this.sprite_name_counter,
@@ -72,40 +96,146 @@ export default class Sprite {
   }
 
   flip_vertical(): void {
-    this.currentSprite.pixels.reverse();
+    const s = this.currentSprite;
+    const bounds = this.getOperationBounds();
+
+    if (this.hasActiveSelection()) {
+      // Flip only within selection bounds
+      const step = s.multicolor ? 2 : 1;
+      const rows: number[][] = [];
+      // Extract rows from selection
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row: number[] = [];
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          row.push(s.pixels[y][x]);
+        }
+        rows.push(row);
+      }
+      // Reverse rows and write back
+      rows.reverse();
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row = rows[y - bounds.y1];
+        let idx = 0;
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          s.pixels[y][x] = row[idx++];
+        }
+      }
+    } else {
+      // Flip entire sprite
+      this.currentSprite.pixels.reverse();
+    }
     this.save_backup();
   }
 
   flip_horizontal(): void {
     const s = this.currentSprite;
-    for (let i = 0; i < this.height; i++) s.pixels[i].reverse();
-    if (s.multicolor) {
-      for (let i = 0; i < this.height; i++)
-        s.pixels[i].push(s.pixels[i].shift());
+    const bounds = this.getOperationBounds();
+
+    if (this.hasActiveSelection()) {
+      // Flip only within selection bounds
+      const step = s.multicolor ? 2 : 1;
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row: number[] = [];
+        // Extract pixels from selection
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          row.push(s.pixels[y][x]);
+        }
+        // Reverse and write back
+        row.reverse();
+        let idx = 0;
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          s.pixels[y][x] = row[idx++];
+        }
+      }
+    } else {
+      // Flip entire sprite
+      for (let i = 0; i < this.height; i++) s.pixels[i].reverse();
+      if (s.multicolor) {
+        for (let i = 0; i < this.height; i++)
+          s.pixels[i].push(s.pixels[i].shift());
+      }
     }
     this.save_backup();
   }
 
   shift_vertical(direction: string): void {
     const s = this.currentSprite;
-    if (direction === "down") {
-      s.pixels.unshift(s.pixels.pop());
+    const bounds = this.getOperationBounds();
+
+    if (this.hasActiveSelection()) {
+      // Rotate within selection bounds
+      const step = s.multicolor ? 2 : 1;
+      const rows: number[][] = [];
+
+      // Extract all rows from selection
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row: number[] = [];
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          row.push(s.pixels[y][x]);
+        }
+        rows.push(row);
+      }
+
+      // Rotate rows
+      if (direction === "down") {
+        rows.unshift(rows.pop()!);
+      } else {
+        rows.push(rows.shift()!);
+      }
+
+      // Write back
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row = rows[y - bounds.y1];
+        let idx = 0;
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          s.pixels[y][x] = row[idx++];
+        }
+      }
     } else {
-      s.pixels.push(s.pixels.shift());
+      // Shift entire sprite
+      if (direction === "down") {
+        s.pixels.unshift(s.pixels.pop());
+      } else {
+        s.pixels.push(s.pixels.shift());
+      }
     }
     this.save_backup();
   }
 
   shift_horizontal(direction: string): void {
     const s = this.currentSprite;
-    const steps = s.multicolor ? 2 : 1;
+    const bounds = this.getOperationBounds();
+    const step = s.multicolor ? 2 : 1;
 
-    for (let i = 0; i < this.height; i++) {
-      for (let j = 0; j < steps; j++) {
+    if (this.hasActiveSelection()) {
+      // Rotate within selection bounds
+      for (let y = bounds.y1; y <= bounds.y2; y++) {
+        const row: number[] = [];
+        // Extract row
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          row.push(s.pixels[y][x]);
+        }
+        // Rotate
         if (direction === "right") {
-          s.pixels[i].unshift(s.pixels[i].pop());
+          row.unshift(row.pop()!);
         } else {
-          s.pixels[i].push(s.pixels[i].shift());
+          row.push(row.shift()!);
+        }
+        // Write back
+        let idx = 0;
+        for (let x = bounds.x1; x <= bounds.x2; x += step) {
+          s.pixels[y][x] = row[idx++];
+        }
+      }
+    } else {
+      // Shift entire sprite
+      for (let i = 0; i < this.height; i++) {
+        for (let j = 0; j < step; j++) {
+          if (direction === "right") {
+            s.pixels[i].unshift(s.pixels[i].pop());
+          } else {
+            s.pixels[i].push(s.pixels[i].shift());
+          }
         }
       }
     }
@@ -155,6 +285,11 @@ export default class Sprite {
     // multicolor check
     if (this.currentSprite.multicolor && pos.x % 2 !== 0) {
       pos.x = pos.x - 1;
+    }
+
+    // Check if pixel is in selection
+    if (!this.isInSelection(pos.x, pos.y)) {
+      return;
     }
 
     if (!shiftkey) {
@@ -290,10 +425,18 @@ export default class Sprite {
     if (is_multi && x % 2 !== 0) x = x - 1;
     const target = data[y][x];
 
+    // Get app reference for selection checking
+    const app = (window as any).app;
+    const checkSelection = (x: number, y: number) => {
+      return app?.isPixelInSelection(x, y) ?? true;
+    };
+
     function flow(x, y, pen) {
       // bounds check what we were passed
       if (y >= 0 && y < data.length && x >= 0 && x < data[y].length) {
         if (is_multi && x % 2 !== 0) x = x - 1;
+        // Check selection bounds
+        if (!checkSelection(x, y)) return;
         if (data[y][x] === target && data[y][x] !== pen) {
           data[y][x] = pen;
           flow(x - stepping, y, pen); // check left
@@ -356,9 +499,11 @@ export default class Sprite {
 
   invert(): void {
     const INVERT_MAP: Record<number, number> = { 0: 1, 1: 0, 2: 3, 3: 2 };
+    const bounds = this.getOperationBounds();
+    const step = this.currentSprite.multicolor ? 2 : 1;
 
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
+    for (let y = bounds.y1; y <= bounds.y2; y++) {
+      for (let x = bounds.x1; x <= bounds.x2; x += step) {
         const pixel = this.currentSprite.pixels[y][x];
         this.currentSprite.pixels[y][x] = INVERT_MAP[pixel] ?? pixel;
       }

@@ -38,8 +38,12 @@ export default class Tools {
             <div class="icontext">erase</div>
         </div>
         <div class ="iconset icon-hover" id="icon-fill">
-            <img src="ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (f)">  
+            <img src="ui/icon-fill.png" class="icon"  id="image-icon-fill" title="fill tool (f)">
             <div class="icontext">fill</div>
+        </div>
+        <div class ="iconset icon-hover" id="icon-select">
+            <img src="ui/icon-select.png" class="icon" id="image-icon-select" title="select tool (q)">
+            <div class="icontext">select</div>
         </div>
       </div>
     `;
