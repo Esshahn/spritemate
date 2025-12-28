@@ -8,16 +8,21 @@ export default class About {
 
     const template = `
     <div id="info">
-        <img autofocus src="logo-menu.svg" width="300px" id="logo" alt="spritemate">
+        <img src="logo-menu.svg" width="300px" id="logo" alt="spritemate">
         <p>The Commodore 64 sprite editor</p>
 
         <fieldset>
             <h1>Release notes</h1>
 
-            <h1>25.12.27-03</h1>
+            <h1>25.12.28</h1>
             <h2>Marquee tool</h2>
             <p>
             This release adds the probably most requested feature, a select tool. You can now activate it from the tool bar and draw a rectangle around an area. The draw, erase and fill operations now only work inside the selection. Also, you can select the move tool and move the selection around to copy the content to another location. Once you're done, hit the Escape (ESC) key to deselect.
+            </p>
+
+            <h2>No more jQuery and jQueryUI</h2>
+            <p>
+            While spritemate was working fine using the now deprecated jQueryUI, I wasn't happy with all the extra code and quirks for window management. With the help of the trusty AI overlord, I finally took the effort to remove all jQuery code from the project. This might result in minor visual issues, but hopefully nothing breaks functionally. I'm quite happy it's finally done.
             </p>
 
             <h1>25.12.27-03</h1>
@@ -64,5 +69,15 @@ export default class About {
       }
       this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     };
+
+    // Prevent auto-scroll to first link by focusing the fieldset
+    const fieldset = dom.sel("#info fieldset") as HTMLElement;
+    if (fieldset) {
+      fieldset.setAttribute("tabindex", "0");
+      setTimeout(() => {
+        fieldset.focus();
+        fieldset.scrollTop = 0;
+      }, 0);
+    }
   }
 }

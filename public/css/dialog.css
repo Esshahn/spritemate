@@ -299,6 +299,11 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
   border: 1px dotted #333333;
   margin: 10px 0;
   padding: 10px;
+  outline: none;
+}
+
+.dialog-content fieldset:focus {
+  outline: none;
 }
 
 .dialog-content fieldset legend {
@@ -336,10 +341,15 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
 .dialog-content a {
   color: var(--blue);
   text-decoration: none;
+  outline: none;
 }
 
 .dialog-content a:hover {
   text-decoration: underline;
+}
+
+.dialog-content a:focus {
+  outline: none;
 }
 
 /* Window-specific styles */

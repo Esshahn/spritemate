@@ -17,7 +17,7 @@ body,
 html,
 p,
 div {
-  font-size: 96%;
+  font-size: 98%;
   font-family: "Quicksand", sans-serif;
   margin: 0;
 }
@@ -53,6 +53,16 @@ html {
   moz-user-select: none; /* mozilla browsers */
   khtml-user-select: none; /* webkit (konqueror) browsers */
   -ms-user-select: none; /* IE10+ */
+}
+
+/* Remove focus outline from all elements */
+*:focus {
+  outline: none !important;
+}
+
+body:focus,
+html:focus {
+  outline: none !important;
 }
 
 h1 {
