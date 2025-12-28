@@ -26,7 +26,6 @@ dialog.spritemate-dialog::backdrop {
 .dialog-wrapper {
   position: absolute;
   background: #282828;
-  border: 2px solid #33bb33;
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -36,12 +35,12 @@ dialog.spritemate-dialog::backdrop {
   width: fit-content;
   height: fit-content;
   box-sizing: border-box;
+  background: #121212 url("images/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
 }
 
 /* Title bar */
 .dialog-titlebar {
-  background: #1a1a1a;
-  border-bottom: 1px solid #33bb33;
+  border-bottom: 1px solid #141414;
   padding: 8px 12px;
   cursor: move;
   user-select: none;
@@ -55,13 +54,13 @@ dialog.spritemate-dialog::backdrop {
 }
 
 .dialog-title {
-  color: #33bb33;
+  color: #aaaaaa;
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
+  text-transform: uppercase;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 0;
 }
 
@@ -103,8 +102,8 @@ dialog.spritemate-dialog::backdrop {
 .dialog-content {
   flex: 1;
   overflow: auto;
-  padding: 0;
-  color: #33bb33;
+  padding: 4px;
+  color: #aaaaaa;
   font-family: 'Quicksand', sans-serif;
   box-sizing: border-box;
   min-width: 0;
