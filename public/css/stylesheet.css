@@ -130,9 +130,6 @@ fieldset .right {
   width: 200px;
 }
 
-.ui-widget-content a {
-  color: var(--blue);
-}
 
 canvas {
   margin: 0px;
@@ -184,102 +181,19 @@ img.center {
   float: left;
 }
 
-.ui-widget input.settings_colorvalue {
-  border: 0px solid var(--blue);
-  min-width: 0px;
-  width: 52px;
-  border-radius: 0px;
-  padding: 4px 4px 4px 4px;
-  font-size: 80%;
-  margin: 2px 2px 2px 2px;
-}
 
-.ui-widget input.editor_sprite_name {
-  border: 1px solid var(--icon_outline);
-  min-width: 0px;
-  line-height: 10px;
-  border-radius: 16px;
-  padding: 4px 4px 4px 4px;
-  font-size: 80%;
-  margin: 2px 2px 2px 16px;
-  vertical-align: top;
-  background-color: transparent;
-  font-family: "Courier";
-  color: var(--inactive_text);
-}
 
-.ui-widget input.editor_sprite_name:hover {
-  border: 1px solid var(--blue);
-  color: var(--active_text);
-}
 
-.ui-widget input.editor_sprite_name:focus {
-  color: var(--active_text);
-  background-color: #333333;
-}
 
-.ui-widget button {
-  border: 2px solid var(--blue);
-  background-color: black;
-  color: white;
-  font-size: 80%;
-  font-family: "Quicksand", sans-serif;
-  font-weight: normal;
-  border-radius: 32px;
-  margin: 4px;
-  padding: 8px 16px 8px 16px;
-  min-width: 160px;
-}
 
-.ui-widget button.center {
-  display: block;
-  margin: 0 auto;
-}
 
-.ui-widget button:hover {
-  background-color: var(--blue);
-  cursor: pointer;
-}
 
-.ui-widget button:focus {
-  outline: none;
-}
 
-.ui-widget .button-cancel {
-  border-color: var(--red);
-}
 
-.ui-widget .button-cancel:hover {
-  background-color: var(--red);
-}
 
-.ui-widget input {
-  border: 2px solid var(--blue);
-  background-color: black;
-  color: white;
-  font-size: 100%;
-  font-family: "Quicksand", sans-serif;
-  font-weight: normal;
-  border-radius: 32px;
-  margin: 4px;
-  padding: 8px 16px 8px 16px;
-  min-width: 260px;
-  text-align: center;
-}
 
-.ui-widget input:focus {
-  outline: 0;
-  background-color: var(--blue);
-}
 
-.ui-widget .error:focus {
-  border: 2px solid var(--red);
-  background-color: var(--red);
-}
 
-.ui-widget .error {
-  border: 2px solid var(--red);
-}
 
 #info {
   padding: 12px;
@@ -588,120 +502,23 @@ img.center {
   color: white;
 }
 
-.ui-dialog-titlebar {
-  font-family: "Quicksand", sans-serif;
-  font-weight: normal;
-  text-transform: uppercase;
-  font-size: 70%;
-  text-align: center;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  color: #aaaaaa;
-}
 
-.no-close .ui-dialog-titlebar-close {
-  display: none;
-}
 
-.window-close-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--red);
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  transform: translateY(-50%);
-  z-index: 1000;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-}
 
-.window-close-button:hover {
-  opacity: 1;
-}
 
-.ui-widget.ui-widget-content {
-  border: 0px;
-  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.6);
-}
 
-.ui-widget-header {
-  border: 0px;
-  background: none;
-}
 
-.ui-dialog {
-  padding: 0px;
-}
 
-.ui-dialog .ui-dialog-titlebar {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  padding: 2px;
-}
 
-.ui-dialog .ui-resizable-se,
-.ui-dialog .ui-resizable-sw,
-.ui-dialog .ui-resizable-ne,
-.ui-dialog .ui-resizable-nw {
-  width: 12px;
-  height: 12px;
-}
 
-.ui-dialog-content.ui-widget-content {
-  /* inner part of a window */
-  padding: 0.5em 0.5em;
-}
 
-.list.ui-dialog-content {
-  /* list window should not scroll */
-  overflow: hidden;
-}
 
-.colors.ui-dialog-content {
-  /* color palette should not have any padding */
-  padding: 0px;
-}
 
-.menu.ui-dialog-content {
-  /* menu should not have any padding */
-  padding: 0px;
-}
 
-.ui-dialog .ui-dialog-title {
-  width: 100%;
-}
 
-.ui-widget-overlay {
-  background: black;
-  opacity: 0.6;
-}
 
-.ui-widget input.ui-inputfield {
-  font-size: 80%;
-  margin: 2px;
-  padding: 0px;
-  border: 1px solid black;
-  min-width: 60px;
-  width: 80px;
-  min-height: 19px;
-  float: left;
-  text-align: left;
-  padding: 0px 12px 0px 12px;
-  color: var(--blue);
-}
 
-.ui-widget input.ui-inputfield:focus {
-  border: 1px solid var(--blue);
-  color: white;
-  background-color: black;
-}
 
-.ui-widget input.ui-inputfield:hover {
-  border: 1px solid var(--blue);
-  background-color: black;
-}
 
 .icon-inputfield {
   float: left;

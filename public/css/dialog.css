@@ -25,7 +25,9 @@ dialog.spritemate-dialog::backdrop {
 /* Dialog wrapper */
 .dialog-wrapper {
   position: absolute;
-  background: #282828;
+  top: 50px;
+  left: 50px;
+  background: #121212 url("images/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -35,7 +37,6 @@ dialog.spritemate-dialog::backdrop {
   width: fit-content;
   height: fit-content;
   box-sizing: border-box;
-  background: #121212 url("images/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
 }
 
 /* Title bar */
@@ -54,7 +55,7 @@ dialog.spritemate-dialog::backdrop {
 }
 
 .dialog-title {
-  color: #aaaaaa;
+  color: var(--inactive_text);
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
   text-transform: uppercase;
@@ -103,7 +104,7 @@ dialog.spritemate-dialog::backdrop {
   flex: 1;
   overflow: auto;
   padding: 4px;
-  color: #aaaaaa;
+  color: var(--inactive_text);
   font-family: 'Quicksand', sans-serif;
   box-sizing: border-box;
   min-width: 0;
@@ -149,7 +150,7 @@ dialog.spritemate-dialog[open] {
 }
 
 .sortable-placeholder {
-  background: rgba(51, 187, 51, 0.2);
+  background: rgba(0, 185, 238, 0.2);
   border: 2px dashed var(--blue);
   box-sizing: border-box;
 }
@@ -162,34 +163,11 @@ dialog.spritemate-dialog:modal {
 /* Non-modal dialogs - ensure they're visible */
 dialog.spritemate-dialog[open]:not(:modal) {
   display: block;
-  pointer-events: none; /* Allow clicks through the transparent dialog */
+  pointer-events: none;
 }
 
 dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
-  pointer-events: auto; /* But enable clicks on the actual window */
-}
-
-/* No-close class (from original jQuery UI) */
-.no-close .dialog-titlebar {
-  /* Keep for compatibility, but close button can be hidden via config */
-}
-
-/* Window type specific styles */
-dialog.spritemate-dialog .dialog-wrapper.sprite,
-dialog.spritemate-dialog .dialog-wrapper.colors,
-dialog.spritemate-dialog .dialog-wrapper.preview,
-dialog.spritemate-dialog .dialog-wrapper.list,
-dialog.spritemate-dialog .dialog-wrapper.tools,
-dialog.spritemate-dialog .dialog-wrapper.info,
-dialog.spritemate-dialog .dialog-wrapper.file,
-dialog.spritemate-dialog .dialog-wrapper.settings {
-  /* Type-specific styles can be added here */
-}
-
-/* Ensure dialogs are properly positioned */
-.dialog-wrapper {
-  top: 50px;
-  left: 50px;
+  pointer-events: auto;
 }
 
 /* Form element styles in dialogs */
@@ -204,14 +182,13 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
   font-weight: normal;
   border-radius: 32px;
   margin: 4px;
-  padding: 8px 16px 8px 16px;
+  padding: 8px 16px;
   min-width: 160px;
   cursor: pointer;
 }
 
 .dialog-content button:hover {
   background-color: var(--blue);
-  cursor: pointer;
 }
 
 .dialog-content button:focus {
@@ -246,7 +223,7 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
   font-weight: normal;
   border-radius: 32px;
   margin: 4px;
-  padding: 8px 16px 8px 16px;
+  padding: 8px 16px;
   min-width: 260px;
   text-align: center;
   box-sizing: border-box;
@@ -258,19 +235,18 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 }
 
 .dialog-content input.error {
-  border: 2px solid var(--red);
+  border-color: var(--red);
 }
 
 .dialog-content input.error:focus {
-  border: 2px solid var(--red);
   background-color: var(--red);
 }
 
 /* Select dropdowns */
 .dialog-content select {
   border: 2px solid var(--blue);
-  background-color: #000000;
-  color: #ffffff;
+  background-color: black;
+  color: white;
   font-size: 100%;
   font-family: 'Quicksand', sans-serif;
   padding: 8px;
@@ -282,7 +258,7 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 .dialog-content select:focus {
   outline: 0;
   background-color: var(--blue);
-  color: #000000;
+  color: black;
 }
 
 .dialog-content select:hover {
@@ -292,7 +268,7 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 /* Textarea */
 .dialog-content textarea {
   border: 2px solid var(--blue);
-  background-color: #000000;
+  background-color: black;
   color: var(--blue);
   font-size: 100%;
   font-family: 'Courier New', monospace;
@@ -307,13 +283,9 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
   background-color: #1a1a1a;
 }
 
-/* Console textarea - make it fill the dialog content without escaping */
+/* Console textarea - fill the dialog content */
 .dialog-content textarea.console {
   position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  bottom: auto;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -368,6 +340,8 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
   text-decoration: underline;
 }
 
+/* Window-specific styles */
+
 /* Tools window - center the menu */
 .dialog-content #menu {
   margin: 0 auto;
@@ -382,10 +356,10 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 /* Editor window - sprite name input field */
 .dialog-content input.editor_sprite_name {
   border: 1px solid var(--icon_outline);
-  min-width: 0px;
+  min-width: 0;
   line-height: 10px;
   border-radius: 16px;
-  padding: 4px 4px 4px 4px;
+  padding: 4px;
   font-size: 80%;
   margin: 2px 2px 2px 16px;
   vertical-align: top;
@@ -395,7 +369,7 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 }
 
 .dialog-content input.editor_sprite_name:hover {
-  border: 1px solid var(--blue);
+  border-color: var(--blue);
   color: var(--active_text);
 }
 
