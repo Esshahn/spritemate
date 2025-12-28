@@ -99,9 +99,7 @@ grabcols
 
 `;
     const template = `
-        <div class="window_menu">
-        </div>
-        <div class="ui-sortable">
+        <div class="console-container">
             <textarea id="snapshot-console" class="console" spellcheck="false">] </textarea>
         </div>
     `;

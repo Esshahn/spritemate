@@ -631,36 +631,4 @@ li.dropdown {
   color: var(--blue);
 }
 
-.console-container {
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  height: 100%;
-  line-height: 0px;
-  padding-bottom: 20px;
-  overflow: none;
-  scrollbar-width: none;
-}
-
-
-.console {
-  background-color: black;
-  color: rgb(21, 236, 35);
-  font-family: monospace !important;
-  font-size: 16px !important;
-  border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 16px;
-  resize: none;
-  box-sizing: border-box;
-  padding-bottom: 20px;
-}
-
-.console:focus {
-    outline: none
-}
-
 /* --- END CSS ONLY MENU --- */
