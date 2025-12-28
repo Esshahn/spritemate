@@ -153,6 +153,8 @@ dialog.spritemate-dialog[open] {
   background: rgba(0, 185, 238, 0.2);
   border: 2px dashed var(--blue);
   box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
 }
 
 /* Modal backdrop styles */

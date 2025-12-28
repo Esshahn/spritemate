@@ -390,6 +390,8 @@ img.center {
 .sprite_in_list {
   margin: 0px;
   padding: 0px;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .sprite_in_list:hover {
