@@ -66,7 +66,6 @@ export class App {
   } | null;
   marquee_drawing: boolean;
   move_selection_backup: number[][] | null;
-  move_original_bounds: { x1: number; y1: number; x2: number; y2: number } | null;
 
   constructor(public config) {
     this.storage = new Storage(config);
@@ -267,7 +266,6 @@ export class App {
     this.selection = null;
     this.marquee_drawing = false;
     this.move_selection_backup = null;
-    this.move_original_bounds = null;
 
     tipoftheday();
 
@@ -388,9 +386,6 @@ export class App {
       }
       backupY++;
     }
-
-    // Reset original bounds
-    this.move_original_bounds = null;
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
@@ -1194,9 +1189,6 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
           const { x1, y1, x2, y2 } = this.selection.bounds;
           const step = this.sprite.is_multicolor() ? 2 : 1;
           const currentSprite = this.sprite.get_current_sprite();
-
-          // Store original bounds before they change during drag
-          this.move_original_bounds = { x1, y1, x2, y2 };
 
           // Backup selected area (copy, not cut)
           this.move_selection_backup = [];

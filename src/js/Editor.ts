@@ -252,7 +252,7 @@ export default class Editor extends Window_Controls {
     const step = app.sprite.is_multicolor() ? 2 : 1;
 
     // If we're dragging a selection, draw the preview of the content
-    if (app.move_start && app.move_selection_backup && app.move_original_bounds) {
+    if (app.move_start && app.move_selection_backup) {
       const currentSprite = app.sprite.get_current_sprite();
       const all_data = app.sprite.get_all();
 
