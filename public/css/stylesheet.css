@@ -17,7 +17,7 @@ body,
 html,
 p,
 div {
-  font-size: 96%;
+  font-size: 98%;
   font-family: "Quicksand", sans-serif;
   margin: 0;
 }
@@ -53,6 +53,16 @@ html {
   moz-user-select: none; /* mozilla browsers */
   khtml-user-select: none; /* webkit (konqueror) browsers */
   -ms-user-select: none; /* IE10+ */
+}
+
+/* Remove focus outline from all elements */
+*:focus {
+  outline: none !important;
+}
+
+body:focus,
+html:focus {
+  outline: none !important;
 }
 
 h1 {
@@ -183,18 +193,6 @@ img.center {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #info {
   padding: 12px;
   text-align: center;
@@ -256,6 +254,7 @@ img.center {
 
 #palette_spritecolors {
   margin-top: 12px;
+  font-size: 80%;
 }
 
 
@@ -507,22 +506,6 @@ img.center {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .icon-inputfield {
   float: left;
   image-rendering: optimizeSpeed; /* Older versions of FF          */
@@ -674,7 +657,7 @@ li.dropdown {
   resize: none;
   box-sizing: border-box;
   padding-bottom: 20px;
-} 
+}
 
 .console:focus {
     outline: none
