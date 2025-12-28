@@ -93,9 +93,16 @@ export class Dialog {
 
     // Apply initial size
     if (this.config.width && this.config.width !== "auto") {
-      const widthValue = typeof this.config.width === "number"
-        ? `${this.config.width}px`
-        : String(this.config.width);
+      let widthValue: string;
+      if (typeof this.config.width === "number") {
+        widthValue = `${this.config.width}px`;
+      } else {
+        // If it's a string number without unit, add px
+        const numValue = parseFloat(String(this.config.width));
+        widthValue = !isNaN(numValue) && String(this.config.width) === String(numValue)
+          ? `${numValue}px`
+          : String(this.config.width);
+      }
       this.wrapper.style.width = widthValue;
       // Remove min-width when explicit width is set
       this.wrapper.style.minWidth = "0";
@@ -106,9 +113,16 @@ export class Dialog {
     }
 
     if (this.config.height && this.config.height !== "auto") {
-      const heightValue = typeof this.config.height === "number"
-        ? `${this.config.height}px`
-        : String(this.config.height);
+      let heightValue: string;
+      if (typeof this.config.height === "number") {
+        heightValue = `${this.config.height}px`;
+      } else {
+        // If it's a string number without unit, add px
+        const numValue = parseFloat(String(this.config.height));
+        heightValue = !isNaN(numValue) && String(this.config.height) === String(numValue)
+          ? `${numValue}px`
+          : String(this.config.height);
+      }
       this.wrapper.style.height = heightValue;
       // Remove min-height when explicit height is set
       this.wrapper.style.minHeight = "0";

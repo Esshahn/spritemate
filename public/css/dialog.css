@@ -104,7 +104,7 @@ dialog.spritemate-dialog::backdrop {
   flex: 1;
   overflow: auto;
   padding: 4px;
-  color: var(--inactive_text);
+  color: var(--active_text);
   font-family: 'Quicksand', sans-serif;
   box-sizing: border-box;
   min-width: 0;
