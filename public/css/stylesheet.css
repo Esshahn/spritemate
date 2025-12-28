@@ -142,6 +142,7 @@ fieldset .right {
 
 
 canvas {
+  display: block;
   margin: 0px;
   padding: 0px;
   image-rendering: optimizeSpeed; /* Older versions of FF          */
