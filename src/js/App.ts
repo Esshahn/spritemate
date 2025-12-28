@@ -58,6 +58,14 @@ export class App {
   move_start: any;
   move_start_pos: any;
   dragging: any;
+  selection: {
+    active: boolean;
+    start: { x: number; y: number } | null;
+    end: { x: number; y: number } | null;
+    bounds: { x1: number; y1: number; x2: number; y2: number } | null;
+  } | null;
+  marquee_drawing: boolean;
+  move_selection_backup: number[][] | null;
 
   constructor(public config) {
     this.storage = new Storage(config);
@@ -255,6 +263,9 @@ export class App {
 
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
+    this.selection = null;
+    this.marquee_drawing = false;
+    this.move_selection_backup = null;
 
     tipoftheday();
 
@@ -267,22 +278,114 @@ export class App {
   }
 
   // Helper method to set drawing mode and update UI icons
-  setDrawMode(mode: "move" | "draw" | "erase" | "fill"): void {
+  setDrawMode(mode: "move" | "draw" | "erase" | "fill" | "select"): void {
     this.mode = mode;
     const modeNames = {
       move: "Move",
       draw: "Draw",
       erase: "Erase",
-      fill: "Fill"
+      fill: "Fill",
+      select: "Select"
     };
     status(`${modeNames[mode]} mode`);
 
     // Update all icon states
-    const modes = ["move", "draw", "erase", "fill"];
+    const modes = ["move", "draw", "erase", "fill", "select"];
     modes.forEach(m => {
       const suffix = m === mode ? "-hi.png" : ".png";
       dom.attr(`#image-icon-${m}`, "src", `ui/icon-${m}${suffix}`);
     });
+  }
+
+  // Helper method to clear selection
+  clearSelection(): void {
+    this.selection = null;
+    this.marquee_drawing = false;
+    this.update();
+  }
+
+  // Helper method to normalize selection bounds
+  normalizeSelection(): void {
+    if (!this.selection || !this.selection.start || !this.selection.end) return;
+
+    let x1 = this.selection.start.x;
+    let y1 = this.selection.start.y;
+    let x2 = this.selection.end.x;
+    let y2 = this.selection.end.y;
+
+    // Normalize coordinates (ensure x1 <= x2, y1 <= y2)
+    if (x1 > x2) [x1, x2] = [x2, x1];
+    if (y1 > y2) [y1, y2] = [y2, y1];
+
+    // Snap to multicolor grid if needed
+    const step = this.sprite.is_multicolor() ? 2 : 1;
+    x1 = Math.floor(x1 / step) * step;
+    x2 = Math.floor(x2 / step) * step;
+
+    // Constrain to sprite boundaries [0, sprite_x-1] × [0, sprite_y-1]
+    x1 = Math.max(0, Math.min(x1, this.config.sprite_x - 1));
+    x2 = Math.max(0, Math.min(x2, this.config.sprite_x - 1));
+    y1 = Math.max(0, Math.min(y1, this.config.sprite_y - 1));
+    y2 = Math.max(0, Math.min(y2, this.config.sprite_y - 1));
+
+    // Store normalized bounds
+    this.selection.bounds = { x1, y1, x2, y2 };
+    this.selection.active = true;
+  }
+
+  // Helper method to check if pixel is inside selection
+  isPixelInSelection(x: number, y: number): boolean {
+    if (!this.selection?.active || !this.selection.bounds) return true;
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+  }
+
+  // Helper method to update selection bounds during drag (doesn't modify sprite data)
+  moveSelectedArea(dx: number, dy: number): void {
+    if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
+
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    const selectionWidth = x2 - x1;
+    const selectionHeight = y2 - y1;
+
+    // Calculate new position - don't constrain to boundaries (allow negative or out-of-bounds)
+    const newX1 = x1 + dx;
+    const newY1 = y1 + dy;
+
+    // Update selection bounds - keep original size, allow going outside canvas
+    this.selection.bounds = {
+      x1: newX1,
+      y1: newY1,
+      x2: newX1 + selectionWidth,
+      y2: newY1 + selectionHeight
+    };
+  }
+
+  // Helper method to apply the final move operation (called on mouse release)
+  applyMoveSelection(): void {
+    if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
+
+    const step = this.sprite.is_multicolor() ? 2 : 1;
+    const currentSprite = this.sprite.get_current_sprite();
+
+    // Paste backup data at new position (copy, not cut - original remains)
+    // Only paste pixels that are within canvas bounds
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    let backupY = 0;
+    for (let y = y1; y <= y2; y++) {
+      let backupX = 0;
+      for (let x = x1; x <= x2; x += step) {
+        // Only paste if within canvas bounds
+        if (y >= 0 && y < this.config.sprite_y && x >= 0 && x < this.config.sprite_x) {
+          if (backupY < this.move_selection_backup.length && backupX < this.move_selection_backup[backupY].length) {
+            const pixel = this.move_selection_backup[backupY][backupX];
+            currentSprite.pixels[y][x] = pixel;
+          }
+        }
+        backupX++; // Increment by 1, not by step
+      }
+      backupY++;
+    }
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
@@ -522,6 +625,13 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "d") this.setDrawMode("draw");
         if (e.key == "e") this.setDrawMode("erase");
         if (e.key == "f") this.setDrawMode("fill");
+        if (e.key == "q") this.setDrawMode("select");
+
+        if (e.key == "Escape") {
+          if (this.selection?.active) {
+            this.clearSelection();
+          }
+        }
 
         if (e.key == "1") {
           this.sprite.set_pen(0);
@@ -924,6 +1034,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
     dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
     dom.sel("#icon-fill").onclick = () => this.setDrawMode("fill");
+    dom.sel("#icon-select").onclick = () => this.setDrawMode("select");
 
     /*
 
@@ -1042,6 +1153,19 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     };
 
     dom.sel("#editor").onmousedown = (e) => {
+      if (this.mode == "select") {
+        const pixel = this.editor.get_pixel(e);
+        this.marquee_drawing = true;
+        this.selection = {
+          active: false,
+          start: pixel,
+          end: pixel,
+          bounds: null
+        };
+        this.update();
+        return;
+      }
+
       if (this.mode == "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
@@ -1059,11 +1183,38 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       if (this.mode == "move") {
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
+
+        // If there's an active selection, backup the selected pixels (don't clear yet)
+        if (this.selection?.active && this.selection.bounds) {
+          const { x1, y1, x2, y2 } = this.selection.bounds;
+          const step = this.sprite.is_multicolor() ? 2 : 1;
+          const currentSprite = this.sprite.get_current_sprite();
+
+          // Backup selected area (copy, not cut)
+          this.move_selection_backup = [];
+          for (let y = y1; y <= y2; y++) {
+            const row: number[] = [];
+            for (let x = x1; x <= x2; x += step) {
+              row.push(currentSprite.pixels[y][x]);
+            }
+            this.move_selection_backup.push(row);
+          }
+        }
       }
       this.update();
     };
 
     dom.sel("#editor").onmousemove = (e) => {
+      if (this.marquee_drawing && this.mode == "select") {
+        const newpos = this.editor.get_pixel(e);
+        if (this.selection) {
+          this.selection.end = newpos;
+          this.normalizeSelection();
+        }
+        this.update();
+        return;
+      }
+
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         const newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
@@ -1080,33 +1231,77 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.move_start) {
-        const x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
-        const y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        const currentPos = this.editor.get_pixel(e);
+        const x_diff = currentPos.x - this.move_start_pos.x;
+        const y_diff = currentPos.y - this.move_start_pos.y;
 
-        if (x_diff > 0) {
-          this.sprite.shift_horizontal("right");
-        }
-        if (x_diff < 0) {
-          this.sprite.shift_horizontal("left");
-        }
-        if (y_diff > 0) {
-          this.sprite.shift_vertical("down");
-        }
-        if (y_diff < 0) {
-          this.sprite.shift_vertical("up");
-        }
+        if (this.selection?.active && this.move_selection_backup) {
+          // Move selection content
+          if (x_diff !== 0 || y_diff !== 0) {
+            // Calculate step based on move direction
+            const step = this.sprite.is_multicolor() ? 2 : 1;
+            const dx = x_diff > 0 ? step : (x_diff < 0 ? -step : 0);
+            const dy = y_diff > 0 ? 1 : (y_diff < 0 ? -1 : 0);
 
-        if (x_diff || y_diff) {
-          this.move_start_pos = this.editor.get_pixel(e);
-          this.update();
+            if (dx !== 0 || dy !== 0) {
+              this.moveSelectedArea(dx, dy);
+              this.move_start_pos = currentPos;
+              this.update();
+            }
+          }
+        } else {
+          // Move entire sprite
+          if (x_diff > 0) {
+            this.sprite.shift_horizontal("right");
+          }
+          if (x_diff < 0) {
+            this.sprite.shift_horizontal("left");
+          }
+          if (y_diff > 0) {
+            this.sprite.shift_vertical("down");
+          }
+          if (y_diff < 0) {
+            this.sprite.shift_vertical("up");
+          }
+
+          if (x_diff || y_diff) {
+            this.move_start_pos = currentPos;
+            this.update();
+          }
         }
       }
     };
 
     dom.sel("#editor").onclick = () => {
+      // Finalize selection
+      if (this.marquee_drawing) {
+        this.marquee_drawing = false;
+        if (this.selection) {
+          this.normalizeSelection();
+        }
+        // Don't save backup (selection isn't a mutation)
+        this.update();
+        return;
+      }
+
       // stop drawing pixels
       this.is_drawing = false;
-      this.move_start = false;
+
+      // Finalize move operation
+      if (this.move_start) {
+        this.move_start = false;
+
+        // Apply the move if there was a selection
+        if (this.move_selection_backup) {
+          this.applyMoveSelection();
+          this.move_selection_backup = null;
+        }
+
+        this.sprite.save_backup();
+        this.update();
+        return;
+      }
+
       this.sprite.save_backup();
       this.update();
     };
@@ -1180,6 +1375,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {
           this.sprite.set_pen(1);
         }
+        this.clearSelection();
         this.update();
       }
     };
