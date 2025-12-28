@@ -117,7 +117,7 @@ dialog.spritemate-dialog::backdrop {
   width: 16px;
   height: 16px;
   cursor: nwse-resize;
-  background: linear-gradient(135deg, transparent 0%, transparent 50%, #33bb33 50%, #33bb33 100%);
+  background: linear-gradient(135deg, transparent 0%, transparent 50%, #666666 50%, #666666 100%);
   opacity: 0.5;
   transition: opacity 0.2s;
 }
