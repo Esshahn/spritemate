@@ -124,7 +124,14 @@ grabcols
       }
     }, 0);
 
-    dom.sel("#snapshot-console").onkeyup = (e) => {
+    const consoleTextarea = dom.sel("#snapshot-console");
+
+    // Position cursor at the end of the prompt
+    const initialLength = consoleTextarea.value.length;
+    consoleTextarea.setSelectionRange(initialLength, initialLength);
+    consoleTextarea.focus();
+
+    consoleTextarea.onkeyup = (e) => {
       if (e.key === "Enter") {
         const command = dom.val("#snapshot-console");
         if (!command) return;
@@ -132,7 +139,6 @@ grabcols
         const last_line = lines[lines.length - 2];
         const last_line_trimmed_without_prompt = this.removePrompt(last_line);
         this.command(last_line_trimmed_without_prompt);
-        this.prompt();
       }
     };
   }
@@ -326,6 +332,7 @@ grabcols
         this.command(this.lastCmd);
         return;
       }
+      this.prompt();
       return;
     }
     switch (command_name) {
@@ -470,8 +477,8 @@ grabcols
         // If no args provided and we have lastIndex, increment by 16
         if (command_args.length === 0 && this.lastIndex !== -1) {
           this.lastIndex = this.lastIndex + 16;
-          this.print(this.formatMemory(this.lastIndex) + "\n");
-          return;
+          this.println(this.formatMemory(this.lastIndex));
+          break;
         }
 
         if (address < 0 || address >= this.c64mem.length) {
@@ -499,6 +506,7 @@ grabcols
     }
 
     this.lastCmd = command_name;
+    this.prompt();
   }
 
   private list_vic() {
