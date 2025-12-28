@@ -420,10 +420,11 @@ img.center {
 #spritelist {
   margin: 0px;
   padding: 0px;
-  overflow: auto;
-  height: 84%;
+  overflow-y: auto;
+  overflow-x: hidden;
   line-height: 0px;
   padding-bottom: 20px;
+  max-height: calc(100vh - 200px);
 }
 
 /*

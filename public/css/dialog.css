@@ -344,6 +344,11 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
 
 /* Window-specific styles */
 
+/* List window - prevent dialog-content from scrolling, only spritelist scrolls */
+.dialog-content:has(#spritelist) {
+  overflow: hidden;
+}
+
 /* Tools window - center the menu */
 .dialog-content #menu {
   margin: 0 auto;
