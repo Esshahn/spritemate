@@ -396,6 +396,7 @@ img.center {
   height: 50px;
   display: block;
   margin: 0 auto;
+  transition: transform 0.15s ease, filter 0.15s ease;
 
   image-rendering: optimizeSpeed; /* Older versions of FF          */
   image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
@@ -421,14 +422,28 @@ img.center {
   position: relative;
   top: -5px;
   height: 8px;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .icon-hover {
   background: transparent;
   transition: 0.25s ease background;
+  border-radius: 4px;
+}
+
+.icon-hover:hover .icon,
+.icon-hover:hover .icontext,
+.icon-active .icon,
+.icon-active .icontext {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8));
 }
 
 .icon-hover:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+.icon-active {
   background: rgba(90, 90, 90, 0.5);
 }
 

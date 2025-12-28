@@ -289,11 +289,17 @@ export class App {
     };
     status(`${modeNames[mode]} mode`);
 
-    // Update all icon states
+    // Update all icon states using CSS classes
     const modes = ["move", "draw", "erase", "fill", "select"];
     modes.forEach(m => {
-      const suffix = m === mode ? "-hi.png" : ".png";
-      dom.attr(`#image-icon-${m}`, "src", `ui/icon-${m}${suffix}`);
+      const iconElement = dom.sel(`#icon-${m}`);
+      if (iconElement) {
+        if (m === mode) {
+          iconElement.classList.add("icon-active");
+        } else {
+          iconElement.classList.remove("icon-active");
+        }
+      }
     });
   }
 
