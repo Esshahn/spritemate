@@ -87,7 +87,7 @@ dialog.spritemate-dialog::backdrop {
   left: 50%;
   width: 12px;
   height: 2px;
-  background: #33bb33;
+  background: var(--blue);
 }
 
 .window-close-button::before {
@@ -150,7 +150,7 @@ dialog.spritemate-dialog[open] {
 
 .sortable-placeholder {
   background: rgba(51, 187, 51, 0.2);
-  border: 2px dashed #33bb33;
+  border: 2px dashed var(--blue);
   box-sizing: border-box;
 }
 
@@ -196,21 +196,22 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 
 /* Buttons */
 .dialog-content button {
-  border: 2px solid #33bb33;
-  background-color: #000000;
-  color: #ffffff;
+  border: 2px solid var(--blue);
+  background-color: black;
+  color: white;
   font-size: 80%;
   font-family: 'Quicksand', sans-serif;
-  padding: 8px 16px;
+  font-weight: normal;
+  border-radius: 32px;
   margin: 4px;
+  padding: 8px 16px 8px 16px;
+  min-width: 160px;
   cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
 }
 
 .dialog-content button:hover {
-  background-color: #33bb33;
-  color: #000000;
+  background-color: var(--blue);
+  cursor: pointer;
 }
 
 .dialog-content button:focus {
@@ -228,59 +229,46 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 }
 
 .dialog-content button.button-cancel {
-  border-color: #ff3333;
-  background: transparent;
+  border-color: var(--red);
 }
 
 .dialog-content button.button-cancel:hover {
-  background-color: #ff3333;
-  color: #ffffff;
-}
-
-.dialog-content button.confirm-button {
-  border: 2px solid #33bb33;
-  background: #000000;
-}
-
-.dialog-content button.confirm-button:hover,
-.dialog-content button.confirm-button:focus {
-  background: #000000;
-  color: #ffffff;
+  background-color: var(--red);
 }
 
 /* Input fields */
 .dialog-content input {
-  border: 2px solid #33bb33;
-  background-color: #000000;
-  color: #ffffff;
+  border: 2px solid var(--blue);
+  background-color: black;
+  color: white;
   font-size: 100%;
   font-family: 'Quicksand', sans-serif;
-  padding: 8px;
-  margin: 4px 0;
+  font-weight: normal;
+  border-radius: 32px;
+  margin: 4px;
+  padding: 8px 16px 8px 16px;
+  min-width: 260px;
+  text-align: center;
   box-sizing: border-box;
 }
 
 .dialog-content input:focus {
   outline: 0;
-  background-color: #33bb33;
-  color: #000000;
-}
-
-.dialog-content input:hover {
-  border-color: #33bb33;
+  background-color: var(--blue);
 }
 
 .dialog-content input.error {
-  border-color: #ff3333;
+  border: 2px solid var(--red);
 }
 
 .dialog-content input.error:focus {
-  background-color: #ff3333;
+  border: 2px solid var(--red);
+  background-color: var(--red);
 }
 
 /* Select dropdowns */
 .dialog-content select {
-  border: 2px solid #33bb33;
+  border: 2px solid var(--blue);
   background-color: #000000;
   color: #ffffff;
   font-size: 100%;
@@ -293,19 +281,19 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 
 .dialog-content select:focus {
   outline: 0;
-  background-color: #33bb33;
+  background-color: var(--blue);
   color: #000000;
 }
 
 .dialog-content select:hover {
-  border-color: #33bb33;
+  border-color: var(--blue);
 }
 
 /* Textarea */
 .dialog-content textarea {
-  border: 2px solid #33bb33;
+  border: 2px solid var(--blue);
   background-color: #000000;
-  color: #33bb33;
+  color: var(--blue);
   font-size: 100%;
   font-family: 'Courier New', monospace;
   padding: 8px;
@@ -340,7 +328,7 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 }
 
 .dialog-content fieldset legend {
-  color: #33bb33;
+  color: var(--blue);
   padding: 0 5px;
 }
 
@@ -372,10 +360,47 @@ dialog.spritemate-dialog .dialog-wrapper.settings {
 
 /* Links */
 .dialog-content a {
-  color: #33bb33;
+  color: var(--blue);
   text-decoration: none;
 }
 
 .dialog-content a:hover {
   text-decoration: underline;
+}
+
+/* Tools window - center the menu */
+.dialog-content #menu {
+  margin: 0 auto;
+}
+
+/* Palette window - center the text labels */
+.dialog-content #palette_spritecolors p {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Editor window - sprite name input field */
+.dialog-content input.editor_sprite_name {
+  border: 1px solid var(--icon_outline);
+  min-width: 0px;
+  line-height: 10px;
+  border-radius: 16px;
+  padding: 4px 4px 4px 4px;
+  font-size: 80%;
+  margin: 2px 2px 2px 16px;
+  vertical-align: top;
+  background-color: transparent;
+  font-family: "Courier", monospace;
+  color: var(--inactive_text);
+}
+
+.dialog-content input.editor_sprite_name:hover {
+  border: 1px solid var(--blue);
+  color: var(--active_text);
+}
+
+.dialog-content input.editor_sprite_name:focus {
+  color: var(--active_text);
+  background-color: #333333;
+  outline: 0;
 }
