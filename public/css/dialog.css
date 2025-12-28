@@ -271,13 +271,40 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
   background-color: #1a1a1a;
 }
 
-/* Console textarea - fill the dialog content */
-.dialog-content textarea.console {
-  position: relative;
+/* Console container and textarea */
+.dialog-content .console-container {
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
+  line-height: 0;
+  padding-bottom: 20px;
+  overflow: hidden;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.dialog-content textarea.console {
+  color: var(--blue);
+  font-family: monospace !important;
+  font-size: 16px !important;
   border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  resize: none;
+  box-sizing: border-box;
+  padding-bottom: 20px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+}
+
+.dialog-content textarea.console:focus {
+  outline: none;
 }
 
 /* Fieldsets */
@@ -343,6 +370,22 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
 /* List window - prevent dialog-content from scrolling, only spritelist scrolls */
 .dialog-content:has(#spritelist) {
   overflow: hidden;
+}
+
+/* Snapshot window - console fills the entire content area */
+.dialog-content:has(#snapshot-console) {
+  overflow: hidden;
+}
+
+#window-9 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#window-9 .console-container {
+  flex: 1;
+  min-height: 0;
 }
 
 /* Tools window - center the menu */

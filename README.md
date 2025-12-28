@@ -27,6 +27,7 @@ Try the example files in the `examples/` directory to explore features!
 * choose from the 16 colors of the C64 palette
 * draw pixels on a 24x21 pixel (singlecolor) or 12x21 pixel (multicolor) canvas
 * C64 mode restrictions (number of colors per sprite, global sprite colors)
+* **select tool** - select and manipulate rectangular areas
 * delete, fill, shift left, right, up, down, flip horizontal & vertical, move, erase
 * check your sprite in the preview window
 * display grid in editor
@@ -36,9 +37,9 @@ Try the example files in the `examples/` directory to explore features!
 * sprite sorting
 * undo & redo
 * copy, paste, duplicate
-* window based GUI
-* save window layout
-* VICE snapshot monitor for extracting sprites from memory dumps
+* window based GUI with draggable windows
+* save window layout and positions
+* **VICE snapshot monitor** for extracting sprites from memory dumps
 * import & export Spritemate format
 * import & export SpritePad 2.0 format
 * import & export SpritePad 1.8.1 format
@@ -46,13 +47,13 @@ Try the example files in the `examples/` directory to explore features!
 * export as ASM source (KICK and ACME)
 * export as hex or binary notation source
 * export as BASIC 2.0 listing
-* keyboard shortcuts
+* comprehensive keyboard shortcuts
 
 ## Technology Stack
 
-* **TypeScript** - All source code converted to TypeScript 
+* **TypeScript** - All source code converted to TypeScript
 * **Vite** - Modern build tool with fast development server
-* **jQuery & jQuery UI** - Window management and UI components (loaded from CDN)
+* **Vanilla JavaScript** - No framework dependencies, pure JavaScript for maximum performance
 * **HTML5 Canvas** - Sprite rendering
 * **Local Storage** - Browser-based persistence for settings and window layouts
 
@@ -197,21 +198,48 @@ Pull requests are welcome! Please feel free to submit ideas, bugs, and feature r
 * Rearrange sprites by dragging them to the desired position
 * Save a sprite as PNG by right-clicking on the Preview window image
 * Hold **Shift** while drawing to erase pixels (or use the eraser tool)
+* Use the **Select Tool** to select and manipulate rectangular areas of your sprite
 * Use **Arrow Keys** to navigate through your sprite list quickly
 * All window positions and zoom levels are automatically saved to local storage
+* Close modal windows using the **X button** or by clicking outside the modal
 * Export to Assembly with both KICK ASS and ACME syntax support
 * Sprite names (editable) will be used as labels in ASM and BASIC exports
 * Use sprite overlays (onion-skinning) to preview animations
-* The VICE snapshot monitor can extract sprites from any C64 program
+* The **VICE snapshot monitor** can extract sprites from any C64 program - perfect for studying existing games
+* The menu bar shows active states to indicate which windows are currently open
 
 
 ## Changelog
 
-### 2025-12-27-02
-- Added VICE Snapshot Monitor for sprite extraction from memory dumps
-- Support for importing VICE snapshot files (.vsf)
+### V1.4 (December 2025)
+#### Major modernization update with complete jQuery removal and new features
 
-### V1.3
+**New Features:**
+- Added **Select Tool** - Select and manipulate rectangular areas of your sprite
+- Added **VICE Snapshot Monitor** for extracting sprites from memory dumps (.vsf files)
+- Added **Close buttons** to modal windows for better usability
+- Added **About window** with version and author information
+- Menu bar now shows active state when windows are open
+
+**Technical Improvements:**
+- **Complete removal of jQuery and jQuery UI** - Now 100% vanilla JavaScript
+  - Custom modal dialog system replaces jQuery UI
+  - All window management rewritten in pure JavaScript
+  - Dramatically reduced bundle size and improved performance
+- Fixed window menu behavior and responsiveness
+- Fixed modal width issues for better display
+- Fixed sprite sorting functionality
+- Fixed cursor display issues
+- Fixed VICE snapshot handling
+
+**Code Quality:**
+- Major code cleanup and refactoring
+- Improved CSS organization and maintainability
+- Better separation of concerns in App.ts
+
+This release completes the modernization journey started in V1.3. The application is now entirely dependency-free (except for JSZip for file handling), resulting in a leaner, faster, and more maintainable codebase.
+
+### V1.3 (January 2025)
 #### This is a housekeeping update with important new functionality and modernization.
 
 - Converted all JavaScript to TypeScript
