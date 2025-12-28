@@ -33,8 +33,8 @@ export default class Tools {
             <img src="ui/icon-select.png" class="icon" id="image-icon-select" title="select tool (q) - deselect with (ESC)">
             <div class="icontext">select</div>
         </div>
-        <div class ="iconset icon-hover" id="icon-draw">
-            <img src="ui/icon-draw-hi.png" class="icon" id="image-icon-draw" title="draw tool (d)">
+        <div class ="iconset icon-hover icon-active" id="icon-draw">
+            <img src="ui/icon-draw.png" class="icon" id="image-icon-draw" title="draw tool (d)">
             <div class="icontext">draw</div>
         </div>
         <div class ="iconset icon-hover" id="icon-erase">

@@ -426,9 +426,14 @@ img.center {
 .icon-hover {
   background: transparent;
   transition: 0.25s ease background;
+  border-radius: 4px;
 }
 
 .icon-hover:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+.icon-active {
   background: rgba(90, 90, 90, 0.5);
 }
 
