@@ -15,6 +15,12 @@ export default class About {
             <h1>Release notes</h1>
 
             <h1>25.12.27-03</h1>
+            <h2>Marquee tool</h2>
+            <p>
+            This release adds the probably most requested feature, a select tool. You can now activate it from the tool bar and draw a rectangle around an area. The draw, erase and fill operations now only work inside the selection. Also, you can select the move tool and move the selection around to copy the content to another location. Once you're done, hit the Escape (ESC) key to deselect.
+            </p>
+
+            <h1>25.12.27-03</h1>
             <h2>The Age Of Vibe Coding</h2>
             <p>
             Ahhhh.... it's finally time to vibe code some life into Spritemate again.<br/>
