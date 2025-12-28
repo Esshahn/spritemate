@@ -66,6 +66,7 @@ export class App {
   } | null;
   marquee_drawing: boolean;
   move_selection_backup: number[][] | null;
+  move_original_bounds: { x1: number; y1: number; x2: number; y2: number } | null;
 
   constructor(public config) {
     this.storage = new Storage(config);
@@ -266,6 +267,7 @@ export class App {
     this.selection = null;
     this.marquee_drawing = false;
     this.move_selection_backup = null;
+    this.move_original_bounds = null;
 
     tipoftheday();
 
@@ -340,22 +342,24 @@ export class App {
     return x >= x1 && x <= x2 && y >= y1 && y <= y2;
   }
 
-  // Helper method to move selected area bounds (doesn't modify pixels during drag)
+  // Helper method to update selection bounds during drag (doesn't modify sprite data)
   moveSelectedArea(dx: number, dy: number): void {
     if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
 
     const { x1, y1, x2, y2 } = this.selection.bounds;
+    const selectionWidth = x2 - x1;
+    const selectionHeight = y2 - y1;
 
-    // Calculate new position
-    const newX1 = Math.max(0, Math.min(x1 + dx, this.config.sprite_x - 1));
-    const newY1 = Math.max(0, Math.min(y1 + dy, this.config.sprite_y - 1));
+    // Calculate new position - don't constrain to boundaries (allow negative or out-of-bounds)
+    const newX1 = x1 + dx;
+    const newY1 = y1 + dy;
 
-    // Update selection bounds only (pixels will be applied on mouse release)
+    // Update selection bounds - keep original size, allow going outside canvas
     this.selection.bounds = {
       x1: newX1,
       y1: newY1,
-      x2: Math.min(newX1 + (x2 - x1), this.config.sprite_x - 1),
-      y2: Math.min(newY1 + (y2 - y1), this.config.sprite_y - 1)
+      x2: newX1 + selectionWidth,
+      y2: newY1 + selectionHeight
     };
   }
 
@@ -363,23 +367,30 @@ export class App {
   applyMoveSelection(): void {
     if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
 
-    const { x1, y1, x2, y2 } = this.selection.bounds;
     const step = this.sprite.is_multicolor() ? 2 : 1;
     const currentSprite = this.sprite.get_current_sprite();
 
-    // Paste backup data at new position
+    // Paste backup data at new position (copy, not cut - original remains)
+    // Only paste pixels that are within canvas bounds
+    const { x1, y1, x2, y2 } = this.selection.bounds;
     let backupY = 0;
     for (let y = y1; y <= y2; y++) {
       let backupX = 0;
       for (let x = x1; x <= x2; x += step) {
-        if (backupY < this.move_selection_backup.length && backupX < this.move_selection_backup[backupY].length) {
-          const pixel = this.move_selection_backup[backupY][backupX];
-          currentSprite.pixels[y][x] = pixel;
+        // Only paste if within canvas bounds
+        if (y >= 0 && y < this.config.sprite_y && x >= 0 && x < this.config.sprite_x) {
+          if (backupY < this.move_selection_backup.length && backupX < this.move_selection_backup[backupY].length) {
+            const pixel = this.move_selection_backup[backupY][backupX];
+            currentSprite.pixels[y][x] = pixel;
+          }
         }
-        backupX += step;
+        backupX++; // Increment by 1, not by step
       }
       backupY++;
     }
+
+    // Reset original bounds
+    this.move_original_bounds = null;
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
@@ -1178,20 +1189,21 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
 
-        // If there's an active selection, backup the selected pixels and clear them
+        // If there's an active selection, backup the selected pixels (don't clear yet)
         if (this.selection?.active && this.selection.bounds) {
           const { x1, y1, x2, y2 } = this.selection.bounds;
           const step = this.sprite.is_multicolor() ? 2 : 1;
           const currentSprite = this.sprite.get_current_sprite();
 
-          // Backup selected area
+          // Store original bounds before they change during drag
+          this.move_original_bounds = { x1, y1, x2, y2 };
+
+          // Backup selected area (copy, not cut)
           this.move_selection_backup = [];
           for (let y = y1; y <= y2; y++) {
             const row: number[] = [];
             for (let x = x1; x <= x2; x += step) {
               row.push(currentSprite.pixels[y][x]);
-              // Clear the pixel (cut operation)
-              currentSprite.pixels[y][x] = 0;
             }
             this.move_selection_backup.push(row);
           }

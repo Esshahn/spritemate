@@ -251,6 +251,53 @@ export default class Editor extends Window_Controls {
     const { x1, y1, x2, y2 } = app.selection.bounds;
     const step = app.sprite.is_multicolor() ? 2 : 1;
 
+    // If we're dragging a selection, draw the preview of the content
+    if (app.move_start && app.move_selection_backup && app.move_original_bounds) {
+      const currentSprite = app.sprite.get_current_sprite();
+      const all_data = app.sprite.get_all();
+
+      // Draw the selected content at the new position (only visible parts)
+      let backupY = 0;
+      for (let y = y1; y <= y2; y++) {
+        let backupX = 0;
+        for (let x = x1; x <= x2; x += step) {
+          // Only draw if within canvas bounds
+          if (y >= 0 && y < this.config.sprite_y && x >= 0 && x < this.config.sprite_x) {
+            if (backupY < app.move_selection_backup.length && backupX < app.move_selection_backup[backupY].length) {
+              const pixel = app.move_selection_backup[backupY][backupX];
+
+              if (pixel === 0) {
+                // Transparent pixel - draw background color to hide what's underneath
+                this.overlay_canvas.fillStyle = this.config.colors[all_data.colors[0]];
+                this.overlay_canvas.fillRect(
+                  x * this.zoom,
+                  y * this.zoom,
+                  step * this.zoom,
+                  this.zoom
+                );
+              } else {
+                // Non-transparent pixel - get color for this pixel
+                let color = currentSprite.color;
+                if (pixel !== 1 && currentSprite.multicolor) {
+                  color = all_data.colors[pixel];
+                }
+
+                this.overlay_canvas.fillStyle = this.config.colors[color];
+                this.overlay_canvas.fillRect(
+                  x * this.zoom,
+                  y * this.zoom,
+                  step * this.zoom,
+                  this.zoom
+                );
+              }
+            }
+          }
+          backupX++; // Increment by 1, not by step
+        }
+        backupY++;
+      }
+    }
+
     // Use the same coordinate calculation as display_grid()
     // Grid lines are drawn at: i * this.zoom
     // We want to draw the selection box ON the grid lines, not between them
