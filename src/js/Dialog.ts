@@ -122,6 +122,11 @@ export class Dialog {
     if (this.config.left !== undefined && this.config.top !== undefined) {
       this.wrapper.style.left = `${this.config.left}px`;
       this.wrapper.style.top = `${this.config.top}px`;
+    } else if (this.config.modal) {
+      // Center modal dialogs by default
+      this.wrapper.style.left = "50%";
+      this.wrapper.style.top = "50%";
+      this.wrapper.style.transform = "translate(-50%, -50%)";
     }
   }
 
@@ -163,6 +168,14 @@ export class Dialog {
       this.isDragging = true;
       this.dragStartX = e.clientX;
       this.dragStartY = e.clientY;
+
+      // If centered with transform, convert to absolute position
+      if (this.wrapper.style.transform) {
+        const rect = this.wrapper.getBoundingClientRect();
+        this.wrapper.style.transform = "";
+        this.wrapper.style.left = `${rect.left}px`;
+        this.wrapper.style.top = `${rect.top}px`;
+      }
 
       // Get current position from style, not from getBoundingClientRect
       this.elementStartX = parseInt(this.wrapper.style.left) || 0;

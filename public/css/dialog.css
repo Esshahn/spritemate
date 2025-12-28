@@ -41,7 +41,7 @@ dialog.spritemate-dialog::backdrop {
 /* Title bar */
 .dialog-titlebar {
   border-bottom: 1px solid #141414;
-  padding: 8px 12px;
+  padding: 4px 12px;
   cursor: move;
   user-select: none;
   -webkit-user-select: none;
