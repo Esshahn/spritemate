@@ -27,7 +27,7 @@ dialog.spritemate-dialog::backdrop {
   position: absolute;
   top: 50px;
   left: 50px;
-  background: #121212 url("images/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
+  background: #121212 url("../ui/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   display: flex;
