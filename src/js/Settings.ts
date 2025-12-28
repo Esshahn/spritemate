@@ -117,8 +117,6 @@ export default class Settings {
     this.selection_change();
     this.update_colors();
 
-    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
-
     dom.sel("#button-apply").onclick = (e) => this.close_window();
   }
 
@@ -176,7 +174,10 @@ export default class Settings {
   }
 
   close_window() {
-    $("#window-" + this.window).dialog("close");
+    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+    if (dialogElement) {
+      dialogElement.close();
+    }
     this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 

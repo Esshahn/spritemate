@@ -53,7 +53,6 @@ export default class Export {
     `;
 
     dom.append("#window-" + this.window, template);
-    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
     dom.sel("#button-export-cancel").onclick = () => this.close_window();
     dom.sel("#button-export-source-kick").onclick = () =>
       this.save_assembly("kick", false);
@@ -623,7 +622,10 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
   }
 
   close_window(): void {
-    $("#window-" + this.window).dialog("close");
+    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+    if (dialogElement) {
+      dialogElement.close();
+    }
     this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 }

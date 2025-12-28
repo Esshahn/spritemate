@@ -39,9 +39,8 @@ export default class Import {
       dom.html("#menubar-filename-name", file.name);
 
       // automatically open the snapshot window if not already open
-      const snapshotWindow = this.app.window_snapshot.get_window_id();
-      if (!$(snapshotWindow).dialog("isOpen")) {
-        $(snapshotWindow).dialog("open");
+      if (!this.app.window_snapshot.isOpen()) {
+        this.app.window_snapshot.open();
       }
     } else {
       alert("File not supported, .vsf files only");
