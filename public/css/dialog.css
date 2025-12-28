@@ -35,10 +35,6 @@ dialog.spritemate-dialog::backdrop {
   max-width: calc(100% - 20px);
   max-height: calc(100% - 20px);
   box-sizing: border-box;
-  width: max-content;
-  height: max-content;
-  min-width: min-content;
-  min-height: min-content;
 }
 
 /* Title bar */

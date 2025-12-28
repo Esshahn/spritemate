@@ -107,9 +107,9 @@ export class Dialog {
       // Remove min-width when explicit width is set
       this.wrapper.style.minWidth = "0";
     } else {
-      // For auto sizing, use fit-content from CSS and let it shrink to content
-      this.wrapper.style.removeProperty("width");
-      this.wrapper.style.removeProperty("minWidth");
+      // For auto sizing, use max-content to fit content
+      this.wrapper.style.width = "max-content";
+      this.wrapper.style.minWidth = "min-content";
     }
 
     if (this.config.height && this.config.height !== "auto") {
@@ -127,9 +127,9 @@ export class Dialog {
       // Remove min-height when explicit height is set
       this.wrapper.style.minHeight = "0";
     } else {
-      // For auto sizing, use fit-content from CSS and let it shrink to content
-      this.wrapper.style.removeProperty("height");
-      this.wrapper.style.removeProperty("minHeight");
+      // For auto sizing, use max-content to fit content
+      this.wrapper.style.height = "max-content";
+      this.wrapper.style.minHeight = "min-content";
     }
 
     // Apply initial position if provided

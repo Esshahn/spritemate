@@ -126,10 +126,33 @@ grabcols
 
     const consoleTextarea = dom.sel("#snapshot-console");
 
-    // Position cursor at the end of the prompt
-    const initialLength = consoleTextarea.value.length;
-    consoleTextarea.setSelectionRange(initialLength, initialLength);
-    consoleTextarea.focus();
+    // Position cursor at the end of the prompt when dialog opens
+    // This ensures the textarea is visible and can receive focus (especially in Safari)
+    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+    if (dialogElement) {
+      // Listen for when the dialog is shown
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'open' && dialogElement.open) {
+            // Dialog just opened, now we can position cursor
+            const initialLength = consoleTextarea.value.length;
+            consoleTextarea.setSelectionRange(initialLength, initialLength);
+            consoleTextarea.focus();
+          }
+        });
+      });
+
+      observer.observe(dialogElement, { attributes: true });
+
+      // If dialog is already open, set cursor immediately
+      if (dialogElement.open) {
+        setTimeout(() => {
+          const initialLength = consoleTextarea.value.length;
+          consoleTextarea.setSelectionRange(initialLength, initialLength);
+          consoleTextarea.focus();
+        }, 0);
+      }
+    }
 
     consoleTextarea.onkeyup = (e) => {
       if (e.key === "Enter") {
