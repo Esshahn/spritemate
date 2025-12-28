@@ -193,18 +193,6 @@ img.center {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #info {
   padding: 12px;
   text-align: center;
@@ -266,6 +254,7 @@ img.center {
 
 #palette_spritecolors {
   margin-top: 12px;
+  font-size: 80%;
 }
 
 
@@ -517,22 +506,6 @@ img.center {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .icon-inputfield {
   float: left;
   image-rendering: optimizeSpeed; /* Older versions of FF          */
@@ -684,7 +657,7 @@ li.dropdown {
   resize: none;
   box-sizing: border-box;
   padding-bottom: 20px;
-} 
+}
 
 .console:focus {
     outline: none

@@ -49,9 +49,10 @@ dialog.spritemate-dialog::backdrop {
   -moz-user-select: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   min-width: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .dialog-title {
@@ -62,41 +63,25 @@ dialog.spritemate-dialog::backdrop {
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
-  min-width: 0;
+  text-align: center;
 }
 
 /* Close button */
 .window-close-button {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   cursor: pointer;
-  position: relative;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  position: absolute;
+  left: 8px;
   flex-shrink: 0;
+  background: var(--red);
+  border-radius: 50%;
+  transition: opacity 0.2s;
+  opacity: 0.5;
 }
 
 .window-close-button:hover {
   opacity: 1;
-}
-
-.window-close-button::before,
-.window-close-button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 12px;
-  height: 2px;
-  background: var(--blue);
-}
-
-.window-close-button::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.window-close-button::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 /* Content area */
@@ -106,6 +91,7 @@ dialog.spritemate-dialog::backdrop {
   padding: 4px;
   color: var(--active_text);
   font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
   box-sizing: border-box;
   min-width: 0;
 }
