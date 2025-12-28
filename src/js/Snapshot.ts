@@ -107,15 +107,24 @@ grabcols
     `;
     dom.append("#window-" + this.window, template);
 
-    // Add close button to the jQuery UI dialog title bar
-    const titleBar = $("#window-" + this.window).prev(".ui-dialog-titlebar");
-    const closeButton = $('<div class="window-close-button"></div>');
-    titleBar.prepend(closeButton);
+    // Add close button to the dialog title bar
+    // Wait for next tick to ensure dialog is created
+    setTimeout(() => {
+      const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+      if (dialogElement) {
+        const titleBar = dialogElement.querySelector(".dialog-titlebar");
+        if (titleBar) {
+          const closeButton = document.createElement("div");
+          closeButton.className = "window-close-button";
+          titleBar.appendChild(closeButton);
 
-    closeButton.on("click", () => {
-      $("#window-" + this.window).dialog("close");
-      this.eventhandler.onLoad();
-    });
+          closeButton.addEventListener("click", () => {
+            dialogElement.close();
+            this.eventhandler.onLoad();
+          });
+        }
+      }
+    }, 0);
 
     dom.sel("#snapshot-console").onkeyup = (e) => {
       if (e.key === "Enter") {

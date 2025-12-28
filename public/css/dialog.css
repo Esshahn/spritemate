@@ -1,0 +1,382 @@
+/**
+ * Dialog styles - Native <dialog> replacement for jQuery UI
+ */
+
+/* Dialog base */
+dialog.spritemate-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  margin: 0;
+}
+
+dialog.spritemate-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Dialog wrapper */
+.dialog-wrapper {
+  position: absolute;
+  background: #282828;
+  border: 2px solid #33bb33;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+  width: fit-content;
+  height: fit-content;
+  box-sizing: border-box;
+}
+
+/* Title bar */
+.dialog-titlebar {
+  background: #1a1a1a;
+  border-bottom: 1px solid #33bb33;
+  padding: 8px 12px;
+  cursor: move;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dialog-title {
+  color: #33bb33;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Close button */
+.window-close-button {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  position: relative;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.window-close-button:hover {
+  opacity: 1;
+}
+
+.window-close-button::before,
+.window-close-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2px;
+  background: #33bb33;
+}
+
+.window-close-button::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.window-close-button::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Content area */
+.dialog-content {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+  color: #33bb33;
+  font-family: 'Quicksand', sans-serif;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Resize handle */
+.dialog-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0%, transparent 50%, #33bb33 50%, #33bb33 100%);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.dialog-resize-handle:hover {
+  opacity: 1;
+}
+
+/* Animations */
+dialog.spritemate-dialog[open] {
+  animation: dialog-fade-in 0.2s ease-out;
+}
+
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Sortable styles */
+.sortable-dragging {
+  opacity: 0.5;
+  cursor: move !important;
+}
+
+.sortable-placeholder {
+  background: rgba(51, 187, 51, 0.2);
+  border: 2px dashed #33bb33;
+  box-sizing: border-box;
+}
+
+/* Modal backdrop styles */
+dialog.spritemate-dialog:modal {
+  z-index: 1000;
+}
+
+/* Non-modal dialogs - ensure they're visible */
+dialog.spritemate-dialog[open]:not(:modal) {
+  display: block;
+  pointer-events: none; /* Allow clicks through the transparent dialog */
+}
+
+dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
+  pointer-events: auto; /* But enable clicks on the actual window */
+}
+
+/* No-close class (from original jQuery UI) */
+.no-close .dialog-titlebar {
+  /* Keep for compatibility, but close button can be hidden via config */
+}
+
+/* Window type specific styles */
+dialog.spritemate-dialog .dialog-wrapper.sprite,
+dialog.spritemate-dialog .dialog-wrapper.colors,
+dialog.spritemate-dialog .dialog-wrapper.preview,
+dialog.spritemate-dialog .dialog-wrapper.list,
+dialog.spritemate-dialog .dialog-wrapper.tools,
+dialog.spritemate-dialog .dialog-wrapper.info,
+dialog.spritemate-dialog .dialog-wrapper.file,
+dialog.spritemate-dialog .dialog-wrapper.settings {
+  /* Type-specific styles can be added here */
+}
+
+/* Ensure dialogs are properly positioned */
+.dialog-wrapper {
+  top: 50px;
+  left: 50px;
+}
+
+/* Form element styles in dialogs */
+
+/* Buttons */
+.dialog-content button {
+  border: 2px solid #33bb33;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 80%;
+  font-family: 'Quicksand', sans-serif;
+  padding: 8px 16px;
+  margin: 4px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.dialog-content button:hover {
+  background-color: #33bb33;
+  color: #000000;
+}
+
+.dialog-content button:focus {
+  outline: none;
+}
+
+.dialog-content button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dialog-content button.center {
+  display: block;
+  margin: 0 auto;
+}
+
+.dialog-content button.button-cancel {
+  border-color: #ff3333;
+  background: transparent;
+}
+
+.dialog-content button.button-cancel:hover {
+  background-color: #ff3333;
+  color: #ffffff;
+}
+
+.dialog-content button.confirm-button {
+  border: 2px solid #33bb33;
+  background: #000000;
+}
+
+.dialog-content button.confirm-button:hover,
+.dialog-content button.confirm-button:focus {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Input fields */
+.dialog-content input {
+  border: 2px solid #33bb33;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 100%;
+  font-family: 'Quicksand', sans-serif;
+  padding: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+}
+
+.dialog-content input:focus {
+  outline: 0;
+  background-color: #33bb33;
+  color: #000000;
+}
+
+.dialog-content input:hover {
+  border-color: #33bb33;
+}
+
+.dialog-content input.error {
+  border-color: #ff3333;
+}
+
+.dialog-content input.error:focus {
+  background-color: #ff3333;
+}
+
+/* Select dropdowns */
+.dialog-content select {
+  border: 2px solid #33bb33;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 100%;
+  font-family: 'Quicksand', sans-serif;
+  padding: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.dialog-content select:focus {
+  outline: 0;
+  background-color: #33bb33;
+  color: #000000;
+}
+
+.dialog-content select:hover {
+  border-color: #33bb33;
+}
+
+/* Textarea */
+.dialog-content textarea {
+  border: 2px solid #33bb33;
+  background-color: #000000;
+  color: #33bb33;
+  font-size: 100%;
+  font-family: 'Courier New', monospace;
+  padding: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.dialog-content textarea:focus {
+  outline: 0;
+  background-color: #1a1a1a;
+}
+
+/* Console textarea - make it fill the dialog content without escaping */
+.dialog-content textarea.console {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+}
+
+/* Fieldsets */
+.dialog-content fieldset {
+  border: 1px dotted #333333;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.dialog-content fieldset legend {
+  color: #33bb33;
+  padding: 0 5px;
+}
+
+.dialog-content fieldset button {
+  float: right;
+}
+
+.dialog-content fieldset p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Tables */
+.dialog-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dialog-content td,
+.dialog-content th {
+  padding: 8px;
+  margin: 4px 0;
+  text-align: left;
+}
+
+.dialog-content tr:nth-child(even) {
+  background-color: #222222;
+}
+
+/* Links */
+.dialog-content a {
+  color: #33bb33;
+  text-decoration: none;
+}
+
+.dialog-content a:hover {
+  text-decoration: underline;
+}

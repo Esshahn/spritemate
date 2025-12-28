@@ -57,9 +57,11 @@ export default class About {
 
     dom.append("#window-" + this.window, template);
 
-    $("#window-" + this.window).dialog({ show: "fade", hide: "fade" });
     dom.sel("#button-info").onclick = () => {
-      $("#window-" + this.window).dialog("close");
+      const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+      if (dialogElement) {
+        dialogElement.close();
+      }
       this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     };
   }

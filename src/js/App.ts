@@ -48,6 +48,7 @@ export class App {
   settings: any;
   window_tools: any;
   window_help: any;
+  window_confirm: any;
   tools: any;
   snapshot: Snapshot;
   load: any;
@@ -257,6 +258,21 @@ export class App {
       onLoad: this.update_loaded_file.bind(this),
     });
 
+    // Confirmation dialog for "New File"
+    const confirm_config = {
+      name: "window_confirm",
+      title: "New File",
+      type: "confirm",
+      modal: true,
+      escape: false,
+      resizable: false,
+      autoOpen: false,
+      width: 400,
+      height: "auto",
+      window_id: 10,
+    };
+    this.window_confirm = new Window(confirm_config);
+
     this.is_drawing = false;
     this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
     this.sprite.new_sprite(this.palette.get_color());
@@ -274,7 +290,7 @@ export class App {
     this.user_interaction();
 
     if (this.storage.is_updated_version())
-      $(this.window_about.get_window_id()).dialog("open");
+      this.window_about.open();
   }
 
   // Helper method to set drawing mode and update UI icons
@@ -750,12 +766,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-info").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_about.get_window_id()).dialog("open");
+      this.window_about.open();
     };
 
     dom.sel("#menubar-settings").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_settings.get_window_id()).dialog("open");
+      this.window_settings.open();
     };
 
     /*
@@ -774,56 +790,49 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-save").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_save.get_window_id()).dialog("open");
+      this.window_save.open();
       this.save.set_save_data(this.sprite.get_all());
     };
 
     dom.sel("#menubar-export").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_export.get_window_id()).dialog("open");
+      this.window_export.open();
       this.export.set_save_data(this.sprite.get_all());
     };
 
     dom.sel("#menubar-new").onclick = () => {
-      dom.css("#dialog-confirm", "visibility", "visible");
-      $("#dialog-confirm").dialog("open");
+      // Add confirm dialog content
+      const confirmContent = this.window_confirm.getDialog().getContent();
+      confirmContent.innerHTML = `
+        <p>All current data will be erased. Are you sure?</p>
+        <div style="text-align: right; margin-top: 20px;">
+          <button id="confirm-ok" class="confirm-button">Ok</button>
+          <button id="confirm-cancel" class="confirm-button">Cancel</button>
+        </div>
+      `;
+
+      // Setup button handlers
+      dom.sel("#confirm-ok").onclick = () => {
+        this.sprite = new Sprite(this.config);
+        this.sprite.new_sprite(this.palette.get_color());
+        this.list.update_all(this.sprite.get_all());
+        this.update();
+        this.window_confirm.close();
+        status("New file created.");
+      };
+
+      dom.sel("#confirm-cancel").onclick = () => {
+        this.window_confirm.close();
+      };
+
+      this.window_confirm.open();
     };
 
-    $("#dialog-confirm").dialog({
-      resizable: false,
-      autoOpen: false,
-      height: "auto",
-      width: 400,
-      modal: true,
-      dialogClass: "no-close",
-      buttons: [
-        {
-          click: () => {
-            this.sprite = new Sprite(this.config);
-            this.sprite.new_sprite(this.palette.get_color());
-            this.list.update_all(this.sprite.get_all());
-            this.update();
-            $("#dialog-confirm").dialog("close");
-            status("New file created.");
-          },
-          text: "Ok",
-          class: "confirm-button",
-        },
-        {
-          click: () => {
-            $("#dialog-confirm").dialog("close");
-          },
-          text: "Cancel",
-          class: "confirm-button",
-        },
-      ],
-    });
-
     dom.sel("#menubar-monitor").onclick = () => {
-      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
-        $(this.window_snapshot.get_window_id()).dialog("close");
+      if (this.window_snapshot.isOpen()) {
+        this.window_snapshot.close();
       } else {
-        $(this.window_snapshot.get_window_id()).dialog("open");
+        this.window_snapshot.open();
       }
     };
 
@@ -1386,19 +1395,16 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       }
     };
 
-    $("#spritelist").sortable({
-      stop: () => {
-        this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
-        this.dragging = false;
-        this.list.update_all(this.sprite.get_all());
-        this.update();
-      },
+    // Setup sortable callbacks
+    this.list.setSortStartCallback(() => {
+      this.dragging = true;
     });
 
-    $("#spritelist").sortable({
-      start: () => {
-        this.dragging = true;
-      },
+    this.list.setSortCallback((sortedIds: string[]) => {
+      this.sprite.sort_spritelist(sortedIds);
+      this.dragging = false;
+      this.list.update_all(this.sprite.get_all());
+      this.update();
     });
   }
 }
