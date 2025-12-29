@@ -673,6 +673,9 @@ export class App {
     }
 
     this.list.update_all(this.sprite.get_all());
+
+    // Stop animation when loading a new file, then update all views
+    this.animation.update(this.sprite.get_all(), true);
     this.update();
   }
 

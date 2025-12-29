@@ -155,6 +155,16 @@ export default class Animation extends Window_Controls {
     // Zoom is handled by App.ts event handlers
   }
 
+  update_zoom(): void {
+    super.update_zoom();
+    // Update canvas element dimensions when zoom changes
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    if (this.cachedSpriteData) {
+      this.drawFrame(this.cachedSpriteData);
+    }
+  }
+
   toggleDoubleX() {
     this.doubleX = !this.doubleX;
     this.updateIconStates();
@@ -330,13 +340,13 @@ export default class Animation extends Window_Controls {
     }
   }
 
-  update(all_data) {
+  update(all_data, stopAnimation = false) {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
     this.cachedSpriteData = all_data;
 
-    // Stop animation if it's playing (ensures clean state after file load)
-    if (this.isPlaying) {
+    // Only stop animation if explicitly requested (e.g., when loading a new file)
+    if (stopAnimation && this.isPlaying) {
       this.stop();
     }
 
