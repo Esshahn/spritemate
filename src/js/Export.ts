@@ -46,6 +46,18 @@ export default class Export {
         <p>Export sprites as PNG images. "Current sprite" saves the selected sprite, "All sprites" saves all sprites in a ZIP file.</p>
       </fieldset>
 
+      <fieldset>
+        <legend>Spritesheet (*.png)</legend>
+        <div class="center">
+          <span id="spritesheet-info">0 sprites</span><br/>
+          Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1" style="width: 60px;">
+          <span id="spritesheet-layout"></span><br/>
+          <label><input type="checkbox" id="spritesheet-border" name="border"> 1 pixel border</label>
+        </div>
+        <button id="button-export-spritesheet">Save as Spritesheet</button>
+        <p>Export all sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.</p>
+      </fieldset>
+
       <div id="button-row">
         <button id="button-export-cancel" class="button-cancel">Cancel</button>
       </div>
@@ -65,6 +77,11 @@ export default class Export {
     dom.sel("#button-export-basic").onclick = () => this.save_basic();
     dom.sel("#button-export-png-current").onclick = () => this.save_png_current();
     dom.sel("#button-export-png-all").onclick = () => this.save_png_all();
+    dom.sel("#button-export-spritesheet").onclick = () => this.save_spritesheet();
+
+    // Spritesheet controls
+    dom.sel("#spritesheet-rows").oninput = () => this.update_spritesheet_info();
+    dom.sel("#spritesheet-border").onchange = () => this.update_spritesheet_info();
 
     dom.sel("#export-filename").onkeyup = () => {
       this.default_filename = dom.val("#export-filename");
@@ -91,6 +108,9 @@ export default class Export {
 
         dom.disabled("#button-export-png-all", true);
         dom.add_class("#button-export-png-all", "error");
+
+        dom.disabled("#button-export-spritesheet", true);
+        dom.add_class("#button-export-spritesheet", "error");
       } else {
         dom.remove_class("#export-filename", "error");
 
@@ -114,6 +134,9 @@ export default class Export {
 
         dom.disabled("#button-export-png-all", false);
         dom.remove_class("#button-export-png-all", "error");
+
+        dom.disabled("#button-export-spritesheet", false);
+        dom.remove_class("#button-export-spritesheet", "error");
       }
     };
   }
@@ -202,8 +225,97 @@ export default class Export {
     this.close_window();
   }
 
+  update_spritesheet_info(): void {
+    if (!this.savedata) return;
+
+    const totalSprites = this.savedata.sprites.length;
+    const rowsValue = dom.val("#spritesheet-rows");
+    const rows = Math.max(1, parseInt(rowsValue || "1") || 1);
+    const spritesPerRow = Math.ceil(totalSprites / rows);
+
+    // Update sprite count
+    dom.html("#spritesheet-info", `${totalSprites} sprite${totalSprites !== 1 ? 's' : ''}`);
+
+    // Calculate actual layout
+    let layoutText = "";
+    if (totalSprites > 0) {
+      const fullRows = Math.floor(totalSprites / spritesPerRow);
+      const lastRowSprites = totalSprites % spritesPerRow;
+
+      if (rows === 1) {
+        layoutText = ` (${totalSprites} columns)`;
+      } else {
+        if (lastRowSprites === 0) {
+          layoutText = ` (${rows} rows × ${spritesPerRow} columns)`;
+        } else {
+          layoutText = ` (${fullRows} rows × ${spritesPerRow} columns, 1 row × ${lastRowSprites} columns)`;
+        }
+      }
+    }
+
+    dom.html("#spritesheet-layout", layoutText);
+  }
+
+  save_spritesheet(): void {
+    const sprites = this.savedata.sprites;
+    const totalSprites = sprites.length;
+
+    if (totalSprites === 0) {
+      status("No sprites to export.");
+      return;
+    }
+
+    const rowsValue = dom.val("#spritesheet-rows");
+    const rows = Math.max(1, parseInt(rowsValue || "1") || 1);
+    const hasBorder = (dom.sel("#spritesheet-border") as HTMLInputElement).checked;
+    const borderSize = hasBorder ? 1 : 0;
+
+    const spritesPerRow = Math.ceil(totalSprites / rows);
+
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
+
+    // Calculate canvas dimensions
+    const canvasWidth = spritesPerRow * spriteWidth + (spritesPerRow - 1) * borderSize;
+    const canvasHeight = rows * spriteHeight + (rows - 1) * borderSize;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      status("Failed to create spritesheet canvas.");
+      return;
+    }
+
+    // Fill with transparent background
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    // Render each sprite onto the spritesheet
+    sprites.forEach((sprite: any, index: number) => {
+      const row = Math.floor(index / spritesPerRow);
+      const col = index % spritesPerRow;
+
+      const x = col * (spriteWidth + borderSize);
+      const y = row * (spriteHeight + borderSize);
+
+      const spriteCanvas = this.renderSpriteToCanvas(sprite, this.savedata);
+      ctx.drawImage(spriteCanvas, x, y);
+    });
+
+    const filename = `${this.default_filename}_spritesheet.png`;
+    canvas.toBlob((blob) => {
+      if (blob) {
+        this.save_file_to_disk(blob, filename);
+      }
+    });
+
+    this.close_window();
+  }
+
   renderSpriteToCanvas(sprite: any, all_data: any): HTMLCanvasElement {
-    const zoom = 8; // Default zoom level for exports
+    const zoom = 1; // Export at 1:1 pixel ratio (no zoom)
     const pixels_x = this.config.sprite_x;
     const pixels_y = this.config.sprite_y;
     const width = pixels_x * zoom;
@@ -619,6 +731,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
 
   set_save_data(savedata): void {
     this.savedata = savedata;
+    this.update_spritesheet_info();
   }
 
   close_window(): void {
