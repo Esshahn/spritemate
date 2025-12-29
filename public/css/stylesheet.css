@@ -735,10 +735,19 @@ img.center {
 
 /* --- ANIMATION CONTROLS --- */
 
+#animation-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#animation-canvas canvas{
+  padding: 8px;
+  border: 1px dotted #444444;
+}
+
 .animation-controls {
   padding: 16px;
-  background-color: #1a1a1a;
-  border-top: 1px solid #333;
   margin-top: 8px;
 }
 
@@ -747,11 +756,11 @@ img.center {
   align-items: center;
   margin-bottom: 12px;
   gap: 8px;
-}
-
-.animation-control-row label {
-  color: var(--blue);
-  min-width: 100px;
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--active_text);
   font-size: 14px;
 }
 
@@ -764,13 +773,7 @@ img.center {
   font-size: 14px;
   border-radius: 4px;
   width: 80px;
-  -moz-appearance: textfield;
-}
-
-.animation-control-row input[type="number"]::-webkit-outer-spin-button,
-.animation-control-row input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  min-width: 80px;
 }
 
 .animation-control-row input[type="number"]:focus {
@@ -786,20 +789,13 @@ img.center {
 .animation-radio-group {
   display: flex;
   gap: 16px;
-}
-
-.animation-radio-group label {
-  display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--active_text);
-  cursor: pointer;
-  min-width: auto;
 }
 
 .animation-radio-group input[type="radio"] {
   cursor: pointer;
   accent-color: var(--blue);
+  min-width: 0;
 }
 
 .animation-button {

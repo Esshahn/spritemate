@@ -54,26 +54,18 @@ export default class Animation extends Window_Controls {
       <div id="animation-canvas"></div>
       <div class="animation-controls">
         <div class="animation-control-row">
-          <label for="animation-start-sprite">Start Sprite:</label>
+          Sprite Start/End:
           <input type="number" id="animation-start-sprite" min="1" value="1" />
-        </div>
-        <div class="animation-control-row">
-          <label for="animation-end-sprite">End Sprite:</label>
           <input type="number" id="animation-end-sprite" min="1" value="1" />
         </div>
         <div class="animation-control-row">
-          <label for="animation-fps">FPS:</label>
+          FPS:
           <input type="number" id="animation-fps" min="1" max="60" value="10" />
         </div>
         <div class="animation-control-row">
-          <label>Mode:</label>
           <div class="animation-radio-group">
-            <label>
               <input type="radio" name="animation-mode" value="restart" checked /> Restart
-            </label>
-            <label>
               <input type="radio" name="animation-mode" value="pingpong" /> PingPong
-            </label>
           </div>
         </div>
         <div class="animation-control-row">
@@ -351,11 +343,9 @@ export default class Animation extends Window_Controls {
       }
     }
 
-    // Show current sprite when not animating
-    if (!this.isPlaying) {
-      this.currentFrame = all_data.current_sprite;
+    // Only redraw if playing (animation is running)
+    if (this.isPlaying) {
+      this.drawFrame(all_data);
     }
-
-    this.drawFrame(all_data);
   }
 }

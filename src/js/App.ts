@@ -173,7 +173,7 @@ export class App {
       resizable: false,
       left: this.config.window_animation?.left ?? 210,
       top: this.config.window_animation?.top ?? 280,
-      width: "auto",
+      width: this.config.window_animation?.width ?? 440,
       height: "auto",
       window_id: 11,
     };
