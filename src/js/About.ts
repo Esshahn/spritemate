@@ -19,11 +19,17 @@ export default class About {
             <p>
             Sprites can now be exported as a Spritesheet PNG image. You can specify the number of rows and Spritemate tries to evenly spread the sprites. Furthermore a border can be applied as an option. 
             </p>
+
+            <h2>Automatic Local Storage Saves</h2>
+            <p>
+            No more accidental work loss! Spritemate now saves the current workstage in your browser's local storage. This means that if you accidentally reload the page or revisit Spritemate after a while, your sprites are still there for you.
+            </p>
             
             <h2>Changes</h2>
             <ul>
             <li>the filename can now be set from the menu bar</li>
             <li>completely restructured the Save and Export modals and made all but one obsolte. Instead, all options are now available directly from the menu bar</li>
+            <li>added the PALette color palette (thx2 Retrofan)</li>
             </ul>
             
             <hr>
