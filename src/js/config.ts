@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: "25.12.27",
+    version: "25.12.29",
     sprite_x: 24,
     sprite_y: 21,
     palettes: {
@@ -21,6 +21,24 @@ export function get_config() {
         "#a9ff9f",
         "#706deb",
         "#b2b2b2",
+      ],
+      palette: [
+        "#000000",
+        "#ffffff",
+        "#af2a29",
+        "#6ed8cc",
+        "#b03fb6",
+        "#4ac64a",
+        "#3739c4",
+        "#e4ed4e",
+        "#b6591c",
+        "#683808",
+        "#ea746c",
+        "#4d4d4d",
+        "#848484",
+        "#a6fa9e",
+        "#707ce6",
+        "#b6b6b5",
       ],
       pepto: [
         "#000000",

@@ -15,6 +15,7 @@ export default class Settings {
             
             <select id="colorpalette">
               <option>colodore</option>
+              <option>palette</option>
               <option>pepto</option>
               <option>custom</option>
             </select>

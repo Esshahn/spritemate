@@ -74,7 +74,25 @@ export default class Storage {
           this.write(this.storage);
           this.is_new_version = true;
         }
+
+        // Merge stored config with default config
+        // Preset palettes (colodore, palette, pepto) always come from code
+        // Only "custom" palette is preserved from localStorage
+        const defaultPalettes = JSON.parse(JSON.stringify(this.config.palettes));
+        const customPalette = this.storage.palettes?.custom;
+
         this.config = JSON.parse(JSON.stringify(this.storage));
+        this.config.palettes = defaultPalettes;
+
+        // Restore custom palette from storage if it exists
+        if (customPalette && Array.isArray(customPalette) && customPalette.length === 16) {
+          this.config.palettes.custom = customPalette;
+        }
+
+        // If selected_palette doesn't exist in palettes, reset to default
+        if (!this.config.palettes[this.config.selected_palette]) {
+          this.config.selected_palette = "pepto";
+        }
       } catch (error) {
         console.error("Failed to initialize storage:", error);
         status("Unable to access settings storage. Using defaults.");
