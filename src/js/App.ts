@@ -7,6 +7,7 @@ import Tools from "./Tools";
 import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Import from "./Import";
+import ImportPNG from "./ImportPNG";
 import Save from "./Save";
 import Export from "./Export-Spritesheet";
 import Settings from "./Settings";
@@ -47,6 +48,7 @@ export class App {
   window_export: any;
   export: any;
   import: any;
+  importPNG: any;
   window_settings: any;
   settings: any;
   window_tools: any;
@@ -256,6 +258,11 @@ export class App {
     // import
     this.import = new Import(this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
+    // import PNG
+    this.importPNG = new ImportPNG(this.config, {
+      onLoad: this.update_imported_png.bind(this),
     });
 
     // settings
@@ -679,6 +686,30 @@ export class App {
     this.update();
   }
 
+  update_imported_png() {
+    // called as a callback event from the importPNG class
+    // after a PNG image got imported
+    console.log("update_imported_png called");
+    const importedData = this.importPNG.get_imported_file();
+    console.log("Imported PNG data:", importedData);
+
+    this.sprite.set_all(importedData);
+
+    // Sync filename to UI (will use filename from sprite data if it exists)
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = this.sprite.get_filename();
+    }
+
+    this.list.update_all(this.sprite.get_all());
+
+    // Stop animation when importing a new sprite, then update all views
+    this.animation.update(this.sprite.get_all(), true);
+    this.update();
+
+    console.log("Sprite data after import:", this.sprite.get_all());
+  }
+
   regain_keyboard_controls() {
     // this will be called whenever keyboard controls have been deactivated, e.g. for input fields
     // currently used as callback after the save dialog
@@ -883,6 +914,10 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-import").onclick = () => {
       dom.sel("#input-import").click();
+    };
+
+    dom.sel("#menubar-import-png").onclick = () => {
+      dom.sel("#input-import-png").click();
     };
 
     // Direct save handlers
