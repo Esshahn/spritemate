@@ -48,14 +48,19 @@ export default class Export {
 
       <fieldset>
         <legend>Spritesheet (*.png)</legend>
-        <div class="center">
-          <span id="spritesheet-info">0 sprites</span><br/>
-          Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1" style="width: 60px;">
-          <span id="spritesheet-layout"></span><br/>
-          <label><input type="checkbox" id="spritesheet-border" name="border"> 1 pixel border</label>
+        <div class="fieldset right">
+          <button id="button-export-spritesheet">Save as Spritesheet</button>
         </div>
-        <button id="button-export-spritesheet">Save as Spritesheet</button>
-        <p>Export all sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.</p>
+
+        <p id="spritesheet-info">Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.</p>
+       
+          Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1">
+          <span id="spritesheet-layout"></span>
+          <p>
+          <label>
+          <input type="checkbox" id="spritesheet-border" name="border">Apply a 1 pixel border
+          </label>
+          </p>
       </fieldset>
 
       <div id="button-row">
@@ -233,8 +238,8 @@ export default class Export {
     const rows = Math.max(1, parseInt(rowsValue || "1") || 1);
     const spritesPerRow = Math.ceil(totalSprites / rows);
 
-    // Update sprite count
-    dom.html("#spritesheet-info", `${totalSprites} sprite${totalSprites !== 1 ? 's' : ''}`);
+    // Update sprite count in description
+    dom.html("#spritesheet-info", `Export ${totalSprites} sprite${totalSprites !== 1 ? 's' : ''} as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.`);
 
     // Calculate actual layout
     let layoutText = "";
@@ -243,12 +248,12 @@ export default class Export {
       const lastRowSprites = totalSprites % spritesPerRow;
 
       if (rows === 1) {
-        layoutText = ` (${totalSprites} columns)`;
+        layoutText = `1*${totalSprites} sprites`;
       } else {
         if (lastRowSprites === 0) {
-          layoutText = ` (${rows} rows × ${spritesPerRow} columns)`;
+          layoutText = `${rows}*${spritesPerRow} sprites`;
         } else {
-          layoutText = ` (${fullRows} rows × ${spritesPerRow} columns, 1 row × ${lastRowSprites} columns)`;
+          layoutText = `${fullRows}*${spritesPerRow} sprites, 1*${lastRowSprites} sprites`;
         }
       }
     }
