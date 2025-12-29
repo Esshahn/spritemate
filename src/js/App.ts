@@ -1083,27 +1083,6 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       toggle_fullscreen();
     };
 
-    dom.sel("#menubar-editor-zoom-in").onclick = () => {
-      this.editor.zoom_in();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-editor-zoom-out").onclick = () => {
-      this.editor.zoom_out();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-editor-grid").onclick = () => this.handleZoomGrid("editor", "toggle-grid");
-    dom.sel("#menubar-preview-zoom-in").onclick = () => this.handleZoomGrid("preview", "zoom-in");
-    dom.sel("#menubar-preview-zoom-out").onclick = () => this.handleZoomGrid("preview", "zoom-out");
-    dom.sel("#menubar-list-grid").onclick = () => this.handleZoomGrid("list", "toggle-grid");
-    dom.sel("#menubar-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
-    dom.sel("#menubar-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
-
     /*
 
     PREVIEW
