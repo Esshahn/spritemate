@@ -183,7 +183,7 @@ export class App {
     // export
     const export_config = {
       name: "window_export",
-      title: "Export",
+      title: "Export Spritesheet",
       type: "file",
       escape: true,
       modal: true,
@@ -794,44 +794,60 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.save.set_save_data(this.sprite.get_all());
     };
 
-    // Keep original export handler if the old element still exists
-    const oldExportBtn = dom.sel("#menubar-export");
-    if (oldExportBtn) {
-      oldExportBtn.onclick = () => {
-        this.allow_keyboard_shortcuts = false;
-        this.window_export.open();
+    // Direct export handlers for nested submenus
+    const exportKickHexBtn = dom.sel("#menubar-export-kick-hex");
+    if (exportKickHexBtn) {
+      exportKickHexBtn.onclick = () => {
         this.export.set_save_data(this.sprite.get_all());
+        this.export.save_assembly("kick", false);
       };
     }
 
-    // New submenu handlers (proof of concept)
-    const exportAssemblyBtn = dom.sel("#menubar-export-assembly");
-    if (exportAssemblyBtn) {
-      exportAssemblyBtn.onclick = () => {
-        this.allow_keyboard_shortcuts = false;
-        this.window_export.open();
+    const exportKickBinaryBtn = dom.sel("#menubar-export-kick-binary");
+    if (exportKickBinaryBtn) {
+      exportKickBinaryBtn.onclick = () => {
         this.export.set_save_data(this.sprite.get_all());
-        status("Submenu: Assembly Code export selected");
+        this.export.save_assembly("kick", true);
+      };
+    }
+
+    const exportAcmeHexBtn = dom.sel("#menubar-export-acme-hex");
+    if (exportAcmeHexBtn) {
+      exportAcmeHexBtn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        this.export.save_assembly("acme", false);
+      };
+    }
+
+    const exportAcmeBinaryBtn = dom.sel("#menubar-export-acme-binary");
+    if (exportAcmeBinaryBtn) {
+      exportAcmeBinaryBtn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        this.export.save_assembly("acme", true);
       };
     }
 
     const exportBasicBtn = dom.sel("#menubar-export-basic");
     if (exportBasicBtn) {
       exportBasicBtn.onclick = () => {
-        this.allow_keyboard_shortcuts = false;
-        this.window_export.open();
         this.export.set_save_data(this.sprite.get_all());
-        status("Submenu: BASIC export selected");
+        this.export.save_basic();
       };
     }
 
-    const exportPngBtn = dom.sel("#menubar-export-png");
-    if (exportPngBtn) {
-      exportPngBtn.onclick = () => {
-        this.allow_keyboard_shortcuts = false;
-        this.window_export.open();
+    const exportPngCurrentBtn = dom.sel("#menubar-export-png-current");
+    if (exportPngCurrentBtn) {
+      exportPngCurrentBtn.onclick = () => {
         this.export.set_save_data(this.sprite.get_all());
-        status("Submenu: PNG export selected");
+        this.export.save_png_current();
+      };
+    }
+
+    const exportPngAllBtn = dom.sel("#menubar-export-png-all");
+    if (exportPngAllBtn) {
+      exportPngAllBtn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        this.export.save_png_all();
       };
     }
 
@@ -841,7 +857,6 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
         this.allow_keyboard_shortcuts = false;
         this.window_export.open();
         this.export.set_save_data(this.sprite.get_all());
-        status("Submenu: Spritesheet export selected");
       };
     }
 

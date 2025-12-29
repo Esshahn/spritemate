@@ -1,63 +1,30 @@
-
 import { dom, status } from "./helper";
-import JSZip from "jszip";
 
-export default class Export {
+/**
+ * Base class for all export functionality
+ * Contains shared methods for file saving and data conversion
+ */
+export default class ExportBase {
   savedata: any;
   app: any;
+  config: any;
+  eventhandler: any;
 
-  constructor(public window: number, public config, public eventhandler, app) {
-    this.config = config;
-    this.window = window;
-    this.eventhandler = eventhandler;
+  constructor(app: any, config: any, eventhandler: any) {
     this.app = app;
-
-    const template = `
-    <div id="window-export">
-
-      <br/>
-      <fieldset>
-        <legend>Spritesheet (*.png)</legend>
-        <div class="fieldset right">
-          <button id="button-export-spritesheet">Save as Spritesheet</button>
-        </div>
-
-        <p id="spritesheet-info">Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.</p>
-
-          Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1">
-          <span id="spritesheet-layout"></span>
-          <p>
-          <label>
-          <input type="checkbox" id="spritesheet-border" name="border">Apply a 1 pixel border
-          </label>
-          </p>
-      </fieldset>
-
-      <div id="button-row">
-        <button id="button-export-cancel" class="button-cancel">Cancel</button>
-      </div>
-    </div>
-    `;
-
-    dom.append("#window-" + this.window, template);
-    dom.sel("#button-export-cancel").onclick = () => this.close_window();
-    dom.sel("#button-export-spritesheet").onclick = () => this.save_spritesheet();
-
-    // Spritesheet controls
-    dom.sel("#spritesheet-rows").oninput = () => this.update_spritesheet_info();
-    dom.sel("#spritesheet-border").onchange = () => this.update_spritesheet_info();
+    this.config = config;
+    this.eventhandler = eventhandler;
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
-
-  save_file_to_disk(file, filename): void {
-    if ((window.navigator as any).msSaveOrOpenBlob)
+  save_file_to_disk(file: Blob, filename: string): void {
+    if ((window.navigator as any).msSaveOrOpenBlob) {
       // IE10+
       (window.navigator as any).msSaveOrOpenBlob(file, filename);
-    else {
+    } else {
       // Others
-      const a = document.createElement("a"),
-        url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      const url = URL.createObjectURL(file);
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
@@ -71,153 +38,12 @@ export default class Export {
     status("File has been saved.");
   }
 
-  save_assembly(format, encode_as_binary): void {
-    const filename = this.app.get_filename() + ".txt";
-    const data = this.create_assembly(format, encode_as_binary);
-    const file = new Blob([data], { type: "text/plain" });
-    this.save_file_to_disk(file, filename);
-    this.close_window();
+  set_save_data(savedata: any): void {
+    this.savedata = savedata;
   }
 
-  save_basic(): void {
-    const filename = this.app.get_filename() + ".bas";
-    const data = this.create_basic();
-    const file = new Blob([data], { type: "text/plain" });
-    this.save_file_to_disk(file, filename);
-    this.close_window();
-  }
-
-  save_png_current(): void {
-    const sprite_index = this.savedata.current_sprite;
-    const sprite = this.savedata.sprites[sprite_index];
-    const filename = `${this.app.get_filename()}_sprite_${sprite_index}.png`;
-
-    const canvas = this.renderSpriteToCanvas(sprite, this.savedata);
-    canvas.toBlob((blob) => {
-      if (blob) {
-        this.save_file_to_disk(blob, filename);
-      }
-    });
-    this.close_window();
-  }
-
-  async save_png_all(): Promise<void> {
-    const sprites = this.savedata.sprites;
-    const zip = new JSZip();
-
-    // Create a promise for each sprite to be added to the ZIP
-    const promises = sprites.map((sprite, index) => {
-      return new Promise<void>((resolve) => {
-        const filename = `sprite_${index}.png`;
-        const canvas = this.renderSpriteToCanvas(sprite, this.savedata);
-
-        canvas.toBlob((blob) => {
-          if (blob) {
-            zip.file(filename, blob);
-          }
-          resolve();
-        });
-      });
-    });
-
-    // Wait for all sprites to be processed
-    await Promise.all(promises);
-
-    // Generate the ZIP file and download it
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-    const zipFilename = `${this.app.get_filename()}_all_sprites.zip`;
-    this.save_file_to_disk(zipBlob, zipFilename);
-
-    this.close_window();
-  }
-
-  update_spritesheet_info(): void {
-    if (!this.savedata) return;
-
-    const totalSprites = this.savedata.sprites.length;
-    const rowsValue = dom.val("#spritesheet-rows");
-    const rows = Math.max(1, parseInt(rowsValue || "1") || 1);
-    const spritesPerRow = Math.ceil(totalSprites / rows);
-
-    // Update sprite count in description
-    dom.html("#spritesheet-info", `Export ${totalSprites} sprite${totalSprites !== 1 ? 's' : ''} as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.`);
-
-    // Calculate actual layout
-    let layoutText = "";
-    if (totalSprites > 0) {
-      const fullRows = Math.floor(totalSprites / spritesPerRow);
-      const lastRowSprites = totalSprites % spritesPerRow;
-
-      if (rows === 1) {
-        layoutText = `1*${totalSprites} sprites`;
-      } else {
-        if (lastRowSprites === 0) {
-          layoutText = `${rows}*${spritesPerRow} sprites`;
-        } else {
-          layoutText = `${fullRows}*${spritesPerRow} sprites, 1*${lastRowSprites} sprites`;
-        }
-      }
-    }
-
-    dom.html("#spritesheet-layout", layoutText);
-  }
-
-  save_spritesheet(): void {
-    const sprites = this.savedata.sprites;
-    const totalSprites = sprites.length;
-
-    if (totalSprites === 0) {
-      status("No sprites to export.");
-      return;
-    }
-
-    const rowsValue = dom.val("#spritesheet-rows");
-    const rows = Math.max(1, parseInt(rowsValue || "1") || 1);
-    const hasBorder = (dom.sel("#spritesheet-border") as HTMLInputElement).checked;
-    const borderSize = hasBorder ? 1 : 0;
-
-    const spritesPerRow = Math.ceil(totalSprites / rows);
-
-    const spriteWidth = this.config.sprite_x;
-    const spriteHeight = this.config.sprite_y;
-
-    // Calculate canvas dimensions
-    const canvasWidth = spritesPerRow * spriteWidth + (spritesPerRow - 1) * borderSize;
-    const canvasHeight = rows * spriteHeight + (rows - 1) * borderSize;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    const ctx = canvas.getContext("2d");
-
-    if (!ctx) {
-      status("Failed to create spritesheet canvas.");
-      return;
-    }
-
-    // Fill with transparent background
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    // Render each sprite onto the spritesheet
-    sprites.forEach((sprite: any, index: number) => {
-      const row = Math.floor(index / spritesPerRow);
-      const col = index % spritesPerRow;
-
-      const x = col * (spriteWidth + borderSize);
-      const y = row * (spriteHeight + borderSize);
-
-      const spriteCanvas = this.renderSpriteToCanvas(sprite, this.savedata);
-      ctx.drawImage(spriteCanvas, x, y);
-    });
-
-    const filename = `${this.app.get_filename()}_spritesheet.png`;
-    canvas.toBlob((blob) => {
-      if (blob) {
-        this.save_file_to_disk(blob, filename);
-      }
-    });
-
-    this.close_window();
+  get_filename(): string {
+    return this.app.get_filename();
   }
 
   renderSpriteToCanvas(sprite: any, all_data: any): HTMLCanvasElement {
@@ -254,12 +80,7 @@ export default class Export {
             color = all_data.colors[array_entry];
           }
           ctx.fillStyle = this.config.colors[color];
-          ctx.fillRect(
-            i * zoom,
-            j * zoom,
-            x_grid_step * zoom,
-            zoom
-          );
+          ctx.fillRect(i * zoom, j * zoom, x_grid_step * zoom, zoom);
         }
       }
     }
@@ -289,7 +110,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
 
  */
 
-  create_assembly(format, encode_as_binary) {
+  create_assembly(format: string, encode_as_binary: boolean): string {
     let comment = "; ";
     let prefix = "!";
     let label_suffix = "";
@@ -434,7 +255,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
 
  */
 
-  create_basic() {
+  create_basic(): string {
     let line_number = 10;
     const line_inc = 10;
     let data = "";
@@ -633,18 +454,5 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
     data = data.replace(/,\n/g, "\n"); // removes all commas at the end of a DATA line
 
     return data;
-  }
-
-  set_save_data(savedata): void {
-    this.savedata = savedata;
-    this.update_spritesheet_info();
-  }
-
-  close_window(): void {
-    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
-    if (dialogElement && dialogElement.open) {
-      dialogElement.close();
-      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
-    }
   }
 }
