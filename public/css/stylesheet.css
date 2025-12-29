@@ -648,4 +648,14 @@ li.dropdown {
   color: var(--blue);
 }
 
+#spritesheet-rows{
+  min-width:0px;
+  width: 60px;
+  border-radius: 8px;
+}
+
+#spritesheet-border{
+  min-width:0px;
+}
+
 /* --- END CSS ONLY MENU --- */
