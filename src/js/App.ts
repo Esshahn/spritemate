@@ -73,7 +73,7 @@ export class App {
     this.config = this.storage.get_config();
     this.config.colors = this.config.palettes[this.config.selected_palette];
 
-    this.sprite = new Sprite(this.config);
+    this.sprite = new Sprite(this.config, this.storage);
 
     // editor
     const editor_config = {
@@ -275,7 +275,17 @@ export class App {
 
     this.is_drawing = false;
     this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
-    this.sprite.new_sprite(this.palette.get_color());
+
+    // Try to load auto-saved sprite data
+    const savedSprites = this.storage.read_sprites();
+    if (savedSprites && savedSprites.sprites && savedSprites.sprites.length > 0) {
+      // Restore auto-saved data
+      this.sprite.set_all(savedSprites);
+      status("Restored previous work session");
+    } else {
+      // Start with a fresh sprite
+      this.sprite.new_sprite(this.palette.get_color());
+    }
 
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
@@ -288,6 +298,12 @@ export class App {
     this.list.update_all(this.sprite.get_all());
     this.update();
     this.user_interaction();
+
+    // Sync filename to UI after initialization (important for auto-restore)
+    const filenameInput = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (filenameInput) {
+      filenameInput.value = this.sprite.get_filename();
+    }
 
     if (this.storage.is_updated_version())
       this.window_about.open();
@@ -578,6 +594,13 @@ export class App {
     // called as a callback event from the load class
     // after a file got loaded in completely
     this.sprite.set_all(this.load.get_imported_file());
+
+    // Sync filename to UI (will use filename from sprite data if it exists)
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = this.sprite.get_filename();
+    }
+
     this.list.update_all(this.sprite.get_all());
     this.update();
   }
@@ -824,8 +847,9 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
       // Setup button handlers
       dom.sel("#confirm-ok").onclick = () => {
-        this.sprite = new Sprite(this.config);
+        this.sprite = new Sprite(this.config, this.storage);
         this.sprite.new_sprite(this.palette.get_color());
+        this.storage.clear_sprites(); // Clear auto-saved data
         this.list.update_all(this.sprite.get_all());
         this.update();
         this.window_confirm.close();
@@ -1424,22 +1448,34 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       filenameInput.oninput = () => {
         const value = dom.val("#menubar-filename-input");
         if (value && value.length > 0) {
-          // Valid filename
+          // Valid filename - sync to sprite data
           dom.remove_class("#menubar-filename-input", "error");
+          this.sprite.set_filename(value);
         } else {
           // Invalid filename
           dom.add_class("#menubar-filename-input", "error");
         }
       };
+
+      // Disable keyboard shortcuts when typing in filename input
+      filenameInput.onfocus = () => {
+        this.allow_keyboard_shortcuts = false;
+      };
+
+      filenameInput.onblur = () => {
+        this.allow_keyboard_shortcuts = true;
+      };
     }
   }
 
   get_filename(): string {
-    const value = dom.val("#menubar-filename-input");
-    return value || "mysprites";
+    // Get filename from sprite data (single source of truth)
+    return this.sprite.get_filename();
   }
 
   set_filename(filename: string): void {
+    // Set filename in sprite data and sync to UI
+    this.sprite.set_filename(filename);
     const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
     if (input) {
       input.value = filename;
