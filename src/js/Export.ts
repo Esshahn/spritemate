@@ -3,22 +3,18 @@ import { dom, status } from "./helper";
 import JSZip from "jszip";
 
 export default class Export {
-  default_filename: any;
   savedata: any;
+  app: any;
 
-  constructor(public window: number, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler, app) {
     this.config = config;
     this.window = window;
-    this.default_filename = "mysprites";
     this.eventhandler = eventhandler;
+    this.app = app;
 
     const template = `
     <div id="window-export">
 
-      <div class="center">
-        Filename: <input autofocus type="text" id="export-filename" name="filename" value="${this.default_filename}">
-        <p>The file will be saved to your browser's default download location.</p>
-      </div>
       <br/>
       <fieldset>
         <legend>Assembly code (*.txt)</legend>
@@ -87,63 +83,6 @@ export default class Export {
     // Spritesheet controls
     dom.sel("#spritesheet-rows").oninput = () => this.update_spritesheet_info();
     dom.sel("#spritesheet-border").onchange = () => this.update_spritesheet_info();
-
-    dom.sel("#export-filename").onkeyup = () => {
-      this.default_filename = dom.val("#export-filename");
-      if (this.default_filename.length < 1) {
-        dom.add_class("#export-filename", "error");
-
-        dom.disabled("#button-export-source-kick", true);
-        dom.add_class("#button-export-source-kick", "error");
-
-        dom.disabled("#button-export-source-kick-binary", true);
-        dom.add_class("#button-export-source-kick-binary", "error");
-
-        dom.disabled("#button-export-source-acme", true);
-        dom.add_class("#button-export-source-acme", "error");
-
-        dom.disabled("#button-export-source-acme-binary", true);
-        dom.add_class("#button-export-source-acme-binary", "error");
-
-        dom.disabled("#button-export-basic", true);
-        dom.add_class("#button-export-basic", "error");
-
-        dom.disabled("#button-export-png-current", true);
-        dom.add_class("#button-export-png-current", "error");
-
-        dom.disabled("#button-export-png-all", true);
-        dom.add_class("#button-export-png-all", "error");
-
-        dom.disabled("#button-export-spritesheet", true);
-        dom.add_class("#button-export-spritesheet", "error");
-      } else {
-        dom.remove_class("#export-filename", "error");
-
-        dom.disabled("#button-export-source-kick", false);
-        dom.remove_class("#button-export-source-kick", "error");
-
-        dom.disabled("#button-export-source-kick-binary", false);
-        dom.remove_class("#button-export-source-kick-binary", "error");
-
-        dom.disabled("#button-export-source-acme", false);
-        dom.remove_class("#button-export-source-acme", "error");
-
-        dom.disabled("#button-export-source-acme-binary", false);
-        dom.remove_class("#button-export-source-acme-binary", "error");
-
-        dom.disabled("#button-export-basic", false);
-        dom.remove_class("#button-export-basic", "error");
-
-        dom.disabled("#button-export-png-current", false);
-        dom.remove_class("#button-export-png-current", "error");
-
-        dom.disabled("#button-export-png-all", false);
-        dom.remove_class("#button-export-png-all", "error");
-
-        dom.disabled("#button-export-spritesheet", false);
-        dom.remove_class("#button-export-spritesheet", "error");
-      }
-    };
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
@@ -171,7 +110,7 @@ export default class Export {
   }
 
   save_assembly(format, encode_as_binary): void {
-    const filename = this.default_filename + ".txt";
+    const filename = this.app.get_filename() + ".txt";
     const data = this.create_assembly(format, encode_as_binary);
     const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
@@ -179,7 +118,7 @@ export default class Export {
   }
 
   save_basic(): void {
-    const filename = this.default_filename + ".bas";
+    const filename = this.app.get_filename() + ".bas";
     const data = this.create_basic();
     const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
@@ -189,7 +128,7 @@ export default class Export {
   save_png_current(): void {
     const sprite_index = this.savedata.current_sprite;
     const sprite = this.savedata.sprites[sprite_index];
-    const filename = `${this.default_filename}_sprite_${sprite_index}.png`;
+    const filename = `${this.app.get_filename()}_sprite_${sprite_index}.png`;
 
     const canvas = this.renderSpriteToCanvas(sprite, this.savedata);
     canvas.toBlob((blob) => {
@@ -224,7 +163,7 @@ export default class Export {
 
     // Generate the ZIP file and download it
     const zipBlob = await zip.generateAsync({ type: "blob" });
-    const zipFilename = `${this.default_filename}_all_sprites.zip`;
+    const zipFilename = `${this.app.get_filename()}_all_sprites.zip`;
     this.save_file_to_disk(zipBlob, zipFilename);
 
     this.close_window();
@@ -309,7 +248,7 @@ export default class Export {
       ctx.drawImage(spriteCanvas, x, y);
     });
 
-    const filename = `${this.default_filename}_spritesheet.png`;
+    const filename = `${this.app.get_filename()}_spritesheet.png`;
     canvas.toBlob((blob) => {
       if (blob) {
         this.save_file_to_disk(blob, filename);

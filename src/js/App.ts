@@ -178,7 +178,7 @@ export class App {
     this.window_save = new Window(save_config);
     this.save = new Save(save_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // export
     const export_config = {
@@ -196,7 +196,7 @@ export class App {
     this.window_export = new Window(export_config);
     this.export = new Export(export_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // import
     this.import = new Import(this.config, {
@@ -794,11 +794,56 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.save.set_save_data(this.sprite.get_all());
     };
 
-    dom.sel("#menubar-export").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      this.window_export.open();
-      this.export.set_save_data(this.sprite.get_all());
-    };
+    // Keep original export handler if the old element still exists
+    const oldExportBtn = dom.sel("#menubar-export");
+    if (oldExportBtn) {
+      oldExportBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+      };
+    }
+
+    // New submenu handlers (proof of concept)
+    const exportAssemblyBtn = dom.sel("#menubar-export-assembly");
+    if (exportAssemblyBtn) {
+      exportAssemblyBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+        status("Submenu: Assembly Code export selected");
+      };
+    }
+
+    const exportBasicBtn = dom.sel("#menubar-export-basic");
+    if (exportBasicBtn) {
+      exportBasicBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+        status("Submenu: BASIC export selected");
+      };
+    }
+
+    const exportPngBtn = dom.sel("#menubar-export-png");
+    if (exportPngBtn) {
+      exportPngBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+        status("Submenu: PNG export selected");
+      };
+    }
+
+    const exportSpritesheetBtn = dom.sel("#menubar-export-spritesheet");
+    if (exportSpritesheetBtn) {
+      exportSpritesheetBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+        status("Submenu: Spritesheet export selected");
+      };
+    }
 
     dom.sel("#menubar-new").onclick = () => {
       // Add confirm dialog content
@@ -1406,6 +1451,33 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
+
+    // Setup filename input in menubar
+    const filenameInput = dom.sel("#menubar-filename-input");
+    if (filenameInput) {
+      filenameInput.oninput = () => {
+        const value = dom.val("#menubar-filename-input");
+        if (value && value.length > 0) {
+          // Valid filename
+          dom.remove_class("#menubar-filename-input", "error");
+        } else {
+          // Invalid filename
+          dom.add_class("#menubar-filename-input", "error");
+        }
+      };
+    }
+  }
+
+  get_filename(): string {
+    const value = dom.val("#menubar-filename-input");
+    return value || "mysprites";
+  }
+
+  set_filename(filename: string): void {
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = filename;
+    }
   }
 }
 

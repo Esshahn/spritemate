@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
     <title>spritemate - the Commodore 64 sprite editor by awsm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="Description" content="spritemate is a free online editor for Commodore 64 sprites." />
@@ -26,7 +27,7 @@
     <div id="container">
       <div id="menubar">
         <div id="menubar-filename" class="dropbtn">
-          File: <span id="menubar-filename-name">unsaved</span>
+          File: <input type="text" id="menubar-filename-input" value="mysprites" maxlength="50">
         </div>
         <ul>
           <li class="dropdown">
@@ -46,7 +47,15 @@
               <a id="menubar-save">Save Sprite Data...</a>
               <hr>
               <a id="menubar-import">Import VICE (*.vsf) Snapshot</a>
-              <a id="menubar-export">Export Sprite Data As...</a>
+              <div class="submenu-item">
+                <a>Export Sprite Data As...<span class="submenu-arrow">›</span></a>
+                <div class="submenu-content">
+                  <a id="menubar-export-assembly">Assembly Code (*.txt)</a>
+                  <a id="menubar-export-basic">BASIC (*.bas)</a>
+                  <a id="menubar-export-png">Image (*.png)</a>
+                  <a id="menubar-export-spritesheet">Spritesheet (*.png)</a>
+                </div>
+              </div>
             </div>
           </li>
 

@@ -2,22 +2,18 @@
 import { dom, status } from "./helper";
 
 export default class Save {
-  default_filename: any;
   savedata: any;
+  app: any;
 
-  constructor(public window: number, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler, app) {
     this.config = config;
     this.window = window;
-    this.default_filename = "mysprites";
     this.eventhandler = eventhandler;
+    this.app = app;
 
     const template = `
     <div id="window-save">
 
-      <div class="center">
-        Filename: <input autofocus type="text" id="filename" name="filename" value="${this.default_filename}">
-        <p>The file will be saved to your browser's default download location.</p>
-      </div>
       <br/>
       <fieldset>
         <legend>Spritemate (*.spm)</legend>
@@ -45,33 +41,6 @@ export default class Save {
     dom.sel("#button-save-spm").onclick = () => this.save_spm();
     dom.sel("#button-save-spd").onclick = () => this.save_spd("new");
     dom.sel("#button-save-spd-old").onclick = () => this.save_spd("old");
-
-    dom.sel("#filename").onkeyup = () => {
-      this.default_filename = dom.val("#filename");
-      if (this.default_filename.length < 1) {
-        dom.add_class("#filename", "error");
-
-        dom.disabled("#button-save-spm", true);
-        dom.add_class("#button-save-spm", "error");
-
-        dom.disabled("#button-save-spd", true);
-        dom.add_class("#button-save-spd", "error");
-
-        dom.disabled("#button-save-spd-old", true);
-        dom.add_class("#button-save-spd-old", "error");
-      } else {
-        dom.remove_class("#filename", "error");
-
-        dom.disabled("#button-save-spm", false);
-        dom.remove_class("#button-save-spm", "error");
-
-        dom.disabled("#button-save-spd", false);
-        dom.remove_class("#button-save-spd", "error");
-
-        dom.disabled("#button-save-spd-old", false);
-        dom.remove_class("#button-save-spd-old", "error");
-      }
-    };
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
@@ -99,7 +68,7 @@ export default class Save {
   }
 
   save_spm(): void {
-    const filename = this.default_filename + ".spm";
+    const filename = this.app.get_filename() + ".spm";
     let data = JSON.stringify(this.savedata);
     // these regular expressions are used to make the outpult file
     // easier to read with line breaks
@@ -113,7 +82,7 @@ export default class Save {
   }
 
   save_spd(format): void {
-    const filename = this.default_filename + ".spd";
+    const filename = this.app.get_filename() + ".spd";
     const hexdata = this.create_spd_array(format);
     const bytes = new Uint8Array(hexdata);
     const file = new Blob([bytes], { type: "application/octet-stream" });
