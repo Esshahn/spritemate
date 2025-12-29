@@ -561,19 +561,23 @@ img.center {
 
 /* --- CSS ONLY MENU --- */
 
-ul {
+#menubar {
+  background-color: #333;
+}
+
+#menubar ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-li {
+#menubar li {
   float: left;
 }
 
-li a,
-.dropbtn {
+#menubar li a,
+#menubar .dropbtn {
   display: inline-block;
   color: white;
   text-align: center;
@@ -581,17 +585,17 @@ li a,
   text-decoration: none;
 }
 
-li a:hover,
-.dropdown:hover .dropbtn {
+#menubar li a:hover,
+#menubar .dropdown:hover .dropbtn {
   background-color: var(--blue);
   color: white;
 }
 
-li.dropdown {
+#menubar li.dropdown {
   display: inline-block;
 }
 
-.dropdown-content {
+#menubar .dropdown-content {
   display: none;
   position: absolute;
   background-color: #333;
@@ -600,7 +604,7 @@ li.dropdown {
   z-index: 1000;
 }
 
-.dropdown-content a {
+#menubar .dropdown-content a {
   color: white;
   padding: 12px 16px;
   text-decoration: none;
@@ -608,20 +612,20 @@ li.dropdown {
   text-align: left;
 }
 
-.dropdown-content a:hover {
+#menubar .dropdown-content a:hover {
   background-color: var(--blue);
 }
 
-.dropdown:hover .dropdown-content {
+#menubar .dropdown:hover .dropdown-content {
   display: block;
 }
 
 /* Submenu styles */
-.submenu-item {
+#menubar .submenu-item {
   position: relative;
 }
 
-.submenu-item > a {
+#menubar .submenu-item > a {
   color: white;
   padding: 12px 16px;
   text-decoration: none;
@@ -631,18 +635,18 @@ li.dropdown {
   cursor: pointer;
 }
 
-.submenu-item > a:hover {
+#menubar .submenu-item > a:hover {
   background-color: var(--blue);
 }
 
-.submenu-arrow {
+#menubar .submenu-arrow {
   position: absolute;
   right: 10px;
   font-size: 14px;
   font-weight: bold;
 }
 
-.submenu-content {
+#menubar .submenu-content {
   display: none;
   position: absolute;
   left: 100%;
@@ -653,7 +657,7 @@ li.dropdown {
   z-index: 1001;
 }
 
-.submenu-content a {
+#menubar .submenu-content a {
   color: white;
   padding: 12px 16px;
   text-decoration: none;
@@ -661,16 +665,12 @@ li.dropdown {
   text-align: left;
 }
 
-.submenu-content a:hover {
+#menubar .submenu-content a:hover {
   background-color: var(--blue);
 }
 
-.submenu-item:hover > .submenu-content {
+#menubar .submenu-item:hover > .submenu-content {
   display: block;
-}
-
-#menubar {
-  background-color: #333;
 }
 
 /* Hotkey documentation in a menu item */
