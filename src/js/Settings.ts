@@ -21,73 +21,72 @@ export default class Settings {
 
             <br/>
             <br/>
-
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-0"></div>
-                <input type="text" class="settings_colorvalue" id="colval-0" name="" value="">
+            <div id="settings_fieldset">
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-0"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-0" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-1"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-1" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-2"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-2" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-3"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-3" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-4"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-4" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-5"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-5" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-6"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-6" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-7"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-7" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-8"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-8" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-9"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-9" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-10"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-10" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-11"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-11" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-12"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-12" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-13"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-13" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-14"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-14" name="" value="">
+              </div>
+              <div class="settings_colorfield">
+                  <div class="settings_color" id="col-15"></div>
+                  <input type="text" class="settings_colorvalue" id="colval-15" name="" value="">
+              </div>
             </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-1"></div>
-                <input type="text" class="settings_colorvalue" id="colval-1" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-2"></div>
-                <input type="text" class="settings_colorvalue" id="colval-2" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-3"></div>
-                <input type="text" class="settings_colorvalue" id="colval-3" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-4"></div>
-                <input type="text" class="settings_colorvalue" id="colval-4" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-5"></div>
-                <input type="text" class="settings_colorvalue" id="colval-5" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-6"></div>
-                <input type="text" class="settings_colorvalue" id="colval-6" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-7"></div>
-                <input type="text" class="settings_colorvalue" id="colval-7" name="" value="">
-            </div>
-
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-8"></div>
-                <input type="text" class="settings_colorvalue" id="colval-8" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-9"></div>
-                <input type="text" class="settings_colorvalue" id="colval-9" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-10"></div>
-                <input type="text" class="settings_colorvalue" id="colval-10" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-11"></div>
-                <input type="text" class="settings_colorvalue" id="colval-11" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-12"></div>
-                <input type="text" class="settings_colorvalue" id="colval-12" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-13"></div>
-                <input type="text" class="settings_colorvalue" id="colval-13" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-14"></div>
-                <input type="text" class="settings_colorvalue" id="colval-14" name="" value="">
-            </div>
-            <div class="settings_colorfield">
-                <div class="settings_color" id="col-15"></div>
-                <input type="text" class="settings_colorvalue" id="colval-15" name="" value="">
-            </div>
-
         </fieldset>
 
         <!--
