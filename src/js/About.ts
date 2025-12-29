@@ -82,6 +82,25 @@ export default class About {
 
     dom.append("#window-" + this.window, template);
 
+    // Add close button to the dialog title bar
+    // Wait for next tick to ensure dialog is created
+    setTimeout(() => {
+      const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+      if (dialogElement) {
+        const titleBar = dialogElement.querySelector(".dialog-titlebar");
+        if (titleBar) {
+          const closeButton = document.createElement("div");
+          closeButton.className = "window-close-button";
+          titleBar.appendChild(closeButton);
+
+          closeButton.addEventListener("click", () => {
+            dialogElement.close();
+            this.eventhandler.onLoad();
+          });
+        }
+      }
+    }, 0);
+
     dom.sel("#button-info").onclick = () => {
       const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
       if (dialogElement) {
