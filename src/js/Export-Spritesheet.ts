@@ -13,26 +13,21 @@ export default class Export extends ExportBase {
     const template = `
     <div id="window-export">
 
-      <br/>
-      <fieldset>
-        <legend>Spritesheet (*.png)</legend>
-        <div class="fieldset right">
-          <button id="button-export-spritesheet">Save as Spritesheet</button>
-        </div>
-
-        <p id="spritesheet-info">Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.</p>
-
+        <p id="spritesheet-info">Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.
+        </p>
+        <p>
           Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1">
           <span id="spritesheet-layout"></span>
-          <p>
+        </p>
+        <p>
           <label>
           <input type="checkbox" id="spritesheet-border" name="border">Apply a 1 pixel border
           </label>
-          </p>
-      </fieldset>
+        </p>
 
       <div id="button-row">
         <button id="button-export-cancel" class="button-cancel">Cancel</button>
+        <button id="button-export-spritesheet">Export</button>
       </div>
     </div>
     `;
