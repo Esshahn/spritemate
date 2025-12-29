@@ -22,6 +22,17 @@ export default class Sprite {
     this.all.sprites = [];
     this.all.current_sprite = 0;
     this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+
+    // Animation settings
+    this.all.animation = {
+      startSprite: 0,
+      endSprite: 0,
+      fps: 10,
+      mode: "restart",
+      doubleX: false,
+      doubleY: false
+    };
+
     this.backup = [];
     this.backup_position = -1;
     this.copy_sprite = {};
@@ -352,6 +363,17 @@ export default class Sprite {
     if (!this.all.filename) {
       this.all.filename = "mysprites";
     }
+    // Ensure animation settings exist (for backward compatibility with old save files)
+    if (!this.all.animation) {
+      this.all.animation = {
+        startSprite: 0,
+        endSprite: 0,
+        fps: 10,
+        mode: "restart",
+        doubleX: false,
+        doubleY: false
+      };
+    }
     this.save_backup();
   }
 
@@ -361,6 +383,22 @@ export default class Sprite {
 
   set_filename(filename: string): void {
     this.all.filename = filename;
+    this.save_backup();
+  }
+
+  get_animation_settings() {
+    return this.all.animation || {
+      startSprite: 0,
+      endSprite: 0,
+      fps: 10,
+      mode: "restart",
+      doubleX: false,
+      doubleY: false
+    };
+  }
+
+  set_animation_settings(settings: any): void {
+    this.all.animation = settings;
     this.save_backup();
   }
 

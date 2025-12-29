@@ -4,8 +4,10 @@ import { Dialog } from "./Dialog";
 
 export default class Window {
   private dialog: Dialog;
+  private onCloseCallback?: () => void;
 
-  constructor(public config, public callback?) {
+  constructor(public config, public callback?, onClose?: () => void) {
+    this.onCloseCallback = onClose;
     config.id = "window-" + config.window_id;
     if (config.modal === undefined) config.modal = false;
     if (config.escape === undefined) config.escape = false;
@@ -59,6 +61,42 @@ export default class Window {
     if (wrapper) {
       wrapper.classList.add(config.type);
     }
+
+    // Add close button if window is closeable
+    if (config.closeable) {
+      this.addCloseButton(config);
+    }
+  }
+
+  private addCloseButton(config: any): void {
+    // Wait for next tick to ensure dialog is fully created
+    setTimeout(() => {
+      const dialogElement = document.querySelector(`#dialog-${config.id}`) as HTMLDialogElement;
+      if (dialogElement) {
+        const titleBar = dialogElement.querySelector(".dialog-titlebar");
+        if (titleBar) {
+          const closeButton = document.createElement("div");
+          closeButton.className = "window-close-button";
+          titleBar.appendChild(closeButton);
+
+          closeButton.addEventListener("click", () => {
+            this.close();
+
+            // Call the onClose callback if provided
+            if (this.onCloseCallback) {
+              this.onCloseCallback();
+            }
+
+            // Save the closed state to config
+            const app = (window as any).app;
+            if (app && app.config && app.config[config.name]) {
+              app.config[config.name].isOpen = false;
+              app.storage.write(app.config);
+            }
+          });
+        }
+      }
+    }, 0);
   }
 
   get_window_id(): string {

@@ -733,4 +733,90 @@ img.center {
   min-width:0px;
 }
 
+/* --- ANIMATION CONTROLS --- */
+
+#animation-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#animation-canvas canvas{
+  padding: 8px;
+  border: 1px dotted #444444;
+}
+
+.animation-controls {
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.animation-control-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--active_text);
+  font-size: 14px;
+}
+
+.animation-control-row input[type="number"] {
+  background-color: #222;
+  color: var(--active_text);
+  border: 1px solid #444;
+  padding: 6px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 80px;
+  min-width: 80px;
+}
+
+.animation-control-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #2a2a2a;
+}
+
+.animation-control-row input[type="number"]:hover {
+  border-color: #666;
+}
+
+.animation-radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.animation-radio-group input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  min-width: 0;
+}
+
+.animation-button {
+  background-color: var(--blue);
+  color: #000;
+  border: none;
+  padding: 8px 24px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.animation-button:hover {
+  background-color: var(--red);
+}
+
+.animation-button:active {
+  transform: scale(0.98);
+}
+
 /* --- END CSS ONLY MENU --- */
