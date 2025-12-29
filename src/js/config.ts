@@ -124,6 +124,11 @@ export function get_config() {
       height: 200,
       zoom: 1,
     },
+    window_animation: {
+      top: 280,
+      left: 210,
+      zoom: 6,
+    },
   };
 
   return config;

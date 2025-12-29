@@ -13,6 +13,7 @@ import Settings from "./Settings";
 import Editor from "./Editor";
 import Palette from "./Palette";
 import Preview from "./Preview";
+import Animation from "./Animation";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
@@ -34,6 +35,8 @@ export class App {
   palette: any;
   window_preview: any;
   preview: any;
+  window_animation: any;
+  animation: any;
   window_list: any;
   window_snapshot: any;
   list: List;
@@ -72,6 +75,15 @@ export class App {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
     this.config.colors = this.config.palettes[this.config.selected_palette].values;
+
+    // Ensure window_animation config exists (for backwards compatibility)
+    if (!this.config.window_animation) {
+      this.config.window_animation = {
+        top: 280,
+        left: 210,
+        zoom: 6,
+      };
+    }
 
     this.sprite = new Sprite(this.config, this.storage);
 
@@ -128,6 +140,24 @@ export class App {
       this.store_window.bind(this)
     );
     this.preview = new Preview(preview_config.window_id, this.config);
+
+    // animation
+    const animation_config = {
+      name: "window_animation",
+      title: "Animation",
+      type: "animation",
+      resizable: false,
+      left: this.config.window_animation?.left ?? 210,
+      top: this.config.window_animation?.top ?? 280,
+      width: "auto",
+      height: "auto",
+      window_id: 11,
+    };
+    this.window_animation = new Window(
+      animation_config,
+      this.store_window.bind(this)
+    );
+    this.animation = new Animation(animation_config.window_id, this.config);
 
     // sprite list
     const list_config = {
@@ -466,6 +496,7 @@ export class App {
     const all = this.sprite.get_all();
     this.editor.update(all);
     this.preview.update(all);
+    this.animation.update(all);
     this.list.update(all);
     this.palette.update(all);
     this.snapshot.update(all);
@@ -1042,6 +1073,32 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.sprite.toggle_overlay();
       this.update();
     };
+
+    /*
+
+    ANIMATION
+
+*/
+
+    const animZoomIn = dom.sel("#icon-animation-zoom-in");
+    if (animZoomIn) {
+      animZoomIn.onclick = () => {
+        this.animation.zoom_in();
+        this.config.window_animation.zoom = this.animation.get_zoom();
+        this.storage.write(this.config);
+        this.update();
+      };
+    }
+
+    const animZoomOut = dom.sel("#icon-animation-zoom-out");
+    if (animZoomOut) {
+      animZoomOut.onclick = () => {
+        this.animation.zoom_out();
+        this.config.window_animation.zoom = this.animation.get_zoom();
+        this.storage.write(this.config);
+        this.update();
+      };
+    }
 
     /*
 
