@@ -15,6 +15,12 @@ export default class About {
             <legend>Release Notes</legend>
 
             <h1>v25.12.29</h1>
+
+            <h2>Animations!</h2>
+            <p>
+            Oh boy, I've dodged that bullet for literally years now, but thanks to AI support, I finally got some basic animation support in. The animation window is closed by default and can be opened from the View menu. The functionality is simple as of now: you can enter a start and end sprite number and the desired fps (frames per second) and finally the mode of animation (ping pong or restarting). You can't have more than one animation defined at the moment, but the animation information is saved in the Spritemate file format, too.
+            </p>
+
             <h2>Spritesheet Export</h2>
             <p>
             Sprites can now be exported as a Spritesheet PNG image. You can specify the number of rows and Spritemate tries to evenly spread the sprites. Furthermore a border can be applied as an option. 
@@ -30,6 +36,7 @@ export default class About {
             <li>the filename can now be set from the menu bar</li>
             <li>completely restructured the Save and Export modals and made all but one obsolte. Instead, all options are now available directly from the menu bar</li>
             <li>added the PALette color palette (thx2 Retrofan)</li>
+            <li>removed some redundant options from the View menu</li>
             </ul>
             
             <hr>
