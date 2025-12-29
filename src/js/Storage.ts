@@ -85,8 +85,15 @@ export default class Storage {
         this.config.palettes = defaultPalettes;
 
         // Restore custom palette from storage if it exists
-        if (customPalette && Array.isArray(customPalette) && customPalette.length === 16) {
-          this.config.palettes.custom = customPalette;
+        // Handle both old format (array) and new format (object with values)
+        if (customPalette) {
+          if (Array.isArray(customPalette) && customPalette.length === 16) {
+            // Old format: migrate to new format
+            this.config.palettes.custom.values = customPalette;
+          } else if (customPalette.values && Array.isArray(customPalette.values) && customPalette.values.length === 16) {
+            // New format
+            this.config.palettes.custom.values = customPalette.values;
+          }
         }
 
         // If selected_palette doesn't exist in palettes, reset to default

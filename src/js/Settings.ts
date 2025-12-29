@@ -13,20 +13,22 @@ export default class Settings {
 
     // Initialize temp state (will be reset on dialog open)
     this.tempSelectedPalette = this.config.selected_palette;
-    this.tempColors = [...this.config.palettes[this.config.selected_palette]];
-    this.tempCustomColors = [...this.config.palettes.custom];
+    this.tempColors = [...this.config.palettes[this.config.selected_palette].values];
+    this.tempCustomColors = [...this.config.palettes.custom.values];
+
+    // Generate palette dropdown options dynamically
+    const paletteOptions = Object.keys(this.config.palettes)
+      .map(key => `<option value="${key}">${this.config.palettes[key].name}</option>`)
+      .join('\n              ');
 
     const template = `
     <div id="modal">
         <h2 autofocus>Your settings will be saved locally to your browser storage</h2>
         <fieldset>
             <legend>Color palette</legend>
-            
+
             <select id="colorpalette">
-              <option>colodore</option>
-              <option>palette</option>
-              <option>pepto</option>
-              <option>custom</option>
+              ${paletteOptions}
             </select>
 
             <br/>
@@ -186,7 +188,7 @@ export default class Settings {
       const palette: any = dom.val("#colorpalette");
 
       that.tempSelectedPalette = palette;
-      that.tempColors = [...that.config.palettes[palette]];
+      that.tempColors = [...that.config.palettes[palette].values];
 
       if (palette != "custom") {
         dom.disabled(".settings_colorvalue", true);
@@ -212,8 +214,8 @@ export default class Settings {
   apply_changes() {
     // Apply the temporary changes to the actual config
     this.config.selected_palette = this.tempSelectedPalette;
-    this.config.colors = this.config.palettes[this.tempSelectedPalette];
-    this.config.palettes.custom = [...this.tempCustomColors];
+    this.config.colors = this.config.palettes[this.tempSelectedPalette].values;
+    this.config.palettes.custom.values = [...this.tempCustomColors];
 
     this.close_window();
   }
@@ -221,8 +223,8 @@ export default class Settings {
   reset_to_saved_state() {
     // Reset temporary state to match the saved config
     this.tempSelectedPalette = this.config.selected_palette;
-    this.tempColors = [...this.config.palettes[this.config.selected_palette]];
-    this.tempCustomColors = [...this.config.palettes.custom];
+    this.tempColors = [...this.config.palettes[this.config.selected_palette].values];
+    this.tempCustomColors = [...this.config.palettes.custom.values];
 
     // Update UI to reflect saved state
     dom.val("#colorpalette", this.tempSelectedPalette);

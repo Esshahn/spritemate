@@ -71,7 +71,7 @@ export class App {
   constructor(public config) {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
-    this.config.colors = this.config.palettes[this.config.selected_palette];
+    this.config.colors = this.config.palettes[this.config.selected_palette].values;
 
     this.sprite = new Sprite(this.config, this.storage);
 
