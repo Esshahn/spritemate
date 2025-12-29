@@ -764,6 +764,13 @@ img.center {
   font-size: 14px;
   border-radius: 4px;
   width: 80px;
+  -moz-appearance: textfield;
+}
+
+.animation-control-row input[type="number"]::-webkit-outer-spin-button,
+.animation-control-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .animation-control-row input[type="number"]:focus {

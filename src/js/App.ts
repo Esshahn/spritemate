@@ -1100,6 +1100,20 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       };
     }
 
+    const animXButton = dom.sel("#icon-animation-x");
+    if (animXButton) {
+      animXButton.onclick = () => {
+        this.animation.toggleDoubleX();
+      };
+    }
+
+    const animYButton = dom.sel("#icon-animation-y");
+    if (animYButton) {
+      animYButton.onclick = () => {
+        this.animation.toggleDoubleY();
+      };
+    }
+
     /*
 
 

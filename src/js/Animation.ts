@@ -13,6 +13,8 @@ export default class Animation extends Window_Controls {
   animationMode: "pingpong" | "restart" = "restart";
   direction: number = 1; // 1 for forward, -1 for backward (used in pingpong mode)
   cachedSpriteData: any = null; // Cache sprite data for animation playback
+  doubleX: boolean = false; // Global X stretch for animation
+  doubleY: boolean = false; // Global Y stretch for animation
 
   constructor(public window: number, public config) {
     super();
@@ -38,16 +40,18 @@ export default class Animation extends Window_Controls {
           <img src="ui/icon-zoom-plus.png" class="icon-hover" id="icon-animation-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-minus.png" class="icon-hover" id="icon-animation-zoom-out" title="zoom out">
         </div>
+        <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-animation-x" title="double width">
+        <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-animation-y" title="double height">
       </div>
       <div id="animation-canvas"></div>
       <div class="animation-controls">
         <div class="animation-control-row">
           <label for="animation-start-sprite">Start Sprite:</label>
-          <input type="number" id="animation-start-sprite" min="0" value="0" />
+          <input type="number" id="animation-start-sprite" min="1" value="1" />
         </div>
         <div class="animation-control-row">
           <label for="animation-end-sprite">End Sprite:</label>
-          <input type="number" id="animation-end-sprite" min="0" value="0" />
+          <input type="number" id="animation-end-sprite" min="1" value="1" />
         </div>
         <div class="animation-control-row">
           <label for="animation-fps">FPS:</label>
@@ -84,14 +88,18 @@ export default class Animation extends Window_Controls {
 
     if (startInput) {
       startInput.oninput = () => {
-        this.startSprite = parseInt(startInput.value) || 0;
+        // Convert from 1-based UI to 0-based internal
+        const uiValue = parseInt(startInput.value) || 1;
+        this.startSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
       };
     }
 
     if (endInput) {
       endInput.oninput = () => {
-        this.endSprite = parseInt(endInput.value) || 0;
+        // Convert from 1-based UI to 0-based internal
+        const uiValue = parseInt(endInput.value) || 1;
+        this.endSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
       };
     }
@@ -150,6 +158,38 @@ export default class Animation extends Window_Controls {
         this.canvas_element.width = this.width;
         this.canvas_element.height = this.height;
       };
+    }
+  }
+
+  toggleDoubleX() {
+    this.doubleX = !this.doubleX;
+    this.updateIconStates();
+    if (this.cachedSpriteData) {
+      this.drawFrame(this.cachedSpriteData);
+    }
+  }
+
+  toggleDoubleY() {
+    this.doubleY = !this.doubleY;
+    this.updateIconStates();
+    if (this.cachedSpriteData) {
+      this.drawFrame(this.cachedSpriteData);
+    }
+  }
+
+  updateIconStates() {
+    // Update X icon by changing the image src
+    if (this.doubleX) {
+      dom.attr("#icon-animation-x", "src", "ui/icon-preview-x2-hi.png");
+    } else {
+      dom.attr("#icon-animation-x", "src", "ui/icon-preview-x2.png");
+    }
+
+    // Update Y icon by changing the image src
+    if (this.doubleY) {
+      dom.attr("#icon-animation-y", "src", "ui/icon-preview-y2-hi.png");
+    } else {
+      dom.attr("#icon-animation-y", "src", "ui/icon-preview-y2.png");
     }
   }
 
@@ -245,20 +285,9 @@ export default class Animation extends Window_Controls {
       }
     }
 
-    // Set the animation window x and y stretch
-    let double_x: number;
-    let double_y: number;
-    if (sprite_data.double_x) {
-      double_x = 2;
-    } else {
-      double_x = 1;
-    }
-
-    if (sprite_data.double_y) {
-      double_y = 2;
-    } else {
-      double_y = 1;
-    }
+    // Set the animation window x and y stretch (using global stretch settings)
+    const double_x = this.doubleX ? 2 : 1;
+    const double_y = this.doubleY ? 2 : 1;
 
     dom.css("#animation", "width", this.width * double_x + "px");
     dom.css("#animation", "height", this.height * double_y + "px");
@@ -271,19 +300,20 @@ export default class Animation extends Window_Controls {
     // Cache sprite data for animation playback
     this.cachedSpriteData = all_data;
 
-    // Update max values for start/end sprite inputs
+    // Update max values for start/end sprite inputs (1-based for UI)
     const startInput = dom.sel("#animation-start-sprite") as HTMLInputElement;
     const endInput = dom.sel("#animation-end-sprite") as HTMLInputElement;
 
     if (startInput) {
-      startInput.max = (all_data.sprites.length - 1).toString();
+      startInput.max = all_data.sprites.length.toString();
     }
 
     if (endInput) {
-      endInput.max = (all_data.sprites.length - 1).toString();
-      if (this.endSprite === 0) {
+      endInput.max = all_data.sprites.length.toString();
+      // Initialize endSprite to last sprite on first load
+      if (this.endSprite === 0 && all_data.sprites.length > 0) {
         this.endSprite = all_data.sprites.length - 1;
-        endInput.value = this.endSprite.toString();
+        endInput.value = all_data.sprites.length.toString();
       }
     }
 
