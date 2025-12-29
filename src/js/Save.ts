@@ -46,7 +46,6 @@ export default class Save {
       .replace(/]]/g, "]\n]");
     const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
-    this.close_window();
   }
 
   save_spd(format): void {
@@ -55,7 +54,6 @@ export default class Save {
     const bytes = new Uint8Array(hexdata);
     const file = new Blob([bytes], { type: "application/octet-stream" });
     this.save_file_to_disk(file, filename);
-    this.close_window();
   }
 
   /*

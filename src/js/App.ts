@@ -8,7 +8,7 @@ import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Import from "./Import";
 import Save from "./Save";
-import Export from "./Export";
+import Export from "./Export-Spritesheet";
 import Settings from "./Settings";
 import Editor from "./Editor";
 import Palette from "./Palette";
@@ -789,86 +789,18 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
     };
 
     // Direct save handlers
-    const saveSpmBtn = dom.sel("#menubar-save-spm");
-    if (saveSpmBtn) {
-      saveSpmBtn.onclick = () => {
-        this.save.set_save_data(this.sprite.get_all());
-        this.save.save_spm();
-      };
-    }
-
-    const saveSpdBtn = dom.sel("#menubar-save-spd");
-    if (saveSpdBtn) {
-      saveSpdBtn.onclick = () => {
-        this.save.set_save_data(this.sprite.get_all());
-        this.save.save_spd("new");
-      };
-    }
-
-    const saveSpdOldBtn = dom.sel("#menubar-save-spd-old");
-    if (saveSpdOldBtn) {
-      saveSpdOldBtn.onclick = () => {
-        this.save.set_save_data(this.sprite.get_all());
-        this.save.save_spd("old");
-      };
-    };
+    this.setupDirectSaveHandler("#menubar-save-spm", () => this.save.save_spm());
+    this.setupDirectSaveHandler("#menubar-save-spd", () => this.save.save_spd("new"));
+    this.setupDirectSaveHandler("#menubar-save-spd-old", () => this.save.save_spd("old"));
 
     // Direct export handlers for nested submenus
-    const exportKickHexBtn = dom.sel("#menubar-export-kick-hex");
-    if (exportKickHexBtn) {
-      exportKickHexBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_assembly("kick", false);
-      };
-    }
-
-    const exportKickBinaryBtn = dom.sel("#menubar-export-kick-binary");
-    if (exportKickBinaryBtn) {
-      exportKickBinaryBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_assembly("kick", true);
-      };
-    }
-
-    const exportAcmeHexBtn = dom.sel("#menubar-export-acme-hex");
-    if (exportAcmeHexBtn) {
-      exportAcmeHexBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_assembly("acme", false);
-      };
-    }
-
-    const exportAcmeBinaryBtn = dom.sel("#menubar-export-acme-binary");
-    if (exportAcmeBinaryBtn) {
-      exportAcmeBinaryBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_assembly("acme", true);
-      };
-    }
-
-    const exportBasicBtn = dom.sel("#menubar-export-basic");
-    if (exportBasicBtn) {
-      exportBasicBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_basic();
-      };
-    }
-
-    const exportPngCurrentBtn = dom.sel("#menubar-export-png-current");
-    if (exportPngCurrentBtn) {
-      exportPngCurrentBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_png_current();
-      };
-    }
-
-    const exportPngAllBtn = dom.sel("#menubar-export-png-all");
-    if (exportPngAllBtn) {
-      exportPngAllBtn.onclick = () => {
-        this.export.set_save_data(this.sprite.get_all());
-        this.export.save_png_all();
-      };
-    }
+    this.setupDirectExportHandler("#menubar-export-kick-hex", () => this.export.save_assembly("kick", false));
+    this.setupDirectExportHandler("#menubar-export-kick-binary", () => this.export.save_assembly("kick", true));
+    this.setupDirectExportHandler("#menubar-export-acme-hex", () => this.export.save_assembly("acme", false));
+    this.setupDirectExportHandler("#menubar-export-acme-binary", () => this.export.save_assembly("acme", true));
+    this.setupDirectExportHandler("#menubar-export-basic", () => this.export.save_basic());
+    this.setupDirectExportHandler("#menubar-export-png-current", () => this.export.save_png_current());
+    this.setupDirectExportHandler("#menubar-export-png-all", () => this.export.save_png_all());
 
     const exportSpritesheetBtn = dom.sel("#menubar-export-spritesheet");
     if (exportSpritesheetBtn) {
@@ -1511,6 +1443,26 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
     if (input) {
       input.value = filename;
+    }
+  }
+
+  private setupDirectSaveHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        handler();
+      };
+    }
+  }
+
+  private setupDirectExportHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        handler();
+      };
     }
   }
 }
