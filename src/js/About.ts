@@ -12,9 +12,23 @@ export default class About {
         <p>The Commodore 64 sprite editor</p>
 
         <fieldset>
-            <h1>Release notes</h1>
+            <legend>Release Notes</legend>
 
-            <h1>25.12.28</h1>
+            <h1>v25.12.29</h1>
+            <h2>Spritesheet Export</h2>
+            <p>
+            Sprites can now be exported as a Spritesheet PNG image. You can specify the number of rows and Spritemate tries to evenly spread the sprites. Furthermore a border can be applied as an option. 
+            </p>
+            
+            <h2>Changes</h2>
+            <ul>
+            <li>the filename can now be set from the menu bar</li>
+            <li>completely restructured the Save and Export modals and made all but one obsolte. Instead, all options are now available directly from the menu bar</li>
+            </ul>
+            
+            <hr>
+            
+            <h1>v25.12.28</h1>
             <h2>Marquee tool</h2>
             <p>
             This release adds the probably most requested feature, a select tool. You can now activate it from the tool bar and draw a rectangle around an area. The draw, erase and fill operations now only work inside the selection. Also, you can select the move tool and move the selection around to copy the content to another location. Once you're done, hit the Escape (ESC) key to deselect.
@@ -25,34 +39,34 @@ export default class About {
             While spritemate was working fine using the now deprecated jQueryUI, I wasn't happy with all the extra code and quirks for window management. With the help of the trusty AI overlord, I finally took the effort to remove all jQuery code from the project. This might result in minor visual issues, but hopefully nothing breaks functionally. I'm quite happy it's finally done.
             </p>
 
-            <h1>25.12.27-03</h1>
-            <h2>The Age Of Vibe Coding</h2>
-            <p>
-            Ahhhh.... it's finally time to vibe code some life into Spritemate again.<br/>
-            Let's see how far it gets us today:<br/><br/>
-            - Cleaned up and refactored codebase and threw away around 20% of the code<br/>
-            - Nondestrucive save options are now under "Save" (Spritemate & Spritepad data)<br/>
-            - Destructive save options are now under "Export" (Assembly, BASIC, PNG)<br/>
-            - VICE snapshots can now be imported by clicking "Import VICE (*.vsf) Snapshot"<br/>
-            - When importing VICE snapshots, the monitor will be opened automatically<br/>
-            - Moved the VICE snapshot window from the "file" to the "view" menu<br/>
-            - Added the option to export the curent sprite as PNG image<br/>
-            - Added the option to export all sprites as PNG images in a ZIP file<br/>
-            - Tweaked wording of the menu items to be more concise<br/>
-            </p>
+            <hr>
 
-            <h1>25.12.27-02</h1>
+            <h1>v25.12.27</h1>
             <h2>VICE Snapshot Monitor</h2>
             <p>
             Finally a feature release, thanks to the amazing contribution by <a target="_blank" href="https://github.com/elliot2">Elliot Tanner</a>. Spritemate now has a VICE Snapshot Monitor and sprite grabber, making it even easier to import sprites from any game. Just export a snapshot image from VICE (make sure to use the latest version) and load it into spritemate. Now from the file menu choose the VICE Snapshot Monitor and import sprite data. For a quick overview, enter "help" into the monitor and watch this <a target="_blank" href="https://www.youtube.com/watch?v=UdFc7yFCZGw">great tutorial video</a> from Elliot himself.
             </p>
 
-            <h1>25.12.27-01</h1>
-            <h2>Security patches.</h2>
+            <h2>The Age Of Vibe Coding</h2>
             <p>
-            - Housecleaning to address some library updates.<br/>
-            - Switching to date based version numbering
+            Ahhhh.... it's finally time to vibe code some life into Spritemate again.<br/>
+            Let's see how far it gets us today:
+            <ul>
+            <li>Cleaned up and refactored codebase and threw away around 20% of the code</li>
+            <li>Nondestrucive save options are now under "Save" (Spritemate & Spritepad data)</li>
+            <li>Destructive save options are now under "Export" (Assembly, BASIC, PNG)</li>
+            <li>VICE snapshots can now be imported by clicking "Import VICE (*.vsf) Snapshot"</li>
+            <li>When importing VICE snapshots, the monitor will be opened automatically</li>
+            <li>Moved the VICE snapshot window from the "file" to the "view" menu</li>
+            <li>Added the option to export the curent sprite as PNG image</li>
+            <li>Added the option to export all sprites as PNG images in a ZIP file</li>
+            <li>Tweaked wording of the menu items to be more concise</li>
+            <li>Housecleaning to address some library updates.</li>
+            <li>Switching to date based version numbering</li>
+            </ul>
             </p>
+
+
 
         </fieldset>
 

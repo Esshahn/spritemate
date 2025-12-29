@@ -8,7 +8,7 @@ import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Import from "./Import";
 import Save from "./Save";
-import Export from "./Export";
+import Export from "./Export-Spritesheet";
 import Settings from "./Settings";
 import Editor from "./Editor";
 import Palette from "./Palette";
@@ -178,12 +178,12 @@ export class App {
     this.window_save = new Window(save_config);
     this.save = new Save(save_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // export
     const export_config = {
       name: "window_export",
-      title: "Export",
+      title: "Export Spritesheet",
       type: "file",
       escape: true,
       modal: true,
@@ -196,7 +196,7 @@ export class App {
     this.window_export = new Window(export_config);
     this.export = new Export(export_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // import
     this.import = new Import(this.config, {
@@ -788,17 +788,28 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       dom.sel("#input-import").click();
     };
 
-    dom.sel("#menubar-save").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      this.window_save.open();
-      this.save.set_save_data(this.sprite.get_all());
-    };
+    // Direct save handlers
+    this.setupDirectSaveHandler("#menubar-save-spm", () => this.save.save_spm());
+    this.setupDirectSaveHandler("#menubar-save-spd", () => this.save.save_spd("new"));
+    this.setupDirectSaveHandler("#menubar-save-spd-old", () => this.save.save_spd("old"));
 
-    dom.sel("#menubar-export").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      this.window_export.open();
-      this.export.set_save_data(this.sprite.get_all());
-    };
+    // Direct export handlers for nested submenus
+    this.setupDirectExportHandler("#menubar-export-kick-hex", () => this.export.save_assembly("kick", false));
+    this.setupDirectExportHandler("#menubar-export-kick-binary", () => this.export.save_assembly("kick", true));
+    this.setupDirectExportHandler("#menubar-export-acme-hex", () => this.export.save_assembly("acme", false));
+    this.setupDirectExportHandler("#menubar-export-acme-binary", () => this.export.save_assembly("acme", true));
+    this.setupDirectExportHandler("#menubar-export-basic", () => this.export.save_basic());
+    this.setupDirectExportHandler("#menubar-export-png-current", () => this.export.save_png_current());
+    this.setupDirectExportHandler("#menubar-export-png-all", () => this.export.save_png_all());
+
+    const exportSpritesheetBtn = dom.sel("#menubar-export-spritesheet");
+    if (exportSpritesheetBtn) {
+      exportSpritesheetBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+      };
+    }
 
     dom.sel("#menubar-new").onclick = () => {
       // Add confirm dialog content
@@ -1406,6 +1417,53 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.list.update_all(this.sprite.get_all());
       this.update();
     });
+
+    // Setup filename input in menubar
+    const filenameInput = dom.sel("#menubar-filename-input");
+    if (filenameInput) {
+      filenameInput.oninput = () => {
+        const value = dom.val("#menubar-filename-input");
+        if (value && value.length > 0) {
+          // Valid filename
+          dom.remove_class("#menubar-filename-input", "error");
+        } else {
+          // Invalid filename
+          dom.add_class("#menubar-filename-input", "error");
+        }
+      };
+    }
+  }
+
+  get_filename(): string {
+    const value = dom.val("#menubar-filename-input");
+    return value || "mysprites";
+  }
+
+  set_filename(filename: string): void {
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = filename;
+    }
+  }
+
+  private setupDirectSaveHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        handler();
+      };
+    }
+  }
+
+  private setupDirectExportHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        handler();
+      };
+    }
   }
 }
 

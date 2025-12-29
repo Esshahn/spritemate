@@ -2,76 +2,14 @@
 import { dom, status } from "./helper";
 
 export default class Save {
-  default_filename: any;
   savedata: any;
+  app: any;
 
-  constructor(public window: number, public config, public eventhandler) {
+  constructor(public window: number, public config, public eventhandler, app) {
     this.config = config;
     this.window = window;
-    this.default_filename = "mysprites";
     this.eventhandler = eventhandler;
-
-    const template = `
-    <div id="window-save">
-
-      <div class="center">
-        Filename: <input autofocus type="text" id="filename" name="filename" value="${this.default_filename}">
-        <p>The file will be saved to your browser's default download location.</p>
-      </div>
-      <br/>
-      <fieldset>
-        <legend>Spritemate (*.spm)</legend>
-        <button id="button-save-spm">Save as Spritemate</button>
-        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>
-      </fieldset>
-    
-      <fieldset>
-        <legend>Spritepad (*.spd)</legend>
-        <div class="fieldset right">
-          <button id="button-save-spd">Save as 2.0</button>
-          <button id="button-save-spd-old">Save as 1.8.1</button>
-        </div>
-        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>
-      </fieldset>
-
-      <div id="button-row">
-        <button id="button-save-cancel" class="button-cancel">Cancel</button>
-      </div>
-    </div> 
-    `;
-
-    dom.append("#window-" + this.window, template);
-    dom.sel("#button-save-cancel").onclick = () => this.close_window();
-    dom.sel("#button-save-spm").onclick = () => this.save_spm();
-    dom.sel("#button-save-spd").onclick = () => this.save_spd("new");
-    dom.sel("#button-save-spd-old").onclick = () => this.save_spd("old");
-
-    dom.sel("#filename").onkeyup = () => {
-      this.default_filename = dom.val("#filename");
-      if (this.default_filename.length < 1) {
-        dom.add_class("#filename", "error");
-
-        dom.disabled("#button-save-spm", true);
-        dom.add_class("#button-save-spm", "error");
-
-        dom.disabled("#button-save-spd", true);
-        dom.add_class("#button-save-spd", "error");
-
-        dom.disabled("#button-save-spd-old", true);
-        dom.add_class("#button-save-spd-old", "error");
-      } else {
-        dom.remove_class("#filename", "error");
-
-        dom.disabled("#button-save-spm", false);
-        dom.remove_class("#button-save-spm", "error");
-
-        dom.disabled("#button-save-spd", false);
-        dom.remove_class("#button-save-spd", "error");
-
-        dom.disabled("#button-save-spd-old", false);
-        dom.remove_class("#button-save-spd-old", "error");
-      }
-    };
+    this.app = app;
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
@@ -95,11 +33,10 @@ export default class Save {
     }
 
     status("File has been saved.");
-    dom.html("#menubar-filename-name", filename);
   }
 
   save_spm(): void {
-    const filename = this.default_filename + ".spm";
+    const filename = this.app.get_filename() + ".spm";
     let data = JSON.stringify(this.savedata);
     // these regular expressions are used to make the outpult file
     // easier to read with line breaks
@@ -109,16 +46,14 @@ export default class Save {
       .replace(/]]/g, "]\n]");
     const file = new Blob([data], { type: "text/plain" });
     this.save_file_to_disk(file, filename);
-    this.close_window();
   }
 
   save_spd(format): void {
-    const filename = this.default_filename + ".spd";
+    const filename = this.app.get_filename() + ".spd";
     const hexdata = this.create_spd_array(format);
     const bytes = new Uint8Array(hexdata);
     const file = new Blob([bytes], { type: "application/octet-stream" });
     this.save_file_to_disk(file, filename);
-    this.close_window();
   }
 
   /*
@@ -244,9 +179,9 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
 
   close_window(): void {
     const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
-    if (dialogElement) {
+    if (dialogElement && dialogElement.open) {
       dialogElement.close();
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     }
-    this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 }

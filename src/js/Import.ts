@@ -36,7 +36,11 @@ export default class Import {
       document.querySelector("#input-import")?.remove();
       this.setup_import_input();
 
-      dom.html("#menubar-filename-name", file.name);
+      // Extract filename without extension and update the menubar input
+      const filenameWithoutExt = file.name.replace(/\.vsf$/i, '');
+      if (this.app) {
+        this.app.set_filename(filenameWithoutExt);
+      }
 
       // automatically open the snapshot window if not already open
       if (!this.app.window_snapshot.isOpen()) {

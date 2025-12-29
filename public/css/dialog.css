@@ -362,6 +362,32 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
   outline: none;
 }
 
+/* Lists (ul/ol/li) */
+.dialog-content ul {
+  list-style-type: disc;
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.dialog-content ol {
+  list-style-type: decimal;
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.dialog-content li {
+  display: list-item;
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+/* Horizontal rule */
+.dialog-content hr {
+  border: none;
+  border-top: 1px solid #333333;
+  margin: 40px 40px;
+}
+
 /* Window-specific styles */
 
 /* List window - prevent dialog-content from scrolling, only spritelist scrolls */

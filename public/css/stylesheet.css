@@ -561,19 +561,23 @@ img.center {
 
 /* --- CSS ONLY MENU --- */
 
-ul {
+#menubar {
+  background-color: #333;
+}
+
+#menubar ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-li {
+#menubar li {
   float: left;
 }
 
-li a,
-.dropbtn {
+#menubar li a,
+#menubar .dropbtn {
   display: inline-block;
   color: white;
   text-align: center;
@@ -581,17 +585,17 @@ li a,
   text-decoration: none;
 }
 
-li a:hover,
-.dropdown:hover .dropbtn {
+#menubar li a:hover,
+#menubar .dropdown:hover .dropbtn {
   background-color: var(--blue);
   color: white;
 }
 
-li.dropdown {
+#menubar li.dropdown {
   display: inline-block;
 }
 
-.dropdown-content {
+#menubar .dropdown-content {
   display: none;
   position: absolute;
   background-color: #333;
@@ -600,7 +604,7 @@ li.dropdown {
   z-index: 1000;
 }
 
-.dropdown-content a {
+#menubar .dropdown-content a {
   color: white;
   padding: 12px 16px;
   text-decoration: none;
@@ -608,16 +612,65 @@ li.dropdown {
   text-align: left;
 }
 
-.dropdown-content a:hover {
+#menubar .dropdown-content a:hover {
   background-color: var(--blue);
 }
 
-.dropdown:hover .dropdown-content {
+#menubar .dropdown:hover .dropdown-content {
   display: block;
 }
 
-#menubar {
+/* Submenu styles */
+#menubar .submenu-item {
+  position: relative;
+}
+
+#menubar .submenu-item > a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+}
+
+#menubar .submenu-item > a:hover {
+  background-color: var(--blue);
+}
+
+#menubar .submenu-arrow {
+  position: absolute;
+  right: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#menubar .submenu-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
   background-color: #333;
+  min-width: 240px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+}
+
+#menubar .submenu-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+#menubar .submenu-content a:hover {
+  background-color: var(--blue);
+}
+
+#menubar .submenu-item:hover > .submenu-content {
+  display: block;
 }
 
 /* Hotkey documentation in a menu item */
@@ -644,8 +697,30 @@ li.dropdown {
   float: right;
 }
 
-#menubar-filename-name {
+#menubar-filename-input {
+  background-color: #222;
   color: var(--blue);
+  border: 1px solid #444;
+  padding: 4px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+#menubar-filename-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #2a2a2a;
+}
+
+#menubar-filename-input:hover {
+  border-color: #666;
+}
+
+#menubar-filename-input.error {
+  border-color: #ff4444;
+  background-color: #331111;
 }
 
 #spritesheet-rows{
