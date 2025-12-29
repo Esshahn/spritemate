@@ -122,4 +122,76 @@ export default class Storage {
   get_config() {
     return this.config;
   }
+
+  /**
+   * Writes sprite data to local storage for auto-save functionality
+   * @param spriteData - The complete sprite data object (same format as .spm files)
+   */
+  write_sprites(spriteData: any) {
+    if (typeof Storage !== "undefined") {
+      try {
+        const dataToSave = {
+          timestamp: new Date().toISOString(),
+          data: spriteData
+        };
+        localStorage.setItem("spritemate_autosave", JSON.stringify(dataToSave));
+      } catch (error) {
+        console.error("Failed to auto-save sprite data:", error);
+        // Don't show status message for auto-save failures to avoid spamming user
+      }
+    }
+  }
+
+  /**
+   * Reads auto-saved sprite data from local storage
+   * @returns The sprite data object or null if none exists
+   */
+  read_sprites() {
+    if (typeof Storage !== "undefined") {
+      try {
+        const saved = localStorage.getItem("spritemate_autosave");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return parsed.data; // Return just the sprite data, not the timestamp wrapper
+        }
+        return null;
+      } catch (error) {
+        console.error("Failed to read auto-saved sprite data:", error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Clears the auto-saved sprite data (used when creating a new file)
+   */
+  clear_sprites() {
+    if (typeof Storage !== "undefined") {
+      try {
+        localStorage.removeItem("spritemate_autosave");
+      } catch (error) {
+        console.error("Failed to clear auto-saved sprite data:", error);
+      }
+    }
+  }
+
+  /**
+   * Gets the timestamp of the last auto-save
+   * @returns ISO timestamp string or null if no auto-save exists
+   */
+  get_autosave_timestamp() {
+    if (typeof Storage !== "undefined") {
+      try {
+        const saved = localStorage.getItem("spritemate_autosave");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return parsed.timestamp;
+        }
+      } catch (error) {
+        console.error("Failed to read auto-save timestamp:", error);
+      }
+    }
+    return null;
+  }
 }
