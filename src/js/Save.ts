@@ -64,7 +64,6 @@ export default class Save {
     }
 
     status("File has been saved.");
-    dom.html("#menubar-filename-name", filename);
   }
 
   save_spm(): void {

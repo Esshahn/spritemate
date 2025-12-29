@@ -106,7 +106,6 @@ export default class Export {
     }
 
     status("File has been saved.");
-    dom.html("#menubar-filename-name", filename);
   }
 
   save_assembly(format, encode_as_binary): void {

@@ -63,7 +63,11 @@ export default class Load {
         reader.readAsBinaryString(file);
       }
 
-      dom.html("#menubar-filename-name", file.name);
+      // Extract filename without extension and update the menubar input
+      const filenameWithoutExt = file.name.replace(/\.(spm|spd|spr)$/i, '');
+      if (this.app) {
+        this.app.set_filename(filenameWithoutExt);
+      }
     } else {
       alert("File not supported, .spm, .spd or .spr files only");
     }
