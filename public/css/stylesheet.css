@@ -166,10 +166,26 @@ img.center {
   margin: 0 auto;
 }
 
+#settings_fieldset{
+
+}
+
 .settings_colorfield {
-  border: 1px dotted #555555;
   min-width: 0px;
-  float: left;
+  max-width: 140px;
+  margin: 8px;
+  border: 1px dotted #888888;
+  border-radius: 8px;
+  padding: 8px;
+  float:left;
+}
+
+.settings_colorfield input{
+  min-width: 0;
+  max-width: 100px;
+  padding: 8px 8px;
+  margin: 0;
+  border: none;
 }
 
 #selected_colors {
@@ -186,9 +202,9 @@ img.center {
 }
 
 .settings_color {
-  width: 5px;
-  height: 10px;
-  padding: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   float: left;
 }
 
