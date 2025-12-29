@@ -78,6 +78,16 @@ export default class Animation extends Window_Controls {
     dom.append_element("#animation-canvas", this.canvas_element);
 
     this.setupEventListeners();
+
+    // Prevent auto-focus on input fields
+    setTimeout(() => {
+      const canvasContainer = dom.sel("#animation-canvas") as HTMLElement;
+      if (canvasContainer) {
+        canvasContainer.setAttribute("tabindex", "0");
+        canvasContainer.focus();
+        canvasContainer.blur(); // Immediately blur to remove focus outline
+      }
+    }, 0);
   }
 
   setupEventListeners() {
@@ -87,7 +97,7 @@ export default class Animation extends Window_Controls {
     this.inputs.fps = dom.sel("#animation-fps") as HTMLInputElement;
 
     if (this.inputs.start) {
-      this.inputs.start.oninput = () => {
+      this.inputs.start.onchange = () => {
         const uiValue = parseInt(this.inputs.start!.value) || 1;
         this.startSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
@@ -96,7 +106,7 @@ export default class Animation extends Window_Controls {
     }
 
     if (this.inputs.end) {
-      this.inputs.end.oninput = () => {
+      this.inputs.end.onchange = () => {
         const uiValue = parseInt(this.inputs.end!.value) || 1;
         this.endSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
@@ -105,7 +115,7 @@ export default class Animation extends Window_Controls {
     }
 
     if (this.inputs.fps) {
-      this.inputs.fps.oninput = () => {
+      this.inputs.fps.onchange = () => {
         const newFps = parseInt(this.inputs.fps!.value) || 10;
         this.fps = Math.min(60, Math.max(1, newFps));
         this.inputs.fps!.value = this.fps.toString();
@@ -325,27 +335,24 @@ export default class Animation extends Window_Controls {
     this.canvas_element.height = this.height;
     this.cachedSpriteData = all_data;
 
-    // Load settings on first update
-    if (this.firstUpdate) {
-      this.loadSettings(all_data);
-      this.firstUpdate = false;
+    // Stop animation if it's playing (ensures clean state after file load)
+    if (this.isPlaying) {
+      this.stop();
     }
+
+    // Load settings from data (handles both first load and file loads)
+    this.loadSettings(all_data);
 
     // Update input constraints using cached elements
     const maxSprites = all_data.sprites.length.toString();
     if (this.inputs.start) this.inputs.start.max = maxSprites;
     if (this.inputs.end) {
       this.inputs.end.max = maxSprites;
-      // Initialize endSprite to last sprite on first load
-      if (this.endSprite === 0 && all_data.sprites.length > 0) {
+      // Initialize endSprite to last sprite if no settings were loaded
+      if (this.endSprite === 0 && all_data.sprites.length > 0 && !all_data.animation) {
         this.endSprite = all_data.sprites.length - 1;
         this.inputs.end.value = all_data.sprites.length.toString();
       }
-    }
-
-    // Only redraw if playing (animation is running)
-    if (this.isPlaying) {
-      this.drawFrame(all_data);
     }
   }
 }
