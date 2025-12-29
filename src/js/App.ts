@@ -82,8 +82,27 @@ export class App {
         top: 280,
         left: 210,
         zoom: 6,
+        autoOpen: false,
+        closeable: true,
+        isOpen: false,
       };
     }
+
+    // Ensure autoOpen, closeable, and isOpen fields exist for all windows (for backwards compatibility)
+    const ensureWindowDefaults = (windowConfig: any, defaults: any) => {
+      if (!windowConfig) return;
+      if (windowConfig.autoOpen === undefined) windowConfig.autoOpen = defaults.autoOpen;
+      if (windowConfig.closeable === undefined) windowConfig.closeable = defaults.closeable;
+      if (windowConfig.isOpen === undefined) windowConfig.isOpen = defaults.isOpen ?? !defaults.autoOpen;
+    };
+
+    ensureWindowDefaults(this.config.window_tools, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_editor, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_preview, { autoOpen: true, closeable: false, isOpen: true });
+    ensureWindowDefaults(this.config.window_list, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_palette, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_snapshot, { autoOpen: false, closeable: true, isOpen: false });
+    ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
 
     this.sprite = new Sprite(this.config, this.storage);
 
@@ -93,6 +112,7 @@ export class App {
       title: "Editor",
       type: "sprite",
       resizable: false,
+      closeable: this.config.window_editor.closeable,
       left: this.config.window_editor.left,
       top: this.config.window_editor.top,
       width: "auto",
@@ -111,6 +131,7 @@ export class App {
       title: "Colors",
       type: "colors",
       resizable: false,
+      closeable: this.config.window_palette.closeable,
       left: this.config.window_palette.left,
       top: this.config.window_palette.top,
       width: "auto",
@@ -129,6 +150,7 @@ export class App {
       title: "Preview",
       type: "preview",
       resizable: false,
+      closeable: this.config.window_preview.closeable,
       left: this.config.window_preview.left,
       top: this.config.window_preview.top,
       width: "auto",
@@ -146,6 +168,8 @@ export class App {
       name: "window_animation",
       title: "Animation",
       type: "animation",
+      autoOpen: this.config.window_animation.autoOpen,
+      closeable: this.config.window_animation.closeable,
       resizable: false,
       left: this.config.window_animation?.left ?? 210,
       top: this.config.window_animation?.top ?? 280,
@@ -165,6 +189,7 @@ export class App {
       title: "Sprite List",
       type: "list",
       resizable: true,
+      closeable: this.config.window_list.closeable,
       left: this.config.window_list.left,
       top: this.config.window_list.top,
       width: this.config.window_list.width,
@@ -257,6 +282,7 @@ export class App {
       title: "Tools",
       type: "tools",
       resizable: false,
+      closeable: this.config.window_tools.closeable,
       left: this.config.window_tools.left,
       top: this.config.window_tools.top,
       width: "auto",
@@ -271,7 +297,8 @@ export class App {
       name: "window_snapshot",
       title: "Snapshot",
       type: "tools",
-      autoOpen: false,
+      autoOpen: this.config.window_snapshot.autoOpen,
+      closeable: this.config.window_snapshot.closeable,
       resizable: true,
       left: this.config.window_snapshot.left,
       top: this.config.window_snapshot.top,
@@ -279,7 +306,11 @@ export class App {
       height: this.config.window_snapshot.height,
       window_id: 9,
     }
-    this.window_snapshot = new Window(snapshot_config, this.store_window.bind(this));
+    this.window_snapshot = new Window(
+      snapshot_config,
+      this.store_window.bind(this),
+      this.regain_keyboard_controls.bind(this) // onClose callback
+    );
     this.snapshot = new Snapshot(snapshot_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
@@ -333,6 +364,15 @@ export class App {
     const filenameInput = dom.sel("#menubar-filename-input") as HTMLInputElement;
     if (filenameInput) {
       filenameInput.value = this.sprite.get_filename();
+    }
+
+    // Restore window open states from config (for closeable windows)
+    // Only restore if window is closeable and should be open
+    if (this.config.window_animation.closeable && this.config.window_animation.isOpen) {
+      this.window_animation.open();
+    }
+    if (this.config.window_snapshot.closeable && this.config.window_snapshot.isOpen) {
+      this.window_snapshot.open();
     }
 
     if (this.storage.is_updated_version())
@@ -894,12 +934,26 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.window_confirm.open();
     };
 
+    dom.sel("#menubar-animation").onclick = () => {
+      if (this.window_animation.isOpen()) {
+        this.window_animation.close();
+        this.config.window_animation.isOpen = false;
+      } else {
+        this.window_animation.open();
+        this.config.window_animation.isOpen = true;
+      }
+      this.storage.write(this.config);
+    };
+
     dom.sel("#menubar-monitor").onclick = () => {
       if (this.window_snapshot.isOpen()) {
         this.window_snapshot.close();
+        this.config.window_snapshot.isOpen = false;
       } else {
         this.window_snapshot.open();
+        this.config.window_snapshot.isOpen = true;
       }
+      this.storage.write(this.config);
     };
 
     /*

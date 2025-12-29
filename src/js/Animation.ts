@@ -15,6 +15,14 @@ export default class Animation extends Window_Controls {
   cachedSpriteData: any = null; // Cache sprite data for animation playback
   doubleX: boolean = false; // Global X stretch for animation
   doubleY: boolean = false; // Global Y stretch for animation
+  firstUpdate: boolean = true; // Track if this is the first update
+
+  // Cache DOM elements to avoid repeated queries
+  private inputs: {
+    start?: HTMLInputElement;
+    end?: HTMLInputElement;
+    fps?: HTMLInputElement;
+  } = {};
 
   constructor(public window: number, public config) {
     super();
@@ -81,50 +89,52 @@ export default class Animation extends Window_Controls {
   }
 
   setupEventListeners() {
-    // Start/End sprite inputs
-    const startInput = dom.sel("#animation-start-sprite") as HTMLInputElement;
-    const endInput = dom.sel("#animation-end-sprite") as HTMLInputElement;
-    const fpsInput = dom.sel("#animation-fps") as HTMLInputElement;
+    // Cache input elements
+    this.inputs.start = dom.sel("#animation-start-sprite") as HTMLInputElement;
+    this.inputs.end = dom.sel("#animation-end-sprite") as HTMLInputElement;
+    this.inputs.fps = dom.sel("#animation-fps") as HTMLInputElement;
 
-    if (startInput) {
-      startInput.oninput = () => {
-        // Convert from 1-based UI to 0-based internal
-        const uiValue = parseInt(startInput.value) || 1;
+    if (this.inputs.start) {
+      this.inputs.start.oninput = () => {
+        const uiValue = parseInt(this.inputs.start!.value) || 1;
         this.startSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
+        this.saveSettings();
       };
     }
 
-    if (endInput) {
-      endInput.oninput = () => {
-        // Convert from 1-based UI to 0-based internal
-        const uiValue = parseInt(endInput.value) || 1;
+    if (this.inputs.end) {
+      this.inputs.end.oninput = () => {
+        const uiValue = parseInt(this.inputs.end!.value) || 1;
         this.endSprite = Math.max(0, uiValue - 1);
         this.currentFrame = this.startSprite;
+        this.saveSettings();
       };
     }
 
-    if (fpsInput) {
-      fpsInput.oninput = () => {
-        const newFps = parseInt(fpsInput.value) || 10;
+    if (this.inputs.fps) {
+      this.inputs.fps.oninput = () => {
+        const newFps = parseInt(this.inputs.fps!.value) || 10;
         this.fps = Math.min(60, Math.max(1, newFps));
-        fpsInput.value = this.fps.toString();
+        this.inputs.fps!.value = this.fps.toString();
 
-        // Restart animation with new FPS if playing
         if (this.isPlaying) {
           this.stop();
           this.play();
         }
+        this.saveSettings();
       };
     }
 
     // Radio buttons
     const radioButtons = document.querySelectorAll('input[name="animation-mode"]');
-    radioButtons.forEach((radio: HTMLInputElement) => {
-      radio.onchange = () => {
-        this.animationMode = radio.value as "pingpong" | "restart";
+    radioButtons.forEach((radio) => {
+      const radioInput = radio as HTMLInputElement;
+      radioInput.onchange = () => {
+        this.animationMode = radioInput.value as "pingpong" | "restart";
         this.direction = 1;
         this.currentFrame = this.startSprite;
+        this.saveSettings();
       };
     });
 
@@ -140,25 +150,7 @@ export default class Animation extends Window_Controls {
       };
     }
 
-    // Zoom controls
-    const zoomInButton = dom.sel("#icon-animation-zoom-in");
-    const zoomOutButton = dom.sel("#icon-animation-zoom-out");
-
-    if (zoomInButton) {
-      zoomInButton.onclick = () => {
-        this.zoom_in();
-        this.canvas_element.width = this.width;
-        this.canvas_element.height = this.height;
-      };
-    }
-
-    if (zoomOutButton) {
-      zoomOutButton.onclick = () => {
-        this.zoom_out();
-        this.canvas_element.width = this.width;
-        this.canvas_element.height = this.height;
-      };
-    }
+    // Zoom is handled by App.ts event handlers
   }
 
   toggleDoubleX() {
@@ -167,6 +159,7 @@ export default class Animation extends Window_Controls {
     if (this.cachedSpriteData) {
       this.drawFrame(this.cachedSpriteData);
     }
+    this.saveSettings();
   }
 
   toggleDoubleY() {
@@ -175,6 +168,7 @@ export default class Animation extends Window_Controls {
     if (this.cachedSpriteData) {
       this.drawFrame(this.cachedSpriteData);
     }
+    this.saveSettings();
   }
 
   updateIconStates() {
@@ -293,36 +287,75 @@ export default class Animation extends Window_Controls {
     dom.css("#animation", "height", this.height * double_y + "px");
   }
 
+  loadSettings(all_data) {
+    if (!all_data.animation) return;
+
+    // Load settings into instance variables
+    this.startSprite = all_data.animation.startSprite || 0;
+    this.endSprite = all_data.animation.endSprite || 0;
+    this.fps = all_data.animation.fps || 10;
+    this.animationMode = all_data.animation.mode || "restart";
+    this.doubleX = all_data.animation.doubleX || false;
+    this.doubleY = all_data.animation.doubleY || false;
+
+    // Update UI using cached inputs
+    if (this.inputs.start) this.inputs.start.value = (this.startSprite + 1).toString();
+    if (this.inputs.end) this.inputs.end.value = (this.endSprite + 1).toString();
+    if (this.inputs.fps) this.inputs.fps.value = this.fps.toString();
+
+    // Update radio buttons
+    const radioButtons = document.querySelectorAll('input[name="animation-mode"]');
+    radioButtons.forEach((radio) => {
+      const radioInput = radio as HTMLInputElement;
+      radioInput.checked = (radioInput.value === this.animationMode);
+    });
+
+    this.updateIconStates();
+  }
+
+  saveSettings() {
+    // Get sprite data and update animation settings
+    const app = (window as any).app;
+    if (app && app.sprite) {
+      app.sprite.set_animation_settings({
+        startSprite: this.startSprite,
+        endSprite: this.endSprite,
+        fps: this.fps,
+        mode: this.animationMode,
+        doubleX: this.doubleX,
+        doubleY: this.doubleY
+      });
+    }
+  }
+
   update(all_data) {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
-
-    // Cache sprite data for animation playback
     this.cachedSpriteData = all_data;
 
-    // Update max values for start/end sprite inputs (1-based for UI)
-    const startInput = dom.sel("#animation-start-sprite") as HTMLInputElement;
-    const endInput = dom.sel("#animation-end-sprite") as HTMLInputElement;
-
-    if (startInput) {
-      startInput.max = all_data.sprites.length.toString();
+    // Load settings on first update
+    if (this.firstUpdate) {
+      this.loadSettings(all_data);
+      this.firstUpdate = false;
     }
 
-    if (endInput) {
-      endInput.max = all_data.sprites.length.toString();
+    // Update input constraints using cached elements
+    const maxSprites = all_data.sprites.length.toString();
+    if (this.inputs.start) this.inputs.start.max = maxSprites;
+    if (this.inputs.end) {
+      this.inputs.end.max = maxSprites;
       // Initialize endSprite to last sprite on first load
       if (this.endSprite === 0 && all_data.sprites.length > 0) {
         this.endSprite = all_data.sprites.length - 1;
-        endInput.value = all_data.sprites.length.toString();
+        this.inputs.end.value = all_data.sprites.length.toString();
       }
     }
 
-    // If not playing, show the current sprite from the editor
+    // Show current sprite when not animating
     if (!this.isPlaying) {
       this.currentFrame = all_data.current_sprite;
     }
 
-    // Draw the current frame
     this.drawFrame(all_data);
   }
 }

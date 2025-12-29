@@ -29,8 +29,8 @@ export default class Storage {
     const configStr = String(configVersion);
     const storageStr = String(storageVersion);
 
-    // Check if config version is in date format (YY.MM.DD or similar)
-    const isDateFormat = /^\d{2}\.\d{2}\.\d{2}$/.test(configStr);
+    // Check if config version is in date format (YY.MM.DD or YY.MM.DD.patch)
+    const isDateFormat = /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(configStr);
 
     if (isDateFormat) {
       // If storage is old numeric format (e.g., 1.51), config is definitely newer
@@ -39,7 +39,7 @@ export default class Storage {
       }
 
       // Both are date format, compare as dates
-      // Format: YY.MM.DD -> convert to YYMMDD for numeric comparison
+      // Format: YY.MM.DD.patch -> convert to YYMMDDpatch for numeric comparison
       const configDate = parseInt(configStr.replace(/\./g, ''), 10);
       const storageDate = parseInt(storageStr.replace(/\./g, ''), 10);
 

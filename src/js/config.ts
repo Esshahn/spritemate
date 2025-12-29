@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: "25.12.29",
+    version: "25.12.29.1",
     sprite_x: 24,
     sprite_y: 21,
     palettes: {
@@ -93,17 +93,24 @@ export function get_config() {
     window_tools: {
       top: 50,
       left: 20,
+      autoOpen: true,
+      closeable: false,
     },
     window_editor: {
       top: 50,
       left: 210,
       zoom: 18,
       grid: true,
+      autoOpen: true,
+      closeable: false,
     },
     window_preview: {
       top: 50,
       left: 700,
       zoom: 6,
+      autoOpen: true,
+      closeable: false,
+      isOpen: true,
     },
     window_list: {
       top: 280,
@@ -111,11 +118,15 @@ export function get_config() {
       width: 440,
       height: 200,
       zoom: 4,
+      autoOpen: true,
+      closeable: false,
     },
     window_palette: {
       top: 50,
       left: 110,
       zoom: 1,
+      autoOpen: true,
+      closeable: false,
     },
     window_snapshot: {
       top: 400,
@@ -123,11 +134,18 @@ export function get_config() {
       width: 440,
       height: 200,
       zoom: 1,
+      autoOpen: false,
+      closeable: true,
+      isOpen: false,
     },
     window_animation: {
       top: 280,
       left: 210,
+      width: 440,
       zoom: 6,
+      autoOpen: false,
+      closeable: true,
+      isOpen: false,
     },
   };
 
