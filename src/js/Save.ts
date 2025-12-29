@@ -10,37 +10,6 @@ export default class Save {
     this.window = window;
     this.eventhandler = eventhandler;
     this.app = app;
-
-    const template = `
-    <div id="window-save">
-
-      <br/>
-      <fieldset>
-        <legend>Spritemate (*.spm)</legend>
-        <button id="button-save-spm">Save as Spritemate</button>
-        <p>JSON file format for spritemate. Recommended as long as you are not done working on the sprites.</p>
-      </fieldset>
-    
-      <fieldset>
-        <legend>Spritepad (*.spd)</legend>
-        <div class="fieldset right">
-          <button id="button-save-spd">Save as 2.0</button>
-          <button id="button-save-spd-old">Save as 1.8.1</button>
-        </div>
-        <p>Choose between the 2.0 beta or the older 1.8.1 file format, which is recommended if you want to import the data in your C64 project.</p>
-      </fieldset>
-
-      <div id="button-row">
-        <button id="button-save-cancel" class="button-cancel">Cancel</button>
-      </div>
-    </div> 
-    `;
-
-    dom.append("#window-" + this.window, template);
-    dom.sel("#button-save-cancel").onclick = () => this.close_window();
-    dom.sel("#button-save-spm").onclick = () => this.save_spm();
-    dom.sel("#button-save-spd").onclick = () => this.save_spd("new");
-    dom.sel("#button-save-spd-old").onclick = () => this.save_spd("old");
   }
 
   // https://stackoverflow.com/questions/13405129/javascript-create-and-save-file
@@ -212,9 +181,9 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
 
   close_window(): void {
     const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
-    if (dialogElement) {
+    if (dialogElement && dialogElement.open) {
       dialogElement.close();
+      this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
     }
-    this.eventhandler.onLoad(); // calls "regain_keyboard_controls" method in app.js
   }
 }

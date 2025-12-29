@@ -788,10 +788,29 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       dom.sel("#input-import").click();
     };
 
-    dom.sel("#menubar-save").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      this.window_save.open();
-      this.save.set_save_data(this.sprite.get_all());
+    // Direct save handlers
+    const saveSpmBtn = dom.sel("#menubar-save-spm");
+    if (saveSpmBtn) {
+      saveSpmBtn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        this.save.save_spm();
+      };
+    }
+
+    const saveSpdBtn = dom.sel("#menubar-save-spd");
+    if (saveSpdBtn) {
+      saveSpdBtn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        this.save.save_spd("new");
+      };
+    }
+
+    const saveSpdOldBtn = dom.sel("#menubar-save-spd-old");
+    if (saveSpdOldBtn) {
+      saveSpdOldBtn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        this.save.save_spd("old");
+      };
     };
 
     // Direct export handlers for nested submenus
