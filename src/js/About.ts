@@ -27,13 +27,17 @@ export default class About {
             <li>Importing a PNG image or a VCF snapshot now append to the current sprites instead of replacing</li>
             <li>reverted back to magnifying glasses icons for zoom (thx2 TheSarge)</li>
             <li>changed selection move behavior from copy to cut (thx2 TheSarge)</li>
+            <li>select tool is now an on/off toggle</li>
+            <li>changed most keyboard shortcuts from 'shift' to 'control' (thx2 TheSarge)</li>
             </ul>
+
+            <hr>
 
             <h1>v25.12.29</h1>
 
             <h2>Animations!</h2>
             <p>
-            Oh boy, I've dodged that bullet for literally years now, but thanks to AI support, I finally got some basic animation support in. The animation window is closed by default and can be opened from the View menu. The functionality is simple as of now: you can enter a start and end sprite number and the desired fps (frames per second) and finally the mode of animation (ping pong or restarting). You can't have more than one animation defined at the moment, but the animation information is saved in the Spritemate file format, too.
+            Oh boy, I've dodged that bullet literally for years now, but thanks to AI support, I finally got some basic animation support in. The animation window is closed by default and can be opened from the View menu. The functionality is simple as of now: you can enter a start and end sprite number and the desired fps (frames per second) and finally the mode of animation (ping pong or restarting). You can't have more than one animation defined at the moment, but the animation information is saved in the Spritemate file format, too.
             </p>
 
             <h2>Spritesheet Export</h2>
