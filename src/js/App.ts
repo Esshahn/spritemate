@@ -403,7 +403,10 @@ export class App {
     modes.forEach(m => {
       const iconElement = dom.sel(`#icon-${m}`);
       if (iconElement) {
-        if (m === mode) {
+        // Special handling for select icon: keep it active if there's an active selection
+        if (m === "select" && this.selection?.active) {
+          iconElement.classList.add("icon-active");
+        } else if (m === mode) {
           iconElement.classList.add("icon-active");
         } else {
           iconElement.classList.remove("icon-active");
@@ -416,6 +419,13 @@ export class App {
   clearSelection(): void {
     this.selection = null;
     this.marquee_drawing = false;
+
+    // Remove active state from select icon when clearing selection
+    const selectIcon = dom.sel("#icon-select");
+    if (selectIcon && this.mode !== "select") {
+      selectIcon.classList.remove("icon-active");
+    }
+
     this.update();
   }
 
@@ -752,6 +762,9 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
     document.addEventListener("keydown", (e) => {
       //console.log(e.key);
       if (this.allow_keyboard_shortcuts) {
+        // Use Ctrl key only (works on all platforms, avoids browser conflicts on Mac)
+        const isCtrl = e.ctrlKey;
+
         if (e.key == "a") {
           console.time("performance");
           for (let i = 0; i <= 1000; i++) this.update();
@@ -771,18 +784,34 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           toggle_fullscreen();
         }
 
-        if (e.key == "m") this.setDrawMode("move");
-        if (e.key == "d") this.setDrawMode("draw");
-        if (e.key == "e") this.setDrawMode("erase");
-        if (e.key == "f") this.setDrawMode("fill");
-        if (e.key == "q") this.setDrawMode("select");
+        // Tool shortcuts (lowercase keys) - only when Ctrl is not pressed
+        if (e.key == "m" && !isCtrl) this.setDrawMode("move");
+        if (e.key == "d" && !isCtrl) this.setDrawMode("draw");
+        if (e.key == "e" && !isCtrl) this.setDrawMode("erase");
+        if (e.key == "f" && !isCtrl) this.setDrawMode("fill");
 
+        // Select tool: 's' key toggles between select and draw mode
+        // If there's an active selection or in select mode, clear and switch to draw
+        if (e.key == "s" && !isCtrl) {
+          if (this.selection?.active || this.mode === "select") {
+            this.clearSelection();
+            this.setDrawMode("draw");
+          } else {
+            this.setDrawMode("select");
+          }
+        }
+
+        // Escape key: Clear selection and return to draw mode
         if (e.key == "Escape") {
           if (this.selection?.active) {
             this.clearSelection();
           }
+          if (this.mode === "select") {
+            this.setDrawMode("draw");
+          }
         }
 
+        // Color palette shortcuts (number keys)
         if (e.key == "1") {
           this.sprite.set_pen(0);
           this.update();
@@ -803,22 +832,29 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
-        if (e.key == "z") {
-          this.sprite.undo();
-          this.update();
+        // Undo/Redo with Ctrl
+        if (isCtrl && e.key.toLowerCase() == "z") {
+          e.preventDefault(); // Prevent browser undo
+          if (e.shiftKey) {
+            // Ctrl+Shift+Z = Redo
+            this.sprite.redo();
+            this.update();
+          } else {
+            // Ctrl+Z = Undo
+            this.sprite.undo();
+            this.update();
+          }
         }
 
-        if (e.key == "Z") {
-          this.sprite.redo();
-          this.update();
-        }
-
-        if (e.key == "c") {
+        // Toggle multicolor mode
+        if (e.key == "c" && !isCtrl) {
           this.sprite.toggle_multicolor();
           this.update();
         }
 
-        if (e.key == "N") {
+        // New sprite with Ctrl+N
+        if (isCtrl && e.key.toLowerCase() == "n") {
+          e.preventDefault(); // Prevent browser new window
           this.sprite.new_sprite(
             this.palette.get_color(),
             this.sprite.is_multicolor()
@@ -828,13 +864,17 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           status("New sprite.");
         }
 
-        if (e.key == "C") {
+        // Copy sprite with Ctrl+C
+        if (isCtrl && e.key.toLowerCase() == "c") {
+          e.preventDefault(); // Prevent browser copy
           this.sprite.copy();
           this.update_ui();
           status("Sprite copied.");
         }
 
-        if (e.key == "V") {
+        // Paste sprite with Ctrl+V
+        if (isCtrl && e.key.toLowerCase() == "v") {
+          e.preventDefault(); // Prevent browser paste
           if (!this.sprite.is_copy_empty()) {
             this.sprite.paste();
             this.update();
@@ -844,20 +884,26 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           }
         }
 
-        if (e.key == "D") {
+        // Duplicate sprite with Ctrl+D
+        if (isCtrl && e.key.toLowerCase() == "d") {
+          e.preventDefault(); // Prevent browser bookmark
           this.sprite.duplicate();
           this.list.update_all(this.sprite.get_all());
           this.update_ui();
           status("Sprite duplicated.");
         }
 
-        if (e.key == "X") {
+        // Delete sprite with Ctrl+Backspace or Ctrl+Delete
+        if (isCtrl && (e.key == "Backspace" || e.key == "Delete")) {
+          e.preventDefault();
           this.sprite.delete();
           this.list.update_all(this.sprite.get_all());
           this.update();
         }
 
-        if (e.key == "i") {
+        // Invert sprite with Ctrl+I
+        if (isCtrl && e.key.toLowerCase() == "i") {
+          e.preventDefault();
           this.sprite.invert();
           this.update();
         }
@@ -1226,7 +1272,15 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
     dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
     dom.sel("#icon-fill").onclick = () => this.setDrawMode("fill");
-    dom.sel("#icon-select").onclick = () => this.setDrawMode("select");
+    dom.sel("#icon-select").onclick = () => {
+      // Toggle behavior: if there's an active selection OR in select mode, clear and switch to draw
+      if (this.selection?.active || this.mode === "select") {
+        this.clearSelection();
+        this.setDrawMode("draw");
+      } else {
+        this.setDrawMode("select");
+      }
+    };
 
     /*
 
