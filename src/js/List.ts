@@ -29,8 +29,8 @@ export default class List extends Window_Controls {
     const template = `
       <div class="window_menu">
       <div class="icons-zoom-area">
-          <img src="ui/icon-zoom-plus.png" class="icon-hover" id="icon-list-zoom-in" title="zoom in">
-          <img src="ui/icon-zoom-minus.png" class="icon-hover" id="icon-list-zoom-out" title="zoom out">
+          <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-list-zoom-in" title="zoom in">
+          <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-list-zoom-out" title="zoom out">
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-list-grid" title="toggle sprite borders">
       </div>
         <img src="ui/icon-list-new.png" class="icon-hover" id="icon-list-new" title="new sprite (shift + n)">
