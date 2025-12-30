@@ -63,7 +63,11 @@ export default class Load {
         reader.readAsBinaryString(file);
       }
 
-      dom.html("#menubar-filename-name", file.name);
+      // Extract filename without extension and update the menubar input
+      const filenameWithoutExt = file.name.replace(/\.(spm|spd|spr)$/i, '');
+      if (this.app) {
+        this.app.set_filename(filenameWithoutExt);
+      }
     } else {
       alert("File not supported, .spm, .spd or .spr files only");
     }
@@ -86,6 +90,9 @@ export default class Load {
 
     this.imported_file = JSON.parse(file);
     this.imported_file = this.convert_legacy_formats(this.imported_file);
+
+    // If the file doesn't have a filename property (old format), it will be set from file.name later
+    // If it does have a filename, that will be used when set_all is called
   }
 
   parse_file_spd(file) {

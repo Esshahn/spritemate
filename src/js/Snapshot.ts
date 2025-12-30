@@ -99,25 +99,43 @@ grabcols
 
 `;
     const template = `
-        <div class="window_menu">
-        </div>
-        <div class="ui-sortable">
+        <div class="console-container">
             <textarea id="snapshot-console" class="console" spellcheck="false">] </textarea>
         </div>
     `;
     dom.append("#window-" + this.window, template);
 
-    // Add close button to the jQuery UI dialog title bar
-    const titleBar = $("#window-" + this.window).prev(".ui-dialog-titlebar");
-    const closeButton = $('<div class="window-close-button"></div>');
-    titleBar.prepend(closeButton);
+    const consoleTextarea = dom.sel("#snapshot-console");
 
-    closeButton.on("click", () => {
-      $("#window-" + this.window).dialog("close");
-      this.eventhandler.onLoad();
-    });
+    // Position cursor at the end of the prompt when dialog opens
+    // This ensures the textarea is visible and can receive focus (especially in Safari)
+    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+    if (dialogElement) {
+      // Listen for when the dialog is shown
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'open' && dialogElement.open) {
+            // Dialog just opened, now we can position cursor
+            const initialLength = consoleTextarea.value.length;
+            consoleTextarea.setSelectionRange(initialLength, initialLength);
+            consoleTextarea.focus();
+          }
+        });
+      });
 
-    dom.sel("#snapshot-console").onkeyup = (e) => {
+      observer.observe(dialogElement, { attributes: true });
+
+      // If dialog is already open, set cursor immediately
+      if (dialogElement.open) {
+        setTimeout(() => {
+          const initialLength = consoleTextarea.value.length;
+          consoleTextarea.setSelectionRange(initialLength, initialLength);
+          consoleTextarea.focus();
+        }, 0);
+      }
+    }
+
+    consoleTextarea.onkeyup = (e) => {
       if (e.key === "Enter") {
         const command = dom.val("#snapshot-console");
         if (!command) return;
@@ -125,7 +143,6 @@ grabcols
         const last_line = lines[lines.length - 2];
         const last_line_trimmed_without_prompt = this.removePrompt(last_line);
         this.command(last_line_trimmed_without_prompt);
-        this.prompt();
       }
     };
   }
@@ -319,6 +336,7 @@ grabcols
         this.command(this.lastCmd);
         return;
       }
+      this.prompt();
       return;
     }
     switch (command_name) {
@@ -463,8 +481,8 @@ grabcols
         // If no args provided and we have lastIndex, increment by 16
         if (command_args.length === 0 && this.lastIndex !== -1) {
           this.lastIndex = this.lastIndex + 16;
-          this.print(this.formatMemory(this.lastIndex) + "\n");
-          return;
+          this.println(this.formatMemory(this.lastIndex));
+          break;
         }
 
         if (address < 0 || address >= this.c64mem.length) {
@@ -492,6 +510,7 @@ grabcols
     }
 
     this.lastCmd = command_name;
+    this.prompt();
   }
 
   private list_vic() {

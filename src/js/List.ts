@@ -1,11 +1,15 @@
 
 import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
+import { Sortable } from "./Sortable";
 
 export default class List extends Window_Controls {
   clicked_sprite: number;
   sorted_array: any = [];
   grid: boolean;
+  private sortable: Sortable | null = null;
+  private onSortCallback: ((sortedArray: string[]) => void) | null = null;
+  private onSortStartCallback: (() => void) | null = null;
 
   constructor(public window: number, public config) {
     super();
@@ -40,11 +44,29 @@ export default class List extends Window_Controls {
 
     dom.append("#window-" + this.window, template);
 
-    $("#spritelist").sortable({
-      cursor: "move",
-      tolerance: "pointer",
-      revert: "100",
-    });
+    // Initialize native sortable
+    const spritelistElement = document.querySelector("#spritelist") as HTMLElement;
+    if (spritelistElement) {
+      this.sortable = new Sortable(spritelistElement, {
+        cursor: "move",
+        tolerance: "pointer",
+        revert: "100",
+        onSortStart: () => {
+          if (this.onSortStartCallback) {
+            this.onSortStartCallback();
+          }
+        },
+        onSort: (oldIndex: number, newIndex: number) => {
+          // Get sorted array of IDs
+          const sortedIds = Array.from(spritelistElement.children).map(
+            (child) => child.id
+          );
+          if (this.onSortCallback) {
+            this.onSortCallback(sortedIds);
+          }
+        },
+      });
+    }
 
     // TODO: needs to go away with new/better sorting and zooming
     // this line is ridiculous, but apparently it is needed for the sprite sorting to not screw up
@@ -58,6 +80,14 @@ export default class List extends Window_Controls {
 
   get_clicked_sprite() {
     return this.clicked_sprite;
+  }
+
+  setSortCallback(callback: (sortedArray: string[]) => void) {
+    this.onSortCallback = callback;
+  }
+
+  setSortStartCallback(callback: () => void) {
+    this.onSortStartCallback = callback;
   }
 
   toggle_grid() {
@@ -82,11 +112,14 @@ export default class List extends Window_Controls {
     // because the normal update method gets too slow
     // when the sprite list is becoming longer
 
-    $("#window-" + this.window).dialog(
-      "option",
-      "title",
-      `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`
-    );
+    // Update dialog title via the dialog element
+    const dialogElement = document.querySelector(`#dialog-window-${this.window}`) as HTMLDialogElement;
+    if (dialogElement) {
+      const titleElement = dialogElement.querySelector(".dialog-title");
+      if (titleElement) {
+        titleElement.textContent = `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`;
+      }
+    }
     const c: any = document.getElementById(all_data.current_sprite);
     const canvas = c.getContext("2d", { alpha: false });
     const sprite_data = all_data.sprites[all_data.current_sprite];
@@ -116,6 +149,11 @@ export default class List extends Window_Controls {
       const sprite_data = all_data.sprites[i];
 
       this.draw_sprite(canvas, sprite_data, all_data);
+    }
+
+    // Refresh sortable after adding new elements
+    if (this.sortable) {
+      this.sortable.refresh();
     }
   }
 

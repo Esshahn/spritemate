@@ -7,12 +7,14 @@ import Tools from "./Tools";
 import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Import from "./Import";
+import ImportPNG from "./ImportPNG";
 import Save from "./Save";
-import Export from "./Export";
+import Export from "./Export-Spritesheet";
 import Settings from "./Settings";
 import Editor from "./Editor";
 import Palette from "./Palette";
 import Preview from "./Preview";
+import Animation from "./Animation";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
@@ -34,6 +36,8 @@ export class App {
   palette: any;
   window_preview: any;
   preview: any;
+  window_animation: any;
+  animation: any;
   window_list: any;
   window_snapshot: any;
   list: List;
@@ -44,10 +48,12 @@ export class App {
   window_export: any;
   export: any;
   import: any;
+  importPNG: any;
   window_settings: any;
   settings: any;
   window_tools: any;
   window_help: any;
+  window_confirm: any;
   tools: any;
   snapshot: Snapshot;
   load: any;
@@ -58,13 +64,49 @@ export class App {
   move_start: any;
   move_start_pos: any;
   dragging: any;
+  selection: {
+    active: boolean;
+    start: { x: number; y: number } | null;
+    end: { x: number; y: number } | null;
+    bounds: { x1: number; y1: number; x2: number; y2: number } | null;
+  } | null;
+  marquee_drawing: boolean;
+  move_selection_backup: number[][] | null;
 
   constructor(public config) {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
-    this.config.colors = this.config.palettes[this.config.selected_palette];
+    this.config.colors = this.config.palettes[this.config.selected_palette].values;
 
-    this.sprite = new Sprite(this.config);
+    // Ensure window_animation config exists (for backwards compatibility)
+    if (!this.config.window_animation) {
+      this.config.window_animation = {
+        top: 280,
+        left: 210,
+        zoom: 6,
+        autoOpen: false,
+        closeable: true,
+        isOpen: false,
+      };
+    }
+
+    // Ensure autoOpen, closeable, and isOpen fields exist for all windows (for backwards compatibility)
+    const ensureWindowDefaults = (windowConfig: any, defaults: any) => {
+      if (!windowConfig) return;
+      if (windowConfig.autoOpen === undefined) windowConfig.autoOpen = defaults.autoOpen;
+      if (windowConfig.closeable === undefined) windowConfig.closeable = defaults.closeable;
+      if (windowConfig.isOpen === undefined) windowConfig.isOpen = defaults.isOpen ?? !defaults.autoOpen;
+    };
+
+    ensureWindowDefaults(this.config.window_tools, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_editor, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_preview, { autoOpen: true, closeable: false, isOpen: true });
+    ensureWindowDefaults(this.config.window_list, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_palette, { autoOpen: true, closeable: false });
+    ensureWindowDefaults(this.config.window_snapshot, { autoOpen: false, closeable: true, isOpen: false });
+    ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
+
+    this.sprite = new Sprite(this.config, this.storage);
 
     // editor
     const editor_config = {
@@ -72,6 +114,7 @@ export class App {
       title: "Editor",
       type: "sprite",
       resizable: false,
+      closeable: this.config.window_editor.closeable,
       left: this.config.window_editor.left,
       top: this.config.window_editor.top,
       width: "auto",
@@ -90,6 +133,7 @@ export class App {
       title: "Colors",
       type: "colors",
       resizable: false,
+      closeable: this.config.window_palette.closeable,
       left: this.config.window_palette.left,
       top: this.config.window_palette.top,
       width: "auto",
@@ -108,6 +152,7 @@ export class App {
       title: "Preview",
       type: "preview",
       resizable: false,
+      closeable: this.config.window_preview.closeable,
       left: this.config.window_preview.left,
       top: this.config.window_preview.top,
       width: "auto",
@@ -120,12 +165,33 @@ export class App {
     );
     this.preview = new Preview(preview_config.window_id, this.config);
 
+    // animation
+    const animation_config = {
+      name: "window_animation",
+      title: "Animation",
+      type: "animation",
+      autoOpen: this.config.window_animation.autoOpen,
+      closeable: this.config.window_animation.closeable,
+      resizable: false,
+      left: this.config.window_animation?.left ?? 210,
+      top: this.config.window_animation?.top ?? 280,
+      width: this.config.window_animation?.width ?? 440,
+      height: "auto",
+      window_id: 11,
+    };
+    this.window_animation = new Window(
+      animation_config,
+      this.store_window.bind(this)
+    );
+    this.animation = new Animation(animation_config.window_id, this.config);
+
     // sprite list
     const list_config = {
       name: "window_list",
       title: "Sprite List",
       type: "list",
       resizable: true,
+      closeable: this.config.window_list.closeable,
       left: this.config.window_list.left,
       top: this.config.window_list.top,
       width: this.config.window_list.width,
@@ -169,12 +235,12 @@ export class App {
     this.window_save = new Window(save_config);
     this.save = new Save(save_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // export
     const export_config = {
       name: "window_export",
-      title: "Export",
+      title: "Export Spritesheet",
       type: "file",
       escape: true,
       modal: true,
@@ -187,11 +253,16 @@ export class App {
     this.window_export = new Window(export_config);
     this.export = new Export(export_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
-    });
+    }, this);
 
     // import
     this.import = new Import(this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
+    // import PNG
+    this.importPNG = new ImportPNG(this.config, {
+      onLoad: this.update_imported_png.bind(this),
     });
 
     // settings
@@ -218,6 +289,7 @@ export class App {
       title: "Tools",
       type: "tools",
       resizable: false,
+      closeable: this.config.window_tools.closeable,
       left: this.config.window_tools.left,
       top: this.config.window_tools.top,
       width: "auto",
@@ -232,7 +304,8 @@ export class App {
       name: "window_snapshot",
       title: "Snapshot",
       type: "tools",
-      autoOpen: false,
+      autoOpen: this.config.window_snapshot.autoOpen,
+      closeable: this.config.window_snapshot.closeable,
       resizable: true,
       left: this.config.window_snapshot.left,
       top: this.config.window_snapshot.top,
@@ -240,7 +313,11 @@ export class App {
       height: this.config.window_snapshot.height,
       window_id: 9,
     }
-    this.window_snapshot = new Window(snapshot_config, this.store_window.bind(this));
+    this.window_snapshot = new Window(
+      snapshot_config,
+      this.store_window.bind(this),
+      this.regain_keyboard_controls.bind(this) // onClose callback
+    );
     this.snapshot = new Snapshot(snapshot_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
@@ -249,12 +326,40 @@ export class App {
       onLoad: this.update_loaded_file.bind(this),
     });
 
+    // Confirmation dialog for "New File"
+    const confirm_config = {
+      name: "window_confirm",
+      title: "New File",
+      type: "confirm",
+      modal: true,
+      escape: false,
+      resizable: false,
+      autoOpen: false,
+      width: 400,
+      height: "auto",
+      window_id: 10,
+    };
+    this.window_confirm = new Window(confirm_config);
+
     this.is_drawing = false;
     this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
-    this.sprite.new_sprite(this.palette.get_color());
+
+    // Try to load auto-saved sprite data
+    const savedSprites = this.storage.read_sprites();
+    if (savedSprites && savedSprites.sprites && savedSprites.sprites.length > 0) {
+      // Restore auto-saved data
+      this.sprite.set_all(savedSprites);
+      status("Restored previous work session");
+    } else {
+      // Start with a fresh sprite
+      this.sprite.new_sprite(this.palette.get_color());
+    }
 
     this.mode = "draw"; // modes can be "draw" and "fill"
     this.allow_keyboard_shortcuts = true;
+    this.selection = null;
+    this.marquee_drawing = false;
+    this.move_selection_backup = null;
 
     tipoftheday();
 
@@ -262,27 +367,140 @@ export class App {
     this.update();
     this.user_interaction();
 
+    // Sync filename to UI after initialization (important for auto-restore)
+    const filenameInput = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (filenameInput) {
+      filenameInput.value = this.sprite.get_filename();
+    }
+
+    // Restore window open states from config (for closeable windows)
+    // Only restore if window is closeable and should be open
+    if (this.config.window_animation.closeable && this.config.window_animation.isOpen) {
+      this.window_animation.open();
+    }
+    if (this.config.window_snapshot.closeable && this.config.window_snapshot.isOpen) {
+      this.window_snapshot.open();
+    }
+
     if (this.storage.is_updated_version())
-      $(this.window_about.get_window_id()).dialog("open");
+      this.window_about.open();
   }
 
   // Helper method to set drawing mode and update UI icons
-  setDrawMode(mode: "move" | "draw" | "erase" | "fill"): void {
+  setDrawMode(mode: "move" | "draw" | "erase" | "fill" | "select"): void {
     this.mode = mode;
     const modeNames = {
       move: "Move",
       draw: "Draw",
       erase: "Erase",
-      fill: "Fill"
+      fill: "Fill",
+      select: "Select"
     };
     status(`${modeNames[mode]} mode`);
 
-    // Update all icon states
-    const modes = ["move", "draw", "erase", "fill"];
+    // Update all icon states using CSS classes
+    const modes = ["move", "draw", "erase", "fill", "select"];
     modes.forEach(m => {
-      const suffix = m === mode ? "-hi.png" : ".png";
-      dom.attr(`#image-icon-${m}`, "src", `ui/icon-${m}${suffix}`);
+      const iconElement = dom.sel(`#icon-${m}`);
+      if (iconElement) {
+        if (m === mode) {
+          iconElement.classList.add("icon-active");
+        } else {
+          iconElement.classList.remove("icon-active");
+        }
+      }
     });
+  }
+
+  // Helper method to clear selection
+  clearSelection(): void {
+    this.selection = null;
+    this.marquee_drawing = false;
+    this.update();
+  }
+
+  // Helper method to normalize selection bounds
+  normalizeSelection(): void {
+    if (!this.selection || !this.selection.start || !this.selection.end) return;
+
+    let x1 = this.selection.start.x;
+    let y1 = this.selection.start.y;
+    let x2 = this.selection.end.x;
+    let y2 = this.selection.end.y;
+
+    // Normalize coordinates (ensure x1 <= x2, y1 <= y2)
+    if (x1 > x2) [x1, x2] = [x2, x1];
+    if (y1 > y2) [y1, y2] = [y2, y1];
+
+    // Snap to multicolor grid if needed
+    const step = this.sprite.is_multicolor() ? 2 : 1;
+    x1 = Math.floor(x1 / step) * step;
+    x2 = Math.floor(x2 / step) * step;
+
+    // Constrain to sprite boundaries [0, sprite_x-1] × [0, sprite_y-1]
+    x1 = Math.max(0, Math.min(x1, this.config.sprite_x - 1));
+    x2 = Math.max(0, Math.min(x2, this.config.sprite_x - 1));
+    y1 = Math.max(0, Math.min(y1, this.config.sprite_y - 1));
+    y2 = Math.max(0, Math.min(y2, this.config.sprite_y - 1));
+
+    // Store normalized bounds
+    this.selection.bounds = { x1, y1, x2, y2 };
+    this.selection.active = true;
+  }
+
+  // Helper method to check if pixel is inside selection
+  isPixelInSelection(x: number, y: number): boolean {
+    if (!this.selection?.active || !this.selection.bounds) return true;
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+  }
+
+  // Helper method to update selection bounds during drag (doesn't modify sprite data)
+  moveSelectedArea(dx: number, dy: number): void {
+    if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
+
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    const selectionWidth = x2 - x1;
+    const selectionHeight = y2 - y1;
+
+    // Calculate new position - don't constrain to boundaries (allow negative or out-of-bounds)
+    const newX1 = x1 + dx;
+    const newY1 = y1 + dy;
+
+    // Update selection bounds - keep original size, allow going outside canvas
+    this.selection.bounds = {
+      x1: newX1,
+      y1: newY1,
+      x2: newX1 + selectionWidth,
+      y2: newY1 + selectionHeight
+    };
+  }
+
+  // Helper method to apply the final move operation (called on mouse release)
+  applyMoveSelection(): void {
+    if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
+
+    const step = this.sprite.is_multicolor() ? 2 : 1;
+    const currentSprite = this.sprite.get_current_sprite();
+
+    // Paste backup data at new position (copy, not cut - original remains)
+    // Only paste pixels that are within canvas bounds
+    const { x1, y1, x2, y2 } = this.selection.bounds;
+    let backupY = 0;
+    for (let y = y1; y <= y2; y++) {
+      let backupX = 0;
+      for (let x = x1; x <= x2; x += step) {
+        // Only paste if within canvas bounds
+        if (y >= 0 && y < this.config.sprite_y && x >= 0 && x < this.config.sprite_x) {
+          if (backupY < this.move_selection_backup.length && backupX < this.move_selection_backup[backupY].length) {
+            const pixel = this.move_selection_backup[backupY][backupX];
+            currentSprite.pixels[y][x] = pixel;
+          }
+        }
+        backupX++; // Increment by 1, not by step
+      }
+      backupY++;
+    }
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
@@ -325,6 +543,7 @@ export class App {
     const all = this.sprite.get_all();
     this.editor.update(all);
     this.preview.update(all);
+    this.animation.update(all);
     this.list.update(all);
     this.palette.update(all);
     this.snapshot.update(all);
@@ -453,7 +672,47 @@ export class App {
     // called as a callback event from the load class
     // after a file got loaded in completely
     this.sprite.set_all(this.load.get_imported_file());
+
+    // Sync filename to UI (will use filename from sprite data if it exists)
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = this.sprite.get_filename();
+    }
+
     this.list.update_all(this.sprite.get_all());
+
+    // Stop animation when loading a new file, then update all views
+    this.animation.update(this.sprite.get_all(), true);
+    this.update();
+  }
+
+  update_imported_png() {
+    // called as a callback event from the importPNG class
+    // after a PNG image got imported
+    const importedData = this.importPNG.get_imported_file();
+    const importedSprite = importedData.sprites[0];
+
+    // Create a new sprite with the imported properties
+    this.sprite.new_sprite(importedSprite.color, importedSprite.multicolor);
+
+    // Get the newly created sprite (it's now the current sprite)
+    const currentSprite = this.sprite.get_current_sprite();
+
+    // Update its pixels and properties
+    currentSprite.pixels = importedSprite.pixels;
+    currentSprite.double_x = importedSprite.double_x;
+    currentSprite.double_y = importedSprite.double_y;
+    currentSprite.overlay = importedSprite.overlay;
+
+    // Update the global colors if they're from a multicolor sprite
+    if (importedSprite.multicolor) {
+      const allData = this.sprite.get_all();
+      allData.colors[2] = importedData.colors[2]; // multicolor1
+      allData.colors[3] = importedData.colors[3]; // multicolor2
+    }
+
+    this.list.update_all(this.sprite.get_all());
+    this.animation.update(this.sprite.get_all(), true);
     this.update();
   }
 
@@ -522,6 +781,13 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         if (e.key == "d") this.setDrawMode("draw");
         if (e.key == "e") this.setDrawMode("erase");
         if (e.key == "f") this.setDrawMode("fill");
+        if (e.key == "q") this.setDrawMode("select");
+
+        if (e.key == "Escape") {
+          if (this.selection?.active) {
+            this.clearSelection();
+          }
+        }
 
         if (e.key == "1") {
           this.sprite.set_pen(0);
@@ -634,12 +900,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-info").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_about.get_window_id()).dialog("open");
+      this.window_about.open();
     };
 
     dom.sel("#menubar-settings").onclick = () => {
       this.allow_keyboard_shortcuts = false;
-      $(this.window_settings.get_window_id()).dialog("open");
+      this.window_settings.open();
     };
 
     /*
@@ -656,59 +922,82 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       dom.sel("#input-import").click();
     };
 
-    dom.sel("#menubar-save").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      $(this.window_save.get_window_id()).dialog("open");
-      this.save.set_save_data(this.sprite.get_all());
+    dom.sel("#menubar-import-png").onclick = () => {
+      dom.sel("#input-import-png").click();
     };
 
-    dom.sel("#menubar-export").onclick = () => {
-      this.allow_keyboard_shortcuts = false;
-      $(this.window_export.get_window_id()).dialog("open");
-      this.export.set_save_data(this.sprite.get_all());
-    };
+    // Direct save handlers
+    this.setupDirectSaveHandler("#menubar-save-spm", () => this.save.save_spm());
+    this.setupDirectSaveHandler("#menubar-save-spd", () => this.save.save_spd("new"));
+    this.setupDirectSaveHandler("#menubar-save-spd-old", () => this.save.save_spd("old"));
+
+    // Direct export handlers for nested submenus
+    this.setupDirectExportHandler("#menubar-export-kick-hex", () => this.export.save_assembly("kick", false));
+    this.setupDirectExportHandler("#menubar-export-kick-binary", () => this.export.save_assembly("kick", true));
+    this.setupDirectExportHandler("#menubar-export-acme-hex", () => this.export.save_assembly("acme", false));
+    this.setupDirectExportHandler("#menubar-export-acme-binary", () => this.export.save_assembly("acme", true));
+    this.setupDirectExportHandler("#menubar-export-basic", () => this.export.save_basic());
+    this.setupDirectExportHandler("#menubar-export-png-current", () => this.export.save_png_current());
+    this.setupDirectExportHandler("#menubar-export-png-all", () => this.export.save_png_all());
+
+    const exportSpritesheetBtn = dom.sel("#menubar-export-spritesheet");
+    if (exportSpritesheetBtn) {
+      exportSpritesheetBtn.onclick = () => {
+        this.allow_keyboard_shortcuts = false;
+        this.window_export.open();
+        this.export.set_save_data(this.sprite.get_all());
+      };
+    }
 
     dom.sel("#menubar-new").onclick = () => {
-      dom.css("#dialog-confirm", "visibility", "visible");
-      $("#dialog-confirm").dialog("open");
+      // Add confirm dialog content
+      const confirmContent = this.window_confirm.getDialog().getContent();
+      confirmContent.innerHTML = `
+        <p>All current data will be erased. Are you sure?</p>
+        <div style="text-align: right; margin-top: 20px;">
+          <button id="confirm-ok" class="confirm-button">Ok</button>
+          <button id="confirm-cancel" class="confirm-button">Cancel</button>
+        </div>
+      `;
+
+      // Setup button handlers
+      dom.sel("#confirm-ok").onclick = () => {
+        this.sprite = new Sprite(this.config, this.storage);
+        this.sprite.new_sprite(this.palette.get_color());
+        this.storage.clear_sprites(); // Clear auto-saved data
+        this.list.update_all(this.sprite.get_all());
+        this.update();
+        this.window_confirm.close();
+        status("New file created.");
+      };
+
+      dom.sel("#confirm-cancel").onclick = () => {
+        this.window_confirm.close();
+      };
+
+      this.window_confirm.open();
     };
 
-    $("#dialog-confirm").dialog({
-      resizable: false,
-      autoOpen: false,
-      height: "auto",
-      width: 400,
-      modal: true,
-      dialogClass: "no-close",
-      buttons: [
-        {
-          click: () => {
-            this.sprite = new Sprite(this.config);
-            this.sprite.new_sprite(this.palette.get_color());
-            this.list.update_all(this.sprite.get_all());
-            this.update();
-            $("#dialog-confirm").dialog("close");
-            status("New file created.");
-          },
-          text: "Ok",
-          class: "confirm-button",
-        },
-        {
-          click: () => {
-            $("#dialog-confirm").dialog("close");
-          },
-          text: "Cancel",
-          class: "confirm-button",
-        },
-      ],
-    });
+    dom.sel("#menubar-animation").onclick = () => {
+      if (this.window_animation.isOpen()) {
+        this.window_animation.close();
+        this.config.window_animation.isOpen = false;
+      } else {
+        this.window_animation.open();
+        this.config.window_animation.isOpen = true;
+      }
+      this.storage.write(this.config);
+    };
 
     dom.sel("#menubar-monitor").onclick = () => {
-      if ($(this.window_snapshot.get_window_id()).dialog("isOpen")) {
-        $(this.window_snapshot.get_window_id()).dialog("close");
+      if (this.window_snapshot.isOpen()) {
+        this.window_snapshot.close();
+        this.config.window_snapshot.isOpen = false;
       } else {
-        $(this.window_snapshot.get_window_id()).dialog("open");
+        this.window_snapshot.open();
+        this.config.window_snapshot.isOpen = true;
       }
+      this.storage.write(this.config);
     };
 
     /*
@@ -838,27 +1127,6 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       toggle_fullscreen();
     };
 
-    dom.sel("#menubar-editor-zoom-in").onclick = () => {
-      this.editor.zoom_in();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-editor-zoom-out").onclick = () => {
-      this.editor.zoom_out();
-      this.config.window_editor.zoom = this.editor.get_zoom();
-      this.storage.write(this.config);
-      this.update();
-    };
-
-    dom.sel("#menubar-editor-grid").onclick = () => this.handleZoomGrid("editor", "toggle-grid");
-    dom.sel("#menubar-preview-zoom-in").onclick = () => this.handleZoomGrid("preview", "zoom-in");
-    dom.sel("#menubar-preview-zoom-out").onclick = () => this.handleZoomGrid("preview", "zoom-out");
-    dom.sel("#menubar-list-grid").onclick = () => this.handleZoomGrid("list", "toggle-grid");
-    dom.sel("#menubar-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
-    dom.sel("#menubar-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
-
     /*
 
     PREVIEW
@@ -882,6 +1150,46 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       this.sprite.toggle_overlay();
       this.update();
     };
+
+    /*
+
+    ANIMATION
+
+*/
+
+    const animZoomIn = dom.sel("#icon-animation-zoom-in");
+    if (animZoomIn) {
+      animZoomIn.onclick = () => {
+        this.animation.zoom_in();
+        this.config.window_animation.zoom = this.animation.get_zoom();
+        this.storage.write(this.config);
+        this.update();
+      };
+    }
+
+    const animZoomOut = dom.sel("#icon-animation-zoom-out");
+    if (animZoomOut) {
+      animZoomOut.onclick = () => {
+        this.animation.zoom_out();
+        this.config.window_animation.zoom = this.animation.get_zoom();
+        this.storage.write(this.config);
+        this.update();
+      };
+    }
+
+    const animXButton = dom.sel("#icon-animation-x");
+    if (animXButton) {
+      animXButton.onclick = () => {
+        this.animation.toggleDoubleX();
+      };
+    }
+
+    const animYButton = dom.sel("#icon-animation-y");
+    if (animYButton) {
+      animYButton.onclick = () => {
+        this.animation.toggleDoubleY();
+      };
+    }
 
     /*
 
@@ -924,6 +1232,7 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
     dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
     dom.sel("#icon-fill").onclick = () => this.setDrawMode("fill");
+    dom.sel("#icon-select").onclick = () => this.setDrawMode("select");
 
     /*
 
@@ -1042,6 +1351,19 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
     };
 
     dom.sel("#editor").onmousedown = (e) => {
+      if (this.mode == "select") {
+        const pixel = this.editor.get_pixel(e);
+        this.marquee_drawing = true;
+        this.selection = {
+          active: false,
+          start: pixel,
+          end: pixel,
+          bounds: null
+        };
+        this.update();
+        return;
+      }
+
       if (this.mode == "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
         this.is_drawing = true; // needed for mousemove drawing
@@ -1059,11 +1381,38 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       if (this.mode == "move") {
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
+
+        // If there's an active selection, backup the selected pixels (don't clear yet)
+        if (this.selection?.active && this.selection.bounds) {
+          const { x1, y1, x2, y2 } = this.selection.bounds;
+          const step = this.sprite.is_multicolor() ? 2 : 1;
+          const currentSprite = this.sprite.get_current_sprite();
+
+          // Backup selected area (copy, not cut)
+          this.move_selection_backup = [];
+          for (let y = y1; y <= y2; y++) {
+            const row: number[] = [];
+            for (let x = x1; x <= x2; x += step) {
+              row.push(currentSprite.pixels[y][x]);
+            }
+            this.move_selection_backup.push(row);
+          }
+        }
       }
       this.update();
     };
 
     dom.sel("#editor").onmousemove = (e) => {
+      if (this.marquee_drawing && this.mode == "select") {
+        const newpos = this.editor.get_pixel(e);
+        if (this.selection) {
+          this.selection.end = newpos;
+          this.normalizeSelection();
+        }
+        this.update();
+        return;
+      }
+
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         const newpos = this.editor.get_pixel(e);
         // only draw if the mouse has entered a new pixel area (just for performance)
@@ -1080,33 +1429,77 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.move_start) {
-        const x_diff = this.editor.get_pixel(e).x - this.move_start_pos.x;
-        const y_diff = this.editor.get_pixel(e).y - this.move_start_pos.y;
+        const currentPos = this.editor.get_pixel(e);
+        const x_diff = currentPos.x - this.move_start_pos.x;
+        const y_diff = currentPos.y - this.move_start_pos.y;
 
-        if (x_diff > 0) {
-          this.sprite.shift_horizontal("right");
-        }
-        if (x_diff < 0) {
-          this.sprite.shift_horizontal("left");
-        }
-        if (y_diff > 0) {
-          this.sprite.shift_vertical("down");
-        }
-        if (y_diff < 0) {
-          this.sprite.shift_vertical("up");
-        }
+        if (this.selection?.active && this.move_selection_backup) {
+          // Move selection content
+          if (x_diff !== 0 || y_diff !== 0) {
+            // Calculate step based on move direction
+            const step = this.sprite.is_multicolor() ? 2 : 1;
+            const dx = x_diff > 0 ? step : (x_diff < 0 ? -step : 0);
+            const dy = y_diff > 0 ? 1 : (y_diff < 0 ? -1 : 0);
 
-        if (x_diff || y_diff) {
-          this.move_start_pos = this.editor.get_pixel(e);
-          this.update();
+            if (dx !== 0 || dy !== 0) {
+              this.moveSelectedArea(dx, dy);
+              this.move_start_pos = currentPos;
+              this.update();
+            }
+          }
+        } else {
+          // Move entire sprite
+          if (x_diff > 0) {
+            this.sprite.shift_horizontal("right");
+          }
+          if (x_diff < 0) {
+            this.sprite.shift_horizontal("left");
+          }
+          if (y_diff > 0) {
+            this.sprite.shift_vertical("down");
+          }
+          if (y_diff < 0) {
+            this.sprite.shift_vertical("up");
+          }
+
+          if (x_diff || y_diff) {
+            this.move_start_pos = currentPos;
+            this.update();
+          }
         }
       }
     };
 
     dom.sel("#editor").onclick = () => {
+      // Finalize selection
+      if (this.marquee_drawing) {
+        this.marquee_drawing = false;
+        if (this.selection) {
+          this.normalizeSelection();
+        }
+        // Don't save backup (selection isn't a mutation)
+        this.update();
+        return;
+      }
+
       // stop drawing pixels
       this.is_drawing = false;
-      this.move_start = false;
+
+      // Finalize move operation
+      if (this.move_start) {
+        this.move_start = false;
+
+        // Apply the move if there was a selection
+        if (this.move_selection_backup) {
+          this.applyMoveSelection();
+          this.move_selection_backup = null;
+        }
+
+        this.sprite.save_backup();
+        this.update();
+        return;
+      }
+
       this.sprite.save_backup();
       this.update();
     };
@@ -1180,24 +1573,81 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {
           this.sprite.set_pen(1);
         }
+        this.clearSelection();
         this.update();
       }
     };
 
-    $("#spritelist").sortable({
-      stop: () => {
-        this.sprite.sort_spritelist($("#spritelist").sortable("toArray"));
-        this.dragging = false;
-        this.list.update_all(this.sprite.get_all());
-        this.update();
-      },
+    // Setup sortable callbacks
+    this.list.setSortStartCallback(() => {
+      this.dragging = true;
     });
 
-    $("#spritelist").sortable({
-      start: () => {
-        this.dragging = true;
-      },
+    this.list.setSortCallback((sortedIds: string[]) => {
+      this.sprite.sort_spritelist(sortedIds);
+      this.dragging = false;
+      this.list.update_all(this.sprite.get_all());
+      this.update();
     });
+
+    // Setup filename input in menubar
+    const filenameInput = dom.sel("#menubar-filename-input");
+    if (filenameInput) {
+      filenameInput.oninput = () => {
+        const value = dom.val("#menubar-filename-input");
+        if (value && value.length > 0) {
+          // Valid filename - sync to sprite data
+          dom.remove_class("#menubar-filename-input", "error");
+          this.sprite.set_filename(value);
+        } else {
+          // Invalid filename
+          dom.add_class("#menubar-filename-input", "error");
+        }
+      };
+
+      // Disable keyboard shortcuts when typing in filename input
+      filenameInput.onfocus = () => {
+        this.allow_keyboard_shortcuts = false;
+      };
+
+      filenameInput.onblur = () => {
+        this.allow_keyboard_shortcuts = true;
+      };
+    }
+  }
+
+  get_filename(): string {
+    // Get filename from sprite data (single source of truth)
+    return this.sprite.get_filename();
+  }
+
+  set_filename(filename: string): void {
+    // Set filename in sprite data and sync to UI
+    this.sprite.set_filename(filename);
+    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
+    if (input) {
+      input.value = filename;
+    }
+  }
+
+  private setupDirectSaveHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.save.set_save_data(this.sprite.get_all());
+        handler();
+      };
+    }
+  }
+
+  private setupDirectExportHandler(selector: string, handler: () => void): void {
+    const btn = dom.sel(selector);
+    if (btn) {
+      btn.onclick = () => {
+        this.export.set_save_data(this.sprite.get_all());
+        handler();
+      };
+    }
   }
 }
 

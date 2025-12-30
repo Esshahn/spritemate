@@ -29,8 +29,8 @@ export default class Storage {
     const configStr = String(configVersion);
     const storageStr = String(storageVersion);
 
-    // Check if config version is in date format (YY.MM.DD or similar)
-    const isDateFormat = /^\d{2}\.\d{2}\.\d{2}$/.test(configStr);
+    // Check if config version is in date format (YY.MM.DD or YY.MM.DD.patch)
+    const isDateFormat = /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(configStr);
 
     if (isDateFormat) {
       // If storage is old numeric format (e.g., 1.51), config is definitely newer
@@ -39,7 +39,7 @@ export default class Storage {
       }
 
       // Both are date format, compare as dates
-      // Format: YY.MM.DD -> convert to YYMMDD for numeric comparison
+      // Format: YY.MM.DD.patch -> convert to YYMMDDpatch for numeric comparison
       const configDate = parseInt(configStr.replace(/\./g, ''), 10);
       const storageDate = parseInt(storageStr.replace(/\./g, ''), 10);
 
@@ -74,7 +74,32 @@ export default class Storage {
           this.write(this.storage);
           this.is_new_version = true;
         }
+
+        // Merge stored config with default config
+        // Preset palettes (colodore, palette, pepto) always come from code
+        // Only "custom" palette is preserved from localStorage
+        const defaultPalettes = JSON.parse(JSON.stringify(this.config.palettes));
+        const customPalette = this.storage.palettes?.custom;
+
         this.config = JSON.parse(JSON.stringify(this.storage));
+        this.config.palettes = defaultPalettes;
+
+        // Restore custom palette from storage if it exists
+        // Handle both old format (array) and new format (object with values)
+        if (customPalette) {
+          if (Array.isArray(customPalette) && customPalette.length === 16) {
+            // Old format: migrate to new format
+            this.config.palettes.custom.values = customPalette;
+          } else if (customPalette.values && Array.isArray(customPalette.values) && customPalette.values.length === 16) {
+            // New format
+            this.config.palettes.custom.values = customPalette.values;
+          }
+        }
+
+        // If selected_palette doesn't exist in palettes, reset to default
+        if (!this.config.palettes[this.config.selected_palette]) {
+          this.config.selected_palette = "pepto";
+        }
       } catch (error) {
         console.error("Failed to initialize storage:", error);
         status("Unable to access settings storage. Using defaults.");
@@ -121,5 +146,77 @@ export default class Storage {
 
   get_config() {
     return this.config;
+  }
+
+  /**
+   * Writes sprite data to local storage for auto-save functionality
+   * @param spriteData - The complete sprite data object (same format as .spm files)
+   */
+  write_sprites(spriteData: any) {
+    if (typeof Storage !== "undefined") {
+      try {
+        const dataToSave = {
+          timestamp: new Date().toISOString(),
+          data: spriteData
+        };
+        localStorage.setItem("spritemate_autosave", JSON.stringify(dataToSave));
+      } catch (error) {
+        console.error("Failed to auto-save sprite data:", error);
+        // Don't show status message for auto-save failures to avoid spamming user
+      }
+    }
+  }
+
+  /**
+   * Reads auto-saved sprite data from local storage
+   * @returns The sprite data object or null if none exists
+   */
+  read_sprites() {
+    if (typeof Storage !== "undefined") {
+      try {
+        const saved = localStorage.getItem("spritemate_autosave");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return parsed.data; // Return just the sprite data, not the timestamp wrapper
+        }
+        return null;
+      } catch (error) {
+        console.error("Failed to read auto-saved sprite data:", error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Clears the auto-saved sprite data (used when creating a new file)
+   */
+  clear_sprites() {
+    if (typeof Storage !== "undefined") {
+      try {
+        localStorage.removeItem("spritemate_autosave");
+      } catch (error) {
+        console.error("Failed to clear auto-saved sprite data:", error);
+      }
+    }
+  }
+
+  /**
+   * Gets the timestamp of the last auto-save
+   * @returns ISO timestamp string or null if no auto-save exists
+   */
+  get_autosave_timestamp() {
+    if (typeof Storage !== "undefined") {
+      try {
+        const saved = localStorage.getItem("spritemate_autosave");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return parsed.timestamp;
+        }
+      } catch (error) {
+        console.error("Failed to read auto-save timestamp:", error);
+      }
+    }
+    return null;
   }
 }

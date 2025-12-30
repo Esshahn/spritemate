@@ -1,62 +1,126 @@
 
 import { dom } from "./helper";
+import { Dialog } from "./Dialog";
 
 export default class Window {
-  constructor(public config, public callback?) {
+  private dialog: Dialog;
+  private onCloseCallback?: () => void;
+
+  constructor(public config, public callback?, onClose?: () => void) {
+    this.onCloseCallback = onClose;
     config.id = "window-" + config.window_id;
-    config.position = {
-      my: "left top",
-      at: "left+" + config.left + " top+" + config.top,
-    };
-    if (config.top === undefined) config.position = undefined;
     if (config.modal === undefined) config.modal = false;
     if (config.escape === undefined) config.escape = false;
 
-    const elem = `<div id="${config.id}" class="${config.type}" title="${config.title}"></div>`;
+    // Create container div for the dialog content
+    const elem = `<div id="${config.id}" class="${config.type}"></div>`;
     dom.append("#app", elem);
 
-    $(this.get_window_id()).dialog({
+    // Create dialog with native implementation
+    this.dialog = new Dialog({
+      id: `dialog-${config.id}`,
+      title: config.title,
       width: config.width,
       height: config.height,
-      dialogClass: "no-close",
       modal: config.modal,
-      closeOnEscape: config.escape,
-      autoOpen: config.autoOpen,
-      position: config.position,
       resizable: config.resizable,
-      buttons: config.buttons,
+      closeOnEscape: config.escape,
+      autoOpen: config.autoOpen !== false,
+      left: config.left,
+      top: config.top,
+      onDragStop: callback ? (position) => {
+        const obj = {
+          name: config.name,
+          data: { top: position.top, left: position.left },
+        };
+        callback(obj);
+      } : undefined,
+      onResizeStop: callback ? (size) => {
+        const obj = {
+          name: config.name,
+          data: {
+            top: size.top,
+            left: size.left,
+            width: size.width,
+            height: size.height,
+          },
+        };
+        callback(obj);
+      } : undefined,
     });
 
-    // in case a callback was defined for this window
-    // we send the position and size information back to the app for storage
-    if (callback) {
-      $(this.get_window_id()).dialog({
-        dragStop: function (event: any, ui: any) {
-          const obj = {
-            name: config.name,
-            data: { top: ui.position.top, left: ui.position.left },
-          };
-          callback(obj);
-        },
-      });
-      $(this.get_window_id()).dialog({
-        resizeStop: function (event: any, ui: any) {
-          const obj = {
-            name: config.name,
-            data: {
-              top: ui.position.top,
-              left: ui.position.left,
-              width: ui.size.width,
-              height: ui.size.height,
-            },
-          };
-          callback(obj);
-        },
-      });
+    // Move the content into the dialog
+    const contentElement = document.querySelector(`#${config.id}`);
+    if (contentElement) {
+      const dialogContent = this.dialog.getContent();
+      dialogContent.appendChild(contentElement);
     }
+
+    // Add dialog-wrapper class with type
+    const wrapper = this.dialog.getContent().closest('.dialog-wrapper') as HTMLElement;
+    if (wrapper) {
+      wrapper.classList.add(config.type);
+    }
+
+    // Add close button if window is closeable
+    if (config.closeable) {
+      this.addCloseButton(config);
+    }
+  }
+
+  private addCloseButton(config: any): void {
+    // Wait for next tick to ensure dialog is fully created
+    setTimeout(() => {
+      const dialogElement = document.querySelector(`#dialog-${config.id}`) as HTMLDialogElement;
+      if (dialogElement) {
+        const titleBar = dialogElement.querySelector(".dialog-titlebar");
+        if (titleBar) {
+          const closeButton = document.createElement("div");
+          closeButton.className = "window-close-button";
+          titleBar.appendChild(closeButton);
+
+          closeButton.addEventListener("click", () => {
+            this.close();
+
+            // Call the onClose callback if provided
+            if (this.onCloseCallback) {
+              this.onCloseCallback();
+            }
+
+            // Save the closed state to config
+            const app = (window as any).app;
+            if (app && app.config && app.config[config.name]) {
+              app.config[config.name].isOpen = false;
+              app.storage.write(app.config);
+            }
+          });
+        }
+      }
+    }, 0);
   }
 
   get_window_id(): string {
     return "#" + this.config.id;
+  }
+
+  // Compatibility methods for jQuery UI dialog API
+  public open(): void {
+    this.dialog.open();
+  }
+
+  public close(): void {
+    this.dialog.close();
+  }
+
+  public isOpen(): boolean {
+    return this.dialog.isOpen();
+  }
+
+  public setOption(key: string, value: any): void {
+    this.dialog.setOption(key, value);
+  }
+
+  public getDialog(): Dialog {
+    return this.dialog;
   }
 }

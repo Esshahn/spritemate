@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
     <title>spritemate - the Commodore 64 sprite editor by awsm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="Description" content="spritemate is a free online editor for Commodore 64 sprites." />
@@ -14,12 +15,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
     <link rel="manifest" href="favicon/manifest.json" />
     <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
-    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/dialog.css">
     <link rel="stylesheet" href="css/stylesheet.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    
-  
+
+
     <!-- Main application script -->
     <script type="module" src="./src/js/App.ts"></script>
   </head>
@@ -28,7 +27,7 @@
     <div id="container">
       <div id="menubar">
         <div id="menubar-filename" class="dropbtn">
-          File: <span id="menubar-filename-name">unsaved</span>
+          File: <input type="text" id="menubar-filename-input" value="mysprites" maxlength="50">
         </div>
         <ul>
           <li class="dropdown">
@@ -42,13 +41,40 @@
           <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">File</a>
             <div class="dropdown-content">
-              <a id="menubar-new">New Sprites<span class="hotkey"></span></a>
+              <a id="menubar-new">New Project<span class="hotkey"></span></a>
+              <a id="menubar-load">Open Project (*.spm, *.spd)<span class="hotkey"></span></a>
               <hr>
-              <a id="menubar-load">Load Sprite Data<span class="hotkey"></span></a>
-              <a id="menubar-save">Save Sprite Data...</a>
+              <a id="menubar-import-png">Import Image (24x21, *.png)</a>
+              <a id="menubar-import">Import VICE Snapshot (*.vsf)</a>
               <hr>
-              <a id="menubar-import">Import VICE (*.vsf) Snapshot</a>
-              <a id="menubar-export">Export Sprite Data As...</a>
+              <a id="menubar-save-spm">Save Project (*.spm)</a>
+              <a id="menubar-save-spd">Save SpritePad 2.0</a>
+              <a id="menubar-save-spd-old">Save SpritePad 1.8.1</a>
+              <hr>
+              <div class="submenu-item">
+                <a>Export...<span class="submenu-arrow">›</span></a>
+                <div class="submenu-content">
+                  <div class="submenu-item">
+                    <a>Assembly Code<span class="submenu-arrow">›</span></a>
+                    <div class="submenu-content">
+                      <a id="menubar-export-kick-hex">KICK ASS (hex notation)</a>
+                      <a id="menubar-export-kick-binary">KICK ASS (binary notation)</a>
+                      <a id="menubar-export-acme-hex">ACME (hex notation)</a>
+                      <a id="menubar-export-acme-binary">ACME (binary notation)</a>
+                    </div>
+                  </div>
+                  <a id="menubar-export-basic">BASIC Code</a>
+                  <div class="submenu-item">
+                    <a>Image<span class="submenu-arrow">›</span></a>
+                    <div class="submenu-content">
+                      <a id="menubar-export-png-current">Single Sprite (24x21, *.png)</a>
+                      <a id="menubar-export-png-all">All Sprites (*.zip)</a>
+                      <a id="menubar-export-spritesheet">Spritesheet (*.png)...</a>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
             </div>
           </li>
 
@@ -91,24 +117,11 @@
 
           <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">View</a>
-            <div class="dropdown-content">    
+            <div class="dropdown-content">
+              <a id="menubar-animation">Animation Window</a>
               <a id="menubar-monitor">VICE Snapshot Monitor</a>
               <hr />
               <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">shift + f</span></a>
-              <hr />
-              <span class="label">Editor Window</span>
-              <a id="menubar-editor-grid">Toggle Grid<span class="hotkey"></span></a>
-              <a id="menubar-editor-zoom-in">Zoom In<span class="hotkey"></span></a>
-              <a id="menubar-editor-zoom-out">Zoom Out<span class="hotkey"></span></a>
-              <hr />
-              <span class="label">Preview Window</span>
-              <a id="menubar-preview-zoom-in">Zoom In<span class="hotkey"></span></a>
-              <a id="menubar-preview-zoom-out">Zoom Out<span class="hotkey"></span></a>
-              <hr />
-              <span class="label">Sprite List Window</span>
-              <a id="menubar-list-grid">Toggle Sprite Borders<span class="hotkey"></span></a>
-              <a id="menubar-list-zoom-in">Zoom In<span class="hotkey"></span></a>
-              <a id="menubar-list-zoom-out">Zoom Out<span class="hotkey"></span></a>
             </div>
           </li>
 
