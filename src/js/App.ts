@@ -460,19 +460,13 @@ export class App {
     if (!this.selection?.active || !this.selection.bounds || !this.move_selection_backup) return;
 
     const { x1, y1, x2, y2 } = this.selection.bounds;
-    const selectionWidth = x2 - x1;
-    const selectionHeight = y2 - y1;
-
-    // Calculate new position - don't constrain to boundaries (allow negative or out-of-bounds)
-    const newX1 = x1 + dx;
-    const newY1 = y1 + dy;
 
     // Update selection bounds - keep original size, allow going outside canvas
     this.selection.bounds = {
-      x1: newX1,
-      y1: newY1,
-      x2: newX1 + selectionWidth,
-      y2: newY1 + selectionHeight
+      x1: x1 + dx,
+      y1: y1 + dy,
+      x2: x2 + dx,
+      y2: y2 + dy
     };
   }
 
@@ -1437,17 +1431,17 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
         if (this.selection?.active && this.move_selection_backup) {
           // Move selection content
-          if (x_diff !== 0 || y_diff !== 0) {
-            // Calculate step based on move direction
-            const step = this.sprite.is_multicolor() ? 2 : 1;
-            const dx = x_diff > 0 ? step : (x_diff < 0 ? -step : 0);
-            const dy = y_diff > 0 ? 1 : (y_diff < 0 ? -1 : 0);
+          const step = this.sprite.is_multicolor() ? 2 : 1;
 
-            if (dx !== 0 || dy !== 0) {
-              this.moveSelectedArea(dx, dy);
-              this.move_start_pos = currentPos;
-              this.update();
-            }
+          // Only move when accumulated movement reaches step threshold
+          const dx = Math.abs(x_diff) >= step ? Math.sign(x_diff) * step : 0;
+          const dy = Math.abs(y_diff) >= 1 ? Math.sign(y_diff) : 0;
+
+          if (dx !== 0 || dy !== 0) {
+            this.moveSelectedArea(dx, dy);
+            this.move_start_pos.x += dx;
+            this.move_start_pos.y += dy;
+            this.update();
           }
         } else {
           // Move entire sprite
