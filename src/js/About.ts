@@ -18,7 +18,7 @@ export default class About {
 
             <h2>Import Sprite from PNG</h2>
             <p>
-            Spritemate can now import a 24x21 pixel image in PNG format and convert it into a sprite. The import ist automagical, meaning that Spritemate tries to identify the right format (singlecolor or multicolor) based on pixel width and the right colors based on euclidean distance. 
+            Spritemate can now import a 24x21 pixel image in PNG format and convert it into a sprite. The import happens automagical, meaning that Spritemate tries to identify the right format (singlecolor or multicolor) based on pixel width and the right colors based on euclidean distance. 
             </p>
 
             <h1>v25.12.29</h1>
