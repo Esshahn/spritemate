@@ -21,6 +21,14 @@ export default class About {
             Spritemate can now import a 24x21 pixel image in PNG format and convert it into a sprite. The import happens automagical, meaning that Spritemate tries to identify the right format (singlecolor or multicolor) based on pixel width and the right colors based on euclidean distance. 
             </p>
 
+            <h2>Changes</h2>
+            <ul>
+            <li>Cleaned up the menu bar again</li>
+            <li>Importing a PNG image or a VCF snapshot now append to the current sprites instead of replacing</li>
+            <li>reverted back to magnifying glasses icons for zoom (thx2 TheSarge)</li>
+            <li>changed selection move behavior from copy to cut (thx2 TheSarge)</li>
+            </ul>
+
             <h1>v25.12.29</h1>
 
             <h2>Animations!</h2>
