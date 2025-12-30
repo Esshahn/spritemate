@@ -689,25 +689,31 @@ export class App {
   update_imported_png() {
     // called as a callback event from the importPNG class
     // after a PNG image got imported
-    console.log("update_imported_png called");
     const importedData = this.importPNG.get_imported_file();
-    console.log("Imported PNG data:", importedData);
+    const importedSprite = importedData.sprites[0];
 
-    this.sprite.set_all(importedData);
+    // Create a new sprite with the imported properties
+    this.sprite.new_sprite(importedSprite.color, importedSprite.multicolor);
 
-    // Sync filename to UI (will use filename from sprite data if it exists)
-    const input = dom.sel("#menubar-filename-input") as HTMLInputElement;
-    if (input) {
-      input.value = this.sprite.get_filename();
+    // Get the newly created sprite (it's now the current sprite)
+    const currentSprite = this.sprite.get_current_sprite();
+
+    // Update its pixels and properties
+    currentSprite.pixels = importedSprite.pixels;
+    currentSprite.double_x = importedSprite.double_x;
+    currentSprite.double_y = importedSprite.double_y;
+    currentSprite.overlay = importedSprite.overlay;
+
+    // Update the global colors if they're from a multicolor sprite
+    if (importedSprite.multicolor) {
+      const allData = this.sprite.get_all();
+      allData.colors[2] = importedData.colors[2]; // multicolor1
+      allData.colors[3] = importedData.colors[3]; // multicolor2
     }
 
     this.list.update_all(this.sprite.get_all());
-
-    // Stop animation when importing a new sprite, then update all views
     this.animation.update(this.sprite.get_all(), true);
     this.update();
-
-    console.log("Sprite data after import:", this.sprite.get_all());
   }
 
   regain_keyboard_controls() {
