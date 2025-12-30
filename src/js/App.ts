@@ -1393,12 +1393,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update_sprite_name();
     };
 
-    // prevent scrolling of canvas on mobile
-    dom.sel("#editor").ontouchmove = (e) => {
-      e.preventDefault();
-    };
-
-    dom.sel("#editor").onmousedown = (e) => {
+    // Shared handler for pointer down (mouse/touch)
+    const handlePointerDown = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
       if (this.mode == "select") {
         const pixel = this.editor.get_pixel(e);
         this.marquee_drawing = true;
@@ -1413,13 +1409,13 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.mode == "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-        this.is_drawing = true; // needed for mousemove drawing
+        this.sprite.set_pixel(this.editor.get_pixel(e), shiftKey);
+        this.is_drawing = true;
       }
 
       if (this.mode == "erase") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), true); // updates the sprite array at the grid position with the color chosen on the palette
-        this.is_drawing = true; // needed for mousemove drawing
+        this.sprite.set_pixel(this.editor.get_pixel(e), true);
+        this.is_drawing = true;
       }
 
       if (this.mode == "fill") {
@@ -1452,7 +1448,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#editor").onmousemove = (e) => {
+    // Shared handler for pointer move (mouse/touch)
+    const handlePointerMove = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
       if (this.marquee_drawing && this.mode == "select") {
         const newpos = this.editor.get_pixel(e);
         if (this.selection) {
@@ -1465,15 +1462,15 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         const newpos = this.editor.get_pixel(e);
-        // only draw if the mouse has entered a new pixel area (just for performance)
+        // only draw if the pointer has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
-          let delete_trigger = e.shiftKey;
+          let delete_trigger = shiftKey;
           if (this.mode == "erase") delete_trigger = true;
-          this.sprite.set_pixel(newpos, delete_trigger); // updates the sprite array at the grid position with the color chosen on the palette
+          this.sprite.set_pixel(newpos, delete_trigger);
           this.editor.update(all);
           this.preview.update(all);
-          this.list.update(all); // only updates the sprite drawn onto
+          this.list.update(all);
           this.oldpos = newpos;
         }
       }
@@ -1520,7 +1517,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     };
 
-    dom.sel("#editor").onclick = () => {
+    // Shared handler for pointer up (mouse/touch)
+    const handlePointerUp = () => {
       // Finalize selection
       if (this.marquee_drawing) {
         this.marquee_drawing = false;
@@ -1552,6 +1550,35 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
       this.sprite.save_backup();
       this.update();
+    };
+
+    // Touch event handlers
+    dom.sel("#editor").ontouchstart = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerDown(e, false);
+    };
+
+    dom.sel("#editor").ontouchmove = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerMove(e, false);
+    };
+
+    dom.sel("#editor").ontouchend = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerUp();
+    };
+
+    // Mouse event handlers
+    dom.sel("#editor").onmousedown = (e) => {
+      handlePointerDown(e, e.shiftKey);
+    };
+
+    dom.sel("#editor").onmousemove = (e) => {
+      handlePointerMove(e, e.shiftKey);
+    };
+
+    dom.sel("#editor").onclick = () => {
+      handlePointerUp();
     };
 
     /*

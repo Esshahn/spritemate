@@ -193,11 +193,28 @@ export default class Editor extends Window_Controls {
     }
   }
 
-  // input: x,y position of the mouse inside the editor window in pixels // output: x,y position in the sprite grid
+  // input: x,y position of the mouse/touch inside the editor window in pixels // output: x,y position in the sprite grid
   get_pixel(e) {
     const obj = this.canvas_element.getBoundingClientRect();
-    const x = e.clientX - obj.left;
-    const y = e.clientY - obj.top;
+
+    // Handle both mouse and touch events
+    let clientX: number, clientY: number;
+    if (e.touches && e.touches.length > 0) {
+      // Touch event
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      // Touch end event
+      clientX = e.changedTouches[0].clientX;
+      clientY = e.changedTouches[0].clientY;
+    } else {
+      // Mouse event
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const x = clientX - obj.left;
+    const y = clientY - obj.top;
     // Use actual rendered size from getBoundingClientRect, not logical canvas size
     const x_grid = Math.floor((x / obj.width) * this.config.sprite_x);
     const y_grid = Math.floor((y / obj.height) * this.config.sprite_y);
