@@ -45,8 +45,8 @@ export default class Animation extends Window_Controls {
     const template = `
       <div class="window_menu">
         <div class="icons-zoom-area">
-          <img src="ui/icon-zoom-plus.png" class="icon-hover" id="icon-animation-zoom-in" title="zoom in">
-          <img src="ui/icon-zoom-minus.png" class="icon-hover" id="icon-animation-zoom-out" title="zoom out">
+          <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-animation-zoom-in" title="zoom in">
+          <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-animation-zoom-out" title="zoom out">
         </div>
         <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-animation-x" title="double width">
         <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-animation-y" title="double height">

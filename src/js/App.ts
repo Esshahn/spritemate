@@ -483,7 +483,7 @@ export class App {
     const step = this.sprite.is_multicolor() ? 2 : 1;
     const currentSprite = this.sprite.get_current_sprite();
 
-    // Paste backup data at new position (copy, not cut - original remains)
+    // Paste backup data at new position (cut behavior - source was cleared on mousedown)
     // Only paste pixels that are within canvas bounds
     const { x1, y1, x2, y2 } = this.selection.bounds;
     let backupY = 0;
@@ -1382,18 +1382,20 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
 
-        // If there's an active selection, backup the selected pixels (don't clear yet)
+        // If there's an active selection, backup the selected pixels and clear the source
         if (this.selection?.active && this.selection.bounds) {
           const { x1, y1, x2, y2 } = this.selection.bounds;
           const step = this.sprite.is_multicolor() ? 2 : 1;
           const currentSprite = this.sprite.get_current_sprite();
 
-          // Backup selected area (copy, not cut)
+          // Backup selected area (cut, not copy)
           this.move_selection_backup = [];
           for (let y = y1; y <= y2; y++) {
             const row: number[] = [];
             for (let x = x1; x <= x2; x += step) {
               row.push(currentSprite.pixels[y][x]);
+              // Clear the source pixel (cut behavior)
+              currentSprite.pixels[y][x] = 0;
             }
             this.move_selection_backup.push(row);
           }
