@@ -7,6 +7,7 @@ import Tools from "./Tools";
 import Snapshot from "./Snapshot";
 import Load from "./Load";
 import Import from "./Import";
+import ImportPNG from "./ImportPNG";
 import Save from "./Save";
 import Export from "./Export-Spritesheet";
 import Settings from "./Settings";
@@ -47,6 +48,7 @@ export class App {
   window_export: any;
   export: any;
   import: any;
+  importPNG: any;
   window_settings: any;
   settings: any;
   window_tools: any;
@@ -256,6 +258,11 @@ export class App {
     // import
     this.import = new Import(this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
+    });
+
+    // import PNG
+    this.importPNG = new ImportPNG(this.config, {
+      onLoad: this.update_imported_png.bind(this),
     });
 
     // settings
@@ -679,6 +686,36 @@ export class App {
     this.update();
   }
 
+  update_imported_png() {
+    // called as a callback event from the importPNG class
+    // after a PNG image got imported
+    const importedData = this.importPNG.get_imported_file();
+    const importedSprite = importedData.sprites[0];
+
+    // Create a new sprite with the imported properties
+    this.sprite.new_sprite(importedSprite.color, importedSprite.multicolor);
+
+    // Get the newly created sprite (it's now the current sprite)
+    const currentSprite = this.sprite.get_current_sprite();
+
+    // Update its pixels and properties
+    currentSprite.pixels = importedSprite.pixels;
+    currentSprite.double_x = importedSprite.double_x;
+    currentSprite.double_y = importedSprite.double_y;
+    currentSprite.overlay = importedSprite.overlay;
+
+    // Update the global colors if they're from a multicolor sprite
+    if (importedSprite.multicolor) {
+      const allData = this.sprite.get_all();
+      allData.colors[2] = importedData.colors[2]; // multicolor1
+      allData.colors[3] = importedData.colors[3]; // multicolor2
+    }
+
+    this.list.update_all(this.sprite.get_all());
+    this.animation.update(this.sprite.get_all(), true);
+    this.update();
+  }
+
   regain_keyboard_controls() {
     // this will be called whenever keyboard controls have been deactivated, e.g. for input fields
     // currently used as callback after the save dialog
@@ -883,6 +920,10 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
     dom.sel("#menubar-import").onclick = () => {
       dom.sel("#input-import").click();
+    };
+
+    dom.sel("#menubar-import-png").onclick = () => {
+      dom.sel("#input-import-png").click();
     };
 
     // Direct save handlers

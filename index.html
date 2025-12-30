@@ -41,35 +41,38 @@
           <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">File</a>
             <div class="dropdown-content">
-              <a id="menubar-new">New Sprites<span class="hotkey"></span></a>
+              <a id="menubar-new">New Project<span class="hotkey"></span></a>
+              <a id="menubar-load">Open Project (*.spm, *.spd)<span class="hotkey"></span></a>
               <hr>
-              <a id="menubar-load">Load Sprite Data<span class="hotkey"></span></a>
-              <a id="menubar-import">Import VICE (*.vsf) Snapshot</a>
+              <a id="menubar-import-png">Import Image (24x21, *.png)</a>
+              <a id="menubar-import">Import VICE Snapshot (*.vsf)</a>
               <hr>
-              <a id="menubar-save-spm">Save as Spritemate</a>
-              <a id="menubar-save-spd">Save as SpritePad 2.0</a>
-              <a id="menubar-save-spd-old">Save as SpritePad 1.8.1</a>
+              <a id="menubar-save-spm">Save Project (*.spm)</a>
+              <a id="menubar-save-spd">Save SpritePad 2.0</a>
+              <a id="menubar-save-spd-old">Save SpritePad 1.8.1</a>
+              <hr>
               <div class="submenu-item">
-                <a>Export Sprite Data As...<span class="submenu-arrow">›</span></a>
+                <a>Export...<span class="submenu-arrow">›</span></a>
                 <div class="submenu-content">
                   <div class="submenu-item">
                     <a>Assembly Code<span class="submenu-arrow">›</span></a>
                     <div class="submenu-content">
-                      <a id="menubar-export-kick-hex">KICK ASS (hex)</a>
-                      <a id="menubar-export-kick-binary">KICK ASS (binary)</a>
-                      <a id="menubar-export-acme-hex">ACME (hex)</a>
-                      <a id="menubar-export-acme-binary">ACME (binary)</a>
+                      <a id="menubar-export-kick-hex">KICK ASS (hex notation)</a>
+                      <a id="menubar-export-kick-binary">KICK ASS (binary notation)</a>
+                      <a id="menubar-export-acme-hex">ACME (hex notation)</a>
+                      <a id="menubar-export-acme-binary">ACME (binary notation)</a>
                     </div>
                   </div>
                   <a id="menubar-export-basic">BASIC Code</a>
                   <div class="submenu-item">
-                    <a>Image (PNG)<span class="submenu-arrow">›</span></a>
+                    <a>Image<span class="submenu-arrow">›</span></a>
                     <div class="submenu-content">
-                      <a id="menubar-export-png-current">Current Sprite</a>
-                      <a id="menubar-export-png-all">All Sprites (ZIP)</a>
+                      <a id="menubar-export-png-current">Single Sprite (24x21, *.png)</a>
+                      <a id="menubar-export-png-all">All Sprites (*.zip)</a>
+                      <a id="menubar-export-spritesheet">Spritesheet (*.png)...</a>
                     </div>
                   </div>
-                  <a id="menubar-export-spritesheet">Spritesheet (PNG)...</a>
+                  
                 </div>
               </div>
             </div>
