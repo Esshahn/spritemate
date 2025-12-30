@@ -154,10 +154,9 @@ export default class ImportPNG {
     const sprite: number[][] = [];
     const colorCounts = new Map<number, number>();
 
-    // First pass: convert all pixels to palette colors and count occurrences
+    // Convert all pixels to palette colors and count occurrences
     for (let y = 0; y < 21; y++) {
       const row: number[] = [];
-
       for (let x = 0; x < 24; x++) {
         const idx = (y * 24 + x) * 4;
         const r = pixels[idx];
@@ -166,26 +165,50 @@ export default class ImportPNG {
 
         const colorIndex = this.find_closest_color(r, g, b, palette);
         row.push(colorIndex);
-
-        // Count color occurrences
         colorCounts.set(colorIndex, (colorCounts.get(colorIndex) || 0) + 1);
       }
-
       sprite.push(row);
     }
-
-    // Check if this is a multicolor sprite by detecting double-wide pixels
-    const isMulticolor = this.detectMulticolor(sprite);
 
     // Sort colors by frequency (most common first)
     const sortedColors = Array.from(colorCounts.entries())
       .sort((a, b) => b[1] - a[1]);
 
-    if (isMulticolor) {
-      return this.convertMulticolorSprite(sprite, sortedColors);
-    } else {
-      return this.convertSinglecolorSprite(sprite, sortedColors);
+    if (sortedColors.length === 0) {
+      console.warn("No colors found in image");
+      (sprite as any).individualColor = 1;
+      (sprite as any).multicolor = false;
+      return sprite;
     }
+
+    // Check if this is a multicolor sprite by detecting double-wide pixels
+    const isMulticolor = this.detectMulticolor(sprite);
+    const maxColors = isMulticolor ? 4 : 2;
+
+    // Map the most common colors to pen values
+    // Single-color: 0=background, 1=foreground
+    // Multi-color: 0=transparent, 1=individual, 2=multicolor1, 3=multicolor2
+    const colorMapping = new Map<number, number>();
+    for (let i = 0; i < Math.min(maxColors, sortedColors.length); i++) {
+      colorMapping.set(sortedColors[i][0], i);
+    }
+
+    // Convert palette colors to pen values
+    for (let y = 0; y < 21; y++) {
+      for (let x = 0; x < 24; x++) {
+        sprite[y][x] = colorMapping.get(sprite[y][x]) ?? (isMulticolor ? 0 : 1);
+      }
+    }
+
+    // Store metadata
+    (sprite as any).individualColor = sortedColors[1]?.[0] ?? sortedColors[0]?.[0] ?? 1;
+    (sprite as any).multicolor = isMulticolor;
+    if (isMulticolor) {
+      (sprite as any).multicolor1 = sortedColors[2]?.[0] ?? 8;
+      (sprite as any).multicolor2 = sortedColors[3]?.[0] ?? 6;
+    }
+
+    return sprite;
   }
 
   detectMulticolor(sprite: number[][]): boolean {
@@ -196,7 +219,6 @@ export default class ImportPNG {
     for (let y = 0; y < sprite.length; y++) {
       for (let x = 0; x < sprite[y].length - 1; x += 2) {
         totalChecks++;
-        // Check if this pixel and the next pixel are the same color
         if (sprite[y][x] === sprite[y][x + 1]) {
           pairCount++;
         }
@@ -204,138 +226,32 @@ export default class ImportPNG {
     }
 
     // If more than 90% of pixels come in pairs, it's likely multicolor
-    const pairRatio = pairCount / totalChecks;
-    return pairRatio > 0.9;
-  }
-
-  convertSinglecolorSprite(sprite: number[][], sortedColors: [number, number][]): number[][] {
-    // Determine background and foreground colors
-    let backgroundColor: number;
-    let foregroundColor: number;
-
-    if (sortedColors.length === 0) {
-      // No colors - shouldn't happen
-      console.warn("No colors found in image");
-      (sprite as any).individualColor = 1;
-      (sprite as any).multicolor = false;
-      return sprite;
-    } else if (sortedColors.length === 1) {
-      // Only one color - treat entire image as foreground
-      backgroundColor = sortedColors[0][0];
-      foregroundColor = sortedColors[0][0];
-      // Don't do any conversion, keep all as 1
-      for (let y = 0; y < 21; y++) {
-        for (let x = 0; x < 24; x++) {
-          sprite[y][x] = 1;
-        }
-      }
-    } else {
-      // Multiple colors: most common is background (0), second most is foreground (1)
-      backgroundColor = sortedColors[0][0];
-      foregroundColor = sortedColors[1][0];
-
-      // Second pass: convert to binary sprite data (0 = background, 1 = foreground)
-      for (let y = 0; y < 21; y++) {
-        for (let x = 0; x < 24; x++) {
-          if (sprite[y][x] === backgroundColor) {
-            sprite[y][x] = 0;
-          } else if (sprite[y][x] === foregroundColor) {
-            sprite[y][x] = 1;
-          } else {
-            // Any other colors get mapped to foreground
-            sprite[y][x] = 1;
-          }
-        }
-      }
-    }
-
-    // Store the foreground color as the sprite's individual color
-    (sprite as any).individualColor = foregroundColor;
-    (sprite as any).multicolor = false;
-
-    return sprite;
-  }
-
-  convertMulticolorSprite(sprite: number[][], sortedColors: [number, number][]): number[][] {
-    // Multicolor sprites can have up to 4 colors: 0, 1, 2, 3
-    // Map the most common colors to these pen values
-    const colorMapping = new Map<number, number>();
-
-    if (sortedColors.length === 0) {
-      console.warn("No colors found in image");
-      (sprite as any).individualColor = 1;
-      (sprite as any).multicolor = true;
-      (sprite as any).multicolor1 = 8;
-      (sprite as any).multicolor2 = 6;
-      return sprite;
-    }
-
-    // Assign the colors to pen values based on frequency
-    // Most common = 0 (transparent/background)
-    // 2nd most = 1 (individual)
-    // 3rd most = 2 (multicolor 1)
-    // 4th most = 3 (multicolor 2)
-    for (let i = 0; i < Math.min(4, sortedColors.length); i++) {
-      colorMapping.set(sortedColors[i][0], i);
-    }
-
-    // For multicolor sprites, the PNG has double-wide pixels (each logical pixel is 2 physical pixels)
-    // But Spritemate stores them as 24x21 with each pen value appearing twice
-    // So we just need to convert palette colors to pen values (0-3)
-    const convertedSprite: number[][] = [];
-
-    for (let y = 0; y < sprite.length; y++) {
-      const row: number[] = [];
-      for (let x = 0; x < sprite[y].length; x++) {
-        const paletteColor = sprite[y][x];
-        const penValue = colorMapping.get(paletteColor) ?? 0;
-        row.push(penValue);
-      }
-      convertedSprite.push(row);
-    }
-
-    // Store metadata
-    (convertedSprite as any).individualColor = sortedColors[1]?.[0] ?? 1;
-    (convertedSprite as any).multicolor = true;
-    (convertedSprite as any).multicolor1 = sortedColors[2]?.[0] ?? 8;
-    (convertedSprite as any).multicolor2 = sortedColors[3]?.[0] ?? 6;
-
-    return convertedSprite;
+    return pairCount / totalChecks > 0.9;
   }
 
   create_imported_file(spriteData: number[][]) {
-    // Get metadata from the sprite data
     const individualColor = (spriteData as any).individualColor || 1;
     const isMulticolor = (spriteData as any).multicolor || false;
     const multicolor1 = (spriteData as any).multicolor1 || 8;
     const multicolor2 = (spriteData as any).multicolor2 || 6;
 
-    // Clean the sprite data - remove metadata properties and ensure it's a clean 2D array
-    const cleanPixels: number[][] = [];
-    for (let y = 0; y < spriteData.length; y++) {
-      cleanPixels.push([...spriteData[y]]);
-    }
-
-    // Create the imported file object in the same format as Load.ts expects
     this.imported_file = {
       version: this.config.version,
       filename: "imported",
       colors: {
         0: 11, // transparent - default to light gray
-        2: multicolor1,  // multicolor 1
-        3: multicolor2,  // multicolor 2
+        2: multicolor1,
+        3: multicolor2,
       },
-      sprites: [
-        {
-          name: "sprite_0",
-          color: individualColor,
-          multicolor: isMulticolor,
-          double_x: false,
-          double_y: false,
-          overlay: false,
-          pixels: cleanPixels,
-        }
-      ],
+      sprites: [{
+        name: "sprite_0",
+        color: individualColor,
+        multicolor: isMulticolor,
+        double_x: false,
+        double_y: false,
+        overlay: false,
+        pixels: spriteData,
+      }],
       current_sprite: 0,
       pen: 1,
       animation: {
