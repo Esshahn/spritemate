@@ -65,8 +65,6 @@ export default class ImportPNG {
   }
 
   process_image(img: HTMLImageElement) {
-    console.log("process_image called with image:", img.width, "x", img.height);
-
     // Check if image is exactly 24x21 pixels
     if (img.width !== 24 || img.height !== 21) {
       alert(`Invalid image dimensions. Expected 24x21 pixels, got ${img.width}x${img.height} pixels.`);
@@ -93,11 +91,9 @@ export default class ImportPNG {
 
     // Get the current palette colors
     const paletteColors = this.get_current_palette_colors();
-    console.log("Palette colors:", paletteColors);
 
     // Convert image to sprite data
     const spriteData = this.convert_to_sprite(pixels, paletteColors);
-    console.log("Converted sprite data:", spriteData);
 
     if (!spriteData) {
       alert("Error converting image to sprite");
@@ -106,7 +102,6 @@ export default class ImportPNG {
 
     // Create the imported file object following the same format as Load.ts
     this.create_imported_file(spriteData);
-    console.log("Imported file created:", this.imported_file);
 
     status("PNG image imported successfully as sprite.");
   }
@@ -179,14 +174,41 @@ export default class ImportPNG {
       sprite.push(row);
     }
 
-    console.log("Color counts:", colorCounts);
+    // Check if this is a multicolor sprite by detecting double-wide pixels
+    const isMulticolor = this.detectMulticolor(sprite);
 
     // Sort colors by frequency (most common first)
     const sortedColors = Array.from(colorCounts.entries())
       .sort((a, b) => b[1] - a[1]);
 
-    console.log("Sorted colors by frequency:", sortedColors);
+    if (isMulticolor) {
+      return this.convertMulticolorSprite(sprite, sortedColors);
+    } else {
+      return this.convertSinglecolorSprite(sprite, sortedColors);
+    }
+  }
 
+  detectMulticolor(sprite: number[][]): boolean {
+    // Check if pixels come in horizontal pairs (multicolor sprites have double-wide pixels)
+    let pairCount = 0;
+    let totalChecks = 0;
+
+    for (let y = 0; y < sprite.length; y++) {
+      for (let x = 0; x < sprite[y].length - 1; x += 2) {
+        totalChecks++;
+        // Check if this pixel and the next pixel are the same color
+        if (sprite[y][x] === sprite[y][x + 1]) {
+          pairCount++;
+        }
+      }
+    }
+
+    // If more than 90% of pixels come in pairs, it's likely multicolor
+    const pairRatio = pairCount / totalChecks;
+    return pairRatio > 0.9;
+  }
+
+  convertSinglecolorSprite(sprite: number[][], sortedColors: [number, number][]): number[][] {
     // Determine background and foreground colors
     let backgroundColor: number;
     let foregroundColor: number;
@@ -195,12 +217,12 @@ export default class ImportPNG {
       // No colors - shouldn't happen
       console.warn("No colors found in image");
       (sprite as any).individualColor = 1;
+      (sprite as any).multicolor = false;
       return sprite;
     } else if (sortedColors.length === 1) {
       // Only one color - treat entire image as foreground
       backgroundColor = sortedColors[0][0];
       foregroundColor = sortedColors[0][0];
-      console.log("Single color image - Color:", foregroundColor);
       // Don't do any conversion, keep all as 1
       for (let y = 0; y < 21; y++) {
         for (let x = 0; x < 24; x++) {
@@ -211,7 +233,6 @@ export default class ImportPNG {
       // Multiple colors: most common is background (0), second most is foreground (1)
       backgroundColor = sortedColors[0][0];
       foregroundColor = sortedColors[1][0];
-      console.log("Background (will be 0):", backgroundColor, "Foreground (will be 1):", foregroundColor);
 
       // Second pass: convert to binary sprite data (0 = background, 1 = foreground)
       for (let y = 0; y < 21; y++) {
@@ -230,24 +251,70 @@ export default class ImportPNG {
 
     // Store the foreground color as the sprite's individual color
     (sprite as any).individualColor = foregroundColor;
-
-    console.log("Final sprite individual color:", foregroundColor);
+    (sprite as any).multicolor = false;
 
     return sprite;
   }
 
-  create_imported_file(spriteData: number[][]) {
-    // Get the individual color from the sprite data
-    const individualColor = (spriteData as any).individualColor || 1;
+  convertMulticolorSprite(sprite: number[][], sortedColors: [number, number][]): number[][] {
+    // Multicolor sprites can have up to 4 colors: 0, 1, 2, 3
+    // Map the most common colors to these pen values
+    const colorMapping = new Map<number, number>();
 
-    // Clean the sprite data - remove the individualColor property and ensure it's a clean 2D array
+    if (sortedColors.length === 0) {
+      console.warn("No colors found in image");
+      (sprite as any).individualColor = 1;
+      (sprite as any).multicolor = true;
+      (sprite as any).multicolor1 = 8;
+      (sprite as any).multicolor2 = 6;
+      return sprite;
+    }
+
+    // Assign the colors to pen values based on frequency
+    // Most common = 0 (transparent/background)
+    // 2nd most = 1 (individual)
+    // 3rd most = 2 (multicolor 1)
+    // 4th most = 3 (multicolor 2)
+    for (let i = 0; i < Math.min(4, sortedColors.length); i++) {
+      colorMapping.set(sortedColors[i][0], i);
+    }
+
+    // For multicolor sprites, the PNG has double-wide pixels (each logical pixel is 2 physical pixels)
+    // But Spritemate stores them as 24x21 with each pen value appearing twice
+    // So we just need to convert palette colors to pen values (0-3)
+    const convertedSprite: number[][] = [];
+
+    for (let y = 0; y < sprite.length; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < sprite[y].length; x++) {
+        const paletteColor = sprite[y][x];
+        const penValue = colorMapping.get(paletteColor) ?? 0;
+        row.push(penValue);
+      }
+      convertedSprite.push(row);
+    }
+
+    // Store metadata
+    (convertedSprite as any).individualColor = sortedColors[1]?.[0] ?? 1;
+    (convertedSprite as any).multicolor = true;
+    (convertedSprite as any).multicolor1 = sortedColors[2]?.[0] ?? 8;
+    (convertedSprite as any).multicolor2 = sortedColors[3]?.[0] ?? 6;
+
+    return convertedSprite;
+  }
+
+  create_imported_file(spriteData: number[][]) {
+    // Get metadata from the sprite data
+    const individualColor = (spriteData as any).individualColor || 1;
+    const isMulticolor = (spriteData as any).multicolor || false;
+    const multicolor1 = (spriteData as any).multicolor1 || 8;
+    const multicolor2 = (spriteData as any).multicolor2 || 6;
+
+    // Clean the sprite data - remove metadata properties and ensure it's a clean 2D array
     const cleanPixels: number[][] = [];
     for (let y = 0; y < spriteData.length; y++) {
       cleanPixels.push([...spriteData[y]]);
     }
-
-    console.log("Clean pixels array:", cleanPixels);
-    console.log("Individual color:", individualColor);
 
     // Create the imported file object in the same format as Load.ts expects
     this.imported_file = {
@@ -255,14 +322,14 @@ export default class ImportPNG {
       filename: "imported",
       colors: {
         0: 11, // transparent - default to light gray
-        2: 8,  // multicolor 1 - default to orange
-        3: 6,  // multicolor 2 - default to blue
+        2: multicolor1,  // multicolor 1
+        3: multicolor2,  // multicolor 2
       },
       sprites: [
         {
           name: "sprite_0",
           color: individualColor,
-          multicolor: false,
+          multicolor: isMulticolor,
           double_x: false,
           double_y: false,
           overlay: false,
