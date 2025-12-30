@@ -36,6 +36,10 @@ export class Dialog {
   private resizeStartWidth = 0;
   private resizeStartHeight = 0;
 
+  // Static z-index counter for bringing windows to front
+  // Start at 100 to stay below modal dialogs (z-index: 1000)
+  private static nextZIndex = 100;
+
   constructor(config: DialogConfig) {
     this.config = {
       modal: false,
@@ -145,6 +149,9 @@ export class Dialog {
   }
 
   private setupEventListeners(): void {
+    // Bring to front on mousedown
+    this.wrapper.addEventListener("mousedown", this.bringToFront.bind(this));
+
     // Dragging
     this.titleBar.addEventListener("mousedown", this.startDrag.bind(this));
     document.addEventListener("mousemove", this.drag.bind(this));
@@ -268,11 +275,23 @@ export class Dialog {
     }
   }
 
+  private bringToFront(): void {
+    // Only increment z-index for non-modal dialogs
+    // Modal dialogs use the browser's native modal z-index stacking
+    if (!this.config.modal) {
+      // Apply z-index to the dialog element itself, not the wrapper
+      // This is because each dialog is a separate stacking context
+      this.dialog.style.zIndex = String(Dialog.nextZIndex++);
+    }
+  }
+
   public open(): void {
     if (this.config.modal) {
       this.dialog.showModal();
     } else {
       this.dialog.show();
+      // Set initial z-index for non-modal dialogs
+      this.bringToFront();
     }
   }
 
