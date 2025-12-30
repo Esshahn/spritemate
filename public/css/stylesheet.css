@@ -17,7 +17,6 @@ body,
 html,
 p,
 div {
-  font-size: 98%;
   font-family: "Quicksand", sans-serif;
   margin: 0;
 }
@@ -486,8 +485,8 @@ img.center {
 
 #info fieldset {
   border: 1px dotted #333333;
-  font-size: 100%;
-  padding: 12px 12px 12px 12px;
+  font-size: 120%;
+  padding: 20px 20px 20px 20px;
   margin: 24px 0px 24px 0px;
   overflow: auto;
   height: 300px;
@@ -506,17 +505,14 @@ img.center {
 #info fieldset h1 {
   font-size: 110%;
   margin: 4px;
-  text-align: left;
-  text-transform: uppercase;
   margin-top: 20px;
   font-weight: bold;
 }
 
 #info fieldset h2 {
-  font-size: 100%;
-  text-align: left;
-  margin: 4px;
+  text-align:left;
   margin-top: 20px;
+  margin-bottom: 0px;
   font-weight: bold;
   color: white;
 }
