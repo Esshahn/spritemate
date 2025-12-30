@@ -1393,10 +1393,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update_sprite_name();
     };
 
-    // Touch event handlers for mobile support
-    dom.sel("#editor").ontouchstart = (e: TouchEvent) => {
-      e.preventDefault(); // Prevent default touch behavior and mouse event emulation
-
+    // Shared handler for pointer down (mouse/touch)
+    const handlePointerDown = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
       if (this.mode == "select") {
         const pixel = this.editor.get_pixel(e);
         this.marquee_drawing = true;
@@ -1411,7 +1409,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.mode == "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), false); // Touch doesn't have shiftKey
+        this.sprite.set_pixel(this.editor.get_pixel(e), shiftKey);
         this.is_drawing = true;
       }
 
@@ -1450,9 +1448,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
-    dom.sel("#editor").ontouchmove = (e: TouchEvent) => {
-      e.preventDefault(); // Prevent scrolling
-
+    // Shared handler for pointer move (mouse/touch)
+    const handlePointerMove = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
       if (this.marquee_drawing && this.mode == "select") {
         const newpos = this.editor.get_pixel(e);
         if (this.selection) {
@@ -1465,10 +1462,10 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
       if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
         const newpos = this.editor.get_pixel(e);
-        // only draw if the touch has entered a new pixel area (just for performance)
+        // only draw if the pointer has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
-          let delete_trigger = false; // Touch doesn't have shiftKey
+          let delete_trigger = shiftKey;
           if (this.mode == "erase") delete_trigger = true;
           this.sprite.set_pixel(newpos, delete_trigger);
           this.editor.update(all);
@@ -1520,9 +1517,8 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
     };
 
-    dom.sel("#editor").ontouchend = (e: TouchEvent) => {
-      e.preventDefault();
-
+    // Shared handler for pointer up (mouse/touch)
+    const handlePointerUp = () => {
       // Finalize selection
       if (this.marquee_drawing) {
         this.marquee_drawing = false;
@@ -1556,160 +1552,33 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       this.update();
     };
 
+    // Touch event handlers
+    dom.sel("#editor").ontouchstart = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerDown(e, false);
+    };
+
+    dom.sel("#editor").ontouchmove = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerMove(e, false);
+    };
+
+    dom.sel("#editor").ontouchend = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePointerUp();
+    };
+
+    // Mouse event handlers
     dom.sel("#editor").onmousedown = (e) => {
-      if (this.mode == "select") {
-        const pixel = this.editor.get_pixel(e);
-        this.marquee_drawing = true;
-        this.selection = {
-          active: false,
-          start: pixel,
-          end: pixel,
-          bounds: null
-        };
-        this.update();
-        return;
-      }
-
-      if (this.mode == "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), e.shiftKey); // updates the sprite array at the grid position with the color chosen on the palette
-        this.is_drawing = true; // needed for mousemove drawing
-      }
-
-      if (this.mode == "erase") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), true); // updates the sprite array at the grid position with the color chosen on the palette
-        this.is_drawing = true; // needed for mousemove drawing
-      }
-
-      if (this.mode == "fill") {
-        this.sprite.floodfill(this.editor.get_pixel(e));
-      }
-
-      if (this.mode == "move") {
-        this.move_start = true;
-        this.move_start_pos = this.editor.get_pixel(e);
-
-        // If there's an active selection, backup the selected pixels and clear the source
-        if (this.selection?.active && this.selection.bounds) {
-          const { x1, y1, x2, y2 } = this.selection.bounds;
-          const step = this.sprite.is_multicolor() ? 2 : 1;
-          const currentSprite = this.sprite.get_current_sprite();
-
-          // Backup selected area (cut, not copy)
-          this.move_selection_backup = [];
-          for (let y = y1; y <= y2; y++) {
-            const row: number[] = [];
-            for (let x = x1; x <= x2; x += step) {
-              row.push(currentSprite.pixels[y][x]);
-              // Clear the source pixel (cut behavior)
-              currentSprite.pixels[y][x] = 0;
-            }
-            this.move_selection_backup.push(row);
-          }
-        }
-      }
-      this.update();
+      handlePointerDown(e, e.shiftKey);
     };
 
     dom.sel("#editor").onmousemove = (e) => {
-      if (this.marquee_drawing && this.mode == "select") {
-        const newpos = this.editor.get_pixel(e);
-        if (this.selection) {
-          this.selection.end = newpos;
-          this.normalizeSelection();
-        }
-        this.update();
-        return;
-      }
-
-      if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
-        const newpos = this.editor.get_pixel(e);
-        // only draw if the mouse has entered a new pixel area (just for performance)
-        if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
-          const all = this.sprite.get_all();
-          let delete_trigger = e.shiftKey;
-          if (this.mode == "erase") delete_trigger = true;
-          this.sprite.set_pixel(newpos, delete_trigger); // updates the sprite array at the grid position with the color chosen on the palette
-          this.editor.update(all);
-          this.preview.update(all);
-          this.list.update(all); // only updates the sprite drawn onto
-          this.oldpos = newpos;
-        }
-      }
-
-      if (this.move_start) {
-        const currentPos = this.editor.get_pixel(e);
-        const x_diff = currentPos.x - this.move_start_pos.x;
-        const y_diff = currentPos.y - this.move_start_pos.y;
-
-        if (this.selection?.active && this.move_selection_backup) {
-          // Move selection content
-          const step = this.sprite.is_multicolor() ? 2 : 1;
-
-          // Only move when accumulated movement reaches step threshold
-          const dx = Math.abs(x_diff) >= step ? Math.sign(x_diff) * step : 0;
-          const dy = Math.abs(y_diff) >= 1 ? Math.sign(y_diff) : 0;
-
-          if (dx !== 0 || dy !== 0) {
-            this.moveSelectedArea(dx, dy);
-            this.move_start_pos.x += dx;
-            this.move_start_pos.y += dy;
-            this.update();
-          }
-        } else {
-          // Move entire sprite
-          if (x_diff > 0) {
-            this.sprite.shift_horizontal("right");
-          }
-          if (x_diff < 0) {
-            this.sprite.shift_horizontal("left");
-          }
-          if (y_diff > 0) {
-            this.sprite.shift_vertical("down");
-          }
-          if (y_diff < 0) {
-            this.sprite.shift_vertical("up");
-          }
-
-          if (x_diff || y_diff) {
-            this.move_start_pos = currentPos;
-            this.update();
-          }
-        }
-      }
+      handlePointerMove(e, e.shiftKey);
     };
 
     dom.sel("#editor").onclick = () => {
-      // Finalize selection
-      if (this.marquee_drawing) {
-        this.marquee_drawing = false;
-        if (this.selection) {
-          this.normalizeSelection();
-        }
-        // Don't save backup (selection isn't a mutation)
-        this.update();
-        return;
-      }
-
-      // stop drawing pixels
-      this.is_drawing = false;
-
-      // Finalize move operation
-      if (this.move_start) {
-        this.move_start = false;
-
-        // Apply the move if there was a selection
-        if (this.move_selection_backup) {
-          this.applyMoveSelection();
-          this.move_selection_backup = null;
-        }
-
-        this.sprite.save_backup();
-        this.update();
-        return;
-      }
-
-      this.sprite.save_backup();
-      this.update();
+      handlePointerUp();
     };
 
     /*
