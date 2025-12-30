@@ -149,13 +149,19 @@ export class Dialog {
   }
 
   private setupEventListeners(): void {
-    // Bring to front on mousedown
+    // Bring to front on mousedown or touch
     this.wrapper.addEventListener("mousedown", this.bringToFront.bind(this));
+    this.wrapper.addEventListener("touchstart", this.bringToFront.bind(this));
 
-    // Dragging
+    // Dragging - mouse events
     this.titleBar.addEventListener("mousedown", this.startDrag.bind(this));
     document.addEventListener("mousemove", this.drag.bind(this));
     document.addEventListener("mouseup", this.stopDrag.bind(this));
+
+    // Dragging - touch events
+    this.titleBar.addEventListener("touchstart", this.startDragTouch.bind(this));
+    document.addEventListener("touchmove", this.dragTouch.bind(this));
+    document.addEventListener("touchend", this.stopDragTouch.bind(this));
 
     // Resizing
     if (this.config.resizable) {
@@ -164,6 +170,11 @@ export class Dialog {
         resizeHandle.addEventListener("mousedown", this.startResize.bind(this));
         document.addEventListener("mousemove", this.resize.bind(this));
         document.addEventListener("mouseup", this.stopResize.bind(this));
+
+        // Touch resize
+        resizeHandle.addEventListener("touchstart", this.startResizeTouch.bind(this));
+        document.addEventListener("touchmove", this.resizeTouch.bind(this));
+        document.addEventListener("touchend", this.stopResizeTouch.bind(this));
       }
     }
 
@@ -261,6 +272,100 @@ export class Dialog {
   }
 
   private stopResize(e: MouseEvent): void {
+    if (!this.isResizing) return;
+
+    this.isResizing = false;
+
+    if (this.config.onResizeStop) {
+      this.config.onResizeStop({
+        width: parseInt(this.wrapper.style.width) || 0,
+        height: parseInt(this.wrapper.style.height) || 0,
+        left: parseInt(this.wrapper.style.left) || 0,
+        top: parseInt(this.wrapper.style.top) || 0,
+      });
+    }
+  }
+
+  // Touch event handlers for dragging
+  private startDragTouch(e: TouchEvent): void {
+    if ((e.target as HTMLElement).classList.contains("dialog-title") ||
+        (e.target as HTMLElement).classList.contains("dialog-titlebar")) {
+      this.isDragging = true;
+      this.dragStartX = e.touches[0].clientX;
+      this.dragStartY = e.touches[0].clientY;
+
+      // If centered with transform, convert to absolute position
+      if (this.wrapper.style.transform) {
+        const rect = this.wrapper.getBoundingClientRect();
+        this.wrapper.style.transform = "";
+        this.wrapper.style.left = `${rect.left}px`;
+        this.wrapper.style.top = `${rect.top}px`;
+      }
+
+      // Get current position from style, not from getBoundingClientRect
+      this.elementStartX = parseInt(this.wrapper.style.left) || 0;
+      this.elementStartY = parseInt(this.wrapper.style.top) || 0;
+
+      this.wrapper.style.cursor = "move";
+      e.preventDefault();
+    }
+  }
+
+  private dragTouch(e: TouchEvent): void {
+    if (!this.isDragging || !e.touches.length) return;
+
+    const deltaX = e.touches[0].clientX - this.dragStartX;
+    const deltaY = e.touches[0].clientY - this.dragStartY;
+
+    const newX = this.elementStartX + deltaX;
+    const newY = this.elementStartY + deltaY;
+
+    this.wrapper.style.left = `${newX}px`;
+    this.wrapper.style.top = `${newY}px`;
+  }
+
+  private stopDragTouch(): void {
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+    this.wrapper.style.cursor = "";
+
+    if (this.config.onDragStop) {
+      this.config.onDragStop({
+        left: parseInt(this.wrapper.style.left) || 0,
+        top: parseInt(this.wrapper.style.top) || 0,
+      });
+    }
+  }
+
+  // Touch event handlers for resizing
+  private startResizeTouch(e: TouchEvent): void {
+    this.isResizing = true;
+    this.resizeStartX = e.touches[0].clientX;
+    this.resizeStartY = e.touches[0].clientY;
+
+    const rect = this.wrapper.getBoundingClientRect();
+    this.resizeStartWidth = rect.width;
+    this.resizeStartHeight = rect.height;
+
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  private resizeTouch(e: TouchEvent): void {
+    if (!this.isResizing || !e.touches.length) return;
+
+    const deltaX = e.touches[0].clientX - this.resizeStartX;
+    const deltaY = e.touches[0].clientY - this.resizeStartY;
+
+    const newWidth = Math.max(200, this.resizeStartWidth + deltaX);
+    const newHeight = Math.max(100, this.resizeStartHeight + deltaY);
+
+    this.wrapper.style.width = `${newWidth}px`;
+    this.wrapper.style.height = `${newHeight}px`;
+  }
+
+  private stopResizeTouch(): void {
     if (!this.isResizing) return;
 
     this.isResizing = false;
