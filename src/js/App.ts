@@ -788,7 +788,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
           this.update();
         }
 
-        if (e.key == "F") {
+        if (e.key == "f" && isCtrl) {
           toggle_fullscreen();
         }
 
