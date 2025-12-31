@@ -107,30 +107,91 @@ export default class ImportPNG {
     // Get the current palette colors
     const paletteColors = this.get_current_palette_colors();
 
-    // Extract all sprites from the spritesheet
-    const allSpriteData: number[][][] = [];
+    // FIRST PASS: Extract raw pixel data and analyze global colors
+    const rawSprites: { pixels: Uint8ClampedArray; x: number; y: number }[] = [];
+    const globalColorCounts = new Map<number, number>();
 
-    console.log('Starting sprite extraction...');
+    console.log('First pass: Extracting raw sprite data...');
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         const x = col * spriteWidth;
         const y = row * spriteHeight;
 
-        console.log(`Extracting sprite at row ${row}, col ${col} (x=${x}, y=${y})`);
-
         // Extract sprite region
         const imageData = ctx.getImageData(x, y, spriteWidth, spriteHeight);
         const pixels = imageData.data;
 
-        // Convert image to sprite data
-        const spriteData = this.convert_to_sprite(pixels, paletteColors);
+        // Store raw pixel data
+        rawSprites.push({ pixels, x, y });
 
-        if (spriteData) {
-          allSpriteData.push(spriteData);
-          console.log(`Sprite ${allSpriteData.length} extracted successfully`);
-        } else {
-          console.warn(`Failed to extract sprite at row ${row}, col ${col}`);
+        // Count colors globally across all sprites
+        for (let py = 0; py < spriteHeight; py++) {
+          for (let px = 0; px < spriteWidth; px++) {
+            const idx = (py * spriteWidth + px) * 4;
+            const r = pixels[idx];
+            const g = pixels[idx + 1];
+            const b = pixels[idx + 2];
+            const colorIndex = this.find_closest_color(r, g, b, paletteColors);
+            globalColorCounts.set(colorIndex, (globalColorCounts.get(colorIndex) || 0) + 1);
+          }
         }
+      }
+    }
+
+    console.log('Global color analysis:', Array.from(globalColorCounts.entries()).sort((a, b) => b[1] - a[1]));
+
+    // Determine global colors (shared across ALL multicolor sprites)
+    let globalBackground = 0; // default black
+    let globalMulticolor1 = 8; // default
+    let globalMulticolor2 = 6; // default
+
+    if (globalColorCounts.size > 0) {
+      // Sort colors by frequency
+      const sortedGlobalColors = Array.from(globalColorCounts.entries())
+        .sort((a, b) => b[1] - a[1]);
+
+      // Most common = background/transparent (pen 0)
+      globalBackground = sortedGlobalColors[0][0];
+
+      // 2nd and 3rd most common = multicolor 1 and 2 (pens 2 and 3)
+      // These will be used for ALL multicolor sprites in the sheet
+      if (sortedGlobalColors.length >= 3) {
+        globalMulticolor1 = sortedGlobalColors[1][0];
+        globalMulticolor2 = sortedGlobalColors[2][0];
+      }
+    }
+
+    console.log('Global color settings:', {
+      background: globalBackground,
+      multicolor1: globalMulticolor1,
+      multicolor2: globalMulticolor2
+    });
+
+    // SECOND PASS: Convert each sprite individually
+    // Each sprite can be single-color OR multicolor independently
+    const allSpriteData: number[][][] = [];
+
+    console.log('Second pass: Converting sprites...');
+    for (let i = 0; i < rawSprites.length; i++) {
+      const { pixels } = rawSprites[i];
+
+      // Detect if THIS specific sprite is multicolor
+      const isSpriteMulticolor = this.detectMulticolorFromPixels(pixels, spriteWidth, spriteHeight, paletteColors);
+      console.log(`Sprite ${i + 1}: ${isSpriteMulticolor ? 'multicolor' : 'single-color'}`);
+
+      const spriteData = this.convert_to_sprite_with_globals(
+        pixels,
+        paletteColors,
+        isSpriteMulticolor,
+        globalMulticolor1,
+        globalMulticolor2
+      );
+
+      if (spriteData) {
+        allSpriteData.push(spriteData);
+        console.log(`Sprite ${allSpriteData.length} converted successfully`);
+      } else {
+        console.warn(`Failed to convert sprite ${i}`);
       }
     }
 
@@ -142,7 +203,7 @@ export default class ImportPNG {
     }
 
     // Create the imported file object with all sprites
-    this.create_imported_file_from_multiple(allSpriteData);
+    this.create_imported_file_from_multiple(allSpriteData, globalBackground, globalMulticolor1, globalMulticolor2);
     console.log('Created imported file with', allSpriteData.length, 'sprites');
 
     if (totalSprites === 1) {
@@ -259,6 +320,45 @@ export default class ImportPNG {
     return sprite;
   }
 
+  detectMulticolorFromPixels(
+    pixels: Uint8ClampedArray,
+    spriteWidth: number,
+    spriteHeight: number,
+    palette: string[]
+  ): boolean {
+    // Multicolor detection rule: EVERY pixel must be in a horizontal pair
+    // If even ONE pixel breaks the pairing, it's single-color
+    // Pixel 0 must equal pixel 1, pixel 2 must equal pixel 3, etc.
+
+    // Convert pixels to palette indices first
+    const paletteIndices: number[][] = [];
+    for (let y = 0; y < spriteHeight; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < spriteWidth; x++) {
+        const idx = (y * spriteWidth + x) * 4;
+        const r = pixels[idx];
+        const g = pixels[idx + 1];
+        const b = pixels[idx + 2];
+        const colorIndex = this.find_closest_color(r, g, b, palette);
+        row.push(colorIndex);
+      }
+      paletteIndices.push(row);
+    }
+
+    // Check EVERY pixel pair - ALL must match for multicolor
+    for (let y = 0; y < spriteHeight; y++) {
+      for (let x = 0; x < spriteWidth - 1; x += 2) {
+        // If any pair doesn't match, it's single-color
+        if (paletteIndices[y][x] !== paletteIndices[y][x + 1]) {
+          return false;
+        }
+      }
+    }
+
+    // All pixels are properly paired - it's multicolor
+    return true;
+  }
+
   detectMulticolor(sprite: number[][]): boolean {
     // Check if pixels come in horizontal pairs (multicolor sprites have double-wide pixels)
     let pairCount = 0;
@@ -275,6 +375,98 @@ export default class ImportPNG {
 
     // If more than 90% of pixels come in pairs, it's likely multicolor
     return pairCount / totalChecks > 0.9;
+  }
+
+  convert_to_sprite_with_globals(
+    pixels: Uint8ClampedArray,
+    palette: string[],
+    isMulticolor: boolean,
+    globalMulticolor1: number,
+    globalMulticolor2: number
+  ): number[][] | null {
+    const sprite: number[][] = [];
+    const colorCounts = new Map<number, number>();
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
+
+    // Convert all pixels to palette colors and count occurrences
+    for (let y = 0; y < spriteHeight; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < spriteWidth; x++) {
+        const idx = (y * spriteWidth + x) * 4;
+        const r = pixels[idx];
+        const g = pixels[idx + 1];
+        const b = pixels[idx + 2];
+
+        const colorIndex = this.find_closest_color(r, g, b, palette);
+        row.push(colorIndex);
+        colorCounts.set(colorIndex, (colorCounts.get(colorIndex) || 0) + 1);
+      }
+      sprite.push(row);
+    }
+
+    // Sort colors by frequency (most common first)
+    const sortedColors = Array.from(colorCounts.entries())
+      .sort((a, b) => b[1] - a[1]);
+
+    if (sortedColors.length === 0) {
+      console.warn("No colors found in sprite");
+      (sprite as any).individualColor = 1;
+      (sprite as any).multicolor = isMulticolor;
+      return sprite;
+    }
+
+    // Create color mapping based on whether it's multicolor or not
+    const colorMapping = new Map<number, number>();
+
+    if (isMulticolor) {
+      // Multicolor mapping:
+      // Most common color in THIS sprite = transparent (pen 0)
+      // Global multicolor1 = pen 2
+      // Global multicolor2 = pen 3
+      // Most common color that ISN'T transparent or global colors = individual (pen 1)
+
+      const transparentColor = sortedColors[0][0];
+      colorMapping.set(transparentColor, 0);
+      colorMapping.set(globalMulticolor1, 2);
+      colorMapping.set(globalMulticolor2, 3);
+
+      // Find individual color - most common that isn't already mapped
+      let individualColor = 1; // default
+      for (const [color] of sortedColors) {
+        if (!colorMapping.has(color)) {
+          individualColor = color;
+          colorMapping.set(color, 1);
+          break;
+        }
+      }
+
+      // Store metadata
+      (sprite as any).individualColor = individualColor;
+      (sprite as any).multicolor = true;
+      (sprite as any).multicolor1 = globalMulticolor1;
+      (sprite as any).multicolor2 = globalMulticolor2;
+    } else {
+      // Single-color mapping:
+      // Most common = background (pen 0)
+      // Next most common = foreground (pen 1)
+      colorMapping.set(sortedColors[0][0], 0);
+
+      const individualColor = sortedColors.length > 1 ? sortedColors[1][0] : sortedColors[0][0];
+      colorMapping.set(individualColor, 1);
+
+      (sprite as any).individualColor = individualColor;
+      (sprite as any).multicolor = false;
+    }
+
+    // Convert palette colors to pen values
+    for (let y = 0; y < spriteHeight; y++) {
+      for (let x = 0; x < spriteWidth; x++) {
+        sprite[y][x] = colorMapping.get(sprite[y][x]) ?? (isMulticolor ? 0 : 1);
+      }
+    }
+
+    return sprite;
   }
 
   create_imported_file(spriteData: number[][]) {
@@ -313,12 +505,12 @@ export default class ImportPNG {
     };
   }
 
-  create_imported_file_from_multiple(allSpriteData: number[][][]) {
-    // Use the first sprite's settings for global colors
-    const firstSprite = allSpriteData[0];
-    const multicolor1 = (firstSprite as any).multicolor1 || 8;
-    const multicolor2 = (firstSprite as any).multicolor2 || 6;
-
+  create_imported_file_from_multiple(
+    allSpriteData: number[][][],
+    globalBackground: number,
+    globalMulticolor1: number,
+    globalMulticolor2: number
+  ) {
     // Create sprite objects for each sprite data
     const sprites = allSpriteData.map((spriteData, index) => {
       const individualColor = (spriteData as any).individualColor || 1;
@@ -339,9 +531,9 @@ export default class ImportPNG {
       version: this.config.version,
       filename: "imported",
       colors: {
-        0: 11, // transparent - default to light gray
-        2: multicolor1,
-        3: multicolor2,
+        0: globalBackground, // background/transparent color
+        2: globalMulticolor1,
+        3: globalMulticolor2,
       },
       sprites: sprites,
       current_sprite: 0,
