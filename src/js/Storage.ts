@@ -56,36 +56,43 @@ export default class Storage {
   init() {
     if (typeof Storage !== "undefined") {
       try {
-        if (localStorage.getItem("spritemate_config") == null) {
-          // there is no local config, so we're creating one
-          localStorage.setItem("spritemate_config", JSON.stringify(this.config));
+        // Read stored config (if it exists)
+        const storedConfigString = localStorage.getItem("spritemate_config");
+
+        if (!storedConfigString) {
+          // No stored config exists, save the default
+          this.write(this.config);
           this.is_new_version = true;
+          return;
         }
 
-        // now we can safely read in the storage
-        this.storage = JSON.parse(
-          localStorage.getItem("spritemate_config") || "{}"
-        );
+        // Parse stored config
+        this.storage = JSON.parse(storedConfigString);
 
+        // Check if config version has been updated
         if (this.isNewerVersion(this.config.version, this.storage.version)) {
-          // is the config newer than the storage version?
-          // then update the storage
-          this.storage = JSON.parse(JSON.stringify(this.config));
-          this.write(this.storage);
           this.is_new_version = true;
         }
 
-        // Merge stored config with default config
-        // Preset palettes (colodore, palette, pepto) always come from code
-        // Only "custom" palette is preserved from localStorage
-        const defaultPalettes = JSON.parse(JSON.stringify(this.config.palettes));
+        // Merge strategy: Start with defaults from code (this.config),
+        // then selectively apply user-specific settings from storage
+
+        // Preserve window positions/sizes from storage
+        const windowKeys = ['window_tools', 'window_editor', 'window_preview', 'window_list',
+                            'window_palette', 'window_snapshot', 'window_animation'];
+        windowKeys.forEach(key => {
+          if (this.storage[key]) {
+            this.config[key] = { ...this.config[key], ...this.storage[key] };
+          }
+        });
+
+        // Preserve selected palette (if valid)
+        if (this.storage.selected_palette && this.config.palettes[this.storage.selected_palette]) {
+          this.config.selected_palette = this.storage.selected_palette;
+        }
+
+        // Preserve custom palette from storage
         const customPalette = this.storage.palettes?.custom;
-
-        this.config = JSON.parse(JSON.stringify(this.storage));
-        this.config.palettes = defaultPalettes;
-
-        // Restore custom palette from storage if it exists
-        // Handle both old format (array) and new format (object with values)
         if (customPalette) {
           if (Array.isArray(customPalette) && customPalette.length === 16) {
             // Old format: migrate to new format
@@ -96,14 +103,13 @@ export default class Storage {
           }
         }
 
-        // If selected_palette doesn't exist in palettes, reset to default
-        if (!this.config.palettes[this.config.selected_palette]) {
-          this.config.selected_palette = "pepto";
-        }
+        // Save merged config back to localStorage (adds any new properties from code)
+        this.write(this.config);
+
       } catch (error) {
         console.error("Failed to initialize storage:", error);
         status("Unable to access settings storage. Using defaults.");
-        this.config = this.config; // Use default config
+        // this.config already has default values from constructor
       }
     } else {
       // can't access storage on the browser
