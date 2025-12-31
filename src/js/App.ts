@@ -792,34 +792,34 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         // Use Ctrl key only (works on all platforms, avoids browser conflicts on Mac)
         const isCtrl = e.ctrlKey;
 
-        if (e.key == "a") {
+        if (e.key === "a") {
           console.time("performance");
           for (let i = 0; i <= 1000; i++) this.update();
           console.timeEnd("performance");
         }
 
-        if (e.key == "ArrowRight") {
+        if (e.key === "ArrowRight") {
           this.sprite.set_current_sprite("right");
           this.update();
         }
-        if (e.key == "ArrowLeft") {
+        if (e.key === "ArrowLeft") {
           this.sprite.set_current_sprite("left");
           this.update();
         }
 
-        if (e.key == "f" && isCtrl) {
+        if (e.key === "f" && isCtrl) {
           toggle_fullscreen();
         }
 
         // Tool shortcuts (lowercase keys) - only when Ctrl is not pressed
-        if (e.key == "m" && !isCtrl) this.setDrawMode("move");
-        if (e.key == "d" && !isCtrl) this.setDrawMode("draw");
-        if (e.key == "e" && !isCtrl) this.setDrawMode("erase");
-        if (e.key == "f" && !isCtrl) this.setDrawMode("fill");
+        if (e.key === "m" && !isCtrl) this.setDrawMode("move");
+        if (e.key === "d" && !isCtrl) this.setDrawMode("draw");
+        if (e.key === "e" && !isCtrl) this.setDrawMode("erase");
+        if (e.key === "f" && !isCtrl) this.setDrawMode("fill");
 
         // Select tool: 's' key toggles between select and draw mode
         // If there's an active selection or in select mode, clear and switch to draw
-        if (e.key == "s" && !isCtrl) {
+        if (e.key === "s" && !isCtrl) {
           if (this.selection?.active || this.mode === "select") {
             this.clearSelection();
             this.setDrawMode("draw");
@@ -829,7 +829,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Escape key: Clear selection and return to draw mode
-        if (e.key == "Escape") {
+        if (e.key === "Escape") {
           if (this.selection?.active) {
             this.clearSelection();
           }
@@ -839,28 +839,28 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Color palette shortcuts (number keys)
-        if (e.key == "1") {
+        if (e.key === "1") {
           this.sprite.set_pen(0);
           this.update();
         }
 
-        if (e.key == "2") {
+        if (e.key === "2") {
           this.sprite.set_pen(1);
           this.update();
         }
 
-        if (e.key == "3" && this.sprite.is_multicolor()) {
+        if (e.key === "3" && this.sprite.is_multicolor()) {
           this.sprite.set_pen(2);
           this.update();
         }
 
-        if (e.key == "4" && this.sprite.is_multicolor()) {
+        if (e.key === "4" && this.sprite.is_multicolor()) {
           this.sprite.set_pen(3);
           this.update();
         }
 
         // Undo/Redo with Ctrl
-        if (isCtrl && e.key.toLowerCase() == "z") {
+        if (isCtrl && e.key.toLowerCase() === "z") {
           e.preventDefault(); // Prevent browser undo
           if (e.shiftKey) {
             // Ctrl+Shift+Z = Redo
@@ -874,13 +874,13 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Toggle multicolor mode
-        if (e.key == "c" && !isCtrl) {
+        if (e.key === "c" && !isCtrl) {
           this.sprite.toggle_multicolor();
           this.update();
         }
 
         // New sprite with Ctrl+N
-        if (isCtrl && e.key.toLowerCase() == "n") {
+        if (isCtrl && e.key.toLowerCase() === "n") {
           e.preventDefault(); // Prevent browser new window
           this.sprite.new_sprite(
             this.palette.get_color(),
@@ -892,7 +892,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Copy sprite with Ctrl+C
-        if (isCtrl && e.key.toLowerCase() == "c") {
+        if (isCtrl && e.key.toLowerCase() === "c") {
           e.preventDefault(); // Prevent browser copy
           this.sprite.copy();
           this.update_ui();
@@ -900,7 +900,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Paste sprite with Ctrl+V
-        if (isCtrl && e.key.toLowerCase() == "v") {
+        if (isCtrl && e.key.toLowerCase() === "v") {
           e.preventDefault(); // Prevent browser paste
           if (!this.sprite.is_copy_empty()) {
             this.sprite.paste();
@@ -912,7 +912,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Duplicate sprite with Ctrl+D
-        if (isCtrl && e.key.toLowerCase() == "d") {
+        if (isCtrl && e.key.toLowerCase() === "d") {
           e.preventDefault(); // Prevent browser bookmark
           this.sprite.duplicate();
           this.list.update_all(this.sprite.get_all());
@@ -921,7 +921,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Delete sprite with Ctrl+Backspace or Ctrl+Delete
-        if (isCtrl && (e.key == "Backspace" || e.key == "Delete")) {
+        if (isCtrl && (e.key === "Backspace" || e.key === "Delete")) {
           e.preventDefault();
           this.sprite.delete();
           this.list.update_all(this.sprite.get_all());
@@ -929,7 +929,7 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
         }
 
         // Invert sprite with Ctrl+I
-        if (isCtrl && e.key.toLowerCase() == "i") {
+        if (isCtrl && e.key.toLowerCase() === "i") {
           e.preventDefault();
           this.sprite.invert();
           this.update();
@@ -1291,17 +1291,6 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    // Icon handlers commented out because icons are removed from Tools.ts
-    // dom.sel("#icon-load").onclick = () => {
-    //   dom.sel("#input-load").click();
-    // };
-
-    // dom.sel("#icon-save").onclick = () => {
-    //   this.allow_keyboard_shortcuts = false;
-    //   $(this.window_save.get_window_id()).dialog("open");
-    //   this.save.set_save_data(this.sprite.get_all());
-    // };
-
     dom.sel("#icon-move").onclick = () => this.setDrawMode("move");
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
     dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
@@ -1429,7 +1418,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     // Shared handler for pointer down (mouse/touch)
     const handlePointerDown = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
-      if (this.mode == "select") {
+      if (this.mode === "select") {
         const pixel = this.editor.get_pixel(e);
         this.marquee_drawing = true;
         this.selection = {
@@ -1442,21 +1431,21 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         return;
       }
 
-      if (this.mode == "draw") {
+      if (this.mode === "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), shiftKey);
         this.is_drawing = true;
       }
 
-      if (this.mode == "erase") {
+      if (this.mode === "erase") {
         this.sprite.set_pixel(this.editor.get_pixel(e), true);
         this.is_drawing = true;
       }
 
-      if (this.mode == "fill") {
+      if (this.mode === "fill") {
         this.sprite.floodfill(this.editor.get_pixel(e));
       }
 
-      if (this.mode == "move") {
+      if (this.mode === "move") {
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
 
@@ -1484,7 +1473,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     // Shared handler for pointer move (mouse/touch)
     const handlePointerMove = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
-      if (this.marquee_drawing && this.mode == "select") {
+      if (this.marquee_drawing && this.mode === "select") {
         const newpos = this.editor.get_pixel(e);
         if (this.selection) {
           this.selection.end = newpos;
@@ -1494,13 +1483,13 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         return;
       }
 
-      if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
+      if (this.is_drawing && (this.mode === "draw" || this.mode === "erase")) {
         const newpos = this.editor.get_pixel(e);
         // only draw if the pointer has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
           let delete_trigger = shiftKey;
-          if (this.mode == "erase") delete_trigger = true;
+          if (this.mode === "erase") delete_trigger = true;
           this.sprite.set_pixel(newpos, delete_trigger);
           this.editor.update(all);
           this.preview.update(all);

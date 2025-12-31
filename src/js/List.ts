@@ -16,8 +16,8 @@ export default class List extends Window_Controls {
     this.config = config;
     this.window = window;
     this.zoom = this.config.window_list.zoom;
-    this.zoom_min = 4;
-    this.zoom_max = 16;
+    this.zoom_min = this.config.zoom_limits.list.min;
+    this.zoom_max = this.config.zoom_limits.list.max;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -74,8 +74,6 @@ export default class List extends Window_Controls {
       "beforeend",
       `<style id="zoom-sort-fix" type='text/css'>.list-sprite-size{ width: ${this.width}px; height:${this.height}px;} </style>`
     );
-
-    // TODO:
   }
 
   get_clicked_sprite() {
@@ -158,31 +156,18 @@ export default class List extends Window_Controls {
   }
 
   draw_sprite(canvas, sprite_data, all_data) {
-    let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
-
     // first fill the whole sprite with the background color
     canvas.fillStyle = this.config.colors[all_data.colors[0]]; // transparent
     canvas.fillRect(0, 0, this.width, this.height);
 
-    for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
-      for (let j = 0; j < this.pixels_y; j++) {
-        const array_entry = sprite_data.pixels[j][i];
+    // Temporarily set canvas for rendering
+    const originalCanvas = this.canvas;
+    this.canvas = canvas;
 
-        if (array_entry != 0) {
-          // transparent
-          let color = sprite_data.color;
-          if (array_entry != 1 && sprite_data.multicolor)
-            color = all_data.colors[array_entry];
-          canvas.fillStyle = this.config.colors[color];
-          canvas.fillRect(
-            i * this.zoom,
-            j * this.zoom,
-            x_grid_step * this.zoom,
-            this.zoom
-          );
-        }
-      }
-    }
+    // Use shared render_pixels method
+    this.render_pixels(sprite_data, all_data);
+
+    // Restore original canvas
+    this.canvas = originalCanvas;
   }
 } // end class

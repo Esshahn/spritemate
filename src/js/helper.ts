@@ -150,7 +150,7 @@ export const dom = {
 export function status(text: string, state = "normal"): void {
   let delay = 2000;
   const fade = 2000;
-  if (state == "tip") delay = 10000;
+  if (state === "tip") delay = 10000;
 
   dom.html("#statustext", text);
   dom.fade_out("#statustext", delay, fade);

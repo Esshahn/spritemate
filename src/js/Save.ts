@@ -92,7 +92,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
 
     const data = [] as any;
 
-    if (format == "new") {
+    if (format === "new") {
       data.push(83, 80, 68); // the "SPD" header that identifies SPD files apparently
       data.push(1, this.savedata.sprites.length - 1, 0); // number of sprites
     }
@@ -126,15 +126,15 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
           const pen = spritedata[i + k];
 
           if (is_multicolor) {
-            if (pen == 0) bit = "00";
-            if (pen == 1) bit = "10";
-            if (pen == 2) bit = "01";
-            if (pen == 3) bit = "11";
+            if (pen === 0) bit = "00";
+            if (pen === 1) bit = "10";
+            if (pen === 2) bit = "01";
+            if (pen === 3) bit = "11";
           }
 
           if (!is_multicolor) {
             bit = "1";
-            if (pen == 0) bit = "0";
+            if (pen === 0) bit = "0";
           }
 
           byte = byte + bit;
@@ -165,7 +165,7 @@ S:::::::::::::::SS P::::::::P          D::::::::::::DDD
       data.push(color_byte); // should be the individual color
     }
 
-    if (format == "new") {
+    if (format === "new") {
       // almost done, just add some animation data crap at the end
       data.push(0, 0, 1, 0); // SpritePad animation info (currently unused)
     }

@@ -30,8 +30,8 @@ export default class Animation extends Window_Controls {
     this.window = window;
     this.canvas_element = document.createElement("canvas");
     this.zoom = this.config.window_animation?.zoom ?? 6;
-    this.zoom_min = 4;
-    this.zoom_max = 16;
+    this.zoom_min = this.config.zoom_limits.animation.min;
+    this.zoom_max = this.config.zoom_limits.animation.max;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;

@@ -13,6 +13,12 @@ export function get_config() {
       animation_fps: 10,
       animation_mode: "restart",
     },
+    zoom_limits: {
+      editor: { min: 10, max: 26 },
+      preview: { min: 4, max: 16 },
+      list: { min: 4, max: 16 },
+      animation: { min: 4, max: 16 },
+    },
     palettes: {
       colodore: {
         name: "Colodore",
