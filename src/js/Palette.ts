@@ -80,7 +80,7 @@ export default class Palette {
       let picker_div =
         `<div class="palette_color_item" id="palette_color_` +
         this.colors[i] +
-        `" title="`+
+        `" title="`+ 
         this.color_name[i]+
         `&nbsp;/&nbsp;` +
         `$` +
