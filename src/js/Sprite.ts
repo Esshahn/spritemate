@@ -15,20 +15,23 @@ export default class Sprite {
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    this.all.version = this.config.version; // current version number
-    this.all.filename = this.config.default_filename; // default filename
-    this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
+    this.all.version = this.config.version;
+    this.all.filename = this.config.default_filename;
+    this.all.colors = {
+      0: config.sprite_defaults.background_color,
+      2: config.sprite_defaults.multicolor_1,
+      3: config.sprite_defaults.multicolor_2
+    };
 
     this.all.sprites = [];
     this.all.current_sprite = 0;
-    this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.all.pen = config.sprite_defaults.pen;
 
-    // Animation settings
     this.all.animation = {
       startSprite: 0,
       endSprite: 0,
-      fps: 10,
-      mode: "restart",
+      fps: config.sprite_defaults.animation_fps,
+      mode: config.sprite_defaults.animation_mode,
       doubleX: false,
       doubleY: false
     };
@@ -36,7 +39,7 @@ export default class Sprite {
     this.backup = [];
     this.backup_position = -1;
     this.copy_sprite = {};
-    this.sprite_name_counter = 0; // increments for every new sprite regardless of deleted sprites. Used for the default name
+    this.sprite_name_counter = 0;
   }
 
   // Helper: Create pixel grid with given fill value

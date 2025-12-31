@@ -141,7 +141,7 @@ export default class Load {
     };
     this.imported_file.sprites = [];
     this.imported_file.current_sprite = 0;
-    this.imported_file.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.imported_file.pen = this.config.sprite_defaults.pen;
   }
 
   convert_sprite_data_to_internal_format(sprite_number) {
