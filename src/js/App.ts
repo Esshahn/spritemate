@@ -1009,6 +1009,13 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
         this.sprite = new Sprite(this.config, this.storage);
         this.sprite.new_sprite(this.palette.get_color());
         this.storage.clear_sprites(); // Clear auto-saved data
+
+        // Reset filename to default in UI
+        const filenameInput = dom.sel("#menubar-filename-input") as HTMLInputElement;
+        if (filenameInput) {
+          filenameInput.value = this.sprite.get_filename();
+        }
+
         this.list.update_all(this.sprite.get_all());
         this.update();
         this.window_confirm.close();
