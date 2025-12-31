@@ -18,11 +18,11 @@ export default class Tools {
         </div>
     -->
         <div class ="iconset icon-hover" id="icon-undo">
-            <img src="ui/icon-undo.png" class="icon" title="undo">
+            <img src="ui/icon-undo.png" class="icon" title="undo (Ctrl+Z)">
             <div class="icontext">undo</div>
         </div>
         <div class ="iconset icon-hover" id="icon-redo">
-            <img src="ui/icon-redo.png" class="icon" title="redo">
+            <img src="ui/icon-redo.png" class="icon" title="redo (Ctrl+Shift+Z)">
             <div class="icontext">redo</div>
         </div>
         <div class ="iconset icon-hover" id="icon-move">
@@ -30,7 +30,7 @@ export default class Tools {
             <div class="icontext">move</div>
         </div>
         <div class ="iconset icon-hover" id="icon-select">
-            <img src="ui/icon-select.png" class="icon" id="image-icon-select" title="select tool (q) - deselect with (ESC)">
+            <img src="ui/icon-select.png" class="icon" id="image-icon-select" title="select tool (s) - deselect with (s) or (ESC)">
             <div class="icontext">select</div>
         </div>
         <div class ="iconset icon-hover icon-active" id="icon-draw">

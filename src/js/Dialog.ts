@@ -36,6 +36,10 @@ export class Dialog {
   private resizeStartWidth = 0;
   private resizeStartHeight = 0;
 
+  // Static z-index counter for bringing windows to front
+  // Start at 100 to stay below modal dialogs (z-index: 1000)
+  private static nextZIndex = 100;
+
   constructor(config: DialogConfig) {
     this.config = {
       modal: false,
@@ -145,18 +149,39 @@ export class Dialog {
   }
 
   private setupEventListeners(): void {
-    // Dragging
-    this.titleBar.addEventListener("mousedown", this.startDrag.bind(this));
-    document.addEventListener("mousemove", this.drag.bind(this));
-    document.addEventListener("mouseup", this.stopDrag.bind(this));
+    // Bring to front on mousedown or touch
+    this.wrapper.addEventListener("mousedown", this.bringToFront.bind(this));
+    this.wrapper.addEventListener("touchstart", this.bringToFront.bind(this));
+
+    // Dragging - mouse events
+    this.titleBar.addEventListener("mousedown", (e: MouseEvent) => this.handleDragStart(e));
+    document.addEventListener("mousemove", (e: MouseEvent) => this.handleDragMove(e));
+    document.addEventListener("mouseup", () => this.handleDragEnd());
+
+    // Dragging - touch events
+    this.titleBar.addEventListener("touchstart", (e: TouchEvent) => {
+      e.preventDefault();
+      this.handleDragStart(e);
+    });
+    document.addEventListener("touchmove", (e: TouchEvent) => this.handleDragMove(e));
+    document.addEventListener("touchend", () => this.handleDragEnd());
 
     // Resizing
     if (this.config.resizable) {
       const resizeHandle = this.wrapper.querySelector(".dialog-resize-handle") as HTMLElement;
       if (resizeHandle) {
-        resizeHandle.addEventListener("mousedown", this.startResize.bind(this));
-        document.addEventListener("mousemove", this.resize.bind(this));
-        document.addEventListener("mouseup", this.stopResize.bind(this));
+        resizeHandle.addEventListener("mousedown", (e: MouseEvent) => this.handleResizeStart(e));
+        document.addEventListener("mousemove", (e: MouseEvent) => this.handleResizeMove(e));
+        document.addEventListener("mouseup", () => this.handleResizeEnd());
+
+        // Touch resize
+        resizeHandle.addEventListener("touchstart", (e: TouchEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.handleResizeStart(e);
+        });
+        document.addEventListener("touchmove", (e: TouchEvent) => this.handleResizeMove(e));
+        document.addEventListener("touchend", () => this.handleResizeEnd());
       }
     }
 
@@ -176,12 +201,18 @@ export class Dialog {
     });
   }
 
-  private startDrag(e: MouseEvent): void {
+  // Unified drag handlers (works with both mouse and touch)
+  private handleDragStart(e: MouseEvent | TouchEvent): void {
     if ((e.target as HTMLElement).classList.contains("dialog-title") ||
         (e.target as HTMLElement).classList.contains("dialog-titlebar")) {
       this.isDragging = true;
-      this.dragStartX = e.clientX;
-      this.dragStartY = e.clientY;
+
+      // Get client coordinates from either mouse or touch event
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      this.dragStartX = clientX;
+      this.dragStartY = clientY;
 
       // If centered with transform, convert to absolute position
       if (this.wrapper.style.transform) {
@@ -196,15 +227,21 @@ export class Dialog {
       this.elementStartY = parseInt(this.wrapper.style.top) || 0;
 
       this.wrapper.style.cursor = "move";
-      e.preventDefault();
+      if ('preventDefault' in e) e.preventDefault();
     }
   }
 
-  private drag(e: MouseEvent): void {
+  private handleDragMove(e: MouseEvent | TouchEvent): void {
     if (!this.isDragging) return;
 
-    const deltaX = e.clientX - this.dragStartX;
-    const deltaY = e.clientY - this.dragStartY;
+    // Get client coordinates from either mouse or touch event
+    const clientX = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientX : 'clientX' in e ? e.clientX : null;
+    const clientY = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientY : 'clientY' in e ? e.clientY : null;
+
+    if (clientX === null || clientY === null) return;
+
+    const deltaX = clientX - this.dragStartX;
+    const deltaY = clientY - this.dragStartY;
 
     const newX = this.elementStartX + deltaX;
     const newY = this.elementStartY + deltaY;
@@ -213,7 +250,7 @@ export class Dialog {
     this.wrapper.style.top = `${newY}px`;
   }
 
-  private stopDrag(e: MouseEvent): void {
+  private handleDragEnd(): void {
     if (!this.isDragging) return;
 
     this.isDragging = false;
@@ -227,24 +264,36 @@ export class Dialog {
     }
   }
 
-  private startResize(e: MouseEvent): void {
+  // Unified resize handlers (works with both mouse and touch)
+  private handleResizeStart(e: MouseEvent | TouchEvent): void {
     this.isResizing = true;
-    this.resizeStartX = e.clientX;
-    this.resizeStartY = e.clientY;
+
+    // Get client coordinates from either mouse or touch event
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    this.resizeStartX = clientX;
+    this.resizeStartY = clientY;
 
     const rect = this.wrapper.getBoundingClientRect();
     this.resizeStartWidth = rect.width;
     this.resizeStartHeight = rect.height;
 
-    e.preventDefault();
-    e.stopPropagation();
+    if ('preventDefault' in e) e.preventDefault();
+    if ('stopPropagation' in e) e.stopPropagation();
   }
 
-  private resize(e: MouseEvent): void {
+  private handleResizeMove(e: MouseEvent | TouchEvent): void {
     if (!this.isResizing) return;
 
-    const deltaX = e.clientX - this.resizeStartX;
-    const deltaY = e.clientY - this.resizeStartY;
+    // Get client coordinates from either mouse or touch event
+    const clientX = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientX : 'clientX' in e ? e.clientX : null;
+    const clientY = 'touches' in e && e.touches.length > 0 ? e.touches[0].clientY : 'clientY' in e ? e.clientY : null;
+
+    if (clientX === null || clientY === null) return;
+
+    const deltaX = clientX - this.resizeStartX;
+    const deltaY = clientY - this.resizeStartY;
 
     const newWidth = Math.max(200, this.resizeStartWidth + deltaX);
     const newHeight = Math.max(100, this.resizeStartHeight + deltaY);
@@ -253,7 +302,7 @@ export class Dialog {
     this.wrapper.style.height = `${newHeight}px`;
   }
 
-  private stopResize(e: MouseEvent): void {
+  private handleResizeEnd(): void {
     if (!this.isResizing) return;
 
     this.isResizing = false;
@@ -268,11 +317,23 @@ export class Dialog {
     }
   }
 
+  private bringToFront(): void {
+    // Only increment z-index for non-modal dialogs
+    // Modal dialogs use the browser's native modal z-index stacking
+    if (!this.config.modal) {
+      // Apply z-index to the dialog element itself, not the wrapper
+      // This is because each dialog is a separate stacking context
+      this.dialog.style.zIndex = String(Dialog.nextZIndex++);
+    }
+  }
+
   public open(): void {
     if (this.config.modal) {
       this.dialog.showModal();
     } else {
       this.dialog.show();
+      // Set initial z-index for non-modal dialogs
+      this.bringToFront();
     }
   }
 
