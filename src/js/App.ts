@@ -345,13 +345,17 @@ export class App {
     this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
 
     // Try to load auto-saved sprite data
-    const savedSprites = this.storage.read_sprites();
-    if (savedSprites && savedSprites.sprites && savedSprites.sprites.length > 0) {
-      // Restore auto-saved data
-      this.sprite.set_all(savedSprites);
-      status("Restored previous work session");
-    } else {
-      // Start with a fresh sprite
+    try {
+      const savedSprites = this.storage.read_sprites();
+      if (savedSprites?.sprites?.length > 0) {
+        this.sprite.set_all(savedSprites);
+        status("Restored previous work session");
+      } else {
+        this.sprite.new_sprite(this.palette.get_color());
+      }
+    } catch (error) {
+      console.error("Failed to restore sprite data, clearing corrupt data:", error);
+      this.storage.clear_sprites();
       this.sprite.new_sprite(this.palette.get_color());
     }
 
