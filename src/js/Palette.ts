@@ -3,10 +3,12 @@ import { dom } from "./helper";
 export default class Palette {
   colors: any = {};
   active_color: number;
+  color_name: string[];
 
   constructor(public window: number, public config) {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
+    this.color_name = ["black", "white", "red", "cyan", "purple","green","blue","yellow","orange","brown","pink","dark grey","grey","light green","light blue","light grey"];
     this.window = window;
 
     const template = `
@@ -78,7 +80,10 @@ export default class Palette {
       let picker_div =
         `<div class="palette_color_item" id="palette_color_` +
         this.colors[i] +
-        `" title="$` +
+        `" title="`+
+        this.color_name[i]+
+        `&nbsp;/&nbsp;` +
+        `$` +
         i.toString(16) +
         `&nbsp;/&nbsp;` +
         this.colors[i] +
