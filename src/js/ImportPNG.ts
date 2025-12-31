@@ -65,16 +65,35 @@ export default class ImportPNG {
   }
 
   process_image(img: HTMLImageElement) {
-    // Check if image is exactly 24x21 pixels
-    if (img.width !== 24 || img.height !== 21) {
-      alert(`Invalid image dimensions. Expected 24x21 pixels, got ${img.width}x${img.height} pixels.`);
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
+
+    // Calculate how many sprites fit in the image (assuming no borders)
+    const cols = Math.floor(img.width / spriteWidth);
+    const rows = Math.floor(img.height / spriteHeight);
+
+    console.log('Image dimensions:', img.width, 'x', img.height);
+    console.log('Sprite dimensions:', spriteWidth, 'x', spriteHeight);
+    console.log('Calculated grid:', cols, 'cols x', rows, 'rows');
+
+    // Check if dimensions are valid multiples of sprite size
+    if (img.width % spriteWidth !== 0 || img.height % spriteHeight !== 0) {
+      alert(`Invalid image dimensions. Image must be a multiple of ${spriteWidth}x${spriteHeight} pixels.\nGot ${img.width}x${img.height} pixels (${cols}x${rows} sprites with ${img.width % spriteWidth}x${img.height % spriteHeight} pixel remainder).`);
       return;
     }
 
+    if (cols === 0 || rows === 0) {
+      alert(`Image too small. Expected at least ${spriteWidth}x${spriteHeight} pixels, got ${img.width}x${img.height} pixels.`);
+      return;
+    }
+
+    const totalSprites = cols * rows;
+    console.log('Total sprites expected:', totalSprites);
+
     // Create a canvas to read pixel data
     const canvas = document.createElement('canvas');
-    canvas.width = 24;
-    canvas.height = 21;
+    canvas.width = img.width;
+    canvas.height = img.height;
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
@@ -85,25 +104,52 @@ export default class ImportPNG {
     // Draw the image onto the canvas
     ctx.drawImage(img, 0, 0);
 
-    // Get pixel data
-    const imageData = ctx.getImageData(0, 0, 24, 21);
-    const pixels = imageData.data;
-
     // Get the current palette colors
     const paletteColors = this.get_current_palette_colors();
 
-    // Convert image to sprite data
-    const spriteData = this.convert_to_sprite(pixels, paletteColors);
+    // Extract all sprites from the spritesheet
+    const allSpriteData: number[][][] = [];
 
-    if (!spriteData) {
-      alert("Error converting image to sprite");
+    console.log('Starting sprite extraction...');
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = col * spriteWidth;
+        const y = row * spriteHeight;
+
+        console.log(`Extracting sprite at row ${row}, col ${col} (x=${x}, y=${y})`);
+
+        // Extract sprite region
+        const imageData = ctx.getImageData(x, y, spriteWidth, spriteHeight);
+        const pixels = imageData.data;
+
+        // Convert image to sprite data
+        const spriteData = this.convert_to_sprite(pixels, paletteColors);
+
+        if (spriteData) {
+          allSpriteData.push(spriteData);
+          console.log(`Sprite ${allSpriteData.length} extracted successfully`);
+        } else {
+          console.warn(`Failed to extract sprite at row ${row}, col ${col}`);
+        }
+      }
+    }
+
+    console.log('Total sprites extracted:', allSpriteData.length);
+
+    if (allSpriteData.length === 0) {
+      alert("Error converting spritesheet to sprites");
       return;
     }
 
-    // Create the imported file object following the same format as Load.ts
-    this.create_imported_file(spriteData);
+    // Create the imported file object with all sprites
+    this.create_imported_file_from_multiple(allSpriteData);
+    console.log('Created imported file with', allSpriteData.length, 'sprites');
 
-    status("PNG image imported successfully as sprite.");
+    if (totalSprites === 1) {
+      status("PNG image imported successfully as sprite.");
+    } else {
+      status(`Spritesheet imported successfully: ${totalSprites} sprites (${cols}x${rows} grid).`);
+    }
   }
 
   get_current_palette_colors(): string[] {
@@ -153,12 +199,14 @@ export default class ImportPNG {
   convert_to_sprite(pixels: Uint8ClampedArray, palette: string[]): number[][] | null {
     const sprite: number[][] = [];
     const colorCounts = new Map<number, number>();
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
 
     // Convert all pixels to palette colors and count occurrences
-    for (let y = 0; y < 21; y++) {
+    for (let y = 0; y < spriteHeight; y++) {
       const row: number[] = [];
-      for (let x = 0; x < 24; x++) {
-        const idx = (y * 24 + x) * 4;
+      for (let x = 0; x < spriteWidth; x++) {
+        const idx = (y * spriteWidth + x) * 4;
         const r = pixels[idx];
         const g = pixels[idx + 1];
         const b = pixels[idx + 2];
@@ -194,8 +242,8 @@ export default class ImportPNG {
     }
 
     // Convert palette colors to pen values
-    for (let y = 0; y < 21; y++) {
-      for (let x = 0; x < 24; x++) {
+    for (let y = 0; y < spriteHeight; y++) {
+      for (let x = 0; x < spriteWidth; x++) {
         sprite[y][x] = colorMapping.get(sprite[y][x]) ?? (isMulticolor ? 0 : 1);
       }
     }
@@ -257,6 +305,50 @@ export default class ImportPNG {
       animation: {
         startSprite: 0,
         endSprite: 0,
+        fps: 10,
+        mode: "restart",
+        doubleX: false,
+        doubleY: false
+      }
+    };
+  }
+
+  create_imported_file_from_multiple(allSpriteData: number[][][]) {
+    // Use the first sprite's settings for global colors
+    const firstSprite = allSpriteData[0];
+    const multicolor1 = (firstSprite as any).multicolor1 || 8;
+    const multicolor2 = (firstSprite as any).multicolor2 || 6;
+
+    // Create sprite objects for each sprite data
+    const sprites = allSpriteData.map((spriteData, index) => {
+      const individualColor = (spriteData as any).individualColor || 1;
+      const isMulticolor = (spriteData as any).multicolor || false;
+
+      return {
+        name: `sprite${index}`,
+        color: individualColor,
+        multicolor: isMulticolor,
+        double_x: false,
+        double_y: false,
+        overlay: false,
+        pixels: spriteData,
+      };
+    });
+
+    this.imported_file = {
+      version: this.config.version,
+      filename: "imported",
+      colors: {
+        0: 11, // transparent - default to light gray
+        2: multicolor1,
+        3: multicolor2,
+      },
+      sprites: sprites,
+      current_sprite: 0,
+      pen: 1,
+      animation: {
+        startSprite: 0,
+        endSprite: sprites.length - 1,
         fps: 10,
         mode: "restart",
         doubleX: false,
