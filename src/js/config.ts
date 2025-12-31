@@ -1,6 +1,7 @@
 export function get_config() {
   const config = {
-    version: "25.12.30",
+    version: "25.12.31",
+    default_filename: "mysprites",
     sprite_x: 24,
     sprite_y: 21,
     palettes: {

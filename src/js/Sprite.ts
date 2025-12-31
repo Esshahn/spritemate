@@ -16,7 +16,7 @@ export default class Sprite {
     this.height = config.sprite_y;
     this.all = {};
     this.all.version = this.config.version; // current version number
-    this.all.filename = "mysprites"; // default filename
+    this.all.filename = this.config.default_filename; // default filename
     this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
 
     this.all.sprites = [];
@@ -82,7 +82,7 @@ export default class Sprite {
 
   new_sprite(color = 1, multicolor = false): void {
     const sprite = {
-      name: "sprite_" + this.sprite_name_counter,
+      name: "sprite" + this.sprite_name_counter,
       color: color,
       multicolor: multicolor,
       double_x: false,
@@ -361,7 +361,7 @@ export default class Sprite {
     this.all = all;
     // Ensure filename exists (for backward compatibility with old save files)
     if (!this.all.filename) {
-      this.all.filename = "mysprites";
+      this.all.filename = this.config.default_filename;
     }
     // Ensure animation settings exist (for backward compatibility with old save files)
     if (!this.all.animation) {
@@ -378,7 +378,7 @@ export default class Sprite {
   }
 
   get_filename(): string {
-    return this.all.filename || "mysprites";
+    return this.all.filename || this.config.default_filename;
   }
 
   set_filename(filename: string): void {
