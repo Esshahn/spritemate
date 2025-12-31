@@ -4,6 +4,15 @@ export function get_config() {
     default_filename: "mysprites",
     sprite_x: 24,
     sprite_y: 21,
+    sprite_defaults: {
+      background_color: 11,      // Light gray (pen 0)
+      multicolor_1: 8,            // Orange (pen 2)
+      multicolor_2: 6,            // Blue (pen 3)
+      individual_color: 1,        // White (pen 1)
+      pen: 1,                     // Default drawing pen
+      animation_fps: 10,
+      animation_mode: "restart",
+    },
     palettes: {
       colodore: {
         name: "Colodore",
