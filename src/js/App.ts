@@ -18,6 +18,7 @@ import Animation from "./Animation";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
+import Tooltip from "./Tooltip";
 import { get_config } from "./config";
 import { dom, tipoftheday, status, toggle_fullscreen } from "./helper";
 
@@ -77,6 +78,9 @@ export class App {
     this.storage = new Storage(config);
     this.config = this.storage.get_config();
     this.config.colors = this.config.palettes[this.config.selected_palette].values;
+
+    // Initialize custom tooltip system
+    new Tooltip();
 
     // Ensure window_animation config exists (for backwards compatibility)
     if (!this.config.window_animation) {

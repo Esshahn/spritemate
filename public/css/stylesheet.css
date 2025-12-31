@@ -816,3 +816,28 @@ img.center {
 }
 
 /* --- END CSS ONLY MENU --- */
+
+/* --- CUSTOM TOOLTIP --- */
+
+#custom-tooltip {
+  position: fixed;
+  background: rgba(20, 20, 20, 0.95);
+  color: var(--blue);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Quicksand', sans-serif;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 185, 238, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+#custom-tooltip.visible {
+  opacity: 1;
+}
+
+/* --- END CUSTOM TOOLTIP --- */
