@@ -1,5 +1,6 @@
 import { dom, status } from "./helper";
 import { App } from './App';
+import { SpriteHelpers } from './SpriteTypes';
 
 export default class ImportPNG {
   app: App | null;
@@ -230,8 +231,8 @@ export default class ImportPNG {
 
     const sorted = Array.from(multicolorOnlyColorCounts.entries()).sort((a, b) => b[1] - a[1]);
     return {
-      mc1: sorted[0]?.[0] ?? 8,
-      mc2: sorted[1]?.[0] ?? 6
+      mc1: sorted[0]?.[0] ?? this.config.sprite_defaults.multicolor_1,
+      mc2: sorted[1]?.[0] ?? this.config.sprite_defaults.multicolor_2
     };
   }
 
@@ -449,39 +450,27 @@ export default class ImportPNG {
   }
 
   create_imported_file(spriteData: number[][]) {
-    const individualColor = (spriteData as any).individualColor || 1;
+    const individualColor = (spriteData as any).individualColor || this.config.sprite_defaults.individual_color;
     const isMulticolor = (spriteData as any).multicolor || false;
-    const multicolor1 = (spriteData as any).multicolor1 || 8;
-    const multicolor2 = (spriteData as any).multicolor2 || 6;
+    const multicolor1 = (spriteData as any).multicolor1;
+    const multicolor2 = (spriteData as any).multicolor2;
 
-    this.imported_file = {
-      version: this.config.version,
+    const sprite = SpriteHelpers.createSprite(this.config, {
+      name: "sprite_0",
+      color: individualColor,
+      multicolor: isMulticolor,
+      pixels: spriteData,
+    });
+
+    const colors = multicolor1 !== undefined && multicolor2 !== undefined
+      ? { 0: this.config.sprite_defaults.background_color, 2: multicolor1, 3: multicolor2 }
+      : undefined;
+
+    this.imported_file = SpriteHelpers.createCollection(this.config, {
       filename: "imported",
-      colors: {
-        0: 11, // transparent - default to light gray
-        2: multicolor1,
-        3: multicolor2,
-      },
-      sprites: [{
-        name: "sprite_0",
-        color: individualColor,
-        multicolor: isMulticolor,
-        double_x: false,
-        double_y: false,
-        overlay: false,
-        pixels: spriteData,
-      }],
-      current_sprite: 0,
-      pen: 1,
-      animation: {
-        startSprite: 0,
-        endSprite: 0,
-        fps: 10,
-        mode: "restart",
-        doubleX: false,
-        doubleY: false
-      }
-    };
+      colors: colors,
+      sprites: [sprite],
+    });
   }
 
   create_imported_file_from_multiple(
@@ -490,41 +479,26 @@ export default class ImportPNG {
     globalMulticolor1: number,
     globalMulticolor2: number
   ) {
-    // Create sprite objects for each sprite data
     const sprites = allSpriteData.map((spriteData, index) => {
-      const individualColor = (spriteData as any).individualColor || 1;
+      const individualColor = (spriteData as any).individualColor || this.config.sprite_defaults.individual_color;
       const isMulticolor = (spriteData as any).multicolor || false;
 
-      return {
+      return SpriteHelpers.createSprite(this.config, {
         name: `sprite${index}`,
         color: individualColor,
         multicolor: isMulticolor,
-        double_x: false,
-        double_y: false,
-        overlay: false,
         pixels: spriteData,
-      };
+      });
     });
 
-    this.imported_file = {
-      version: this.config.version,
+    this.imported_file = SpriteHelpers.createCollection(this.config, {
       filename: "imported",
       colors: {
-        0: globalBackground, // background/transparent color
+        0: globalBackground,
         2: globalMulticolor1,
         3: globalMulticolor2,
       },
       sprites: sprites,
-      current_sprite: 0,
-      pen: 1,
-      animation: {
-        startSprite: 0,
-        endSprite: sprites.length - 1,
-        fps: 10,
-        mode: "restart",
-        doubleX: false,
-        doubleY: false
-      }
-    };
+    });
   }
 }
