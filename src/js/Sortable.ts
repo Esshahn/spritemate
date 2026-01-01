@@ -4,9 +4,6 @@
  */
 
 export interface SortableConfig {
-  cursor?: string;
-  tolerance?: string;
-  revert?: string | number;
   onSort?: (oldIndex: number, newIndex: number) => void;
   onSortStart?: () => void;
 }
@@ -36,7 +33,6 @@ export class Sortable {
     this.container.addEventListener("dragend", this.handleDragEnd.bind(this));
     this.container.addEventListener("dragover", this.handleDragOver.bind(this));
     this.container.addEventListener("drop", this.handleDrop.bind(this));
-    this.container.addEventListener("dragenter", this.handleDragEnter.bind(this));
 
     // Make all children draggable
     this.updateDraggableItems();
@@ -87,14 +83,16 @@ export class Sortable {
   private handleDragEnd(e: DragEvent): void {
     if (this.draggedElement) {
       this.draggedElement.classList.remove("sortable-dragging");
+      this.draggedElement = null;
     }
 
-    if (this.placeholder && this.placeholder.parentElement) {
-      this.placeholder.remove();
+    if (this.placeholder) {
+      // Remove placeholder if it's still in DOM (might already be removed in handleDrop)
+      if (this.placeholder.parentElement) {
+        this.placeholder.remove();
+      }
+      this.placeholder = null;
     }
-
-    this.draggedElement = null;
-    this.placeholder = null;
   }
 
   private handleDragOver(e: DragEvent): void {
@@ -102,33 +100,39 @@ export class Sortable {
     if (e.dataTransfer) {
       e.dataTransfer.dropEffect = "move";
     }
-  }
 
-  private handleDragEnter(e: DragEvent): void {
-    let target = e.target as HTMLElement;
+    if (!this.draggedElement || !this.placeholder) return;
 
-    // Find the sortable item (direct child of container)
-    while (target && target.parentElement !== this.container) {
-      target = target.parentElement as HTMLElement;
-      if (!target || target === this.container) {
-        return;
+    // Find which element is under the cursor
+    const items = Array.from(this.container.children) as HTMLElement[];
+    let closestItem: HTMLElement | null = null;
+    let insertBefore = false;
+
+    for (const item of items) {
+      if (item === this.draggedElement || item === this.placeholder) continue;
+
+      const rect = item.getBoundingClientRect();
+      const horizontalMidpoint = rect.left + rect.width / 2;
+
+      // Check if cursor is over this item
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      ) {
+        closestItem = item;
+        insertBefore = e.clientX < horizontalMidpoint;
+        break;
       }
     }
 
-    // Check if target is valid and not the dragged element
-    if (!target || target === this.draggedElement) {
-      return;
-    }
-
-    // Insert placeholder before or after target based on mouse position
-    const rect = target.getBoundingClientRect();
-    const midpoint = rect.top + rect.height / 2;
-
-    if (this.placeholder) {
-      if (e.clientY < midpoint) {
-        this.container.insertBefore(this.placeholder, target);
+    // Insert placeholder at the cursor position
+    if (closestItem) {
+      if (insertBefore) {
+        this.container.insertBefore(this.placeholder, closestItem);
       } else {
-        this.container.insertBefore(this.placeholder, target.nextSibling);
+        this.container.insertBefore(this.placeholder, closestItem.nextSibling);
       }
     }
   }
@@ -143,31 +147,22 @@ export class Sortable {
     const placeholderInContainer = this.placeholder.parentElement === this.container;
 
     if (placeholderInContainer) {
-      // Get new index
       const newIndex = Array.from(this.container.children).indexOf(this.placeholder);
 
       // Insert dragged element at new position
       this.container.insertBefore(this.draggedElement, this.placeholder);
 
-      // Remove placeholder
+      // Remove placeholder immediately before callback
       this.placeholder.remove();
 
-      // Call callback if provided
+      // Call callback if provided (after placeholder is removed)
       if (this.config.onSort && newIndex !== -1 && this.draggedIndex !== newIndex) {
-        // Adjust index if placeholder was counted
         const adjustedNewIndex = newIndex > this.draggedIndex ? newIndex - 1 : newIndex;
         this.config.onSort(this.draggedIndex, adjustedNewIndex);
       }
-    } else {
-      // Placeholder not in container, just remove it if it exists
-      if (this.placeholder.parentElement) {
-        this.placeholder.remove();
-      }
     }
 
-    // Cleanup
-    this.draggedElement.classList.remove("sortable-dragging");
-    this.draggedElement = null;
+    // Reset state
     this.draggedIndex = -1;
   }
 
