@@ -270,7 +270,7 @@ img.center {
 
 #palette_spritecolors {
   margin-top: 12px;
-  font-size: 80%;
+  font-size: 70%;
 }
 
 
@@ -297,7 +297,8 @@ img.center {
   height: 20px;
   margin: auto;
   cursor: pointer;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
+  margin-top: 8px;
 }
 
 .palette_highlight_text {

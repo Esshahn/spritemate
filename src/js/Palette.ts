@@ -3,32 +3,32 @@ import { dom } from "./helper";
 export default class Palette {
   colors: any = {};
   active_color: number;
-  color_name: string[];
+  color_names: string[];
 
   constructor(public window: number, public config) {
     this.colors = config.colors;
     this.active_color = 3; // 1 = white on the c64
-    this.color_name = ["black", "white", "red", "cyan", "purple","green","blue","yellow","orange","brown","pink","dark grey","grey","light green","light blue","light grey"];
+    this.color_names = config.color_names;
     this.window = window;
 
     const template = `
       <div id="palette_all_colors"></div>
       <div id="palette_spritecolors">
           <div id="palette_0">
-              <p>Transparent</p>
               <div class="palette_color_item_active_colors" id="color_0" title="transparent&nbsp;(1)"></div>
+              <p>Transparent</p>
           </div>
           <div id="palette_1">
-              <p>Individual</p>
               <div class="palette_color_item_active_colors" id="color_1" title="individual&nbsp;color&nbsp;(2)"></div>
+              <p>Individual</p>
           </div>
           <div id="palette_2">
-              <p>Multicolor 1</p>
               <div class="palette_color_item_active_colors" id="color_2" title="multicolor&nbsp;1&nbsp;(3)"></div>
+              <p>Multicolor 1</p>
           </div>
           <div id="palette_3">
-              <p>Multicolor 2</p>
               <div class="palette_color_item_active_colors" id="color_3" title="multicolor&nbsp;2&nbsp;(4)"></div>
+              <p>Multicolor 2</p>
           </div>
       </div>`;
 
@@ -81,7 +81,7 @@ export default class Palette {
         `<div class="palette_color_item" id="palette_color_` +
         this.colors[i] +
         `" title="`+ 
-        this.color_name[i]+
+        this.color_names[i]+
         `&nbsp;/&nbsp;` +
         `$` +
         i.toString(16) +
