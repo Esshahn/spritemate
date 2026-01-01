@@ -78,7 +78,7 @@ export default class Export extends ExportBase {
   save_png_current(): void {
     const sprite_index = this.savedata.current_sprite;
     const sprite = this.savedata.sprites[sprite_index];
-    const filename = `${this.app.get_filename()}_sprite_${sprite_index}.png`;
+    const filename = `${this.app.get_filename()}_sprite_${sprite_index + 1}.png`;
 
     const canvas = this.renderSpriteToCanvas(sprite, this.savedata);
     canvas.toBlob((blob) => {
@@ -94,7 +94,7 @@ export default class Export extends ExportBase {
 
     const promises = sprites.map((sprite, index) => {
       return new Promise<void>((resolve) => {
-        const filename = `sprite_${index}.png`;
+        const filename = `sprite_${index + 1}.png`;
         const canvas = this.renderSpriteToCanvas(sprite, this.savedata);
 
         canvas.toBlob((blob) => {

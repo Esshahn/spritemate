@@ -85,7 +85,7 @@ export default class Sprite {
 
   new_sprite(color = 1, multicolor = false): void {
     const sprite = {
-      name: "sprite" + this.sprite_name_counter,
+      name: "sprite" + (this.sprite_name_counter + 1),
       color: color,
       multicolor: multicolor,
       double_x: false,
