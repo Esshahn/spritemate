@@ -348,7 +348,7 @@ export default class Sprite {
   }
 
   set_pen_color(pencolor): void {
-    if (this.all.pen == 1) {
+    if (this.all.pen === 1) {
       this.all.sprites[this.all.current_sprite].color = pencolor;
     } else {
       this.all.colors[this.all.pen] = pencolor;
@@ -414,7 +414,7 @@ export default class Sprite {
 
     for (let i = 0; i < sorted_list.length; i++) {
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
-      if (sorted_list[i] == this.all.current_sprite) temp_current_sprite = i;
+      if (sorted_list[i] === this.all.current_sprite) temp_current_sprite = i;
     }
 
     this.all.sprites = new_sprite_list;
@@ -425,9 +425,9 @@ export default class Sprite {
   set_current_sprite(spritenumber: string | number): void {
     let spriteNum: number;
 
-    if (spritenumber == "right") {
+    if (spritenumber === "right") {
       spriteNum = this.all.current_sprite + 1;
-    } else if (spritenumber == "left") {
+    } else if (spritenumber === "left") {
       spriteNum = this.all.current_sprite - 1;
     } else {
       spriteNum = typeof spritenumber === "number" ? spritenumber : parseInt(spritenumber);
@@ -444,7 +444,7 @@ export default class Sprite {
   delete(): void {
     if (this.all.sprites.length > 1) {
       this.all.sprites.splice(this.all.current_sprite, 1);
-      if (this.all.current_sprite == this.all.sprites.length)
+      if (this.all.current_sprite === this.all.sprites.length)
         this.all.current_sprite--;
       this.save_backup();
     }

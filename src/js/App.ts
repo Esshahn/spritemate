@@ -30,7 +30,7 @@ declare global {
 
 export class App {
   storage: any = {};
-  sprite: Sprite;
+  sprite!: Sprite;
   editor: any;
   window_editor: any;
   window_palette: any;
@@ -41,7 +41,7 @@ export class App {
   animation: any;
   window_list: any;
   window_snapshot: any;
-  list: List;
+  list!: List;
   window_about: any;
   about: any;
   window_save: any;
@@ -56,26 +56,33 @@ export class App {
   window_help: any;
   window_confirm: any;
   tools: any;
-  snapshot: Snapshot;
+  snapshot!: Snapshot;
   load: any;
-  is_drawing: boolean;
+  is_drawing!: boolean;
   oldpos: any;
   mode: any;
-  allow_keyboard_shortcuts: boolean;
+  allow_keyboard_shortcuts!: boolean;
   move_start: any;
   move_start_pos: any;
   dragging: any;
-  selection: {
+  selection!: {
     active: boolean;
     start: { x: number; y: number } | null;
     end: { x: number; y: number } | null;
     bounds: { x1: number; y1: number; x2: number; y2: number } | null;
   } | null;
-  marquee_drawing: boolean;
-  move_selection_backup: number[][] | null;
+  marquee_drawing!: boolean;
+  move_selection_backup!: number[][] | null;
 
   constructor(public config) {
-    this.storage = new Storage(config);
+    this.initializeConfig();
+    this.initializeWindows();
+    this.initializeState();
+    this.restoreWindowStates();
+  }
+
+  private initializeConfig(): void {
+    this.storage = new Storage(this.config);
     this.config = this.storage.get_config();
     this.config.colors = this.config.palettes[this.config.selected_palette].values;
 
@@ -111,62 +118,35 @@ export class App {
     ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
 
     this.sprite = new Sprite(this.config, this.storage);
+  }
+
+  private initializeWindows(): void {
 
     // editor
-    const editor_config = {
-      name: "window_editor",
-      title: "Editor",
-      type: "sprite",
-      resizable: false,
+    const editor_config = this.createWindowConfig("window_editor", "Editor", "sprite", 0, {
       closeable: this.config.window_editor.closeable,
       left: this.config.window_editor.left,
       top: this.config.window_editor.top,
-      width: "auto",
-      height: "auto",
-      window_id: 0,
-    };
-    this.window_editor = new Window(
-      editor_config,
-      this.store_window.bind(this)
-    );
+    });
+    this.window_editor = new Window(editor_config, this.store_window.bind(this));
     this.editor = new Editor(editor_config.window_id, this.config);
 
     // palette
-    const palette_config = {
-      name: "window_palette",
-      title: "Colors",
-      type: "colors",
-      resizable: false,
+    const palette_config = this.createWindowConfig("window_palette", "Colors", "colors", 1, {
       closeable: this.config.window_palette.closeable,
       left: this.config.window_palette.left,
       top: this.config.window_palette.top,
-      width: "auto",
-      height: "auto",
-      window_id: 1,
-    };
-    this.window_palette = new Window(
-      palette_config,
-      this.store_window.bind(this)
-    );
+    });
+    this.window_palette = new Window(palette_config, this.store_window.bind(this));
     this.palette = new Palette(palette_config.window_id, this.config);
 
     // preview
-    const preview_config = {
-      name: "window_preview",
-      title: "Preview",
-      type: "preview",
-      resizable: false,
+    const preview_config = this.createWindowConfig("window_preview", "Preview", "preview", 2, {
       closeable: this.config.window_preview.closeable,
       left: this.config.window_preview.left,
       top: this.config.window_preview.top,
-      width: "auto",
-      height: "auto",
-      window_id: 2,
-    };
-    this.window_preview = new Window(
-      preview_config,
-      this.store_window.bind(this)
-    );
+    });
+    this.window_preview = new Window(preview_config, this.store_window.bind(this));
     this.preview = new Preview(preview_config.window_id, this.config);
 
     // animation
@@ -206,54 +186,36 @@ export class App {
     this.list = new List(list_config.window_id, this.config);
 
     // about
-    const about_config = {
-      name: "window_about",
-      title: "Spritemate",
-      type: "info",
+    const about_config = this.createWindowConfig("window_about", "Spritemate", "info", 4, {
       escape: true,
       modal: true,
-      resizable: false,
       autoOpen: false,
       width: "680",
-      height: "auto",
-      window_id: 4,
-    };
+    });
     this.window_about = new Window(about_config);
     this.about = new About(about_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
     // save
-    const save_config = {
-      name: "window_save",
-      title: "Save",
-      type: "file",
+    const save_config = this.createWindowConfig("window_save", "Save", "file", 5, {
       escape: true,
       modal: true,
-      resizable: false,
       autoOpen: false,
       width: "580",
-      height: "auto",
-      window_id: 5,
-    };
+    });
     this.window_save = new Window(save_config);
     this.save = new Save(save_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
     }, this);
 
     // export
-    const export_config = {
-      name: "window_export",
-      title: "Export Spritesheet",
-      type: "file",
+    const export_config = this.createWindowConfig("window_export", "Export Spritesheet", "file", 7, {
       escape: true,
       modal: true,
-      resizable: false,
       autoOpen: false,
       width: "580",
-      height: "auto",
-      window_id: 7,
-    };
+    });
     this.window_export = new Window(export_config);
     this.export = new Export(export_config.window_id, this.config, {
       onLoad: this.regain_keyboard_controls.bind(this),
@@ -270,36 +232,23 @@ export class App {
     });
 
     // settings
-    const settings_config = {
-      name: "window_settings,",
-      title: "Settings",
-      type: "settings",
+    const settings_config = this.createWindowConfig("window_settings,", "Settings", "settings", 6, {
       modal: true,
       escape: true,
-      resizable: false,
       autoOpen: false,
       width: "760",
-      height: "auto",
-      window_id: 6,
-    };
+    });
     this.window_settings = new Window(settings_config);
     this.settings = new Settings(settings_config.window_id, this.config, {
       onLoad: this.update_config.bind(this),
     });
 
     // tools
-    const tools_config = {
-      name: "window_tools",
-      title: "Tools",
-      type: "tools",
-      resizable: false,
+    const tools_config = this.createWindowConfig("window_tools", "Tools", "tools", 8, {
       closeable: this.config.window_tools.closeable,
       left: this.config.window_tools.left,
       top: this.config.window_tools.top,
-      width: "auto",
-      height: "auto",
-      window_id: 8,
-    };
+    });
     this.window_tools = new Window(tools_config, this.store_window.bind(this));
     this.tools = new Tools(tools_config.window_id, this.config);
 
@@ -331,20 +280,16 @@ export class App {
     });
 
     // Confirmation dialog for "New File"
-    const confirm_config = {
-      name: "window_confirm",
-      title: "New File",
-      type: "confirm",
+    const confirm_config = this.createWindowConfig("window_confirm", "New File", "confirm", 10, {
       modal: true,
       escape: false,
-      resizable: false,
       autoOpen: false,
       width: 400,
-      height: "auto",
-      window_id: 10,
-    };
+    });
     this.window_confirm = new Window(confirm_config);
+  }
 
+  private initializeState(): void {
     this.is_drawing = false;
     this.oldpos = { x: 0, y: 0 }; // used when drawing and moving the mouse in editor
 
@@ -380,7 +325,9 @@ export class App {
     if (filenameInput) {
       filenameInput.value = this.sprite.get_filename();
     }
+  }
 
+  private restoreWindowStates(): void {
     // Restore window open states from config (for closeable windows)
     // Only restore if window is closeable and should be open
     if (this.config.window_animation.closeable && this.config.window_animation.isOpen) {
@@ -392,6 +339,181 @@ export class App {
 
     if (this.storage.is_updated_version())
       this.window_about.open();
+  }
+
+  /**
+   * Helper to create window config with common defaults
+   * Reduces repetitive window configuration code
+   */
+  private createWindowConfig(
+    name: string,
+    title: string,
+    type: string,
+    windowId: number,
+    options: {
+      resizable?: boolean;
+      closeable?: boolean;
+      left?: number;
+      top?: number;
+      width?: number | string;
+      height?: number | string;
+      autoOpen?: boolean;
+      modal?: boolean;
+      escape?: boolean;
+    } = {}
+  ) {
+    return {
+      name,
+      title,
+      type,
+      window_id: windowId,
+      resizable: options.resizable ?? false,
+      closeable: options.closeable,
+      left: options.left,
+      top: options.top,
+      width: options.width ?? "auto",
+      height: options.height ?? "auto",
+      autoOpen: options.autoOpen,
+      modal: options.modal,
+      escape: options.escape,
+    };
+  }
+
+  /**
+   * Handle navigation keys (arrow keys)
+   */
+  private handleNavigationKeys(e: KeyboardEvent): void {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      this.sprite.set_current_sprite(this.sprite.get_current_sprite_number() - 1);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      this.sprite.set_current_sprite(this.sprite.get_current_sprite_number() + 1);
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    }
+    if (e.key === "ArrowLeft") {
+      this.sprite.shift_horizontal("left");
+      this.update();
+    }
+    if (e.key === "ArrowRight") {
+      this.sprite.shift_horizontal("right");
+      this.update();
+    }
+  }
+
+  /**
+   * Handle tool shortcuts (m, d, e, f, s, Escape, c)
+   */
+  private handleToolShortcuts(e: KeyboardEvent, isCtrl: boolean): void {
+    if (e.key === "m") {
+      this.setDrawMode("move");
+    }
+    if (e.key === "d") {
+      this.setDrawMode("draw");
+    }
+    if (e.key === "e") {
+      this.setDrawMode("erase");
+    }
+    if (e.key === "f") {
+      this.setDrawMode("fill");
+    }
+    if (e.key === "s" && !isCtrl) {
+      e.preventDefault();
+      // Toggle behavior: if in select mode or has selection, clear and switch to draw
+      if (this.mode === "select" || this.selection?.active) {
+        this.clearSelection();
+        this.setDrawMode("draw");
+      } else {
+        this.setDrawMode("select");
+      }
+    }
+    if (e.key === "Escape") {
+      this.clearSelection();
+      this.setDrawMode("draw");
+    }
+    if (e.key === "c" && !isCtrl) {
+      this.sprite.toggle_multicolor();
+      this.update();
+    }
+  }
+
+  /**
+   * Handle color shortcuts (1-4 keys)
+   */
+  private handleColorShortcuts(e: KeyboardEvent): void {
+    if (e.key === "1") {
+      this.sprite.set_pen(0);
+      this.update();
+    }
+    if (e.key === "2") {
+      this.sprite.set_pen(1);
+      this.update();
+    }
+    if (e.key === "3") {
+      this.sprite.set_pen(2);
+      this.update();
+    }
+    if (e.key === "4") {
+      this.sprite.set_pen(3);
+      this.update();
+    }
+  }
+
+  /**
+   * Handle edit shortcuts (Ctrl+Z, N, C, V, D, Delete, I)
+   */
+  private handleEditShortcuts(e: KeyboardEvent, isCtrl: boolean): void {
+    if (e.key === "z" && isCtrl) {
+      e.preventDefault();
+      if (e.shiftKey) {
+        this.sprite.redo();
+      } else {
+        this.sprite.undo();
+      }
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    }
+    if (e.key === "n" && isCtrl) {
+      e.preventDefault();
+      this.sprite.new_sprite(this.palette.get_color(), this.sprite.is_multicolor());
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    }
+    if (e.key === "c" && isCtrl) {
+      e.preventDefault();
+      this.sprite.copy();
+      this.update_ui();
+      status("Sprite copied.");
+    }
+    if (e.key === "v" && isCtrl) {
+      e.preventDefault();
+      if (!this.sprite.is_copy_empty()) {
+        this.sprite.paste();
+        this.update();
+        status("Sprite pasted.");
+      }
+    }
+    if (e.key === "d" && isCtrl) {
+      e.preventDefault();
+      this.sprite.duplicate();
+      this.list.update_all(this.sprite.get_all());
+      this.update_ui();
+      status("Sprite duplicated.");
+    }
+    if (e.key === "Delete") {
+      this.sprite.delete();
+      this.list.update_all(this.sprite.get_all());
+      this.update();
+    }
+    if (e.key === "i" && isCtrl) {
+      e.preventDefault();
+      this.sprite.invert();
+      this.update();
+    }
   }
 
   // Helper method to set drawing mode and update UI icons
@@ -787,154 +909,23 @@ KKKKKKKKK    KKKKKKK   EEEEEEEEEEEEEEEEEEEEEE       YYYYYYYYYYYYY        SSSSSSS
 */
 
     document.addEventListener("keydown", (e) => {
-      //console.log(e.key);
-      if (this.allow_keyboard_shortcuts) {
-        // Use Ctrl key only (works on all platforms, avoids browser conflicts on Mac)
-        const isCtrl = e.ctrlKey;
+      if (!this.allow_keyboard_shortcuts) return;
 
-        if (e.key == "a") {
-          console.time("performance");
-          for (let i = 0; i <= 1000; i++) this.update();
-          console.timeEnd("performance");
-        }
+      const isCtrl = e.ctrlKey;
 
-        if (e.key == "ArrowRight") {
-          this.sprite.set_current_sprite("right");
-          this.update();
-        }
-        if (e.key == "ArrowLeft") {
-          this.sprite.set_current_sprite("left");
-          this.update();
-        }
-
-        if (e.key == "f" && isCtrl) {
-          toggle_fullscreen();
-        }
-
-        // Tool shortcuts (lowercase keys) - only when Ctrl is not pressed
-        if (e.key == "m" && !isCtrl) this.setDrawMode("move");
-        if (e.key == "d" && !isCtrl) this.setDrawMode("draw");
-        if (e.key == "e" && !isCtrl) this.setDrawMode("erase");
-        if (e.key == "f" && !isCtrl) this.setDrawMode("fill");
-
-        // Select tool: 's' key toggles between select and draw mode
-        // If there's an active selection or in select mode, clear and switch to draw
-        if (e.key == "s" && !isCtrl) {
-          if (this.selection?.active || this.mode === "select") {
-            this.clearSelection();
-            this.setDrawMode("draw");
-          } else {
-            this.setDrawMode("select");
-          }
-        }
-
-        // Escape key: Clear selection and return to draw mode
-        if (e.key == "Escape") {
-          if (this.selection?.active) {
-            this.clearSelection();
-          }
-          if (this.mode === "select") {
-            this.setDrawMode("draw");
-          }
-        }
-
-        // Color palette shortcuts (number keys)
-        if (e.key == "1") {
-          this.sprite.set_pen(0);
-          this.update();
-        }
-
-        if (e.key == "2") {
-          this.sprite.set_pen(1);
-          this.update();
-        }
-
-        if (e.key == "3" && this.sprite.is_multicolor()) {
-          this.sprite.set_pen(2);
-          this.update();
-        }
-
-        if (e.key == "4" && this.sprite.is_multicolor()) {
-          this.sprite.set_pen(3);
-          this.update();
-        }
-
-        // Undo/Redo with Ctrl
-        if (isCtrl && e.key.toLowerCase() == "z") {
-          e.preventDefault(); // Prevent browser undo
-          if (e.shiftKey) {
-            // Ctrl+Shift+Z = Redo
-            this.sprite.redo();
-            this.update();
-          } else {
-            // Ctrl+Z = Undo
-            this.sprite.undo();
-            this.update();
-          }
-        }
-
-        // Toggle multicolor mode
-        if (e.key == "c" && !isCtrl) {
-          this.sprite.toggle_multicolor();
-          this.update();
-        }
-
-        // New sprite with Ctrl+N
-        if (isCtrl && e.key.toLowerCase() == "n") {
-          e.preventDefault(); // Prevent browser new window
-          this.sprite.new_sprite(
-            this.palette.get_color(),
-            this.sprite.is_multicolor()
-          );
-          this.list.update_all(this.sprite.get_all());
-          this.update();
-          status("New sprite.");
-        }
-
-        // Copy sprite with Ctrl+C
-        if (isCtrl && e.key.toLowerCase() == "c") {
-          e.preventDefault(); // Prevent browser copy
-          this.sprite.copy();
-          this.update_ui();
-          status("Sprite copied.");
-        }
-
-        // Paste sprite with Ctrl+V
-        if (isCtrl && e.key.toLowerCase() == "v") {
-          e.preventDefault(); // Prevent browser paste
-          if (!this.sprite.is_copy_empty()) {
-            this.sprite.paste();
-            this.update();
-            status("Sprite pasted.");
-          } else {
-            status("Nothing to copy.", "error");
-          }
-        }
-
-        // Duplicate sprite with Ctrl+D
-        if (isCtrl && e.key.toLowerCase() == "d") {
-          e.preventDefault(); // Prevent browser bookmark
-          this.sprite.duplicate();
-          this.list.update_all(this.sprite.get_all());
-          this.update_ui();
-          status("Sprite duplicated.");
-        }
-
-        // Delete sprite with Ctrl+Backspace or Ctrl+Delete
-        if (isCtrl && (e.key == "Backspace" || e.key == "Delete")) {
-          e.preventDefault();
-          this.sprite.delete();
-          this.list.update_all(this.sprite.get_all());
-          this.update();
-        }
-
-        // Invert sprite with Ctrl+I
-        if (isCtrl && e.key.toLowerCase() == "i") {
-          e.preventDefault();
-          this.sprite.invert();
-          this.update();
-        }
+      // Performance test (debug only)
+      if (e.key === "a") {
+        console.time("performance");
+        for (let i = 0; i <= 1000; i++) this.update();
+        console.timeEnd("performance");
+        return;
       }
+
+      // Handle different key categories
+      this.handleNavigationKeys(e);
+      this.handleToolShortcuts(e, isCtrl);
+      this.handleColorShortcuts(e);
+      this.handleEditShortcuts(e, isCtrl);
     });
 
     /*
@@ -1291,17 +1282,6 @@ TTTTTT  T:::::T  TTTTTT O::::::O   O::::::O::::::O   O::::::O   L:::::L         
 
 */
 
-    // Icon handlers commented out because icons are removed from Tools.ts
-    // dom.sel("#icon-load").onclick = () => {
-    //   dom.sel("#input-load").click();
-    // };
-
-    // dom.sel("#icon-save").onclick = () => {
-    //   this.allow_keyboard_shortcuts = false;
-    //   $(this.window_save.get_window_id()).dialog("open");
-    //   this.save.set_save_data(this.sprite.get_all());
-    // };
-
     dom.sel("#icon-move").onclick = () => this.setDrawMode("move");
     dom.sel("#icon-draw").onclick = () => this.setDrawMode("draw");
     dom.sel("#icon-erase").onclick = () => this.setDrawMode("erase");
@@ -1429,7 +1409,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     // Shared handler for pointer down (mouse/touch)
     const handlePointerDown = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
-      if (this.mode == "select") {
+      if (this.mode === "select") {
         const pixel = this.editor.get_pixel(e);
         this.marquee_drawing = true;
         this.selection = {
@@ -1442,21 +1422,21 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         return;
       }
 
-      if (this.mode == "draw") {
+      if (this.mode === "draw") {
         this.sprite.set_pixel(this.editor.get_pixel(e), shiftKey);
         this.is_drawing = true;
       }
 
-      if (this.mode == "erase") {
+      if (this.mode === "erase") {
         this.sprite.set_pixel(this.editor.get_pixel(e), true);
         this.is_drawing = true;
       }
 
-      if (this.mode == "fill") {
+      if (this.mode === "fill") {
         this.sprite.floodfill(this.editor.get_pixel(e));
       }
 
-      if (this.mode == "move") {
+      if (this.mode === "move") {
         this.move_start = true;
         this.move_start_pos = this.editor.get_pixel(e);
 
@@ -1484,7 +1464,7 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     // Shared handler for pointer move (mouse/touch)
     const handlePointerMove = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
-      if (this.marquee_drawing && this.mode == "select") {
+      if (this.marquee_drawing && this.mode === "select") {
         const newpos = this.editor.get_pixel(e);
         if (this.selection) {
           this.selection.end = newpos;
@@ -1494,13 +1474,13 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
         return;
       }
 
-      if (this.is_drawing && (this.mode == "draw" || this.mode == "erase")) {
+      if (this.is_drawing && (this.mode === "draw" || this.mode === "erase")) {
         const newpos = this.editor.get_pixel(e);
         // only draw if the pointer has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
           let delete_trigger = shiftKey;
-          if (this.mode == "erase") delete_trigger = true;
+          if (this.mode === "erase") delete_trigger = true;
           this.sprite.set_pixel(newpos, delete_trigger);
           this.editor.update(all);
           this.preview.update(all);

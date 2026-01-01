@@ -92,7 +92,7 @@ export default class Palette {
         `;"></div>`;
 
       x++;
-      if (x == 2) {
+      if (x === 2) {
         x = 0;
         picker_div += `<div style="clear:both;"></div>`; // after two colors, break to next line
       }

@@ -14,6 +14,8 @@ export default class Window_Controls {
   zoom_max: any;
   pixels_x: any;
   pixels_y: any;
+  config: any;
+  canvas: any;
 
   get_width(): number {
     return this.width;
@@ -52,5 +54,48 @@ export default class Window_Controls {
   update_zoom(): void {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
+  }
+
+  /**
+   * Shared method for rendering sprite pixels to canvas
+   * Used by Editor, Preview, and List
+   */
+  render_pixels(
+    sprite_data: any,
+    all_data: any,
+    fillStyleTransform?: (color: string) => string
+  ): void {
+    const x_grid_step = sprite_data.multicolor ? 2 : 1;
+
+    for (let i = 0; i < this.pixels_x; i += x_grid_step) {
+      for (let j = 0; j < this.pixels_y; j++) {
+        let array_entry = sprite_data.pixels[j][i];
+
+        // Skip transparent pixels
+        if (array_entry === 0) continue;
+
+        // Determine color based on pixel value
+        let color: number;
+        if (array_entry === 1 || !sprite_data.multicolor) {
+          color = sprite_data.color;
+        } else {
+          color = all_data.colors[array_entry];
+        }
+
+        // Apply color transformation if provided (e.g., for alpha/overlay)
+        const colorString = this.config.colors[color];
+        this.canvas.fillStyle = fillStyleTransform
+          ? fillStyleTransform(colorString)
+          : colorString;
+
+        // Draw pixel rectangle
+        this.canvas.fillRect(
+          i * this.zoom,
+          j * this.zoom,
+          x_grid_step * this.zoom,
+          this.zoom
+        );
+      }
+    }
   }
 }
