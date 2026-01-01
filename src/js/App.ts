@@ -1744,9 +1744,10 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       console.error("Playfield button not found!");
     }
 
-    // Playfield zoom controls
+    // Playfield zoom and grid controls
     dom.sel("#icon-playfield-zoom-in").onclick = () => this.handleZoomGrid("playfield", "zoom-in");
     dom.sel("#icon-playfield-zoom-out").onclick = () => this.handleZoomGrid("playfield", "zoom-out");
+    dom.sel("#icon-playfield-grid").onclick = () => this.handleZoomGrid("playfield", "toggle-grid");
 
     dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {

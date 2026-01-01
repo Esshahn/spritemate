@@ -24,6 +24,7 @@ export default class Playfield extends Window_Controls {
   nextId: number = 1;
   all_data: any = null; // Cache of sprite data
   selectedBackgroundColor: number = 0; // Default to color 0 (black)
+  grid: boolean = false; // Grid is off by default
 
   constructor(public window: number, public config) {
     super();
@@ -54,6 +55,7 @@ export default class Playfield extends Window_Controls {
         <div class="icons-zoom-area">
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-playfield-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-playfield-zoom-out" title="zoom out">
+          <img src="ui/icon-grid.png" class="icon-hover" id="icon-playfield-grid" title="toggle grid">
         </div>
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
       </div>
@@ -306,6 +308,40 @@ export default class Playfield extends Window_Controls {
     this.sprites.sort((a, b) => a.zIndex - b.zIndex);
   }
 
+  toggle_grid() {
+    this.grid = !this.grid;
+    this.render();
+  }
+
+  get_grid() {
+    return this.grid;
+  }
+
+  display_grid() {
+    // Draw grid with 24px horizontal and 21px vertical spacing
+    this.canvas.setLineDash([1, 1]);
+    this.canvas.strokeStyle = "#666666";
+
+    // Vertical lines (every 24 pixels)
+    for (let i = 0; i <= 320; i += 24) {
+      this.canvas.beginPath();
+      this.canvas.moveTo(i * this.zoom, 0);
+      this.canvas.lineTo(i * this.zoom, this.canvas_element.height);
+      this.canvas.stroke();
+    }
+
+    // Horizontal lines (every 21 pixels)
+    for (let j = 0; j <= 200; j += 21) {
+      this.canvas.beginPath();
+      this.canvas.moveTo(0, j * this.zoom);
+      this.canvas.lineTo(this.canvas_element.width, j * this.zoom);
+      this.canvas.stroke();
+    }
+
+    // Reset line dash
+    this.canvas.setLineDash([]);
+  }
+
   // Override zoom methods to only allow 1x or 2x
   zoom_in(): void {
     if (this.zoom < this.zoom_max) {
@@ -378,6 +414,11 @@ export default class Playfield extends Window_Controls {
     // Clear canvas with selected background color
     this.canvas.fillStyle = this.config.colors[this.selectedBackgroundColor];
     this.canvas.fillRect(0, 0, this.canvas_element.width, this.canvas_element.height);
+
+    // Draw grid if enabled (lowest z-index, below sprites)
+    if (this.grid) {
+      this.display_grid();
+    }
 
     // Draw all sprites sorted by z-index
     for (const playfieldSprite of this.sprites) {
