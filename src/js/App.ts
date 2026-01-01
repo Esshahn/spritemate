@@ -1748,6 +1748,9 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     dom.sel("#icon-playfield-zoom-in").onclick = () => this.handleZoomGrid("playfield", "zoom-in");
     dom.sel("#icon-playfield-zoom-out").onclick = () => this.handleZoomGrid("playfield", "zoom-out");
     dom.sel("#icon-playfield-grid").onclick = () => this.handleZoomGrid("playfield", "toggle-grid");
+    dom.sel("#icon-playfield-scanlines").onclick = () => {
+      this.playfield.toggle_scanlines();
+    };
 
     dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {

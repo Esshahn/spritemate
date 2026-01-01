@@ -25,6 +25,7 @@ export default class Playfield extends Window_Controls {
   all_data: any = null; // Cache of sprite data
   selectedBackgroundColor: number = 0; // Default to color 0 (black)
   grid: boolean = false; // Grid is off by default
+  scanlines: boolean = false; // Scanlines are off by default
 
   constructor(public window: number, public config) {
     super();
@@ -56,6 +57,7 @@ export default class Playfield extends Window_Controls {
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-playfield-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-playfield-zoom-out" title="zoom out">
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-playfield-grid" title="toggle grid">
+          <img src="ui/icon-info.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
         </div>
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
       </div>
@@ -311,6 +313,28 @@ export default class Playfield extends Window_Controls {
   toggle_grid() {
     this.grid = !this.grid;
     this.render();
+  }
+
+  toggle_scanlines() {
+    this.scanlines = !this.scanlines;
+    this.updateScanlines();
+  }
+
+  updateScanlines() {
+    const existingScanlines = document.getElementById("playfield-scanlines-overlay");
+    if (existingScanlines) {
+      existingScanlines.remove();
+    }
+
+    if (this.scanlines) {
+      const scanlinesOverlay = document.createElement("div");
+      scanlinesOverlay.id = "playfield-scanlines-overlay";
+      scanlinesOverlay.className = "playfield-scanlines";
+      const wrapper = document.getElementById("playfield-canvas-wrapper");
+      if (wrapper) {
+        wrapper.appendChild(scanlinesOverlay);
+      }
+    }
   }
 
   get_grid() {
