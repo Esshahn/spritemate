@@ -773,9 +773,11 @@ export class App {
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
-    document
-      .getElementById(this.sprite.get_current_sprite_number().toString())
-      ?.classList.add("sprite_in_list_selected");
+    const container = document.getElementById(this.sprite.get_current_sprite_number().toString());
+    const canvas = container?.querySelector(".sprite_in_list");
+    if (canvas) {
+      canvas.classList.add("sprite_in_list_selected");
+    }
   }
 
   /** 
@@ -1619,6 +1621,11 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     dom.sel("#icon-list-grid").onclick = () => this.handleZoomGrid("list", "toggle-grid");
     dom.sel("#icon-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
     dom.sel("#icon-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
+
+    dom.sel("#icon-list-info").onclick = () => {
+      this.list.toggle_info_overlay();
+      this.list.update_all(this.sprite.get_all());
+    };
 
     dom.sel("#icon-list-new").onclick = () => {
       this.sprite.new_sprite(
