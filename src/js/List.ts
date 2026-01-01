@@ -51,9 +51,6 @@ export default class List extends Window_Controls {
     const spritelistElement = document.querySelector("#spritelist") as HTMLElement;
     if (spritelistElement) {
       this.sortable = new Sortable(spritelistElement, {
-        cursor: "move",
-        tolerance: "pointer",
-        revert: "100",
         onSortStart: () => {
           if (this.onSortStartCallback) {
             this.onSortStartCallback();
@@ -146,8 +143,6 @@ export default class List extends Window_Controls {
       const sprite_container = document.createElement("div");
       sprite_container.id = String(i);
       sprite_container.className = "sprite_in_list_container";
-      sprite_container.style.position = "relative";
-      sprite_container.style.display = "inline-block";
 
       const canvas_element: any = document.createElement("canvas");
       canvas_element.width = this.width;

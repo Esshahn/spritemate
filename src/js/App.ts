@@ -773,9 +773,11 @@ export class App {
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
-    document
-      .getElementById(this.sprite.get_current_sprite_number().toString())
-      ?.classList.add("sprite_in_list_selected");
+    const container = document.getElementById(this.sprite.get_current_sprite_number().toString());
+    const canvas = container?.querySelector(".sprite_in_list");
+    if (canvas) {
+      canvas.classList.add("sprite_in_list_selected");
+    }
   }
 
   /** 

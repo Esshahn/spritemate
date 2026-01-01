@@ -27,13 +27,7 @@ export class Sortable {
       throw new Error("Sortable container not found");
     }
 
-    this.config = {
-      cursor: "move",
-      tolerance: "pointer",
-      revert: "100",
-      ...config,
-    };
-
+    this.config = config;
     this.init();
   }
 
@@ -53,7 +47,6 @@ export class Sortable {
     for (let i = 0; i < items.length; i++) {
       const item = items[i] as HTMLElement;
       item.draggable = true;
-      item.style.cursor = this.config.cursor || "move";
     }
   }
 
@@ -187,7 +180,6 @@ export class Sortable {
     for (let i = 0; i < items.length; i++) {
       const item = items[i] as HTMLElement;
       item.draggable = false;
-      item.style.cursor = "";
     }
   }
 }

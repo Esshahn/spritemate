@@ -453,8 +453,8 @@ img.center {
 .sprite_info_number {
   color: var(--red);
   font-size: 16px;
-  font-weight: bold;
   margin:8px;
+  font-weight: bold;
   padding: 2px;
   text-shadow:
     -1px -1px 0 #000,
