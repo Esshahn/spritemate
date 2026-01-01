@@ -877,7 +877,7 @@ img.center {
 /* --- PLAYFIELD --- */
 
 .playfield-color-palette {
-  display: flex;
+  display: inline-flex;
   gap: 2px;
   margin-left: 12px;
 }

@@ -60,6 +60,7 @@ export default class Playfield extends Window_Controls {
           <img src="ui/icon-scanlines.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
         </div>
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
+        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="clear all sprites">
       </div>
       <div id="playfield-canvas-container"></div>
       <div id="playfield-sprite-controls" class="playfield-sprite-controls">
@@ -89,7 +90,6 @@ export default class Playfield extends Window_Controls {
         </div>
         <div class="playfield-control-row">
           <button id="playfield-sprite-remove" class="playfield-button" disabled>Remove from Playfield</button>
-          <button id="playfield-clear-all" class="playfield-button" title="Clear all sprites">Clear All</button>
         </div>
       </div>
     `;
