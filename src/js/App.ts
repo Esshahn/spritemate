@@ -284,7 +284,7 @@ export class App {
       name: "window_playfield",
       title: "Playfield",
       type: "playfield",
-      autoOpen: this.config.window_playfield.autoOpen,
+      autoOpen: false, // Don't auto-open, use isOpen state instead
       closeable: this.config.window_playfield.closeable,
       resizable: false,
       left: this.config.window_playfield.left,

@@ -168,9 +168,9 @@ export function get_config() {
       top: 100,
       left: 800,
       zoom: 1,
-      autoOpen: true,
+      autoOpen: false,
       closeable: true,
-      isOpen: true,
+      isOpen: false,
     },
   };
 
