@@ -451,7 +451,7 @@ img.center {
 }
 
 .sprite_info_text {
-  color: var(--active_text);
+  color: var(--red);
   font-size: 12px;
   line-height:12px;
   margin: 6px;
