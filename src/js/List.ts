@@ -7,6 +7,7 @@ export default class List extends Window_Controls {
   clicked_sprite: number;
   sorted_array: any = [];
   grid: boolean;
+  info_overlay: boolean;
   private sortable: Sortable | null = null;
   private onSortCallback: ((sortedArray: string[]) => void) | null = null;
   private onSortStartCallback: (() => void) | null = null;
@@ -25,6 +26,7 @@ export default class List extends Window_Controls {
     this.clicked_sprite = 0;
     this.sorted_array = [];
     this.grid = true;
+    this.info_overlay = false;
 
     const template = `
       <div class="window_menu">
@@ -32,6 +34,7 @@ export default class List extends Window_Controls {
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-list-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-list-zoom-out" title="zoom out">
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-list-grid" title="toggle sprite borders">
+          <img src="ui/icon-info.png" class="icon-hover" id="icon-list-info" title="toggle info overlay">
       </div>
         <img src="ui/icon-list-new.png" class="icon-hover" id="icon-list-new" title="new sprite (ctrl + n)">
         <img src="ui/icon-list-copy.png" class="icon-hover" id="icon-list-copy" title="copy sprite (ctrl + c)">
@@ -92,6 +95,14 @@ export default class List extends Window_Controls {
     this.grid = !this.grid;
   }
 
+  toggle_info_overlay() {
+    this.info_overlay = !this.info_overlay;
+  }
+
+  is_info_overlay(): boolean {
+    return this.info_overlay;
+  }
+
   update_zoom() {
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
@@ -118,22 +129,33 @@ export default class List extends Window_Controls {
         titleElement.textContent = `sprite ${all_data.current_sprite + 1} of ${all_data.sprites.length}`;
       }
     }
-    const c: any = document.getElementById(all_data.current_sprite);
+    const container = document.getElementById(String(all_data.current_sprite));
+    if (!container) return;
+    const c = container.querySelector("canvas");
+    if (!c) return;
     const canvas = c.getContext("2d", { alpha: false });
     const sprite_data = all_data.sprites[all_data.current_sprite];
     this.draw_sprite(canvas, sprite_data, all_data);
   }
 
   update_all(all_data) {
-    dom.remove_all_elements(".sprite_in_list");
+    dom.remove_all_elements(".sprite_in_list_container");
     const length = all_data.sprites.length;
     for (let i = 0; i < length; i++) {
+      // Create container for sprite + overlay
+      const sprite_container = document.createElement("div");
+      sprite_container.id = String(i);
+      sprite_container.className = "sprite_in_list_container";
+      sprite_container.style.position = "relative";
+      sprite_container.style.display = "inline-block";
+
       const canvas_element: any = document.createElement("canvas");
-      canvas_element.id = i;
       canvas_element.width = this.width;
       canvas_element.height = this.height;
+      canvas_element.draggable = false; // Prevent canvas from being draggable, only container should be
 
-      dom.append_element("#spritelist", canvas_element);
+      sprite_container.appendChild(canvas_element);
+      dom.append_element("#spritelist", sprite_container);
       dom.add_class(canvas_element, "sprite_in_list");
 
       canvas_element.setAttribute("title", all_data.sprites[i].name);
@@ -141,12 +163,31 @@ export default class List extends Window_Controls {
 
       if (this.grid) dom.add_class(canvas_element, "sprite_in_list_border");
 
-      canvas_element.addEventListener("click", () => (this.clicked_sprite = i));
+      canvas_element.addEventListener("click", (e: MouseEvent) => {
+        const container = (e.target as HTMLElement).closest(".sprite_in_list_container");
+        if (container && container.id) {
+          this.clicked_sprite = parseInt(container.id);
+        }
+      });
 
       const canvas = canvas_element.getContext("2d", { alpha: false });
       const sprite_data = all_data.sprites[i];
 
       this.draw_sprite(canvas, sprite_data, all_data);
+
+      // Add info overlay if enabled
+      if (this.info_overlay) {
+        const info_overlay = document.createElement("div");
+        info_overlay.className = "sprite_info_overlay";
+
+        // Sprite number info
+        const sprite_number = document.createElement("div");
+        sprite_number.className = "sprite_info_number";
+        sprite_number.textContent = String(i);
+
+        info_overlay.appendChild(sprite_number);
+        sprite_container.appendChild(info_overlay);
+      }
     }
 
     // Refresh sortable after adding new elements

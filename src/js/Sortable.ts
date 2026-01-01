@@ -112,10 +112,18 @@ export class Sortable {
   }
 
   private handleDragEnter(e: DragEvent): void {
-    const target = e.target as HTMLElement;
+    let target = e.target as HTMLElement;
 
-    // Check if target is a sortable item
-    if (target.parentElement !== this.container || target === this.draggedElement) {
+    // Find the sortable item (direct child of container)
+    while (target && target.parentElement !== this.container) {
+      target = target.parentElement as HTMLElement;
+      if (!target || target === this.container) {
+        return;
+      }
+    }
+
+    // Check if target is valid and not the dragged element
+    if (!target || target === this.draggedElement) {
       return;
     }
 
@@ -138,20 +146,30 @@ export class Sortable {
 
     if (!this.draggedElement || !this.placeholder) return;
 
-    // Get new index
-    const newIndex = Array.from(this.container.children).indexOf(this.placeholder);
+    // Check if placeholder is actually in the container
+    const placeholderInContainer = this.placeholder.parentElement === this.container;
 
-    // Insert dragged element at new position
-    this.container.insertBefore(this.draggedElement, this.placeholder);
+    if (placeholderInContainer) {
+      // Get new index
+      const newIndex = Array.from(this.container.children).indexOf(this.placeholder);
 
-    // Remove placeholder
-    this.placeholder.remove();
+      // Insert dragged element at new position
+      this.container.insertBefore(this.draggedElement, this.placeholder);
 
-    // Call callback if provided
-    if (this.config.onSort && newIndex !== -1 && this.draggedIndex !== newIndex) {
-      // Adjust index if placeholder was counted
-      const adjustedNewIndex = newIndex > this.draggedIndex ? newIndex - 1 : newIndex;
-      this.config.onSort(this.draggedIndex, adjustedNewIndex);
+      // Remove placeholder
+      this.placeholder.remove();
+
+      // Call callback if provided
+      if (this.config.onSort && newIndex !== -1 && this.draggedIndex !== newIndex) {
+        // Adjust index if placeholder was counted
+        const adjustedNewIndex = newIndex > this.draggedIndex ? newIndex - 1 : newIndex;
+        this.config.onSort(this.draggedIndex, adjustedNewIndex);
+      }
+    } else {
+      // Placeholder not in container, just remove it if it exists
+      if (this.placeholder.parentElement) {
+        this.placeholder.remove();
+      }
     }
 
     // Cleanup

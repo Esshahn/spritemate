@@ -1620,6 +1620,11 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     dom.sel("#icon-list-zoom-in").onclick = () => this.handleZoomGrid("list", "zoom-in");
     dom.sel("#icon-list-zoom-out").onclick = () => this.handleZoomGrid("list", "zoom-out");
 
+    dom.sel("#icon-list-info").onclick = () => {
+      this.list.toggle_info_overlay();
+      this.list.update_all(this.sprite.get_all());
+    };
+
     dom.sel("#icon-list-new").onclick = () => {
       this.sprite.new_sprite(
         this.palette.get_color(),
