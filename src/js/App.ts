@@ -30,7 +30,7 @@ declare global {
 
 export class App {
   storage: any = {};
-  sprite: Sprite;
+  sprite!: Sprite;
   editor: any;
   window_editor: any;
   window_palette: any;
@@ -41,7 +41,7 @@ export class App {
   animation: any;
   window_list: any;
   window_snapshot: any;
-  list: List;
+  list!: List;
   window_about: any;
   about: any;
   window_save: any;
@@ -56,23 +56,23 @@ export class App {
   window_help: any;
   window_confirm: any;
   tools: any;
-  snapshot: Snapshot;
+  snapshot!: Snapshot;
   load: any;
-  is_drawing: boolean;
+  is_drawing!: boolean;
   oldpos: any;
   mode: any;
-  allow_keyboard_shortcuts: boolean;
+  allow_keyboard_shortcuts!: boolean;
   move_start: any;
   move_start_pos: any;
   dragging: any;
-  selection: {
+  selection!: {
     active: boolean;
     start: { x: number; y: number } | null;
     end: { x: number; y: number } | null;
     bounds: { x1: number; y1: number; x2: number; y2: number } | null;
   } | null;
-  marquee_drawing: boolean;
-  move_selection_backup: number[][] | null;
+  marquee_drawing!: boolean;
+  move_selection_backup!: number[][] | null;
 
   constructor(public config) {
     this.initializeConfig();

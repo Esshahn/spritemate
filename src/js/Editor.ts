@@ -79,8 +79,6 @@ export default class Editor extends Window_Controls {
     this.canvas_element.height = this.height;
 
     const sprite_data = all_data.sprites[all_data.current_sprite];
-    let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
 
     // set the name of the sprite as the title
     dom.val("#input-sprite-name", sprite_data.name);
@@ -96,7 +94,7 @@ export default class Editor extends Window_Controls {
     }
 
     // current sprite
-    this.fill_canvas(all_data, sprite_data, x_grid_step, 1);
+    this.fill_canvas(all_data, sprite_data, 1);
 
     // overlay from next sprite
     if (
