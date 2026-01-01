@@ -19,6 +19,7 @@ export function get_config() {
       list: { min: 4, max: 16 },
       animation: { min: 4, max: 16 },
     },
+    color_names:["black", "white", "red", "cyan", "purple","green","blue","yellow","orange","brown","pink","dark grey","grey","light green","light blue","light grey"],
     palettes: {
       colodore: {
         name: "Colodore",
