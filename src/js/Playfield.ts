@@ -99,8 +99,7 @@ export default class Playfield extends Window_Controls {
     // Create a wrapper for the canvas to position the selection overlay
     const canvasWrapper = document.createElement("div");
     canvasWrapper.id = "playfield-canvas-wrapper";
-    canvasWrapper.style.position = "relative";
-    canvasWrapper.style.display = "inline-block";
+    canvasWrapper.className = "playfield-canvas-wrapper";
     canvasWrapper.appendChild(this.canvas_element);
 
     dom.append_element("#playfield-canvas-container", canvasWrapper);
@@ -119,7 +118,7 @@ export default class Playfield extends Window_Controls {
       colorSquare.className = "playfield-color-square";
       colorSquare.id = `playfield-color-${i}`;
       colorSquare.style.backgroundColor = this.config.colors[i];
-      colorSquare.title = `Color ${i}`;
+      colorSquare.title = `Set background to ${this.config.color_names[i]}`;
 
       // Mark the first color as selected by default
       if (i === 0) {
@@ -137,17 +136,11 @@ export default class Playfield extends Window_Controls {
   selectBackgroundColor(colorIndex: number) {
     this.selectedBackgroundColor = colorIndex;
 
-    // Update visual selection
-    for (let i = 0; i < 16; i++) {
-      const square = dom.sel(`#playfield-color-${i}`);
-      if (square) {
-        if (i === colorIndex) {
-          square.classList.add("playfield-color-selected");
-        } else {
-          square.classList.remove("playfield-color-selected");
-        }
-      }
-    }
+    // Update visual selection - remove previous, add new
+    document.querySelectorAll(".playfield-color-selected").forEach(el =>
+      el.classList.remove("playfield-color-selected")
+    );
+    dom.sel(`#playfield-color-${colorIndex}`)?.classList.add("playfield-color-selected");
 
     this.render();
   }
@@ -165,7 +158,7 @@ export default class Playfield extends Window_Controls {
       clearAllBtn.onclick = () => {
         this.sprites = [];
         this.selectedSprite = null;
-        this.hideControls();
+        this.updateControls();
         this.render();
       };
     }
@@ -228,7 +221,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.sprites = this.sprites.filter(s => s.id !== this.selectedSprite!.id);
           this.selectedSprite = null;
-          this.hideControls();
+          this.updateControls();
           this.render();
         }
       };
@@ -243,15 +236,13 @@ export default class Playfield extends Window_Controls {
     // Check if clicking on a sprite (reverse order for z-index)
     for (let i = this.sprites.length - 1; i >= 0; i--) {
       const sprite = this.sprites[i];
-      // Calculate sprite dimensions (24x21 pixels base)
-      const spriteWidth = this.pixels_x * (sprite.doubleX ? 2 : 1);
-      const spriteHeight = this.pixels_y * (sprite.doubleY ? 2 : 1);
+      const { width, height } = this.getSpriteDimensions(sprite);
 
       if (
         x >= sprite.x &&
-        x <= sprite.x + spriteWidth &&
+        x <= sprite.x + width &&
         y >= sprite.y &&
-        y <= sprite.y + spriteHeight
+        y <= sprite.y + height
       ) {
         this.selectedSprite = sprite;
         this.dragging = true;
@@ -265,7 +256,7 @@ export default class Playfield extends Window_Controls {
 
     // Clicked on empty space
     this.selectedSprite = null;
-    this.hideControls();
+    this.updateControls();
     this.render();
   }
 
@@ -284,7 +275,7 @@ export default class Playfield extends Window_Controls {
     this.render();
   }
 
-  onMouseUp(e: MouseEvent) {
+  onMouseUp() {
     this.dragging = false;
   }
 
@@ -308,6 +299,13 @@ export default class Playfield extends Window_Controls {
 
   sortByZIndex() {
     this.sprites.sort((a, b) => a.zIndex - b.zIndex);
+  }
+
+  getSpriteDimensions(sprite: PlayfieldSprite) {
+    return {
+      width: this.pixels_x * (sprite.doubleX ? 2 : 1),
+      height: this.pixels_y * (sprite.doubleY ? 2 : 1)
+    };
   }
 
   toggle_grid() {
@@ -335,10 +333,6 @@ export default class Playfield extends Window_Controls {
         wrapper.appendChild(scanlinesOverlay);
       }
     }
-  }
-
-  get_grid() {
-    return this.grid;
   }
 
   display_grid() {
@@ -421,12 +415,6 @@ export default class Playfield extends Window_Controls {
     if (removeBtn) removeBtn.disabled = false;
   }
 
-  hideControls() {
-    // No longer hide controls, just disable them
-    this.selectedSprite = null;
-    this.updateControls();
-  }
-
   update(all_data: any) {
     this.all_data = all_data;
     this.render();
@@ -457,25 +445,16 @@ export default class Playfield extends Window_Controls {
 
     // Highlight selected sprite with blue dotted border
     if (this.selectedSprite) {
-      // Calculate sprite dimensions (24x21 pixels base)
-      const spriteWidth = this.pixels_x * (this.selectedSprite.doubleX ? 2 : 1);
-      const spriteHeight = this.pixels_y * (this.selectedSprite.doubleY ? 2 : 1);
+      const { width, height } = this.getSpriteDimensions(this.selectedSprite);
 
-      // Create an overlay div for the dotted border
       const overlay = document.createElement("div");
       overlay.id = "playfield-selection-overlay";
-      overlay.style.position = "absolute";
-      // Offset by 1px to the right and bottom to align with sprite edge
+      overlay.className = "playfield-selection-overlay";
       overlay.style.left = `${this.selectedSprite.x * this.zoom + 1}px`;
       overlay.style.top = `${this.selectedSprite.y * this.zoom + 1}px`;
-      // Keep exact sprite dimensions
-      overlay.style.width = `${spriteWidth * this.zoom}px`;
-      overlay.style.height = `${spriteHeight * this.zoom}px`;
-      overlay.style.border = "1px dotted var(--blue)";
-      overlay.style.boxSizing = "border-box";
-      overlay.style.pointerEvents = "none";
+      overlay.style.width = `${width * this.zoom}px`;
+      overlay.style.height = `${height * this.zoom}px`;
 
-      // Append to the canvas wrapper
       const wrapper = dom.sel("#playfield-canvas-wrapper");
       if (wrapper) {
         wrapper.appendChild(overlay);

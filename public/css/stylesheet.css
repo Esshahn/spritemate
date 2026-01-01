@@ -1031,4 +1031,16 @@ img.center {
   height: 16px;
 }
 
+.playfield-canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.playfield-selection-overlay {
+  position: absolute;
+  border: 1px dotted var(--blue);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
 /* --- END PLAYFIELD --- */
