@@ -873,3 +873,145 @@ img.center {
 }
 
 /* --- END CUSTOM TOOLTIP --- */
+
+/* --- PLAYFIELD --- */
+
+.playfield-color-palette {
+  display: flex;
+  gap: 2px;
+  margin-left: 12px;
+}
+
+.playfield-color-square {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+.playfield-color-square:hover {
+  border: 1px solid #888;
+}
+
+.playfield-color-selected {
+  border: 1px solid var(--blue) !important;
+}
+
+#playfield-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  overflow: auto;
+}
+
+#playfield {
+  background-color: #1a1a1a;
+  cursor: crosshair;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: 1px solid #333;
+}
+
+.playfield-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.playfield-toolbar-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.playfield-button,
+.icon-button {
+  background-color: var(--blue);
+  color: #000;
+  border: none;
+  padding: 6px 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.playfield-button:hover,
+.icon-button:hover {
+  background-color: var(--red);
+}
+
+.playfield-button:active,
+.icon-button:active {
+  transform: scale(0.98);
+}
+
+.playfield-sprite-controls {
+  padding: 16px;
+  background-color: #1a1a1a;
+  border-top: 1px solid #333;
+  margin-top: 8px;
+}
+
+.playfield-control-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+  color: var(--active_text);
+  font-size: 14px;
+}
+
+.playfield-control-row label {
+  min-width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playfield-control-row input[type="text"],
+.playfield-control-row input[type="number"] {
+  background-color: #222;
+  color: var(--active_text);
+  border: 1px solid #444;
+  padding: 6px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 80px;
+  min-width: 80px;
+}
+
+.playfield-sprite-name {
+  color: var(--active_text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+}
+
+.playfield-control-row input[type="text"]:focus,
+.playfield-control-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #2a2a2a;
+}
+
+.playfield-control-row input[type="text"]:hover,
+.playfield-control-row input[type="number"]:hover {
+  border-color: #666;
+}
+
+.playfield-control-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  width: 16px;
+  height: 16px;
+}
+
+/* --- END PLAYFIELD --- */

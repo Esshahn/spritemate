@@ -26,7 +26,12 @@ export default class About {
             <li>More code refactoring, working with AI is a blast, but can easily introduce bloated code.</li>
             <li>New Tooltip design, which should provide better information about shortkeys</li>
             <li>More robust local storage management when data is corrupted or the data format changed</li>
+            <li>Sprite numbering starts at 1 now, making the UI more consistent</li>
+            <li>Added info toggle for sprite number and name in the list view</li>
+            <li>much improved drag'n'drop sorting in list view</li>
             </ul>
+
+            <hr>
 
             <h1>v25.12.30</h1>
 

@@ -164,6 +164,14 @@ export function get_config() {
       closeable: true,
       isOpen: false,
     },
+    window_playfield: {
+      top: 100,
+      left: 800,
+      zoom: 1,
+      autoOpen: true,
+      closeable: true,
+      isOpen: true,
+    },
   };
 
   return config;

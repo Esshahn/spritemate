@@ -15,6 +15,7 @@ import Editor from "./Editor";
 import Palette from "./Palette";
 import Preview from "./Preview";
 import Animation from "./Animation";
+import Playfield from "./Playfield";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
@@ -39,6 +40,8 @@ export class App {
   preview: any;
   window_animation: any;
   animation: any;
+  window_playfield: any;
+  playfield: any;
   window_list: any;
   window_snapshot: any;
   list!: List;
@@ -116,6 +119,7 @@ export class App {
     ensureWindowDefaults(this.config.window_palette, { autoOpen: true, closeable: false });
     ensureWindowDefaults(this.config.window_snapshot, { autoOpen: false, closeable: true, isOpen: false });
     ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
+    ensureWindowDefaults(this.config.window_playfield, { autoOpen: false, closeable: true, isOpen: false });
 
     this.sprite = new Sprite(this.config, this.storage);
   }
@@ -275,6 +279,25 @@ export class App {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
+    // playfield
+    const playfield_config = {
+      name: "window_playfield",
+      title: "Playfield",
+      type: "playfield",
+      autoOpen: this.config.window_playfield.autoOpen,
+      closeable: this.config.window_playfield.closeable,
+      resizable: false,
+      left: this.config.window_playfield.left,
+      top: this.config.window_playfield.top,
+      window_id: 12,
+    };
+    this.window_playfield = new Window(
+      playfield_config,
+      this.store_window.bind(this),
+      this.regain_keyboard_controls.bind(this) // onClose callback
+    );
+    this.playfield = new Playfield(playfield_config.window_id, this.config);
+
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
     });
@@ -335,6 +358,9 @@ export class App {
     }
     if (this.config.window_snapshot.closeable && this.config.window_snapshot.isOpen) {
       this.window_snapshot.open();
+    }
+    if (this.config.window_playfield.closeable && this.config.window_playfield.isOpen) {
+      this.window_playfield.open();
     }
 
     if (this.storage.is_updated_version())
@@ -638,7 +664,7 @@ export class App {
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
-  handleZoomGrid(component: "editor" | "preview" | "list", action: "zoom-in" | "zoom-out" | "toggle-grid"): void {
+  handleZoomGrid(component: "editor" | "preview" | "list" | "playfield", action: "zoom-in" | "zoom-out" | "toggle-grid"): void {
     const comp = this[component];
 
     if (action === "zoom-in") {
@@ -681,6 +707,7 @@ export class App {
     this.list.update(all);
     this.palette.update(all);
     this.snapshot.update(all);
+    this.playfield.update(all);
     this.update_ui();
   }
 
@@ -769,6 +796,18 @@ export class App {
       dom.fade("#icon-list-zoom-in", 1, 0.33);
     } else {
       dom.fade("#icon-list-zoom-in", 0.33, 1);
+    }
+
+    if (this.playfield.is_min_zoom()) {
+      dom.fade("#icon-playfield-zoom-out", 1, 0.33);
+    } else {
+      dom.fade("#icon-playfield-zoom-out", 0.33, 1);
+    }
+
+    if (this.playfield.is_max_zoom()) {
+      dom.fade("#icon-playfield-zoom-in", 1, 0.33);
+    } else {
+      dom.fade("#icon-playfield-zoom-in", 0.33, 1);
     }
 
     // spritepad style layer
@@ -1052,6 +1091,17 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       } else {
         this.window_animation.open();
         this.config.window_animation.isOpen = true;
+      }
+      this.storage.write(this.config);
+    };
+
+    dom.sel("#menubar-playfield").onclick = () => {
+      if (this.window_playfield.isOpen()) {
+        this.window_playfield.close();
+        this.config.window_playfield.isOpen = false;
+      } else {
+        this.window_playfield.open();
+        this.config.window_playfield.isOpen = true;
       }
       this.storage.write(this.config);
     };
@@ -1664,6 +1714,39 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       this.update_ui();
       status("Sprite duplicated.");
     };
+
+    const playfieldButton = dom.sel("#icon-list-send-to-playfield");
+    if (playfieldButton) {
+      playfieldButton.onclick = () => {
+        const currentSpriteIndex = this.sprite.get_current_sprite_number();
+        const all = this.sprite.get_all();
+
+        if (!all || !all.sprites || !all.sprites[currentSpriteIndex]) {
+          status("No sprite selected.", "error");
+          return;
+        }
+
+        const spriteData = all.sprites[currentSpriteIndex];
+        const spriteName = spriteData.name || `Sprite ${currentSpriteIndex + 1}`;
+
+        // Open playfield window if not already open
+        if (!this.window_playfield.isOpen()) {
+          this.window_playfield.open();
+          this.config.window_playfield.isOpen = true;
+          this.storage.write(this.config);
+        }
+
+        // Add sprite to playfield
+        this.playfield.addSprite(currentSpriteIndex, spriteName, spriteData);
+        status("Sprite sent to playfield.");
+      };
+    } else {
+      console.error("Playfield button not found!");
+    }
+
+    // Playfield zoom controls
+    dom.sel("#icon-playfield-zoom-in").onclick = () => this.handleZoomGrid("playfield", "zoom-in");
+    dom.sel("#icon-playfield-zoom-out").onclick = () => this.handleZoomGrid("playfield", "zoom-out");
 
     dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {
