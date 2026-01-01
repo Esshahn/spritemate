@@ -165,7 +165,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
       const line_breaks_after = encode_as_binary ? 24 : 64;
 
-      data += "\n\n" + comment + "sprite " + j;
+      data += "\n\n" + comment + "sprite " + (j + 1);
       if (is_multicolor) {
         data += " / " + "multicolor";
       } else {

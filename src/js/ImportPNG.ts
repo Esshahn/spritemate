@@ -456,7 +456,7 @@ export default class ImportPNG {
     const multicolor2 = (spriteData as any).multicolor2;
 
     const sprite = SpriteHelpers.createSprite(this.config, {
-      name: "sprite_0",
+      name: "sprite1",
       color: individualColor,
       multicolor: isMulticolor,
       pixels: spriteData,
@@ -484,7 +484,7 @@ export default class ImportPNG {
       const isMulticolor = (spriteData as any).multicolor || false;
 
       return SpriteHelpers.createSprite(this.config, {
-        name: `sprite${index}`,
+        name: `sprite${index + 1}`,
         color: individualColor,
         multicolor: isMulticolor,
         pixels: spriteData,

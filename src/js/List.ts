@@ -178,7 +178,7 @@ export default class List extends Window_Controls {
         // Sprite info (number and name)
         const sprite_info = document.createElement("div");
         sprite_info.className = "sprite_info_text";
-        sprite_info.innerHTML = `${i}<br/>${all_data.sprites[i].name}`;
+        sprite_info.innerHTML = `${i + 1}<br/>${all_data.sprites[i].name}`;
 
         info_overlay.appendChild(sprite_info);
         sprite_container.appendChild(info_overlay);

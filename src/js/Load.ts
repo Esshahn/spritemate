@@ -165,7 +165,7 @@ export default class Load {
     );
 
     const sprite = {
-      name: "sprite_" + sprite_number,
+      name: "sprite" + (sprite_number + 1),
       color: this.pencolor,
       multicolor: this.multicolor,
       double_x: false,
@@ -240,7 +240,7 @@ export default class Load {
       const number_of_sprites = file_data.sprites.length;
 
       for (let i = 0; i < number_of_sprites; i++) {
-        file_data.sprites[i].name = "sprite_" + i;
+        file_data.sprites[i].name = "sprite" + (i + 1);
       }
     }
 
