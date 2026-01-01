@@ -40,7 +40,7 @@ export default class List extends Window_Controls {
         <img src="ui/icon-list-copy.png" class="icon-hover" id="icon-list-copy" title="copy sprite (ctrl + c)">
         <img src="ui/icon-list-paste.png" class="icon-hover" id="icon-list-paste" title="paste sprite (ctrl + v)">
         <img src="ui/icon-list-duplicate.png" class="icon-hover" id="icon-list-duplicate" title="duplicate sprite (ctrl + d)">
-        <button id="icon-list-send-to-playfield" class="icon-button icon-hover" title="send sprite to playfield">➕ Playfield</button>
+        <img src="ui/icon-playfield.png" class="icon-hover" id="icon-list-send-to-playfield" title="send sprite to playfield">
         <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="icon-list-delete" title="delete sprite (ctrl + x)">
       </div>
       <div id="spritelist"></div>

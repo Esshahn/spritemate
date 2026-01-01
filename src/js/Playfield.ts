@@ -57,7 +57,7 @@ export default class Playfield extends Window_Controls {
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-playfield-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-playfield-zoom-out" title="zoom out">
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-playfield-grid" title="toggle grid">
-          <img src="ui/icon-info.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
+          <img src="ui/icon-scanlines.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
         </div>
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
       </div>
