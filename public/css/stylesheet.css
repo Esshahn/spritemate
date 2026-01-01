@@ -450,10 +450,11 @@ img.center {
   user-select: none;
 }
 
-.sprite_info_number {
-  color: var(--red);
-  font-size: 16px;
-  margin:8px;
+.sprite_info_text {
+  color: var(--active_text);
+  font-size: 12px;
+  line-height:12px;
+  margin: 6px;
   font-weight: bold;
   padding: 2px;
   text-shadow:

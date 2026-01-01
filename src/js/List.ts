@@ -175,12 +175,12 @@ export default class List extends Window_Controls {
         const info_overlay = document.createElement("div");
         info_overlay.className = "sprite_info_overlay";
 
-        // Sprite number info
-        const sprite_number = document.createElement("div");
-        sprite_number.className = "sprite_info_number";
-        sprite_number.textContent = String(i);
+        // Sprite info (number and name)
+        const sprite_info = document.createElement("div");
+        sprite_info.className = "sprite_info_text";
+        sprite_info.innerHTML = `${i}<br/>${all_data.sprites[i].name}`;
 
-        info_overlay.appendChild(sprite_number);
+        info_overlay.appendChild(sprite_info);
         sprite_container.appendChild(info_overlay);
       }
     }
