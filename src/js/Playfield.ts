@@ -79,16 +79,8 @@ export default class Playfield extends Window_Controls {
           <input type="number" id="playfield-sprite-y" disabled />
           <label>Z:</label>
           <input type="number" id="playfield-sprite-z-index" disabled />
-        </div>
-        <div class="playfield-control-row">
-          <label>
-            <input type="checkbox" id="playfield-sprite-double-x" disabled />
-            Double Width
-          </label>
-          <label>
-            <input type="checkbox" id="playfield-sprite-double-y" disabled />
-            Double Height
-          </label>
+          <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-playfield-double-x" title="double width">
+          <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-playfield-double-y" title="double height">
         </div>
         <div class="playfield-control-row">
           <button id="playfield-sprite-remove" class="playfield-button" disabled>Remove from Playfield</button>
@@ -190,22 +182,24 @@ export default class Playfield extends Window_Controls {
       };
     }
 
-    const doubleXCheckbox = dom.sel("#playfield-sprite-double-x") as HTMLInputElement;
-    if (doubleXCheckbox) {
-      doubleXCheckbox.onchange = () => {
+    const doubleXIcon = dom.sel("#icon-playfield-double-x");
+    if (doubleXIcon) {
+      doubleXIcon.onclick = () => {
         if (this.selectedSprite) {
-          this.selectedSprite.doubleX = doubleXCheckbox.checked;
+          this.selectedSprite.doubleX = !this.selectedSprite.doubleX;
+          this.updateControls();
           this.render();
           this.app.saveState(); // Trigger save
         }
       };
     }
 
-    const doubleYCheckbox = dom.sel("#playfield-sprite-double-y") as HTMLInputElement;
-    if (doubleYCheckbox) {
-      doubleYCheckbox.onchange = () => {
+    const doubleYIcon = dom.sel("#icon-playfield-double-y");
+    if (doubleYIcon) {
+      doubleYIcon.onclick = () => {
         if (this.selectedSprite) {
-          this.selectedSprite.doubleY = doubleYCheckbox.checked;
+          this.selectedSprite.doubleY = !this.selectedSprite.doubleY;
+          this.updateControls();
           this.render();
           this.app.saveState(); // Trigger save
         }
@@ -415,8 +409,6 @@ export default class Playfield extends Window_Controls {
     const nameSpan = dom.sel("#playfield-sprite-name") as HTMLSpanElement;
     const xInput = dom.sel("#playfield-sprite-x") as HTMLInputElement;
     const yInput = dom.sel("#playfield-sprite-y") as HTMLInputElement;
-    const doubleXCheckbox = dom.sel("#playfield-sprite-double-x") as HTMLInputElement;
-    const doubleYCheckbox = dom.sel("#playfield-sprite-double-y") as HTMLInputElement;
     const zIndexInput = dom.sel("#playfield-sprite-z-index") as HTMLInputElement;
     const removeBtn = dom.sel("#playfield-sprite-remove") as HTMLButtonElement;
 
@@ -424,10 +416,12 @@ export default class Playfield extends Window_Controls {
       // Disable all controls when nothing is selected
       if (xInput) { xInput.value = ""; xInput.disabled = true; }
       if (yInput) { yInput.value = ""; yInput.disabled = true; }
-      if (doubleXCheckbox) { doubleXCheckbox.checked = false; doubleXCheckbox.disabled = true; }
-      if (doubleYCheckbox) { doubleYCheckbox.checked = false; doubleYCheckbox.disabled = true; }
       if (zIndexInput) { zIndexInput.value = ""; zIndexInput.disabled = true; }
       if (removeBtn) removeBtn.disabled = true;
+
+      // Reset icon images to non-highlighted state
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2.png");
       return;
     }
 
@@ -435,10 +429,21 @@ export default class Playfield extends Window_Controls {
     if (nameSpan) nameSpan.textContent = this.selectedSprite.name;
     if (xInput) { xInput.value = this.selectedSprite.x.toString(); xInput.disabled = false; }
     if (yInput) { yInput.value = this.selectedSprite.y.toString(); yInput.disabled = false; }
-    if (doubleXCheckbox) { doubleXCheckbox.checked = this.selectedSprite.doubleX; doubleXCheckbox.disabled = false; }
-    if (doubleYCheckbox) { doubleYCheckbox.checked = this.selectedSprite.doubleY; doubleYCheckbox.disabled = false; }
     if (zIndexInput) { zIndexInput.value = this.selectedSprite.zIndex.toString(); zIndexInput.disabled = false; }
     if (removeBtn) removeBtn.disabled = false;
+
+    // Update icon images based on sprite state
+    if (this.selectedSprite.doubleX) {
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2-hi.png");
+    } else {
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
+    }
+
+    if (this.selectedSprite.doubleY) {
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2-hi.png");
+    } else {
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2.png");
+    }
   }
 
   update(all_data: any) {
