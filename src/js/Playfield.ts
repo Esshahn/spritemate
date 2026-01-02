@@ -26,12 +26,13 @@ export default class Playfield extends Window_Controls {
   selectedBackgroundColor: number = 0; // Default to color 0 (black)
   grid: boolean = false; // Grid is off by default
   scanlines: boolean = false; // Scanlines are off by default
-  private onChangeCallback: (() => void) | null = null;
+  private app: any; // Reference to App for calling saveState()
 
-  constructor(public window: number, public config) {
+  constructor(public window: number, public config, app: any) {
     super();
     this.config = config;
     this.window = window;
+    this.app = app;
 
     // Setup canvas - playfield is a larger canvas
     this.canvas_element = document.createElement("canvas");
@@ -147,7 +148,7 @@ export default class Playfield extends Window_Controls {
     dom.sel(`#playfield-color-${colorIndex}`)?.classList.add("playfield-color-selected");
 
     this.render();
-    this.notifyChange(); // Trigger save
+    this.app.saveState(); // Trigger save
   }
 
   setupEventListeners() {
@@ -165,7 +166,7 @@ export default class Playfield extends Window_Controls {
         this.selectedSprite = null;
         this.updateControls();
         this.render();
-        this.notifyChange(); // Trigger save
+        this.app.saveState(); // Trigger save
       };
     }
 
@@ -176,7 +177,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.x = parseInt(xInput.value) || 0;
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -187,7 +188,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.y = parseInt(yInput.value) || 0;
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -198,7 +199,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.doubleX = doubleXCheckbox.checked;
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -209,7 +210,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.doubleY = doubleYCheckbox.checked;
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -221,7 +222,7 @@ export default class Playfield extends Window_Controls {
           this.selectedSprite.zIndex = parseInt(zIndexInput.value) || 0;
           this.sortByZIndex();
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -234,7 +235,7 @@ export default class Playfield extends Window_Controls {
           this.selectedSprite = null;
           this.updateControls();
           this.render();
-          this.notifyChange(); // Trigger save
+          this.app.saveState(); // Trigger save
         }
       };
     }
@@ -290,7 +291,7 @@ export default class Playfield extends Window_Controls {
   onMouseUp() {
     if (this.dragging) {
       this.dragging = false;
-      this.notifyChange(); // Trigger save after drag
+      this.app.saveState(); // Trigger save after drag
     }
   }
 
@@ -310,7 +311,7 @@ export default class Playfield extends Window_Controls {
     this.selectedSprite = newSprite;
     this.updateControls();
     this.render();
-    this.notifyChange(); // Trigger save
+    this.app.saveState(); // Trigger save
   }
 
   sortByZIndex() {
@@ -438,24 +439,6 @@ export default class Playfield extends Window_Controls {
   update(all_data: any) {
     this.all_data = all_data;
     this.render();
-  }
-
-  /**
-   * Sets callback to be called whenever playfield state changes
-   * Used to trigger auto-save when user modifies playfield
-   */
-  setChangeCallback(callback: (() => void) | null): void {
-    this.onChangeCallback = callback;
-  }
-
-  /**
-   * Notify that playfield state has changed
-   * Triggers save via callback (if registered)
-   */
-  private notifyChange(): void {
-    if (this.onChangeCallback) {
-      this.onChangeCallback();
-    }
   }
 
   getPlayfieldState() {

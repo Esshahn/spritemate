@@ -6,13 +6,11 @@ export default class Sprite {
   backup_position: number;
   copy_sprite: any = {};
   sprite_name_counter: number;
-  storage: any = null;
-  autosave_timeout: any = null;
-  getPlayfieldStateCallback: (() => any) | null = null;
+  private app: any = null;
 
-  constructor(public config, storage: any = null) {
+  constructor(public config, app: any = null) {
     this.config = config;
-    this.storage = storage;
+    this.app = app;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
@@ -467,44 +465,19 @@ export default class Sprite {
     this.backup_position++;
     this.backup[this.backup_position] = this.deepClone(this.all);
 
-    // Trigger debounced auto-save to local storage
-    this.trigger_autosave();
-  }
-
-  /**
-   * Sets the callback to retrieve playfield state before auto-save
-   */
-  setPlayfieldStateCallback(callback: (() => any) | null): void {
-    this.getPlayfieldStateCallback = callback;
-  }
-
-  /**
-   * Triggers a debounced auto-save to local storage
-   * Debounced by 2 seconds to avoid excessive saves during rapid edits
-   */
-  private trigger_autosave(): void {
-    if (!this.storage) return;
-
-    // Clear any existing timeout
-    if (this.autosave_timeout) {
-      clearTimeout(this.autosave_timeout);
+    // Trigger app-wide save
+    if (this.app) {
+      this.app.saveState();
     }
-
-    // Set a new timeout for auto-save
-    this.autosave_timeout = setTimeout(() => {
-      // Sync playfield state before saving
-      if (this.getPlayfieldStateCallback) {
-        this.all.playfield = this.getPlayfieldStateCallback();
-      }
-      this.storage.write_sprites(this.all);
-    }, 2000); // 2 second debounce
   }
 
   undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 
@@ -512,7 +485,9 @@ export default class Sprite {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 

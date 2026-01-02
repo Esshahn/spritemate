@@ -76,6 +76,7 @@ export class App {
   } | null;
   marquee_drawing!: boolean;
   move_selection_backup!: number[][] | null;
+  private autosave_timeout: any = null;
 
   constructor(public config) {
     this.initializeConfig();
@@ -121,7 +122,7 @@ export class App {
     ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
     ensureWindowDefaults(this.config.window_playfield, { autoOpen: false, closeable: true, isOpen: false });
 
-    this.sprite = new Sprite(this.config, this.storage);
+    this.sprite = new Sprite(this.config, this);
   }
 
   private initializeWindows(): void {
@@ -296,16 +297,7 @@ export class App {
       this.store_window.bind(this),
       this.regain_keyboard_controls.bind(this) // onClose callback
     );
-    this.playfield = new Playfield(playfield_config.window_id, this.config);
-
-    // Register callback to sync playfield state during auto-save
-    this.sprite.setPlayfieldStateCallback(() => this.playfield.getPlayfieldState());
-
-    // Register callback to trigger save when playfield changes
-    this.playfield.setChangeCallback(() => {
-      // Trigger the same auto-save mechanism as sprite edits
-      this.sprite.save_backup();
-    });
+    this.playfield = new Playfield(playfield_config.window_id, this.config, this);
 
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
@@ -377,6 +369,27 @@ export class App {
 
     if (this.storage.is_updated_version())
       this.window_about.open();
+  }
+
+  /**
+   * Central save method - called by any component when state changes
+   * Debounces saves to avoid excessive writes during rapid edits
+   */
+  saveState(): void {
+    // Clear existing timeout
+    if (this.autosave_timeout) {
+      clearTimeout(this.autosave_timeout);
+    }
+
+    // Debounced save (2 seconds)
+    this.autosave_timeout = setTimeout(() => {
+      // Collect all state in one place
+      const state = this.sprite.get_all();
+      state.playfield = this.playfield.getPlayfieldState();
+
+      // Single save call
+      this.storage.write_sprites(state);
+    }, 2000);
   }
 
   /**
@@ -1094,7 +1107,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
       // Setup button handlers
       dom.sel("#confirm-ok").onclick = () => {
-        this.sprite = new Sprite(this.config, this.storage);
+        this.sprite = new Sprite(this.config, this);
         this.sprite.new_sprite(this.palette.get_color());
         this.storage.clear_sprites(); // Clear auto-saved data
 
