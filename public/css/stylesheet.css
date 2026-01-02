@@ -875,7 +875,7 @@ img.center {
 .playfield-color-palette {
   display: inline-flex;
   gap: 2px;
-  margin-left: 12px;
+  margin-top: 2px;
 }
 
 .playfield-color-square {
@@ -987,8 +987,6 @@ img.center {
 
 .playfield-sprite-name {
   color: var(--active_text);
-  font-family: 'Quicksand', sans-serif;
-  font-size: 14px;
 }
 
 .playfield-control-row input[type="text"]:focus,

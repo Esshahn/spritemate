@@ -64,8 +64,10 @@ export default class Playfield extends Window_Controls {
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-playfield-grid" title="toggle grid">
           <img src="ui/icon-scanlines.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
         </div>
+        <div class="window_menu_icon_area">
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
-        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="clear all sprites">
+        </div>
+        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="remove all sprites from playfield">
       </div>
       <div id="playfield-canvas-container"></div>
       <div class="window-control-panel">
