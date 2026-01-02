@@ -298,6 +298,15 @@ export class App {
     );
     this.playfield = new Playfield(playfield_config.window_id, this.config);
 
+    // Register callback to sync playfield state during auto-save
+    this.sprite.setPlayfieldStateCallback(() => this.playfield.getPlayfieldState());
+
+    // Register callback to trigger save when playfield changes
+    this.playfield.setChangeCallback(() => {
+      // Trigger the same auto-save mechanism as sprite edits
+      this.sprite.save_backup();
+    });
+
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
     });
@@ -348,6 +357,9 @@ export class App {
     if (filenameInput) {
       filenameInput.value = this.sprite.get_filename();
     }
+
+    // Restore playfield state from auto-saved data (if any exists)
+    this.syncSpriteDataToPlayfield();
   }
 
   private restoreWindowStates(): void {
@@ -680,6 +692,9 @@ export class App {
       if (component === "editor") {
         this.config.window_editor.grid = comp.get_grid();
         this.storage.write(this.config);
+      } else if (component === "playfield") {
+        this.config.window_playfield.grid = comp.get_grid();
+        this.storage.write(this.config);
       }
     }
 
@@ -843,6 +858,20 @@ export class App {
     status("Configuration updated.");
   }
 
+  // Save current playfield state to sprite data
+  private syncPlayfieldToSpriteData(): void {
+    const all = this.sprite.get_all();
+    all.playfield = this.playfield.getPlayfieldState();
+  }
+
+  // Restore playfield state from sprite data
+  private syncSpriteDataToPlayfield(): void {
+    const all = this.sprite.get_all();
+    if (all.playfield) {
+      this.playfield.setPlayfieldState(all.playfield);
+    }
+  }
+
   update_loaded_file() {
     // called as a callback event from the load class
     // after a file got loaded in completely
@@ -859,6 +888,9 @@ export class App {
     // Stop animation when loading a new file, then update all views
     this.animation.update(this.sprite.get_all(), true);
     this.update();
+
+    // Restore playfield state from loaded file
+    this.syncSpriteDataToPlayfield();
   }
 
   update_imported_png() {
@@ -1044,6 +1076,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       exportSpritesheetBtn.onclick = () => {
         this.allow_keyboard_shortcuts = false;
         this.window_export.open();
+        this.syncPlayfieldToSpriteData();
         this.export.set_save_data(this.sprite.get_all());
       };
     }
@@ -1819,6 +1852,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     const btn = dom.sel(selector);
     if (btn) {
       btn.onclick = () => {
+        this.syncPlayfieldToSpriteData();
         this.save.set_save_data(this.sprite.get_all());
         handler();
       };
@@ -1829,6 +1863,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     const btn = dom.sel(selector);
     if (btn) {
       btn.onclick = () => {
+        this.syncPlayfieldToSpriteData();
         this.export.set_save_data(this.sprite.get_all());
         handler();
       };

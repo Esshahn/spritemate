@@ -168,6 +168,7 @@ export function get_config() {
       top: 100,
       left: 800,
       zoom: 1,
+      grid: false,
       autoOpen: false,
       closeable: true,
       isOpen: false,

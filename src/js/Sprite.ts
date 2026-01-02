@@ -8,6 +8,7 @@ export default class Sprite {
   sprite_name_counter: number;
   storage: any = null;
   autosave_timeout: any = null;
+  getPlayfieldStateCallback: (() => any) | null = null;
 
   constructor(public config, storage: any = null) {
     this.config = config;
@@ -34,6 +35,11 @@ export default class Sprite {
       mode: config.sprite_defaults.animation_mode,
       doubleX: false,
       doubleY: false
+    };
+
+    this.all.playfield = {
+      backgroundColor: 0,
+      sprites: []
     };
 
     this.backup = [];
@@ -377,6 +383,13 @@ export default class Sprite {
         doubleY: false
       };
     }
+    // Ensure playfield settings exist (for backward compatibility with old save files)
+    if (!this.all.playfield) {
+      this.all.playfield = {
+        backgroundColor: 0,
+        sprites: []
+      };
+    }
     this.save_backup();
   }
 
@@ -459,6 +472,13 @@ export default class Sprite {
   }
 
   /**
+   * Sets the callback to retrieve playfield state before auto-save
+   */
+  setPlayfieldStateCallback(callback: (() => any) | null): void {
+    this.getPlayfieldStateCallback = callback;
+  }
+
+  /**
    * Triggers a debounced auto-save to local storage
    * Debounced by 2 seconds to avoid excessive saves during rapid edits
    */
@@ -472,6 +492,10 @@ export default class Sprite {
 
     // Set a new timeout for auto-save
     this.autosave_timeout = setTimeout(() => {
+      // Sync playfield state before saving
+      if (this.getPlayfieldStateCallback) {
+        this.all.playfield = this.getPlayfieldStateCallback();
+      }
       this.storage.write_sprites(this.all);
     }, 2000); // 2 second debounce
   }

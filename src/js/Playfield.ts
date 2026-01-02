@@ -26,6 +26,7 @@ export default class Playfield extends Window_Controls {
   selectedBackgroundColor: number = 0; // Default to color 0 (black)
   grid: boolean = false; // Grid is off by default
   scanlines: boolean = false; // Scanlines are off by default
+  private onChangeCallback: (() => void) | null = null;
 
   constructor(public window: number, public config) {
     super();
@@ -41,6 +42,9 @@ export default class Playfield extends Window_Controls {
     this.zoom_max = 2;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
+
+    // Restore grid state from config
+    this.grid = this.config.window_playfield?.grid ?? false;
 
     // Playfield canvas size - 320x200 (C64 screen resolution) at zoom 1
     this.width = 320 * this.zoom;
@@ -143,6 +147,7 @@ export default class Playfield extends Window_Controls {
     dom.sel(`#playfield-color-${colorIndex}`)?.classList.add("playfield-color-selected");
 
     this.render();
+    this.notifyChange(); // Trigger save
   }
 
   setupEventListeners() {
@@ -160,6 +165,7 @@ export default class Playfield extends Window_Controls {
         this.selectedSprite = null;
         this.updateControls();
         this.render();
+        this.notifyChange(); // Trigger save
       };
     }
 
@@ -170,6 +176,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.x = parseInt(xInput.value) || 0;
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -180,6 +187,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.y = parseInt(yInput.value) || 0;
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -190,6 +198,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.doubleX = doubleXCheckbox.checked;
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -200,6 +209,7 @@ export default class Playfield extends Window_Controls {
         if (this.selectedSprite) {
           this.selectedSprite.doubleY = doubleYCheckbox.checked;
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -211,6 +221,7 @@ export default class Playfield extends Window_Controls {
           this.selectedSprite.zIndex = parseInt(zIndexInput.value) || 0;
           this.sortByZIndex();
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -223,6 +234,7 @@ export default class Playfield extends Window_Controls {
           this.selectedSprite = null;
           this.updateControls();
           this.render();
+          this.notifyChange(); // Trigger save
         }
       };
     }
@@ -276,7 +288,10 @@ export default class Playfield extends Window_Controls {
   }
 
   onMouseUp() {
-    this.dragging = false;
+    if (this.dragging) {
+      this.dragging = false;
+      this.notifyChange(); // Trigger save after drag
+    }
   }
 
   addSprite(spriteIndex: number, spriteName: string, spriteData: any) {
@@ -295,6 +310,7 @@ export default class Playfield extends Window_Controls {
     this.selectedSprite = newSprite;
     this.updateControls();
     this.render();
+    this.notifyChange(); // Trigger save
   }
 
   sortByZIndex() {
@@ -311,6 +327,10 @@ export default class Playfield extends Window_Controls {
   toggle_grid() {
     this.grid = !this.grid;
     this.render();
+  }
+
+  get_grid(): boolean {
+    return this.grid;
   }
 
   toggle_scanlines() {
@@ -418,6 +438,66 @@ export default class Playfield extends Window_Controls {
   update(all_data: any) {
     this.all_data = all_data;
     this.render();
+  }
+
+  /**
+   * Sets callback to be called whenever playfield state changes
+   * Used to trigger auto-save when user modifies playfield
+   */
+  setChangeCallback(callback: (() => void) | null): void {
+    this.onChangeCallback = callback;
+  }
+
+  /**
+   * Notify that playfield state has changed
+   * Triggers save via callback (if registered)
+   */
+  private notifyChange(): void {
+    if (this.onChangeCallback) {
+      this.onChangeCallback();
+    }
+  }
+
+  getPlayfieldState() {
+    return {
+      backgroundColor: this.selectedBackgroundColor,
+      sprites: this.sprites.map(s => ({
+        spriteIndex: s.spriteIndex,
+        x: s.x,
+        y: s.y,
+        doubleX: s.doubleX,
+        doubleY: s.doubleY,
+        zIndex: s.zIndex,
+        name: s.name
+      }))
+    };
+  }
+
+  setPlayfieldState(state: any) {
+    if (!state) return;
+
+    // Restore background color
+    if (state.backgroundColor !== undefined) {
+      this.selectBackgroundColor(state.backgroundColor);
+    }
+
+    // Restore sprites
+    if (state.sprites && Array.isArray(state.sprites)) {
+      this.sprites = state.sprites.map(s => ({
+        id: `sprite_${this.nextId++}`,
+        spriteIndex: s.spriteIndex,
+        x: s.x || 0,
+        y: s.y || 0,
+        doubleX: s.doubleX || false,
+        doubleY: s.doubleY || false,
+        zIndex: s.zIndex || 0,
+        name: s.name || `Sprite ${s.spriteIndex + 1}`
+      }));
+      this.sortByZIndex();
+      this.selectedSprite = null;
+      this.updateControls();
+      this.render();
+    }
   }
 
   render() {
