@@ -370,6 +370,9 @@ export class App {
 
     if (this.storage.is_updated_version())
       this.window_about.open();
+
+    // Update checkmarks after restoring window states
+    this.update_view_menu_checkmarks();
   }
 
   /**
@@ -772,6 +775,24 @@ export class App {
     if (canvas) {
       canvas.classList.add("sprite_in_list_selected");
     }
+  }
+
+  /**
+   * Updates the checkmark indicators in the View menu based on window open states
+   */
+  update_view_menu_checkmarks(): void {
+    const windows = [
+      { selector: "#menubar-animation .checkmark", window: this.window_animation },
+      { selector: "#menubar-playfield .checkmark", window: this.window_playfield },
+      { selector: "#menubar-monitor .checkmark", window: this.window_snapshot }
+    ];
+
+    windows.forEach(({ selector, window }) => {
+      const checkmark = dom.sel(selector);
+      if (checkmark) {
+        checkmark.classList.toggle("visible", window.isOpen());
+      }
+    });
   }
 
   /** 
