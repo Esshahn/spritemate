@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: "25.12.31",
+    version: "26.01.02",
     default_filename: "mysprites",
     sprite_x: 24,
     sprite_y: 21,
@@ -160,6 +160,15 @@ export function get_config() {
       left: 210,
       width: 440,
       zoom: 6,
+      autoOpen: false,
+      closeable: true,
+      isOpen: false,
+    },
+    window_playfield: {
+      top: 100,
+      left: 800,
+      zoom: 1,
+      grid: false,
       autoOpen: false,
       closeable: true,
       isOpen: false,

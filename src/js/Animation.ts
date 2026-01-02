@@ -44,7 +44,7 @@ export default class Animation extends Window_Controls {
 
     const template = `
       <div class="window_menu">
-        <div class="icons-zoom-area">
+        <div class="window_menu_icon_area">
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-animation-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-animation-zoom-out" title="zoom out">
         </div>
@@ -52,13 +52,11 @@ export default class Animation extends Window_Controls {
         <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-animation-y" title="double height">
       </div>
       <div id="animation-canvas"></div>
-      <div class="animation-controls">
+      <div class="window-control-panel">
         <div class="animation-control-row">
-          Sprite Start/End:
+          Start/End:
           <input type="number" id="animation-start-sprite" min="1" value="1" />
           <input type="number" id="animation-end-sprite" min="1" value="1" />
-        </div>
-        <div class="animation-control-row">
           FPS:
           <input type="number" id="animation-fps" min="1" max="60" value="10" />
         </div>

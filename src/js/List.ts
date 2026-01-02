@@ -30,17 +30,22 @@ export default class List extends Window_Controls {
 
     const template = `
       <div class="window_menu">
-      <div class="icons-zoom-area">
+      <div class="window_menu_icon_area">
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-list-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-list-zoom-out" title="zoom out">
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-list-grid" title="toggle sprite borders">
           <img src="ui/icon-info.png" class="icon-hover" id="icon-list-info" title="toggle info overlay">
       </div>
+      <div class="window_menu_icon_area">
         <img src="ui/icon-list-new.png" class="icon-hover" id="icon-list-new" title="new sprite (ctrl + n)">
         <img src="ui/icon-list-copy.png" class="icon-hover" id="icon-list-copy" title="copy sprite (ctrl + c)">
         <img src="ui/icon-list-paste.png" class="icon-hover" id="icon-list-paste" title="paste sprite (ctrl + v)">
         <img src="ui/icon-list-duplicate.png" class="icon-hover" id="icon-list-duplicate" title="duplicate sprite (ctrl + d)">
+        </div>
+        <img src="ui/icon-playfield.png" class="icon-hover" id="icon-list-send-to-playfield" title="send sprite to playfield">
+        
         <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="icon-list-delete" title="delete sprite (ctrl + x)">
+        
       </div>
       <div id="spritelist"></div>
     `;

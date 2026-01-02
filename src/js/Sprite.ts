@@ -6,12 +6,11 @@ export default class Sprite {
   backup_position: number;
   copy_sprite: any = {};
   sprite_name_counter: number;
-  storage: any = null;
-  autosave_timeout: any = null;
+  private app: any = null;
 
-  constructor(public config, storage: any = null) {
+  constructor(public config, app: any = null) {
     this.config = config;
-    this.storage = storage;
+    this.app = app;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
@@ -34,6 +33,11 @@ export default class Sprite {
       mode: config.sprite_defaults.animation_mode,
       doubleX: false,
       doubleY: false
+    };
+
+    this.all.playfield = {
+      backgroundColor: 0,
+      sprites: []
     };
 
     this.backup = [];
@@ -377,6 +381,13 @@ export default class Sprite {
         doubleY: false
       };
     }
+    // Ensure playfield settings exist (for backward compatibility with old save files)
+    if (!this.all.playfield) {
+      this.all.playfield = {
+        backgroundColor: 0,
+        sprites: []
+      };
+    }
     this.save_backup();
   }
 
@@ -454,33 +465,19 @@ export default class Sprite {
     this.backup_position++;
     this.backup[this.backup_position] = this.deepClone(this.all);
 
-    // Trigger debounced auto-save to local storage
-    this.trigger_autosave();
-  }
-
-  /**
-   * Triggers a debounced auto-save to local storage
-   * Debounced by 2 seconds to avoid excessive saves during rapid edits
-   */
-  private trigger_autosave(): void {
-    if (!this.storage) return;
-
-    // Clear any existing timeout
-    if (this.autosave_timeout) {
-      clearTimeout(this.autosave_timeout);
+    // Trigger app-wide save
+    if (this.app) {
+      this.app.saveState();
     }
-
-    // Set a new timeout for auto-save
-    this.autosave_timeout = setTimeout(() => {
-      this.storage.write_sprites(this.all);
-    }, 2000); // 2 second debounce
   }
 
   undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 
@@ -488,7 +485,9 @@ export default class Sprite {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 

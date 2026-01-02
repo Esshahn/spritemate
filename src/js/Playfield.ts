@@ -1,0 +1,573 @@
+import { dom } from "./helper";
+import Window_Controls from "./Window_Controls";
+
+// Interface for a sprite placed on the playfield
+interface PlayfieldSprite {
+  id: string; // unique ID for this instance
+  spriteIndex: number; // which sprite from the sprite list
+  x: number; // position on playfield
+  y: number; // position on playfield
+  doubleX: boolean; // x stretch
+  doubleY: boolean; // y stretch
+  zIndex: number; // layer order
+  name: string; // display name
+}
+
+export default class Playfield extends Window_Controls {
+  canvas_element: HTMLCanvasElement;
+  canvas: CanvasRenderingContext2D;
+  sprites: PlayfieldSprite[] = [];
+  selectedSprite: PlayfieldSprite | null = null;
+  dragging: boolean = false;
+  dragOffsetX: number = 0;
+  dragOffsetY: number = 0;
+  nextId: number = 1;
+  all_data: any = null; // Cache of sprite data
+  selectedBackgroundColor: number = 0; // Default to color 0 (black)
+  grid: boolean = false; // Grid is off by default
+  scanlines: boolean = false; // Scanlines are off by default
+  private app: any; // Reference to App for calling saveState()
+
+  constructor(public window: number, public config, app: any) {
+    super();
+    this.config = config;
+    this.window = window;
+    this.app = app;
+
+    // Setup canvas - playfield is a larger canvas
+    this.canvas_element = document.createElement("canvas");
+    // Allow zoom 1 (320x200), 2 (640x400), or 3 (960x600)
+    const savedZoom = this.config.window_playfield?.zoom ?? 1;
+    this.zoom = Math.min(Math.max(savedZoom, 1), 3); // Clamp between 1-3
+    this.zoom_min = 1;
+    this.zoom_max = 3;
+    this.pixels_x = this.config.sprite_x;
+    this.pixels_y = this.config.sprite_y;
+
+    // Restore grid state from config
+    this.grid = this.config.window_playfield?.grid ?? false;
+
+    // Playfield canvas size - 320x200 (C64 screen resolution) at zoom 1
+    this.width = 320 * this.zoom;
+    this.height = 200 * this.zoom;
+
+    this.canvas_element.id = "playfield";
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    this.canvas = this.canvas_element.getContext("2d")!;
+
+    const template = `
+      <div class="window_menu">
+        <div class="window_menu_icon_area">
+          <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-playfield-zoom-in" title="zoom in">
+          <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-playfield-zoom-out" title="zoom out">
+          <img src="ui/icon-grid.png" class="icon-hover" id="icon-playfield-grid" title="toggle grid">
+          <img src="ui/icon-scanlines.png" class="icon-hover" id="icon-playfield-scanlines" title="toggle scanlines">
+        </div>
+        <div class="window_menu_icon_area">
+        <div id="playfield-color-palette" class="playfield-color-palette"></div>
+        </div>
+        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="remove sprite from playfield">
+      </div>
+      <div id="playfield-canvas-container"></div>
+      <div id="playfield-control-panel" class="window-control-panel">
+        <div class="playfield-control-row">
+          <span id="playfield-sprite-name" class="playfield-sprite-name"></span>
+        </div>
+        <div class="playfield-control-row">
+          <label>X:</label>
+          <input type="number" id="playfield-sprite-x" disabled />
+          <label>Y:</label>
+          <input type="number" id="playfield-sprite-y" disabled />
+          <label>Z:</label>
+          <input type="number" id="playfield-sprite-z-index" disabled />
+          <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-playfield-double-x" title="double width">
+          <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-playfield-double-y" title="double height">
+        </div>
+      </div>
+    `;
+
+    dom.append("#window-" + this.window, template);
+
+    // Create a wrapper for the canvas to position the selection overlay
+    const canvasWrapper = document.createElement("div");
+    canvasWrapper.id = "playfield-canvas-wrapper";
+    canvasWrapper.className = "playfield-canvas-wrapper";
+    canvasWrapper.appendChild(this.canvas_element);
+
+    dom.append_element("#playfield-canvas-container", canvasWrapper);
+
+    this.createColorPalette();
+    this.setupEventListeners();
+  }
+
+  createColorPalette() {
+    const paletteContainer = dom.sel("#playfield-color-palette");
+    if (!paletteContainer) return;
+
+    // Create 16 color squares
+    for (let i = 0; i < 16; i++) {
+      const colorSquare = document.createElement("div");
+      colorSquare.className = "playfield-color-square";
+      colorSquare.id = `playfield-color-${i}`;
+      colorSquare.style.backgroundColor = this.config.colors[i];
+      colorSquare.title = `Set background to ${this.config.color_names[i]}`;
+
+      // Mark the first color as selected by default
+      if (i === 0) {
+        colorSquare.classList.add("playfield-color-selected");
+      }
+
+      colorSquare.onclick = () => {
+        this.selectBackgroundColor(i);
+      };
+
+      paletteContainer.appendChild(colorSquare);
+    }
+  }
+
+  selectBackgroundColor(colorIndex: number) {
+    this.selectedBackgroundColor = colorIndex;
+
+    // Update visual selection - remove previous, add new
+    document.querySelectorAll(".playfield-color-selected").forEach(el =>
+      el.classList.remove("playfield-color-selected")
+    );
+    dom.sel(`#playfield-color-${colorIndex}`)?.classList.add("playfield-color-selected");
+
+    this.render();
+    this.app.saveState(); // Trigger save
+  }
+
+  setupEventListeners() {
+    // Canvas mouse events for dragging
+    this.canvas_element.addEventListener("mousedown", this.onMouseDown.bind(this));
+    this.canvas_element.addEventListener("mousemove", this.onMouseMove.bind(this));
+    this.canvas_element.addEventListener("mouseup", this.onMouseUp.bind(this));
+    this.canvas_element.addEventListener("mouseleave", this.onMouseUp.bind(this));
+
+    // Remove selected sprite button
+    const removeBtn = dom.sel("#playfield-clear-all") as HTMLButtonElement;
+    if (removeBtn) {
+      removeBtn.onclick = () => {
+        if (this.selectedSprite) {
+          this.sprites = this.sprites.filter(s => s.id !== this.selectedSprite!.id);
+          this.selectedSprite = null;
+          this.updateControls();
+          this.render();
+          this.app.update_ui();
+          this.app.saveState();
+        }
+      };
+    }
+
+    // Sprite controls
+    const xInput = dom.sel("#playfield-sprite-x") as HTMLInputElement;
+    if (xInput) {
+      xInput.onchange = () => {
+        if (this.selectedSprite) {
+          this.selectedSprite.x = parseInt(xInput.value) || 0;
+          this.render();
+          this.app.saveState(); // Trigger save
+        }
+      };
+    }
+
+    const yInput = dom.sel("#playfield-sprite-y") as HTMLInputElement;
+    if (yInput) {
+      yInput.onchange = () => {
+        if (this.selectedSprite) {
+          this.selectedSprite.y = parseInt(yInput.value) || 0;
+          this.render();
+          this.app.saveState(); // Trigger save
+        }
+      };
+    }
+
+    const doubleXIcon = dom.sel("#icon-playfield-double-x");
+    if (doubleXIcon) {
+      doubleXIcon.onclick = () => {
+        if (this.selectedSprite) {
+          this.selectedSprite.doubleX = !this.selectedSprite.doubleX;
+          this.updateControls();
+          this.render();
+          this.app.saveState(); // Trigger save
+        }
+      };
+    }
+
+    const doubleYIcon = dom.sel("#icon-playfield-double-y");
+    if (doubleYIcon) {
+      doubleYIcon.onclick = () => {
+        if (this.selectedSprite) {
+          this.selectedSprite.doubleY = !this.selectedSprite.doubleY;
+          this.updateControls();
+          this.render();
+          this.app.saveState(); // Trigger save
+        }
+      };
+    }
+
+    const zIndexInput = dom.sel("#playfield-sprite-z-index") as HTMLInputElement;
+    if (zIndexInput) {
+      zIndexInput.onchange = () => {
+        if (this.selectedSprite) {
+          this.selectedSprite.zIndex = parseInt(zIndexInput.value) || 0;
+          this.sortByZIndex();
+          this.render();
+          this.app.saveState(); // Trigger save
+        }
+      };
+    }
+  }
+
+  onMouseDown(e: MouseEvent) {
+    const rect = this.canvas_element.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / this.zoom;
+    const y = (e.clientY - rect.top) / this.zoom;
+
+    // Check if clicking on a sprite (reverse order for z-index)
+    for (let i = this.sprites.length - 1; i >= 0; i--) {
+      const sprite = this.sprites[i];
+      const { width, height } = this.getSpriteDimensions(sprite);
+
+      if (
+        x >= sprite.x &&
+        x <= sprite.x + width &&
+        y >= sprite.y &&
+        y <= sprite.y + height
+      ) {
+        this.selectedSprite = sprite;
+        this.dragging = true;
+        this.dragOffsetX = x - sprite.x;
+        this.dragOffsetY = y - sprite.y;
+        this.updateControls();
+        this.render();
+        this.app.update_ui();
+        return;
+      }
+    }
+
+    // Clicked on empty space
+    this.selectedSprite = null;
+    this.updateControls();
+    this.render();
+    this.app.update_ui();
+  }
+
+  onMouseMove(e: MouseEvent) {
+    if (!this.dragging || !this.selectedSprite) return;
+
+    const rect = this.canvas_element.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / this.zoom;
+    const y = (e.clientY - rect.top) / this.zoom;
+
+    // Round to integers to ensure sprite positions are always whole numbers
+    this.selectedSprite.x = Math.max(0, Math.round(x - this.dragOffsetX));
+    this.selectedSprite.y = Math.max(0, Math.round(y - this.dragOffsetY));
+
+    this.updateControls();
+    this.render();
+  }
+
+  onMouseUp() {
+    if (this.dragging) {
+      this.dragging = false;
+      this.app.saveState(); // Trigger save after drag
+    }
+  }
+
+  addSprite(spriteIndex: number, spriteName: string, spriteData: any) {
+    const newSprite: PlayfieldSprite = {
+      id: `sprite_${this.nextId++}`,
+      spriteIndex: spriteIndex,
+      x: 50,
+      y: 50,
+      doubleX: spriteData.double_x || false,
+      doubleY: spriteData.double_y || false,
+      zIndex: this.sprites.length,
+      name: spriteName || `Sprite ${spriteIndex + 1}`,
+    };
+
+    this.sprites.push(newSprite);
+    this.selectedSprite = newSprite;
+    this.updateControls();
+    this.render();
+    this.app.saveState(); // Trigger save
+  }
+
+  sortByZIndex() {
+    this.sprites.sort((a, b) => a.zIndex - b.zIndex);
+  }
+
+  getSpriteDimensions(sprite: PlayfieldSprite) {
+    return {
+      width: this.pixels_x * (sprite.doubleX ? 2 : 1),
+      height: this.pixels_y * (sprite.doubleY ? 2 : 1)
+    };
+  }
+
+  toggle_grid() {
+    this.grid = !this.grid;
+    this.render();
+  }
+
+  get_grid(): boolean {
+    return this.grid;
+  }
+
+  toggle_scanlines() {
+    this.scanlines = !this.scanlines;
+    this.updateScanlines();
+  }
+
+  updateScanlines() {
+    const existingScanlines = document.getElementById("playfield-scanlines-overlay");
+    if (existingScanlines) {
+      existingScanlines.remove();
+    }
+
+    if (this.scanlines) {
+      const scanlinesOverlay = document.createElement("div");
+      scanlinesOverlay.id = "playfield-scanlines-overlay";
+      scanlinesOverlay.className = "playfield-scanlines";
+      const wrapper = document.getElementById("playfield-canvas-wrapper");
+      if (wrapper) {
+        wrapper.appendChild(scanlinesOverlay);
+      }
+    }
+  }
+
+  display_grid() {
+    // Draw grid with 24px horizontal and 21px vertical spacing
+    this.canvas.setLineDash([1, 1]);
+    this.canvas.strokeStyle = "#666666";
+
+    // Vertical lines (every 24 pixels)
+    for (let i = 0; i <= 320; i += 24) {
+      this.canvas.beginPath();
+      this.canvas.moveTo(i * this.zoom, 0);
+      this.canvas.lineTo(i * this.zoom, this.canvas_element.height);
+      this.canvas.stroke();
+    }
+
+    // Horizontal lines (every 21 pixels)
+    for (let j = 0; j <= 200; j += 21) {
+      this.canvas.beginPath();
+      this.canvas.moveTo(0, j * this.zoom);
+      this.canvas.lineTo(this.canvas_element.width, j * this.zoom);
+      this.canvas.stroke();
+    }
+
+    // Reset line dash
+    this.canvas.setLineDash([]);
+  }
+
+  // Override is_min_zoom and is_max_zoom to use <= and >= because Playfield increments by 1 (not 2)
+  is_min_zoom(): boolean {
+    return this.zoom <= this.zoom_min;
+  }
+
+  is_max_zoom(): boolean {
+    return this.zoom >= this.zoom_max;
+  }
+
+  // Override zoom methods to cycle through 1x, 2x, and 3x
+  zoom_in(): void {
+    if (this.zoom < this.zoom_max) {
+      this.zoom = Math.min(this.zoom + 1, this.zoom_max);
+      this.update_zoom();
+    }
+  }
+
+  zoom_out(): void {
+    if (this.zoom > this.zoom_min) {
+      this.zoom = Math.max(this.zoom - 1, this.zoom_min);
+      this.update_zoom();
+    }
+  }
+
+  // Override update_zoom to resize canvas based on zoom level
+  update_zoom(): void {
+    this.width = 320 * this.zoom;
+    this.height = 200 * this.zoom;
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    this.render();
+  }
+
+  updateControls() {
+    const nameSpan = dom.sel("#playfield-sprite-name") as HTMLSpanElement;
+    const xInput = dom.sel("#playfield-sprite-x") as HTMLInputElement;
+    const yInput = dom.sel("#playfield-sprite-y") as HTMLInputElement;
+    const zIndexInput = dom.sel("#playfield-sprite-z-index") as HTMLInputElement;
+    const controlPanel = dom.sel("#playfield-control-panel") as HTMLElement;
+
+    if (!this.selectedSprite) {
+      // Disable all controls when nothing is selected
+      if (xInput) { xInput.value = ""; xInput.disabled = true; }
+      if (yInput) { yInput.value = ""; yInput.disabled = true; }
+      if (zIndexInput) { zIndexInput.value = ""; zIndexInput.disabled = true; }
+
+      // Reset icon images to non-highlighted state
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2.png");
+
+      // Add inactive class to control panel
+      if (controlPanel) controlPanel.classList.add("inactive");
+      return;
+    }
+
+    // Remove inactive class from control panel
+    if (controlPanel) controlPanel.classList.remove("inactive");
+
+    // Enable controls and populate with selected sprite data
+    if (nameSpan) nameSpan.textContent = this.selectedSprite.name;
+    if (xInput) { xInput.value = this.selectedSprite.x.toString(); xInput.disabled = false; }
+    if (yInput) { yInput.value = this.selectedSprite.y.toString(); yInput.disabled = false; }
+    if (zIndexInput) { zIndexInput.value = this.selectedSprite.zIndex.toString(); zIndexInput.disabled = false; }
+
+    // Update icon images based on sprite state
+    if (this.selectedSprite.doubleX) {
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2-hi.png");
+    } else {
+      dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
+    }
+
+    if (this.selectedSprite.doubleY) {
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2-hi.png");
+    } else {
+      dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2.png");
+    }
+  }
+
+  update(all_data: any) {
+    this.all_data = all_data;
+    this.render();
+  }
+
+  getPlayfieldState() {
+    return {
+      backgroundColor: this.selectedBackgroundColor,
+      sprites: this.sprites.map(s => ({
+        spriteIndex: s.spriteIndex,
+        x: s.x,
+        y: s.y,
+        doubleX: s.doubleX,
+        doubleY: s.doubleY,
+        zIndex: s.zIndex,
+        name: s.name
+      }))
+    };
+  }
+
+  hasSpriteSelected(): boolean {
+    return this.selectedSprite !== null;
+  }
+
+  setPlayfieldState(state: any) {
+    if (!state) return;
+
+    // Restore background color
+    if (state.backgroundColor !== undefined) {
+      this.selectBackgroundColor(state.backgroundColor);
+    }
+
+    // Restore sprites
+    if (state.sprites && Array.isArray(state.sprites)) {
+      this.sprites = state.sprites.map(s => ({
+        id: `sprite_${this.nextId++}`,
+        spriteIndex: s.spriteIndex,
+        x: s.x || 0,
+        y: s.y || 0,
+        doubleX: s.doubleX || false,
+        doubleY: s.doubleY || false,
+        zIndex: s.zIndex || 0,
+        name: s.name || `Sprite ${s.spriteIndex + 1}`
+      }));
+      this.sortByZIndex();
+      this.selectedSprite = null;
+      this.updateControls();
+      this.render();
+    }
+  }
+
+  render() {
+    if (!this.all_data) return;
+
+    // Clear canvas with selected background color
+    this.canvas.fillStyle = this.config.colors[this.selectedBackgroundColor];
+    this.canvas.fillRect(0, 0, this.canvas_element.width, this.canvas_element.height);
+
+    // Draw grid if enabled (lowest z-index, below sprites)
+    if (this.grid) {
+      this.display_grid();
+    }
+
+    // Draw all sprites sorted by z-index
+    for (const playfieldSprite of this.sprites) {
+      this.renderSprite(playfieldSprite);
+    }
+
+    // Remove existing selection overlay
+    const existingOverlay = dom.sel("#playfield-selection-overlay");
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+
+    // Highlight selected sprite with blue dotted border
+    if (this.selectedSprite) {
+      const { width, height } = this.getSpriteDimensions(this.selectedSprite);
+
+      const overlay = document.createElement("div");
+      overlay.id = "playfield-selection-overlay";
+      overlay.className = "playfield-selection-overlay";
+      overlay.style.left = `${this.selectedSprite.x * this.zoom + 1}px`;
+      overlay.style.top = `${this.selectedSprite.y * this.zoom + 1}px`;
+      overlay.style.width = `${width * this.zoom}px`;
+      overlay.style.height = `${height * this.zoom}px`;
+
+      const wrapper = dom.sel("#playfield-canvas-wrapper");
+      if (wrapper) {
+        wrapper.appendChild(overlay);
+      }
+    }
+  }
+
+  renderSprite(playfieldSprite: PlayfieldSprite) {
+    const sprite_data = this.all_data.sprites[playfieldSprite.spriteIndex];
+    if (!sprite_data) return;
+
+    const x_grid_step = sprite_data.multicolor ? 2 : 1;
+    const scaleX = playfieldSprite.doubleX ? 2 : 1;
+    const scaleY = playfieldSprite.doubleY ? 2 : 1;
+
+    // Render each pixel (zoom affects the entire canvas, not individual pixels)
+    for (let i = 0; i < this.pixels_x; i += x_grid_step) {
+      for (let j = 0; j < this.pixels_y; j++) {
+        const array_entry = sprite_data.pixels[j][i];
+
+        // Skip transparent pixels
+        if (array_entry === 0) continue;
+
+        // Determine color
+        let color: number;
+        if (array_entry === 1 || !sprite_data.multicolor) {
+          color = sprite_data.color;
+        } else {
+          color = this.all_data.colors[array_entry];
+        }
+
+        this.canvas.fillStyle = this.config.colors[color];
+
+        // Draw pixel - positions and sizes are scaled by zoom
+        this.canvas.fillRect(
+          (playfieldSprite.x + i * scaleX) * this.zoom,
+          (playfieldSprite.y + j * scaleY) * this.zoom,
+          x_grid_step * scaleX * this.zoom,
+          scaleY * this.zoom
+        );
+      }
+    }
+  }
+}

@@ -15,12 +15,14 @@ import Editor from "./Editor";
 import Palette from "./Palette";
 import Preview from "./Preview";
 import Animation from "./Animation";
+import Playfield from "./Playfield";
 import Sprite from "./Sprite";
 import Storage from "./Storage";
 import Window from "./Window";
 import Tooltip from "./Tooltip";
 import { get_config } from "./config";
 import { dom, tipoftheday, status, toggle_fullscreen } from "./helper";
+import { IconStateManager } from "./IconStateManager";
 
 declare global {
   interface Window {
@@ -39,6 +41,8 @@ export class App {
   preview: any;
   window_animation: any;
   animation: any;
+  window_playfield: any;
+  playfield: any;
   window_list: any;
   window_snapshot: any;
   list!: List;
@@ -73,6 +77,7 @@ export class App {
   } | null;
   marquee_drawing!: boolean;
   move_selection_backup!: number[][] | null;
+  private autosave_timeout: any = null;
 
   constructor(public config) {
     this.initializeConfig();
@@ -116,8 +121,9 @@ export class App {
     ensureWindowDefaults(this.config.window_palette, { autoOpen: true, closeable: false });
     ensureWindowDefaults(this.config.window_snapshot, { autoOpen: false, closeable: true, isOpen: false });
     ensureWindowDefaults(this.config.window_animation, { autoOpen: false, closeable: true, isOpen: false });
+    ensureWindowDefaults(this.config.window_playfield, { autoOpen: false, closeable: true, isOpen: false });
 
-    this.sprite = new Sprite(this.config, this.storage);
+    this.sprite = new Sprite(this.config, this);
   }
 
   private initializeWindows(): void {
@@ -275,6 +281,25 @@ export class App {
       onLoad: this.regain_keyboard_controls.bind(this),
     });
 
+    // playfield
+    const playfield_config = {
+      name: "window_playfield",
+      title: "Playfield",
+      type: "playfield",
+      autoOpen: false, // Don't auto-open, use isOpen state instead
+      closeable: this.config.window_playfield.closeable,
+      resizable: false,
+      left: this.config.window_playfield.left,
+      top: this.config.window_playfield.top,
+      window_id: 12,
+    };
+    this.window_playfield = new Window(
+      playfield_config,
+      this.store_window.bind(this),
+      this.regain_keyboard_controls.bind(this) // onClose callback
+    );
+    this.playfield = new Playfield(playfield_config.window_id, this.config, this);
+
     this.load = new Load(this.config, {
       onLoad: this.update_loaded_file.bind(this),
     });
@@ -325,6 +350,9 @@ export class App {
     if (filenameInput) {
       filenameInput.value = this.sprite.get_filename();
     }
+
+    // Restore playfield state from auto-saved data (if any exists)
+    this.syncSpriteDataToPlayfield();
   }
 
   private restoreWindowStates(): void {
@@ -336,9 +364,33 @@ export class App {
     if (this.config.window_snapshot.closeable && this.config.window_snapshot.isOpen) {
       this.window_snapshot.open();
     }
+    if (this.config.window_playfield.closeable && this.config.window_playfield.isOpen) {
+      this.window_playfield.open();
+    }
 
     if (this.storage.is_updated_version())
       this.window_about.open();
+  }
+
+  /**
+   * Central save method - called by any component when state changes
+   * Debounces saves to avoid excessive writes during rapid edits
+   */
+  saveState(): void {
+    // Clear existing timeout
+    if (this.autosave_timeout) {
+      clearTimeout(this.autosave_timeout);
+    }
+
+    // Debounced save (2 seconds)
+    this.autosave_timeout = setTimeout(() => {
+      // Collect all state in one place
+      const state = this.sprite.get_all();
+      state.playfield = this.playfield.getPlayfieldState();
+
+      // Single save call
+      this.storage.write_sprites(state);
+    }, 2000);
   }
 
   /**
@@ -638,7 +690,7 @@ export class App {
   }
 
   // Helper method to handle zoom and grid controls for editor, preview, and list
-  handleZoomGrid(component: "editor" | "preview" | "list", action: "zoom-in" | "zoom-out" | "toggle-grid"): void {
+  handleZoomGrid(component: "editor" | "preview" | "list" | "playfield", action: "zoom-in" | "zoom-out" | "toggle-grid"): void {
     const comp = this[component];
 
     if (action === "zoom-in") {
@@ -653,6 +705,9 @@ export class App {
       comp.toggle_grid();
       if (component === "editor") {
         this.config.window_editor.grid = comp.get_grid();
+        this.storage.write(this.config);
+      } else if (component === "playfield") {
+        this.config.window_playfield.grid = comp.get_grid();
         this.storage.write(this.config);
       }
     }
@@ -681,95 +736,34 @@ export class App {
     this.list.update(all);
     this.palette.update(all);
     this.snapshot.update(all);
+    this.playfield.update(all);
     this.update_ui();
   }
 
   update_ui() {
-    if (this.sprite.get_number_of_sprites() > 1) {
-      dom.fade("#icon-list-delete", 0.33, 1);
-    } else {
-      dom.fade("#icon-list-delete", 1, 0.33);
-    }
+    // Icon fade states (enabled when condition is true)
+    IconStateManager.toggleFade("#icon-list-delete", this.sprite.get_number_of_sprites() > 1);
+    IconStateManager.toggleFade("#icon-list-paste", !this.sprite.is_copy_empty());
+    IconStateManager.toggleFade("#icon-undo", this.sprite.can_undo());
+    IconStateManager.toggleFade("#icon-redo", this.sprite.can_redo());
+    IconStateManager.toggleFade("#playfield-clear-all", this.playfield.hasSpriteSelected());
 
-    if (this.sprite.is_copy_empty()) {
-      dom.fade("#icon-list-paste", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-paste", 0.33, 1);
-    }
+    // Icon image swaps (highlighted when condition is true)
+    IconStateManager.toggleImage("#icon-preview-overlay", this.sprite.is_overlay(), "ui/icon-preview-overlay");
+    IconStateManager.toggleImage("#icon-preview-x", this.sprite.is_double_x(), "ui/icon-preview-x2");
+    IconStateManager.toggleImage("#icon-preview-y", this.sprite.is_double_y(), "ui/icon-preview-y2");
 
-    if (this.sprite.can_undo()) {
-      dom.fade("#icon-undo", 0.33, 1);
-    } else {
-      dom.fade("#icon-undo", 1, 0.33);
-    }
-
-    if (this.sprite.can_redo()) {
-      dom.fade("#icon-redo", 0.33, 1);
-    } else {
-      dom.fade("#icon-redo", 1, 0.33);
-    }
-
-    if (this.sprite.is_overlay()) {
-      dom.attr(
-        "#icon-preview-overlay",
-        "src",
-        "ui/icon-preview-overlay-hi.png"
-      );
-    } else {
-      dom.attr(
-        "#icon-preview-overlay",
-        "src",
-        "ui/icon-preview-overlay.png"
-      );
-    }
-
-    if (this.sprite.is_double_x()) {
-      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2-hi.png");
-    } else {
-      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2.png");
-    }
-
-    if (this.sprite.is_double_y()) {
-      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2-hi.png");
-    } else {
-      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2.png");
-    }
-
-    if (this.preview.is_min_zoom()) {
-      dom.fade("#icon-preview-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-preview-zoom-out", 0.33, 1);
-    }
-
-    if (this.preview.is_max_zoom()) {
-      dom.fade("#icon-preview-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-preview-zoom-in", 0.33, 1);
-    }
-
-    if (this.editor.is_min_zoom()) {
-      dom.fade("#icon-editor-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-editor-zoom-out", 0.33, 1);
-    }
-
-    if (this.editor.is_max_zoom()) {
-      dom.fade("#icon-editor-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-editor-zoom-in", 0.33, 1);
-    }
-
-    if (this.list.is_min_zoom()) {
-      dom.fade("#icon-list-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-zoom-out", 0.33, 1);
-    }
-
-    if (this.list.is_max_zoom()) {
-      dom.fade("#icon-list-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-zoom-in", 0.33, 1);
-    }
+    // Zoom controls (disabled when at min/max)
+    IconStateManager.toggleFadeInverted("#icon-preview-zoom-out", this.preview.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-preview-zoom-in", this.preview.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-editor-zoom-out", this.editor.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-editor-zoom-in", this.editor.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-list-zoom-out", this.list.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-list-zoom-in", this.list.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-playfield-zoom-out", this.playfield.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-playfield-zoom-in", this.playfield.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-animation-zoom-out", this.animation.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-animation-zoom-in", this.animation.is_max_zoom());
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
@@ -804,6 +798,20 @@ export class App {
     status("Configuration updated.");
   }
 
+  // Save current playfield state to sprite data
+  private syncPlayfieldToSpriteData(): void {
+    const all = this.sprite.get_all();
+    all.playfield = this.playfield.getPlayfieldState();
+  }
+
+  // Restore playfield state from sprite data
+  private syncSpriteDataToPlayfield(): void {
+    const all = this.sprite.get_all();
+    if (all.playfield) {
+      this.playfield.setPlayfieldState(all.playfield);
+    }
+  }
+
   update_loaded_file() {
     // called as a callback event from the load class
     // after a file got loaded in completely
@@ -820,6 +828,9 @@ export class App {
     // Stop animation when loading a new file, then update all views
     this.animation.update(this.sprite.get_all(), true);
     this.update();
+
+    // Restore playfield state from loaded file
+    this.syncSpriteDataToPlayfield();
   }
 
   update_imported_png() {
@@ -1005,6 +1016,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       exportSpritesheetBtn.onclick = () => {
         this.allow_keyboard_shortcuts = false;
         this.window_export.open();
+        this.syncPlayfieldToSpriteData();
         this.export.set_save_data(this.sprite.get_all());
       };
     }
@@ -1022,7 +1034,7 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
 
       // Setup button handlers
       dom.sel("#confirm-ok").onclick = () => {
-        this.sprite = new Sprite(this.config, this.storage);
+        this.sprite = new Sprite(this.config, this);
         this.sprite.new_sprite(this.palette.get_color());
         this.storage.clear_sprites(); // Clear auto-saved data
 
@@ -1052,6 +1064,17 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       } else {
         this.window_animation.open();
         this.config.window_animation.isOpen = true;
+      }
+      this.storage.write(this.config);
+    };
+
+    dom.sel("#menubar-playfield").onclick = () => {
+      if (this.window_playfield.isOpen()) {
+        this.window_playfield.close();
+        this.config.window_playfield.isOpen = false;
+      } else {
+        this.window_playfield.open();
+        this.config.window_playfield.isOpen = true;
       }
       this.storage.write(this.config);
     };
@@ -1665,6 +1688,43 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
       status("Sprite duplicated.");
     };
 
+    const playfieldButton = dom.sel("#icon-list-send-to-playfield");
+    if (playfieldButton) {
+      playfieldButton.onclick = () => {
+        const currentSpriteIndex = this.sprite.get_current_sprite_number();
+        const all = this.sprite.get_all();
+
+        if (!all || !all.sprites || !all.sprites[currentSpriteIndex]) {
+          status("No sprite selected.", "error");
+          return;
+        }
+
+        const spriteData = all.sprites[currentSpriteIndex];
+        const spriteName = spriteData.name || `Sprite ${currentSpriteIndex + 1}`;
+
+        // Open playfield window if not already open
+        if (!this.window_playfield.isOpen()) {
+          this.window_playfield.open();
+          this.config.window_playfield.isOpen = true;
+          this.storage.write(this.config);
+        }
+
+        // Add sprite to playfield
+        this.playfield.addSprite(currentSpriteIndex, spriteName, spriteData);
+        status("Sprite sent to playfield.");
+      };
+    } else {
+      console.error("Playfield button not found!");
+    }
+
+    // Playfield zoom and grid controls
+    dom.sel("#icon-playfield-zoom-in").onclick = () => this.handleZoomGrid("playfield", "zoom-in");
+    dom.sel("#icon-playfield-zoom-out").onclick = () => this.handleZoomGrid("playfield", "zoom-out");
+    dom.sel("#icon-playfield-grid").onclick = () => this.handleZoomGrid("playfield", "toggle-grid");
+    dom.sel("#icon-playfield-scanlines").onclick = () => {
+      this.playfield.toggle_scanlines();
+    };
+
     dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {
         this.sprite.set_current_sprite(this.list.get_clicked_sprite());
@@ -1732,6 +1792,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     const btn = dom.sel(selector);
     if (btn) {
       btn.onclick = () => {
+        this.syncPlayfieldToSpriteData();
         this.save.set_save_data(this.sprite.get_all());
         handler();
       };
@@ -1742,6 +1803,7 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
     const btn = dom.sel(selector);
     if (btn) {
       btn.onclick = () => {
+        this.syncPlayfieldToSpriteData();
         this.export.set_save_data(this.sprite.get_all());
         handler();
       };

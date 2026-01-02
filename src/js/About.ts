@@ -14,6 +14,21 @@ export default class About {
         <fieldset>
             <legend>Release Notes</legend>
 
+            <h1>v26.01.02</h1>
+
+            <h2>Playfield</h2>
+            <p>
+            This took a lot of work and refactoring... Spritemate now has a feature called playfield, which you can access from the View menu. The playfield is basically a canvas where you can drag around  sprites to arrange them for multi-sprite layouts. You can stack sprites onto others, stretch them and use the grid mode for pixel exact placement. Adding a sprite to the playfield is done via a new button in the sprite list - not the most intuitive yet, but working. Hope you like it!
+            </p>
+
+            <h2>Changes</h2>
+            <ul>
+            <li>Another day, another code refactoring. Hopefully no breaking change, but a lot got shuffled around</li>
+            <li>The usual UI changes</li>
+            </ul>
+
+            <hr>
+
             <h1>v26.01.01</h1>
 
             <h2>Import Spritesheets</h2>
@@ -26,7 +41,12 @@ export default class About {
             <li>More code refactoring, working with AI is a blast, but can easily introduce bloated code.</li>
             <li>New Tooltip design, which should provide better information about shortkeys</li>
             <li>More robust local storage management when data is corrupted or the data format changed</li>
+            <li>Sprite numbering starts at 1 now, making the UI more consistent</li>
+            <li>Added info toggle for sprite number and name in the list view</li>
+            <li>much improved drag'n'drop sorting in list view</li>
             </ul>
+
+            <hr>
 
             <h1>v25.12.30</h1>
 
