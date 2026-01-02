@@ -36,11 +36,11 @@ export default class Playfield extends Window_Controls {
 
     // Setup canvas - playfield is a larger canvas
     this.canvas_element = document.createElement("canvas");
-    // Only allow zoom 1 (320x200) or 2 (640x400)
+    // Allow zoom 1 (320x200), 2 (640x400), or 3 (960x600)
     const savedZoom = this.config.window_playfield?.zoom ?? 1;
-    this.zoom = savedZoom === 2 ? 2 : 1;
+    this.zoom = Math.min(Math.max(savedZoom, 1), 3); // Clamp between 1-3
     this.zoom_min = 1;
-    this.zoom_max = 2;
+    this.zoom_max = 3;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
 
@@ -381,17 +381,17 @@ export default class Playfield extends Window_Controls {
     this.canvas.setLineDash([]);
   }
 
-  // Override zoom methods to only allow 1x or 2x
+  // Override zoom methods to cycle through 1x, 2x, and 3x
   zoom_in(): void {
     if (this.zoom < this.zoom_max) {
-      this.zoom = 2;
+      this.zoom = Math.min(this.zoom + 1, this.zoom_max);
       this.update_zoom();
     }
   }
 
   zoom_out(): void {
     if (this.zoom > this.zoom_min) {
-      this.zoom = 1;
+      this.zoom = Math.max(this.zoom - 1, this.zoom_min);
       this.update_zoom();
     }
   }
