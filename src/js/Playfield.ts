@@ -68,16 +68,17 @@ export default class Playfield extends Window_Controls {
         <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="clear all sprites">
       </div>
       <div id="playfield-canvas-container"></div>
-      <div id="playfield-sprite-controls" class="playfield-sprite-controls">
+      <div class="window-control-panel">
         <div class="playfield-control-row">
-          <label>Sprite:</label>
-          <span id="playfield-sprite-name" class="playfield-sprite-name">-</span>
+          <span id="playfield-sprite-name" class="playfield-sprite-name"></span>
         </div>
         <div class="playfield-control-row">
           <label>X:</label>
           <input type="number" id="playfield-sprite-x" disabled />
           <label>Y:</label>
           <input type="number" id="playfield-sprite-y" disabled />
+          <label>Z:</label>
+          <input type="number" id="playfield-sprite-z-index" disabled />
         </div>
         <div class="playfield-control-row">
           <label>
@@ -88,10 +89,6 @@ export default class Playfield extends Window_Controls {
             <input type="checkbox" id="playfield-sprite-double-y" disabled />
             Double Height
           </label>
-        </div>
-        <div class="playfield-control-row">
-          <label>Z-Index:</label>
-          <input type="number" id="playfield-sprite-z-index" disabled />
         </div>
         <div class="playfield-control-row">
           <button id="playfield-sprite-remove" class="playfield-button" disabled>Remove from Playfield</button>
@@ -425,7 +422,6 @@ export default class Playfield extends Window_Controls {
 
     if (!this.selectedSprite) {
       // Disable all controls when nothing is selected
-      if (nameSpan) nameSpan.textContent = "-";
       if (xInput) { xInput.value = ""; xInput.disabled = true; }
       if (yInput) { yInput.value = ""; yInput.disabled = true; }
       if (doubleXCheckbox) { doubleXCheckbox.checked = false; doubleXCheckbox.disabled = true; }

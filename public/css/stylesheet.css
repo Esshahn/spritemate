@@ -774,10 +774,6 @@ img.center {
   border: 1px dotted #444444;
 }
 
-.animation-controls {
-  padding: 16px;
-  margin-top: 8px;
-}
 
 .animation-control-row {
   display: flex;
@@ -953,7 +949,7 @@ img.center {
   transform: scale(0.98);
 }
 
-.playfield-sprite-controls {
+.window-control-panel {
   padding: 16px;
   background-color: #1a1a1a;
   border-top: 1px solid #333;
