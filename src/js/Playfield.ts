@@ -381,6 +381,15 @@ export default class Playfield extends Window_Controls {
     this.canvas.setLineDash([]);
   }
 
+  // Override is_min_zoom and is_max_zoom to use <= and >= because Playfield increments by 1 (not 2)
+  is_min_zoom(): boolean {
+    return this.zoom <= this.zoom_min;
+  }
+
+  is_max_zoom(): boolean {
+    return this.zoom >= this.zoom_max;
+  }
+
   // Override zoom methods to cycle through 1x, 2x, and 3x
   zoom_in(): void {
     if (this.zoom < this.zoom_max) {

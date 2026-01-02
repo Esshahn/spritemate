@@ -761,6 +761,8 @@ export class App {
     IconStateManager.toggleFadeInverted("#icon-list-zoom-in", this.list.is_max_zoom());
     IconStateManager.toggleFadeInverted("#icon-playfield-zoom-out", this.playfield.is_min_zoom());
     IconStateManager.toggleFadeInverted("#icon-playfield-zoom-in", this.playfield.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-animation-zoom-out", this.animation.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-animation-zoom-in", this.animation.is_max_zoom());
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
