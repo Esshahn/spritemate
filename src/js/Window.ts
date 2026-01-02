@@ -106,10 +106,20 @@ export default class Window {
   // Compatibility methods for jQuery UI dialog API
   public open(): void {
     this.dialog.open();
+    // Update checkmarks when window opens
+    const app = (window as any).app;
+    if (app && app.update_view_menu_checkmarks) {
+      app.update_view_menu_checkmarks();
+    }
   }
 
   public close(): void {
     this.dialog.close();
+    // Update checkmarks when window closes
+    const app = (window as any).app;
+    if (app && app.update_view_menu_checkmarks) {
+      app.update_view_menu_checkmarks();
+    }
   }
 
   public isOpen(): boolean {

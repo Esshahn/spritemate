@@ -638,6 +638,7 @@ img.center {
   text-decoration: none;
   display: block;
   text-align: left;
+  position: relative;
 }
 
 #menubar .dropdown-content a:hover {
@@ -706,6 +707,29 @@ img.center {
   position: absolute;
   right: 9px;
   color: rgba(200, 200, 200, 0.5);
+}
+
+/* Checkmark indicator for toggleable windows */
+#menubar .has-checkmark {
+  padding-left: 40px !important;
+}
+
+#menubar .checkmark {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  line-height: 1;
+  color: white;
+  visibility: hidden;
+  font-weight: normal;
+  width: 16px;
+  display: inline-block;
+}
+
+#menubar .checkmark.visible {
+  visibility: visible;
 }
 
 /* Label documentation in a menu item */
