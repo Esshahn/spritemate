@@ -22,6 +22,7 @@ import Window from "./Window";
 import Tooltip from "./Tooltip";
 import { get_config } from "./config";
 import { dom, tipoftheday, status, toggle_fullscreen } from "./helper";
+import { IconStateManager } from "./IconStateManager";
 
 declare global {
   interface Window {
@@ -740,103 +741,26 @@ export class App {
   }
 
   update_ui() {
-    if (this.sprite.get_number_of_sprites() > 1) {
-      dom.fade("#icon-list-delete", 0.33, 1);
-    } else {
-      dom.fade("#icon-list-delete", 1, 0.33);
-    }
+    // Icon fade states (enabled when condition is true)
+    IconStateManager.toggleFade("#icon-list-delete", this.sprite.get_number_of_sprites() > 1);
+    IconStateManager.toggleFade("#icon-list-paste", !this.sprite.is_copy_empty());
+    IconStateManager.toggleFade("#icon-undo", this.sprite.can_undo());
+    IconStateManager.toggleFade("#icon-redo", this.sprite.can_redo());
 
-    if (this.sprite.is_copy_empty()) {
-      dom.fade("#icon-list-paste", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-paste", 0.33, 1);
-    }
+    // Icon image swaps (highlighted when condition is true)
+    IconStateManager.toggleImage("#icon-preview-overlay", this.sprite.is_overlay(), "ui/icon-preview-overlay");
+    IconStateManager.toggleImage("#icon-preview-x", this.sprite.is_double_x(), "ui/icon-preview-x2");
+    IconStateManager.toggleImage("#icon-preview-y", this.sprite.is_double_y(), "ui/icon-preview-y2");
 
-    if (this.sprite.can_undo()) {
-      dom.fade("#icon-undo", 0.33, 1);
-    } else {
-      dom.fade("#icon-undo", 1, 0.33);
-    }
-
-    if (this.sprite.can_redo()) {
-      dom.fade("#icon-redo", 0.33, 1);
-    } else {
-      dom.fade("#icon-redo", 1, 0.33);
-    }
-
-    if (this.sprite.is_overlay()) {
-      dom.attr(
-        "#icon-preview-overlay",
-        "src",
-        "ui/icon-preview-overlay-hi.png"
-      );
-    } else {
-      dom.attr(
-        "#icon-preview-overlay",
-        "src",
-        "ui/icon-preview-overlay.png"
-      );
-    }
-
-    if (this.sprite.is_double_x()) {
-      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2-hi.png");
-    } else {
-      dom.attr("#icon-preview-x", "src", "ui/icon-preview-x2.png");
-    }
-
-    if (this.sprite.is_double_y()) {
-      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2-hi.png");
-    } else {
-      dom.attr("#icon-preview-y", "src", "ui/icon-preview-y2.png");
-    }
-
-    if (this.preview.is_min_zoom()) {
-      dom.fade("#icon-preview-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-preview-zoom-out", 0.33, 1);
-    }
-
-    if (this.preview.is_max_zoom()) {
-      dom.fade("#icon-preview-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-preview-zoom-in", 0.33, 1);
-    }
-
-    if (this.editor.is_min_zoom()) {
-      dom.fade("#icon-editor-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-editor-zoom-out", 0.33, 1);
-    }
-
-    if (this.editor.is_max_zoom()) {
-      dom.fade("#icon-editor-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-editor-zoom-in", 0.33, 1);
-    }
-
-    if (this.list.is_min_zoom()) {
-      dom.fade("#icon-list-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-zoom-out", 0.33, 1);
-    }
-
-    if (this.list.is_max_zoom()) {
-      dom.fade("#icon-list-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-list-zoom-in", 0.33, 1);
-    }
-
-    if (this.playfield.is_min_zoom()) {
-      dom.fade("#icon-playfield-zoom-out", 1, 0.33);
-    } else {
-      dom.fade("#icon-playfield-zoom-out", 0.33, 1);
-    }
-
-    if (this.playfield.is_max_zoom()) {
-      dom.fade("#icon-playfield-zoom-in", 1, 0.33);
-    } else {
-      dom.fade("#icon-playfield-zoom-in", 0.33, 1);
-    }
+    // Zoom controls (disabled when at min/max)
+    IconStateManager.toggleFadeInverted("#icon-preview-zoom-out", this.preview.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-preview-zoom-in", this.preview.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-editor-zoom-out", this.editor.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-editor-zoom-in", this.editor.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-list-zoom-out", this.list.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-list-zoom-in", this.list.is_max_zoom());
+    IconStateManager.toggleFadeInverted("#icon-playfield-zoom-out", this.playfield.is_min_zoom());
+    IconStateManager.toggleFadeInverted("#icon-playfield-zoom-in", this.playfield.is_max_zoom());
 
     // spritepad style layer
     dom.remove_all_class(".sprite_in_list", "sprite_in_list_selected");
