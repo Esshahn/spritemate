@@ -746,6 +746,7 @@ export class App {
     IconStateManager.toggleFade("#icon-list-paste", !this.sprite.is_copy_empty());
     IconStateManager.toggleFade("#icon-undo", this.sprite.can_undo());
     IconStateManager.toggleFade("#icon-redo", this.sprite.can_redo());
+    IconStateManager.toggleFade("#playfield-clear-all", this.playfield.hasSpriteSelected());
 
     // Icon image swaps (highlighted when condition is true)
     IconStateManager.toggleImage("#icon-preview-overlay", this.sprite.is_overlay(), "ui/icon-preview-overlay");

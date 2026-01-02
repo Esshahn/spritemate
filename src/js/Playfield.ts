@@ -67,7 +67,7 @@ export default class Playfield extends Window_Controls {
         <div class="window_menu_icon_area">
         <div id="playfield-color-palette" class="playfield-color-palette"></div>
         </div>
-        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="remove all sprites from playfield">
+        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="remove sprite from playfield">
       </div>
       <div id="playfield-canvas-container"></div>
       <div class="window-control-panel">
@@ -83,9 +83,6 @@ export default class Playfield extends Window_Controls {
           <input type="number" id="playfield-sprite-z-index" disabled />
           <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-playfield-double-x" title="double width">
           <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-playfield-double-y" title="double height">
-        </div>
-        <div class="playfield-control-row">
-          <button id="playfield-sprite-remove" class="playfield-button" disabled>Remove from Playfield</button>
         </div>
       </div>
     `;
@@ -149,15 +146,18 @@ export default class Playfield extends Window_Controls {
     this.canvas_element.addEventListener("mouseup", this.onMouseUp.bind(this));
     this.canvas_element.addEventListener("mouseleave", this.onMouseUp.bind(this));
 
-    // Clear all button
-    const clearAllBtn = dom.sel("#playfield-clear-all") as HTMLButtonElement;
-    if (clearAllBtn) {
-      clearAllBtn.onclick = () => {
-        this.sprites = [];
-        this.selectedSprite = null;
-        this.updateControls();
-        this.render();
-        this.app.saveState(); // Trigger save
+    // Remove selected sprite button
+    const removeBtn = dom.sel("#playfield-clear-all") as HTMLButtonElement;
+    if (removeBtn) {
+      removeBtn.onclick = () => {
+        if (this.selectedSprite) {
+          this.sprites = this.sprites.filter(s => s.id !== this.selectedSprite!.id);
+          this.selectedSprite = null;
+          this.updateControls();
+          this.render();
+          this.app.update_ui();
+          this.app.saveState();
+        }
       };
     }
 
@@ -219,19 +219,6 @@ export default class Playfield extends Window_Controls {
         }
       };
     }
-
-    const removeBtn = dom.sel("#playfield-sprite-remove") as HTMLButtonElement;
-    if (removeBtn) {
-      removeBtn.onclick = () => {
-        if (this.selectedSprite) {
-          this.sprites = this.sprites.filter(s => s.id !== this.selectedSprite!.id);
-          this.selectedSprite = null;
-          this.updateControls();
-          this.render();
-          this.app.saveState(); // Trigger save
-        }
-      };
-    }
   }
 
   onMouseDown(e: MouseEvent) {
@@ -256,6 +243,7 @@ export default class Playfield extends Window_Controls {
         this.dragOffsetY = y - sprite.y;
         this.updateControls();
         this.render();
+        this.app.update_ui();
         return;
       }
     }
@@ -264,6 +252,7 @@ export default class Playfield extends Window_Controls {
     this.selectedSprite = null;
     this.updateControls();
     this.render();
+    this.app.update_ui();
   }
 
   onMouseMove(e: MouseEvent) {
@@ -412,14 +401,12 @@ export default class Playfield extends Window_Controls {
     const xInput = dom.sel("#playfield-sprite-x") as HTMLInputElement;
     const yInput = dom.sel("#playfield-sprite-y") as HTMLInputElement;
     const zIndexInput = dom.sel("#playfield-sprite-z-index") as HTMLInputElement;
-    const removeBtn = dom.sel("#playfield-sprite-remove") as HTMLButtonElement;
 
     if (!this.selectedSprite) {
       // Disable all controls when nothing is selected
       if (xInput) { xInput.value = ""; xInput.disabled = true; }
       if (yInput) { yInput.value = ""; yInput.disabled = true; }
       if (zIndexInput) { zIndexInput.value = ""; zIndexInput.disabled = true; }
-      if (removeBtn) removeBtn.disabled = true;
 
       // Reset icon images to non-highlighted state
       dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
@@ -432,7 +419,6 @@ export default class Playfield extends Window_Controls {
     if (xInput) { xInput.value = this.selectedSprite.x.toString(); xInput.disabled = false; }
     if (yInput) { yInput.value = this.selectedSprite.y.toString(); yInput.disabled = false; }
     if (zIndexInput) { zIndexInput.value = this.selectedSprite.zIndex.toString(); zIndexInput.disabled = false; }
-    if (removeBtn) removeBtn.disabled = false;
 
     // Update icon images based on sprite state
     if (this.selectedSprite.doubleX) {
@@ -466,6 +452,10 @@ export default class Playfield extends Window_Controls {
         name: s.name
       }))
     };
+  }
+
+  hasSpriteSelected(): boolean {
+    return this.selectedSprite !== null;
   }
 
   setPlayfieldState(state: any) {
