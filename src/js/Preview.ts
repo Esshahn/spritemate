@@ -25,7 +25,7 @@ export default class Preview extends Window_Controls {
 
     const template = `
       <div class="window_menu">
-        <div class="icons-zoom-area">
+        <div class="window_menu_icon_area">
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-preview-zoom-out" title="zoom out">
         </div>

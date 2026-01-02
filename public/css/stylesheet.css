@@ -371,7 +371,7 @@ img.center {
   background: rgba(90, 90, 90, 0.5);
 }
 
-.icons-zoom-area /* zoom icons */ {
+.window_menu_icon_area /* zoom icons */ {
   margin-right: 10px;
   padding-right: 10px;
   float: left;
