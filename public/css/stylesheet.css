@@ -270,7 +270,7 @@ img.center {
 
 #palette_spritecolors {
   margin-top: 12px;
-  font-size: 80%;
+  font-size: 70%;
 }
 
 
@@ -297,7 +297,8 @@ img.center {
   height: 20px;
   margin: auto;
   cursor: pointer;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
+  margin-top: 8px;
 }
 
 .palette_highlight_text {
@@ -370,7 +371,7 @@ img.center {
   background: rgba(90, 90, 90, 0.5);
 }
 
-.icons-zoom-area /* zoom icons */ {
+.window_menu_icon_area /* zoom icons */ {
   margin-right: 10px;
   padding-right: 10px;
   float: left;
@@ -430,6 +431,37 @@ img.center {
   /* shadow when dragging a sprite in the sprite list */
   background-color: white;
   box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.6);
+}
+
+.sprite_in_list_container {
+  margin: 0px;
+  padding: 0px;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  cursor: move;
+}
+
+.sprite_info_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sprite_info_text {
+  color: var(--red);
+  font-size: 12px;
+  line-height:12px;
+  margin: 6px;
+  font-weight: bold;
+  padding: 2px;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
 }
 
 #spritelist {
@@ -606,6 +638,7 @@ img.center {
   text-decoration: none;
   display: block;
   text-align: left;
+  position: relative;
 }
 
 #menubar .dropdown-content a:hover {
@@ -676,6 +709,29 @@ img.center {
   color: rgba(200, 200, 200, 0.5);
 }
 
+/* Checkmark indicator for toggleable windows */
+#menubar .has-checkmark {
+  padding-left: 40px !important;
+}
+
+#menubar .checkmark {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  line-height: 1;
+  color: white;
+  visibility: hidden;
+  font-weight: normal;
+  width: 16px;
+  display: inline-block;
+}
+
+#menubar .checkmark.visible {
+  visibility: visible;
+}
+
 /* Label documentation in a menu item */
 #menubar .label {
   padding: 4px 4px 4px 14px;
@@ -742,10 +798,6 @@ img.center {
   border: 1px dotted #444444;
 }
 
-.animation-controls {
-  padding: 16px;
-  margin-top: 8px;
-}
 
 .animation-control-row {
   display: flex;
@@ -816,3 +868,202 @@ img.center {
 }
 
 /* --- END CSS ONLY MENU --- */
+
+/* --- CUSTOM TOOLTIP --- */
+
+#custom-tooltip {
+  position: fixed;
+  background: rgba(20, 20, 20, 0.95);
+  color: var(--blue);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Quicksand', sans-serif;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 185, 238, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+#custom-tooltip.visible {
+  opacity: 1;
+}
+
+/* --- END CUSTOM TOOLTIP --- */
+
+/* --- PLAYFIELD --- */
+
+.playfield-color-palette {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.playfield-color-square {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+.playfield-color-square:hover {
+  border: 1px solid #888;
+}
+
+.playfield-color-selected {
+  border: 1px solid var(--blue) !important;
+}
+
+#playfield-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  overflow: auto;
+}
+
+#playfield {
+  background-color: #1a1a1a;
+  cursor: crosshair;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: 1px solid #333;
+}
+
+.playfield-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.playfield-toolbar-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.playfield-button,
+.icon-button {
+  background-color: var(--blue);
+  color: #000;
+  border: none;
+  padding: 6px 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.playfield-button:hover,
+.icon-button:hover {
+  background-color: var(--red);
+}
+
+.playfield-button:active,
+.icon-button:active {
+  transform: scale(0.98);
+}
+
+.window-control-panel {
+  padding: 16px;
+  background-color: #1a1a1a;
+  border-top: 1px solid #333;
+  margin-top: 8px;
+}
+
+.window-control-panel.inactive {
+  opacity: 0.33;
+  pointer-events: none;
+}
+
+.playfield-control-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+  color: var(--active_text);
+  font-size: 14px;
+}
+
+.playfield-control-row label {
+  min-width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playfield-control-row input[type="text"],
+.playfield-control-row input[type="number"] {
+  background-color: #222;
+  color: var(--active_text);
+  border: 1px solid #444;
+  padding: 6px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 80px;
+  min-width: 80px;
+}
+
+.playfield-sprite-name {
+  color: var(--active_text);
+}
+
+.playfield-control-row input[type="text"]:focus,
+.playfield-control-row input[type="number"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #2a2a2a;
+}
+
+.playfield-control-row input[type="text"]:hover,
+.playfield-control-row input[type="number"]:hover {
+  border-color: #666;
+}
+
+.playfield-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0px,
+    rgba(0, 0, 0, 0.4) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+.playfield-control-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  width: 16px;
+  height: 16px;
+}
+
+.playfield-canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.playfield-selection-overlay {
+  position: absolute;
+  border: 1px dotted var(--blue);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* --- END PLAYFIELD --- */

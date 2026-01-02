@@ -98,14 +98,10 @@ export default class Load {
   parse_file_spd(file) {
     this.file = file;
 
-    this.start_of_sprite_data = 0;
-    this.old_format = true;
-
-    // is this the new format?
-    if (this.file[0] == "S" && this.file[1] == "P" && this.file[2] == "D") {
-      this.start_of_sprite_data = 6;
-      this.old_format = false;
-    }
+    // Detect file format based on "SPD" header
+    const isNewFormat = this.file.startsWith("SPD");
+    this.old_format = !isNewFormat;
+    this.start_of_sprite_data = isNewFormat ? 6 : 0;
 
     this.sprite_size = 64;
 
@@ -127,7 +123,7 @@ export default class Load {
       this.number_of_sprites = parseInt(this.file.charCodeAt(4), 10) + 1; // new format has the number stored here
     }
 
-    if (this.number_of_sprites == 1) {
+    if (this.number_of_sprites === 1) {
       status(this.number_of_sprites + " sprite imported successfully.");
     } else {
       status(this.number_of_sprites + " sprites imported successfully.");
@@ -141,7 +137,7 @@ export default class Load {
     };
     this.imported_file.sprites = [];
     this.imported_file.current_sprite = 0;
-    this.imported_file.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.imported_file.pen = this.config.sprite_defaults.pen;
   }
 
   convert_sprite_data_to_internal_format(sprite_number) {
@@ -156,11 +152,11 @@ export default class Load {
 
     this.multicolor = false;
 
-    if (parseInt(bits[0]) == 1) this.multicolor = true;
+    if (parseInt(bits[0]) === 1) this.multicolor = true;
 
     this.overlay = false;
 
-    if (parseInt(bits[3]) == 1) this.overlay = true;
+    if (parseInt(bits[3]) === 1) this.overlay = true;
 
     // this reads in the lower nibble of the byte and converts it do decimal.
     this.pencolor = parseInt(
@@ -169,7 +165,7 @@ export default class Load {
     );
 
     const sprite = {
-      name: "sprite_" + sprite_number,
+      name: "sprite" + (sprite_number + 1),
       color: this.pencolor,
       multicolor: this.multicolor,
       double_x: false,
@@ -194,10 +190,10 @@ export default class Load {
         let pen = 0;
 
         if (this.multicolor) {
-          if (byte[j] == "00") pen = 0;
-          if (byte[j] == "10") pen = 1;
-          if (byte[j] == "01") pen = 2;
-          if (byte[j] == "11") pen = 3;
+          if (byte[j] === "00") pen = 0;
+          if (byte[j] === "10") pen = 1;
+          if (byte[j] === "01") pen = 2;
+          if (byte[j] === "11") pen = 3;
 
           binary.push(pen);
           binary.push(pen);
@@ -205,11 +201,11 @@ export default class Load {
 
         if (!this.multicolor) {
           pen = 1;
-          if (byte[j][0] == "0") pen = 0;
+          if (byte[j][0] === "0") pen = 0;
           binary.push(pen);
 
           pen = 1;
-          if (byte[j][1] == "0") pen = 0;
+          if (byte[j][1] === "0") pen = 0;
           binary.push(pen);
         }
       }
@@ -221,7 +217,7 @@ export default class Load {
       spritedata.push(binary[i]);
       line++;
 
-      if (line == 24) {
+      if (line === 24) {
         (sprite.pixels as any).push(spritedata);
         line = 0;
         spritedata = [];
@@ -244,7 +240,7 @@ export default class Load {
       const number_of_sprites = file_data.sprites.length;
 
       for (let i = 0; i < number_of_sprites; i++) {
-        file_data.sprites[i].name = "sprite_" + i;
+        file_data.sprites[i].name = "sprite" + (i + 1);
       }
     }
 

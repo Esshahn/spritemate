@@ -44,7 +44,7 @@
               <a id="menubar-new">New Project<span class="hotkey"></span></a>
               <a id="menubar-load">Open Project (*.spm, *.spd)<span class="hotkey"></span></a>
               <hr>
-              <a id="menubar-import-png">Import Image (24x21, *.png)</a>
+              <a id="menubar-import-png">Import Image or Spritesheet (*.png)</a>
               <a id="menubar-import">Import VICE Snapshot (*.vsf)</a>
               <hr>
               <a id="menubar-save-spm">Save Project (*.spm)</a>
@@ -84,7 +84,7 @@
               <a id="menubar-undo">Undo<span class="hotkey">Ctrl+Z</span></a>
               <a id="menubar-redo">Redo<span class="hotkey">Ctrl+Shift+Z</span></a>
               <hr />
-              <a id="menubar-new-sprite">New Empty Sprite<span class="hotkey">Ctrl+N</span></a>
+              <a id="menubar-new-sprite">New Sprite<span class="hotkey">Ctrl+N</span></a>
               <a id="menubar-copy">Copy Sprite<span class="hotkey">Ctrl+C</span></a>
               <a id="menubar-paste">Paste Sprite<span class="hotkey">Ctrl+V</span></a>
               <a id="menubar-duplicate">Duplicate Sprite<span class="hotkey">Ctrl+D</span></a>
@@ -118,10 +118,11 @@
           <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">View</a>
             <div class="dropdown-content">
-              <a id="menubar-animation">Animation Window</a>
-              <a id="menubar-monitor">VICE Snapshot Monitor</a>
+              <a id="menubar-animation" class="has-checkmark"><span class="checkmark">✓</span>Animation Window</a>
+              <a id="menubar-playfield" class="has-checkmark"><span class="checkmark">✓</span>Playfield Window</a>
+              <a id="menubar-monitor" class="has-checkmark"><span class="checkmark">✓</span>VICE Snapshot Monitor</a>
               <hr />
-              <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">shift + f</span></a>
+              <a id="menubar-fullscreen">Toggle Fullscreen<span class="hotkey">Ctrl+F</span></a>
             </div>
           </li>
 
@@ -143,6 +144,7 @@
       <div id="statusbar">
         <div id="statustext"></div>
       </div>
+      <div id="custom-tooltip"></div>
     </div>
   </body>
 </html>

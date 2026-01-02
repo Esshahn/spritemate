@@ -1,8 +1,25 @@
 export function get_config() {
   const config = {
-    version: "25.12.30",
+    version: "26.01.02",
+    default_filename: "mysprites",
     sprite_x: 24,
     sprite_y: 21,
+    sprite_defaults: {
+      background_color: 11,      // Light gray (pen 0)
+      multicolor_1: 8,            // Orange (pen 2)
+      multicolor_2: 6,            // Blue (pen 3)
+      individual_color: 1,        // White (pen 1)
+      pen: 1,                     // Default drawing pen
+      animation_fps: 10,
+      animation_mode: "restart",
+    },
+    zoom_limits: {
+      editor: { min: 10, max: 26 },
+      preview: { min: 4, max: 16 },
+      list: { min: 4, max: 16 },
+      animation: { min: 4, max: 16 },
+    },
+    color_names:["black", "white", "red", "cyan", "purple","green","blue","yellow","orange","brown","pink","dark grey","grey","light green","light blue","light grey"],
     palettes: {
       colodore: {
         name: "Colodore",
@@ -143,6 +160,15 @@ export function get_config() {
       left: 210,
       width: 440,
       zoom: 6,
+      autoOpen: false,
+      closeable: true,
+      isOpen: false,
+    },
+    window_playfield: {
+      top: 100,
+      left: 800,
+      zoom: 1,
+      grid: false,
       autoOpen: false,
       closeable: true,
       isOpen: false,

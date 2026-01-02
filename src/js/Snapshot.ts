@@ -278,7 +278,7 @@ grabcols
       return ".";
     };
 
-    if (this.c64mem == null) return "";
+    if (this.c64mem === null) return "";
     const mem = this.c64mem;
 
     // Add bounds checking
@@ -300,7 +300,7 @@ grabcols
   }
 
   sprite_address(number: number): number {
-    if (this.cia2mem == null || this.viciimem == null || this.c64mem == null) {
+    if (this.cia2mem === null || this.viciimem === null || this.c64mem === null) {
       return 0;
     }
     const sprite_base = 0x03f8;
@@ -328,10 +328,10 @@ grabcols
     for (let i = 1; i < command_parts.length; i++) {
       args.push(parseInt(command_parts[i], 16));
     }
-    if (args.length == 0) {
+    if (args.length === 0) {
       args.push(0);
     }
-    if (command_name == "") {
+    if (command_name === "") {
       if (this.lastCmd === "mem" || this.lastCmd === "grabmem") {
         this.command(this.lastCmd);
         return;
@@ -342,16 +342,16 @@ grabcols
     switch (command_name) {
 
       case "grabcols": {
-        if (this.viciimem == null) {
+        if (this.viciimem === null) {
             this.message("no snapshot loaded");
             return;
           }
         this.grabcols();
         break;
       }
-        
+
       case "grab": {
-        if (this.c64mem == null || this.viciimem == null) {
+        if (this.c64mem === null || this.viciimem === null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -366,7 +366,7 @@ grabcols
       }
         
       case "grabmem": {
-        if (this.c64mem == null) {
+        if (this.c64mem === null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -395,7 +395,7 @@ grabcols
 
         
       case "sprites": {
-        if (this.cia2mem == null || this.viciimem == null) {
+        if (this.cia2mem === null || this.viciimem === null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -403,39 +403,39 @@ grabcols
         this.list_sprites();
         break;
       }
-        
+
       case "cia": {
-        if (this.cia2mem == null) {
+        if (this.cia2mem === null) {
           this.message("no snapshot loaded");
           return;
         }
         this.list_cia_memory();
         break;
       }
-       
+
 
       case "vid": {
-        if (this.viciimem == null || this.cia2mem == null) {
+        if (this.viciimem === null || this.cia2mem === null) {
           this.message("no snapshot loaded");
           return;
         }
 
-        this.list_vid(command_args);              
+        this.list_vid(command_args);
         break;
       }
 
 
       case "vic":
-        if (this.viciimem == null) {
+        if (this.viciimem === null) {
           this.message("no snapshot loaded");
           return;
         }
        this.list_vic();
         break;
 
-      
+
       case "edit":
-        if (this.c64mem == null) {
+        if (this.c64mem === null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -467,7 +467,7 @@ grabcols
 
       
       case "mem": {
-        if (this.c64mem == null) {
+        if (this.c64mem === null) {
           this.message("no snapshot loaded");
           return;
         }
@@ -514,17 +514,17 @@ grabcols
   }
 
   private list_vic() {
-    if (this.viciimem == null) {
+    if (this.viciimem === null) {
       return;
     }
     this.println("VIC-II memory");
     for (let i = 0; i < 64; i++) {
-      if (i % 16 == 0) {
+      if (i % 16 === 0) {
         const hexAddress = (i + VIC_BASE).toString(16).padStart(4, "0");
         this.print(hexAddress + " |");
       }
       this.print(this.viciimem[i].toString(16).padStart(2, "0") + " ");
-      if ((i + 1) % 16 == 0) {
+      if ((i + 1) % 16 === 0) {
         this.print("\n");
       }
     }
@@ -532,7 +532,7 @@ grabcols
   }
 
   private list_vid(command_args: string[]) {
-    if (this.viciimem == null || this.cia2mem == null) {
+    if (this.viciimem === null || this.cia2mem === null) {
       return;
     }
 
@@ -548,17 +548,17 @@ grabcols
   }
 
   private list_cia_memory() {
-    if (this.cia2mem == null) {
+    if (this.cia2mem === null) {
       return;
     }
     this.print("CIA-II memory\n");
     for (let i = 0; i < 16; i++) {
-      if (i % 16 == 0) {
+      if (i % 16 === 0) {
         const hexAddress = (i + CIA2_VIC_BANK).toString(16).padStart(4, "0");
         this.print(hexAddress + " |");
       }
       this.print(this.cia2mem[i].toString(16).padStart(2, "0") + " ");
-      if ((i + 1) % 16 == 0) {
+      if ((i + 1) % 16 === 0) {
         this.println();
       }
     }
@@ -568,7 +568,7 @@ grabcols
   }
 
   private list_sprites() {
-    if (this.cia2mem == null || this.viciimem == null) {
+    if (this.cia2mem === null || this.viciimem === null) {
       return;
     }
     this.println("Sprite enabled reg");
@@ -619,7 +619,7 @@ grabcols
   }
 
   private grabSprite(sprite: number) {
-    if (this.viciimem == null || this.c64mem == null) {
+    if (this.viciimem === null || this.c64mem === null) {
       return;
     }
 
@@ -639,7 +639,7 @@ grabcols
   }
 
   private grabAddress(spriteAddr: number, data: number[][]) {
-    if (this.c64mem == null) {
+    if (this.c64mem === null) {
       return;
     }
 
@@ -683,7 +683,7 @@ grabcols
   }
 
   private grabcols() {
-    if (this.viciimem == null) {
+    if (this.viciimem === null) {
       return;
     }
     const mcol0 = this.viciimem[(VIC_SPRITE_MCOLOR_0) - VIC_BASE];

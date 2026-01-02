@@ -1,5 +1,6 @@
 import { dom, status } from "./helper";
 import { App } from './App';
+import { SpriteHelpers } from './SpriteTypes';
 
 export default class ImportPNG {
   app: App | null;
@@ -64,46 +65,203 @@ export default class ImportPNG {
     }
   }
 
+  /**
+   * Process a PNG image and convert it to C64 sprites.
+   *
+   * Algorithm:
+   * 1. Extract raw sprite regions from the image grid
+   * 2. Determine global background color (most common across all sprites)
+   * 3. Detect which sprites are multicolor using strict pixel-pair checking
+   * 4. Analyze colors from multicolor sprites only to find MC1 and MC2
+   * 5. Convert each sprite using the determined global colors
+   */
   process_image(img: HTMLImageElement) {
-    // Check if image is exactly 24x21 pixels
-    if (img.width !== 24 || img.height !== 21) {
-      alert(`Invalid image dimensions. Expected 24x21 pixels, got ${img.width}x${img.height} pixels.`);
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
+    const cols = Math.floor(img.width / spriteWidth);
+    const rows = Math.floor(img.height / spriteHeight);
+
+    if (!this.validate_image_dimensions(img.width, img.height, spriteWidth, spriteHeight, cols, rows)) {
       return;
     }
 
-    // Create a canvas to read pixel data
-    const canvas = document.createElement('canvas');
-    canvas.width = 24;
-    canvas.height = 21;
-    const ctx = canvas.getContext('2d');
-
+    const ctx = this.create_canvas_context(img);
     if (!ctx) {
       alert("Error: Could not create canvas context");
       return;
     }
 
-    // Draw the image onto the canvas
-    ctx.drawImage(img, 0, 0);
-
-    // Get pixel data
-    const imageData = ctx.getImageData(0, 0, 24, 21);
-    const pixels = imageData.data;
-
-    // Get the current palette colors
     const paletteColors = this.get_current_palette_colors();
+    const rawSprites = this.extract_raw_sprites(ctx, rows, cols, spriteWidth, spriteHeight, paletteColors);
 
-    // Convert image to sprite data
-    const spriteData = this.convert_to_sprite(pixels, paletteColors);
+    const globalBackground = this.find_most_common_color(rawSprites.globalColorCounts);
+    const spriteMulticolorFlags = this.detect_multicolor_sprites(rawSprites.sprites, spriteWidth, spriteHeight, paletteColors);
+    const { mc1, mc2 } = this.determine_multicolor_globals(rawSprites.sprites, spriteMulticolorFlags, spriteWidth, spriteHeight, paletteColors, globalBackground);
 
-    if (!spriteData) {
-      alert("Error converting image to sprite");
+    const allSpriteData = this.convert_sprites(rawSprites.sprites, spriteMulticolorFlags, paletteColors, mc1, mc2, globalBackground);
+
+    if (allSpriteData.length === 0) {
+      alert("Error converting spritesheet to sprites");
       return;
     }
 
-    // Create the imported file object following the same format as Load.ts
-    this.create_imported_file(spriteData);
+    this.create_imported_file_from_multiple(allSpriteData, globalBackground, mc1, mc2);
 
-    status("PNG image imported successfully as sprite.");
+    const totalSprites = cols * rows;
+    status(totalSprites === 1
+      ? "PNG image imported successfully as sprite."
+      : `Spritesheet imported successfully: ${totalSprites} sprites (${cols}x${rows} grid).`
+    );
+  }
+
+  private validate_image_dimensions(width: number, height: number, spriteWidth: number, spriteHeight: number, cols: number, rows: number): boolean {
+    if (width % spriteWidth !== 0 || height % spriteHeight !== 0) {
+      alert(`Invalid image dimensions. Image must be a multiple of ${spriteWidth}x${spriteHeight} pixels.\nGot ${width}x${height} pixels (${cols}x${rows} sprites with ${width % spriteWidth}x${height % spriteHeight} pixel remainder).`);
+      return false;
+    }
+
+    if (cols === 0 || rows === 0) {
+      alert(`Image too small. Expected at least ${spriteWidth}x${spriteHeight} pixels, got ${width}x${height} pixels.`);
+      return false;
+    }
+
+    return true;
+  }
+
+  private create_canvas_context(img: HTMLImageElement): CanvasRenderingContext2D | null {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(img, 0, 0);
+    }
+    return ctx;
+  }
+
+  private extract_raw_sprites(
+    ctx: CanvasRenderingContext2D,
+    rows: number,
+    cols: number,
+    spriteWidth: number,
+    spriteHeight: number,
+    paletteColors: string[]
+  ) {
+    const sprites: Uint8ClampedArray[] = [];
+    const globalColorCounts = new Map<number, number>();
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = col * spriteWidth;
+        const y = row * spriteHeight;
+        const imageData = ctx.getImageData(x, y, spriteWidth, spriteHeight);
+        const pixels = imageData.data;
+
+        sprites.push(pixels);
+        this.count_colors_in_pixels(pixels, spriteWidth, spriteHeight, paletteColors, globalColorCounts);
+      }
+    }
+
+    return { sprites, globalColorCounts };
+  }
+
+  private count_colors_in_pixels(
+    pixels: Uint8ClampedArray,
+    width: number,
+    height: number,
+    palette: string[],
+    colorCounts: Map<number, number>
+  ) {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = (y * width + x) * 4;
+        const colorIndex = this.find_closest_color(pixels[idx], pixels[idx + 1], pixels[idx + 2], palette);
+        colorCounts.set(colorIndex, (colorCounts.get(colorIndex) || 0) + 1);
+      }
+    }
+  }
+
+  private find_most_common_color(colorCounts: Map<number, number>): number {
+    if (colorCounts.size === 0) return 0;
+    return Array.from(colorCounts.entries())
+      .sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  private detect_multicolor_sprites(sprites: Uint8ClampedArray[], spriteWidth: number, spriteHeight: number, palette: string[]): boolean[] {
+    return sprites.map(pixels => this.detectMulticolorFromPixels(pixels, spriteWidth, spriteHeight, palette));
+  }
+
+  /**
+   * Determine the global multicolor 1 and 2 values by analyzing only multicolor sprites.
+   *
+   * C64 color architecture:
+   * - Pen 0 (background): Shared globally across all sprites
+   * - Pen 1 (individual): Per-sprite, can vary
+   * - Pen 2 (MC1): Shared globally across all multicolor sprites
+   * - Pen 3 (MC2): Shared globally across all multicolor sprites
+   *
+   * This finds the two most common colors (excluding background) across all
+   * multicolor sprites, which become MC1 and MC2.
+   */
+  private determine_multicolor_globals(
+    sprites: Uint8ClampedArray[],
+    multicolorFlags: boolean[],
+    spriteWidth: number,
+    spriteHeight: number,
+    palette: string[],
+    globalBackground: number
+  ) {
+    const multicolorOnlyColorCounts = new Map<number, number>();
+
+    for (let i = 0; i < sprites.length; i++) {
+      if (multicolorFlags[i]) {
+        for (let y = 0; y < spriteHeight; y++) {
+          for (let x = 0; x < spriteWidth; x++) {
+            const idx = (y * spriteWidth + x) * 4;
+            const pixels = sprites[i];
+            const colorIndex = this.find_closest_color(pixels[idx], pixels[idx + 1], pixels[idx + 2], palette);
+
+            if (colorIndex !== globalBackground) {
+              multicolorOnlyColorCounts.set(colorIndex, (multicolorOnlyColorCounts.get(colorIndex) || 0) + 1);
+            }
+          }
+        }
+      }
+    }
+
+    const sorted = Array.from(multicolorOnlyColorCounts.entries()).sort((a, b) => b[1] - a[1]);
+    return {
+      mc1: sorted[0]?.[0] ?? this.config.sprite_defaults.multicolor_1,
+      mc2: sorted[1]?.[0] ?? this.config.sprite_defaults.multicolor_2
+    };
+  }
+
+  private convert_sprites(
+    sprites: Uint8ClampedArray[],
+    multicolorFlags: boolean[],
+    palette: string[],
+    mc1: number,
+    mc2: number,
+    background: number
+  ): number[][][] {
+    const converted: number[][][] = [];
+
+    for (let i = 0; i < sprites.length; i++) {
+      const spriteData = this.convert_to_sprite_with_globals(
+        sprites[i],
+        palette,
+        multicolorFlags[i],
+        mc1,
+        mc2,
+        background
+      );
+
+      if (spriteData) {
+        converted.push(spriteData);
+      }
+    }
+
+    return converted;
   }
 
   get_current_palette_colors(): string[] {
@@ -150,118 +308,197 @@ export default class ImportPNG {
     return closestIndex;
   }
 
-  convert_to_sprite(pixels: Uint8ClampedArray, palette: string[]): number[][] | null {
+
+  /**
+   * Detect if a sprite is multicolor using strict pixel-pair checking.
+   *
+   * C64 multicolor sprites have pixels that come in horizontal pairs.
+   * This function checks EVERY pixel pair - if even ONE pair doesn't match,
+   * the sprite is single-color.
+   */
+  detectMulticolorFromPixels(
+    pixels: Uint8ClampedArray,
+    spriteWidth: number,
+    spriteHeight: number,
+    palette: string[]
+  ): boolean {
+    const paletteIndices: number[][] = [];
+    for (let y = 0; y < spriteHeight; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < spriteWidth; x++) {
+        const idx = (y * spriteWidth + x) * 4;
+        const colorIndex = this.find_closest_color(pixels[idx], pixels[idx + 1], pixels[idx + 2], palette);
+        row.push(colorIndex);
+      }
+      paletteIndices.push(row);
+    }
+
+    for (let y = 0; y < spriteHeight; y++) {
+      for (let x = 0; x < spriteWidth - 1; x += 2) {
+        if (paletteIndices[y][x] !== paletteIndices[y][x + 1]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+
+  convert_to_sprite_with_globals(
+    pixels: Uint8ClampedArray,
+    palette: string[],
+    isMulticolor: boolean,
+    globalMulticolor1: number,
+    globalMulticolor2: number,
+    globalBackground: number
+  ): number[][] | null {
+    const spriteWidth = this.config.sprite_x;
+    const spriteHeight = this.config.sprite_y;
+
+    const { sprite, colorCounts } = this.pixels_to_sprite_grid(pixels, palette, spriteWidth, spriteHeight);
+    const sortedColors = Array.from(colorCounts.entries()).sort((a, b) => b[1] - a[1]);
+
+    if (sortedColors.length === 0) {
+      (sprite as any).individualColor = 1;
+      (sprite as any).multicolor = isMulticolor;
+      return sprite;
+    }
+
+    const { colorMapping, individualColor } = this.create_color_mapping(
+      isMulticolor,
+      sortedColors,
+      globalBackground,
+      globalMulticolor1,
+      globalMulticolor2
+    );
+
+    this.apply_color_mapping(sprite, colorMapping, isMulticolor);
+
+    (sprite as any).individualColor = individualColor;
+    (sprite as any).multicolor = isMulticolor;
+    if (isMulticolor) {
+      (sprite as any).multicolor1 = globalMulticolor1;
+      (sprite as any).multicolor2 = globalMulticolor2;
+    }
+
+    return sprite;
+  }
+
+  private pixels_to_sprite_grid(pixels: Uint8ClampedArray, palette: string[], width: number, height: number) {
     const sprite: number[][] = [];
     const colorCounts = new Map<number, number>();
 
-    // Convert all pixels to palette colors and count occurrences
-    for (let y = 0; y < 21; y++) {
+    for (let y = 0; y < height; y++) {
       const row: number[] = [];
-      for (let x = 0; x < 24; x++) {
-        const idx = (y * 24 + x) * 4;
-        const r = pixels[idx];
-        const g = pixels[idx + 1];
-        const b = pixels[idx + 2];
-
-        const colorIndex = this.find_closest_color(r, g, b, palette);
+      for (let x = 0; x < width; x++) {
+        const idx = (y * width + x) * 4;
+        const colorIndex = this.find_closest_color(pixels[idx], pixels[idx + 1], pixels[idx + 2], palette);
         row.push(colorIndex);
         colorCounts.set(colorIndex, (colorCounts.get(colorIndex) || 0) + 1);
       }
       sprite.push(row);
     }
 
-    // Sort colors by frequency (most common first)
-    const sortedColors = Array.from(colorCounts.entries())
-      .sort((a, b) => b[1] - a[1]);
-
-    if (sortedColors.length === 0) {
-      console.warn("No colors found in image");
-      (sprite as any).individualColor = 1;
-      (sprite as any).multicolor = false;
-      return sprite;
-    }
-
-    // Check if this is a multicolor sprite by detecting double-wide pixels
-    const isMulticolor = this.detectMulticolor(sprite);
-    const maxColors = isMulticolor ? 4 : 2;
-
-    // Map the most common colors to pen values
-    // Single-color: 0=background, 1=foreground
-    // Multi-color: 0=transparent, 1=individual, 2=multicolor1, 3=multicolor2
-    const colorMapping = new Map<number, number>();
-    for (let i = 0; i < Math.min(maxColors, sortedColors.length); i++) {
-      colorMapping.set(sortedColors[i][0], i);
-    }
-
-    // Convert palette colors to pen values
-    for (let y = 0; y < 21; y++) {
-      for (let x = 0; x < 24; x++) {
-        sprite[y][x] = colorMapping.get(sprite[y][x]) ?? (isMulticolor ? 0 : 1);
-      }
-    }
-
-    // Store metadata
-    (sprite as any).individualColor = sortedColors[1]?.[0] ?? sortedColors[0]?.[0] ?? 1;
-    (sprite as any).multicolor = isMulticolor;
-    if (isMulticolor) {
-      (sprite as any).multicolor1 = sortedColors[2]?.[0] ?? 8;
-      (sprite as any).multicolor2 = sortedColors[3]?.[0] ?? 6;
-    }
-
-    return sprite;
+    return { sprite, colorCounts };
   }
 
-  detectMulticolor(sprite: number[][]): boolean {
-    // Check if pixels come in horizontal pairs (multicolor sprites have double-wide pixels)
-    let pairCount = 0;
-    let totalChecks = 0;
+  private create_color_mapping(
+    isMulticolor: boolean,
+    sortedColors: [number, number][],
+    globalBackground: number,
+    globalMulticolor1: number,
+    globalMulticolor2: number
+  ) {
+    const colorMapping = new Map<number, number>();
+    let individualColor = 1;
 
-    for (let y = 0; y < sprite.length; y++) {
-      for (let x = 0; x < sprite[y].length - 1; x += 2) {
-        totalChecks++;
-        if (sprite[y][x] === sprite[y][x + 1]) {
-          pairCount++;
+    if (isMulticolor) {
+      colorMapping.set(globalBackground, 0);
+      colorMapping.set(globalMulticolor1, 2);
+      colorMapping.set(globalMulticolor2, 3);
+
+      for (const [color] of sortedColors) {
+        if (!colorMapping.has(color)) {
+          individualColor = color;
+          colorMapping.set(color, 1);
+          break;
+        }
+      }
+    } else {
+      colorMapping.set(globalBackground, 0);
+
+      for (const [color] of sortedColors) {
+        if (color !== globalBackground) {
+          individualColor = color;
+          colorMapping.set(color, 1);
+          break;
         }
       }
     }
 
-    // If more than 90% of pixels come in pairs, it's likely multicolor
-    return pairCount / totalChecks > 0.9;
+    return { colorMapping, individualColor };
+  }
+
+  private apply_color_mapping(sprite: number[][], colorMapping: Map<number, number>, isMulticolor: boolean) {
+    const defaultPen = isMulticolor ? 0 : 1;
+    for (let y = 0; y < sprite.length; y++) {
+      for (let x = 0; x < sprite[y].length; x++) {
+        sprite[y][x] = colorMapping.get(sprite[y][x]) ?? defaultPen;
+      }
+    }
   }
 
   create_imported_file(spriteData: number[][]) {
-    const individualColor = (spriteData as any).individualColor || 1;
+    const individualColor = (spriteData as any).individualColor || this.config.sprite_defaults.individual_color;
     const isMulticolor = (spriteData as any).multicolor || false;
-    const multicolor1 = (spriteData as any).multicolor1 || 8;
-    const multicolor2 = (spriteData as any).multicolor2 || 6;
+    const multicolor1 = (spriteData as any).multicolor1;
+    const multicolor2 = (spriteData as any).multicolor2;
 
-    this.imported_file = {
-      version: this.config.version,
+    const sprite = SpriteHelpers.createSprite(this.config, {
+      name: "sprite1",
+      color: individualColor,
+      multicolor: isMulticolor,
+      pixels: spriteData,
+    });
+
+    const colors = multicolor1 !== undefined && multicolor2 !== undefined
+      ? { 0: this.config.sprite_defaults.background_color, 2: multicolor1, 3: multicolor2 }
+      : undefined;
+
+    this.imported_file = SpriteHelpers.createCollection(this.config, {
       filename: "imported",
-      colors: {
-        0: 11, // transparent - default to light gray
-        2: multicolor1,
-        3: multicolor2,
-      },
-      sprites: [{
-        name: "sprite_0",
+      colors: colors,
+      sprites: [sprite],
+    });
+  }
+
+  create_imported_file_from_multiple(
+    allSpriteData: number[][][],
+    globalBackground: number,
+    globalMulticolor1: number,
+    globalMulticolor2: number
+  ) {
+    const sprites = allSpriteData.map((spriteData, index) => {
+      const individualColor = (spriteData as any).individualColor || this.config.sprite_defaults.individual_color;
+      const isMulticolor = (spriteData as any).multicolor || false;
+
+      return SpriteHelpers.createSprite(this.config, {
+        name: `sprite${index + 1}`,
         color: individualColor,
         multicolor: isMulticolor,
-        double_x: false,
-        double_y: false,
-        overlay: false,
         pixels: spriteData,
-      }],
-      current_sprite: 0,
-      pen: 1,
-      animation: {
-        startSprite: 0,
-        endSprite: 0,
-        fps: 10,
-        mode: "restart",
-        doubleX: false,
-        doubleY: false
-      }
-    };
+      });
+    });
+
+    this.imported_file = SpriteHelpers.createCollection(this.config, {
+      filename: "imported",
+      colors: {
+        0: globalBackground,
+        2: globalMulticolor1,
+        3: globalMulticolor2,
+      },
+      sprites: sprites,
+    });
   }
 }

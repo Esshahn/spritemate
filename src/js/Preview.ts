@@ -11,8 +11,8 @@ export default class Preview extends Window_Controls {
     this.window = window;
     this.canvas_element = document.createElement("canvas");
     this.zoom = this.config.window_preview.zoom; // this.config.zoom;
-    this.zoom_min = 4;
-    this.zoom_max = 16;
+    this.zoom_min = this.config.zoom_limits.preview.min;
+    this.zoom_max = this.config.zoom_limits.preview.max;
     this.pixels_x = this.config.sprite_x;
     this.pixels_y = this.config.sprite_y;
     this.width = this.pixels_x * this.zoom;
@@ -25,7 +25,7 @@ export default class Preview extends Window_Controls {
 
     const template = `
       <div class="window_menu">
-        <div class="icons-zoom-area">
+        <div class="window_menu_icon_area">
           <img src="ui/icon-zoom-in.png" class="icon-hover" id="icon-preview-zoom-in" title="zoom in">
           <img src="ui/icon-zoom-out.png" class="icon-hover" id="icon-preview-zoom-out" title="zoom out">
         </div>
@@ -44,33 +44,15 @@ export default class Preview extends Window_Controls {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
     const sprite_data = all_data.sprites[all_data.current_sprite];
-    let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
 
-    // first fill the whole sprite with the background color
+    // Fill background color
     this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
     this.canvas.fillRect(0, 0, this.width, this.height);
 
-    for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
-      for (let j = 0; j < this.pixels_y; j++) {
-        const array_entry = sprite_data.pixels[j][i];
+    // Use shared render_pixels method from Window_Controls
+    this.render_pixels(sprite_data, all_data);
 
-        if (array_entry != 0) {
-          // transparent
-          let color = sprite_data.color;
-          if (array_entry != 1 && sprite_data.multicolor)
-            color = all_data.colors[array_entry];
-          this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(
-            i * this.zoom,
-            j * this.zoom,
-            x_grid_step * this.zoom,
-            this.zoom
-          );
-        }
-      }
-    }
-
+    // Display overlay of next sprite if enabled
     if (
       sprite_data.overlay &&
       all_data.current_sprite < all_data.sprites.length - 1
@@ -102,30 +84,7 @@ export default class Preview extends Window_Controls {
 
   display_overlay(all_data) {
     const sprite_data = all_data.sprites[all_data.current_sprite + 1];
-    let x_grid_step = 1;
-    if (sprite_data.multicolor) x_grid_step = 2;
-
-    for (let i = 0; i < this.pixels_x; i = i + x_grid_step) {
-      for (let j = 0; j < this.pixels_y; j++) {
-        let array_entry = sprite_data.pixels[j][i];
-
-        // if singlecolor only, replace the multicolor pixels with the individual color
-        if (!sprite_data.multicolor && (array_entry == 2 || array_entry == 3))
-          array_entry = 1;
-
-        let color = sprite_data.color;
-        if (array_entry != 1) color = all_data.colors[array_entry];
-
-        if (array_entry != 0) {
-          this.canvas.fillStyle = this.config.colors[color];
-          this.canvas.fillRect(
-            i * this.zoom,
-            j * this.zoom,
-            this.zoom * x_grid_step,
-            this.zoom
-          );
-        }
-      }
-    }
+    // Use shared render_pixels method
+    this.render_pixels(sprite_data, all_data);
   }
 }

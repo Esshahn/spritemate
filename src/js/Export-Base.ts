@@ -115,7 +115,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
     let prefix = "!";
     let label_suffix = "";
 
-    if (format == "kick") {
+    if (format === "kick") {
       comment = "// ";
       prefix = ".";
       label_suffix = ":";
@@ -165,7 +165,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       if (is_multicolor) stepping = 2; // for multicolor, half of the array data can be ignored
       const line_breaks_after = encode_as_binary ? 24 : 64;
 
-      data += "\n\n" + comment + "sprite " + j;
+      data += "\n\n" + comment + "sprite " + (j + 1);
       if (is_multicolor) {
         data += " / " + "multicolor";
       } else {
@@ -181,7 +181,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       // iterate through the pixel data array
       // and create a hex or binary values based on multicolor or singlecolor
       for (let i = 0; i < spritedata.length; i = i + 8) {
-        if (i % line_breaks_after == 0) {
+        if (i % line_breaks_after === 0) {
           data = data.substring(0, data.length - 1);
           data += "\n" + prefix + "byte ";
         }
@@ -190,15 +190,15 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
           const pen = spritedata[i + k];
 
           if (is_multicolor) {
-            if (pen == 0) bit = "00";
-            if (pen == 1) bit = "10";
-            if (pen == 2) bit = "01";
-            if (pen == 3) bit = "11";
+            if (pen === 0) bit = "00";
+            if (pen === 1) bit = "10";
+            if (pen === 2) bit = "01";
+            if (pen === 3) bit = "11";
           }
 
           if (!is_multicolor) {
             bit = "1";
-            if (pen == 0) bit = "0";
+            if (pen === 0) bit = "0";
           }
 
           byte = byte + bit;
@@ -410,7 +410,7 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
       // iterate through the pixel data array
       // and create a hex values based on multicolor or singlecolor
       for (let i = 0; i < spritedata.length; i = i + 8) {
-        if (i % 128 == 0) {
+        if (i % 128 === 0) {
           data += "\n" + line_number + " data ";
           line_number += line_inc;
         }
@@ -419,15 +419,15 @@ BBBBBBBBBBBBBBBBBAAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   IIIIIIIIII  
           const pen = spritedata[i + k];
 
           if (is_multicolor) {
-            if (pen == 0) bit = "00";
-            if (pen == 1) bit = "10";
-            if (pen == 2) bit = "01";
-            if (pen == 3) bit = "11";
+            if (pen === 0) bit = "00";
+            if (pen === 1) bit = "10";
+            if (pen === 2) bit = "01";
+            if (pen === 3) bit = "11";
           }
 
           if (!is_multicolor) {
             bit = "1";
-            if (pen == 0) bit = "0";
+            if (pen === 0) bit = "0";
           }
 
           byte = byte + bit;

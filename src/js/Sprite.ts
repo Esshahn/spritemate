@@ -6,37 +6,44 @@ export default class Sprite {
   backup_position: number;
   copy_sprite: any = {};
   sprite_name_counter: number;
-  storage: any = null;
-  autosave_timeout: any = null;
+  private app: any = null;
 
-  constructor(public config, storage: any = null) {
+  constructor(public config, app: any = null) {
     this.config = config;
-    this.storage = storage;
+    this.app = app;
     this.width = config.sprite_x;
     this.height = config.sprite_y;
     this.all = {};
-    this.all.version = this.config.version; // current version number
-    this.all.filename = "mysprites"; // default filename
-    this.all.colors = { 0: 11, 2: 8, 3: 6 }; // 0 = transparent, 2 = mc1, 3 = mc2
+    this.all.version = this.config.version;
+    this.all.filename = this.config.default_filename;
+    this.all.colors = {
+      0: config.sprite_defaults.background_color,
+      2: config.sprite_defaults.multicolor_1,
+      3: config.sprite_defaults.multicolor_2
+    };
 
     this.all.sprites = [];
     this.all.current_sprite = 0;
-    this.all.pen = 1; // can be individual = i, transparent = t, multicolor_1 = m1, multicolor_2 = m2
+    this.all.pen = config.sprite_defaults.pen;
 
-    // Animation settings
     this.all.animation = {
       startSprite: 0,
       endSprite: 0,
-      fps: 10,
-      mode: "restart",
+      fps: config.sprite_defaults.animation_fps,
+      mode: config.sprite_defaults.animation_mode,
       doubleX: false,
       doubleY: false
+    };
+
+    this.all.playfield = {
+      backgroundColor: 0,
+      sprites: []
     };
 
     this.backup = [];
     this.backup_position = -1;
     this.copy_sprite = {};
-    this.sprite_name_counter = 0; // increments for every new sprite regardless of deleted sprites. Used for the default name
+    this.sprite_name_counter = 0;
   }
 
   // Helper: Create pixel grid with given fill value
@@ -82,7 +89,7 @@ export default class Sprite {
 
   new_sprite(color = 1, multicolor = false): void {
     const sprite = {
-      name: "sprite_" + this.sprite_name_counter,
+      name: "sprite" + (this.sprite_name_counter + 1),
       color: color,
       multicolor: multicolor,
       double_x: false,
@@ -345,7 +352,7 @@ export default class Sprite {
   }
 
   set_pen_color(pencolor): void {
-    if (this.all.pen == 1) {
+    if (this.all.pen === 1) {
       this.all.sprites[this.all.current_sprite].color = pencolor;
     } else {
       this.all.colors[this.all.pen] = pencolor;
@@ -361,7 +368,7 @@ export default class Sprite {
     this.all = all;
     // Ensure filename exists (for backward compatibility with old save files)
     if (!this.all.filename) {
-      this.all.filename = "mysprites";
+      this.all.filename = this.config.default_filename;
     }
     // Ensure animation settings exist (for backward compatibility with old save files)
     if (!this.all.animation) {
@@ -374,11 +381,18 @@ export default class Sprite {
         doubleY: false
       };
     }
+    // Ensure playfield settings exist (for backward compatibility with old save files)
+    if (!this.all.playfield) {
+      this.all.playfield = {
+        backgroundColor: 0,
+        sprites: []
+      };
+    }
     this.save_backup();
   }
 
   get_filename(): string {
-    return this.all.filename || "mysprites";
+    return this.all.filename || this.config.default_filename;
   }
 
   set_filename(filename: string): void {
@@ -411,7 +425,7 @@ export default class Sprite {
 
     for (let i = 0; i < sorted_list.length; i++) {
       new_sprite_list.push(this.all.sprites[sorted_list[i]]);
-      if (sorted_list[i] == this.all.current_sprite) temp_current_sprite = i;
+      if (sorted_list[i] === this.all.current_sprite) temp_current_sprite = i;
     }
 
     this.all.sprites = new_sprite_list;
@@ -422,9 +436,9 @@ export default class Sprite {
   set_current_sprite(spritenumber: string | number): void {
     let spriteNum: number;
 
-    if (spritenumber == "right") {
+    if (spritenumber === "right") {
       spriteNum = this.all.current_sprite + 1;
-    } else if (spritenumber == "left") {
+    } else if (spritenumber === "left") {
       spriteNum = this.all.current_sprite - 1;
     } else {
       spriteNum = typeof spritenumber === "number" ? spritenumber : parseInt(spritenumber);
@@ -441,7 +455,7 @@ export default class Sprite {
   delete(): void {
     if (this.all.sprites.length > 1) {
       this.all.sprites.splice(this.all.current_sprite, 1);
-      if (this.all.current_sprite == this.all.sprites.length)
+      if (this.all.current_sprite === this.all.sprites.length)
         this.all.current_sprite--;
       this.save_backup();
     }
@@ -451,33 +465,19 @@ export default class Sprite {
     this.backup_position++;
     this.backup[this.backup_position] = this.deepClone(this.all);
 
-    // Trigger debounced auto-save to local storage
-    this.trigger_autosave();
-  }
-
-  /**
-   * Triggers a debounced auto-save to local storage
-   * Debounced by 2 seconds to avoid excessive saves during rapid edits
-   */
-  private trigger_autosave(): void {
-    if (!this.storage) return;
-
-    // Clear any existing timeout
-    if (this.autosave_timeout) {
-      clearTimeout(this.autosave_timeout);
+    // Trigger app-wide save
+    if (this.app) {
+      this.app.saveState();
     }
-
-    // Set a new timeout for auto-save
-    this.autosave_timeout = setTimeout(() => {
-      this.storage.write_sprites(this.all);
-    }, 2000); // 2 second debounce
   }
 
   undo(): void {
     if (this.backup_position > 0) {
       this.backup_position--;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 
@@ -485,7 +485,9 @@ export default class Sprite {
     if (this.backup_position < this.backup.length - 1) {
       this.backup_position++;
       this.all = this.deepClone(this.backup[this.backup_position]);
-      this.trigger_autosave();
+      if (this.app) {
+        this.app.saveState();
+      }
     }
   }
 
