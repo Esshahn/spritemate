@@ -70,7 +70,7 @@ export default class Playfield extends Window_Controls {
         <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="playfield-clear-all" title="remove sprite from playfield">
       </div>
       <div id="playfield-canvas-container"></div>
-      <div class="window-control-panel">
+      <div id="playfield-control-panel" class="window-control-panel">
         <div class="playfield-control-row">
           <span id="playfield-sprite-name" class="playfield-sprite-name"></span>
         </div>
@@ -401,6 +401,7 @@ export default class Playfield extends Window_Controls {
     const xInput = dom.sel("#playfield-sprite-x") as HTMLInputElement;
     const yInput = dom.sel("#playfield-sprite-y") as HTMLInputElement;
     const zIndexInput = dom.sel("#playfield-sprite-z-index") as HTMLInputElement;
+    const controlPanel = dom.sel("#playfield-control-panel") as HTMLElement;
 
     if (!this.selectedSprite) {
       // Disable all controls when nothing is selected
@@ -411,8 +412,14 @@ export default class Playfield extends Window_Controls {
       // Reset icon images to non-highlighted state
       dom.attr("#icon-playfield-double-x", "src", "ui/icon-preview-x2.png");
       dom.attr("#icon-playfield-double-y", "src", "ui/icon-preview-y2.png");
+
+      // Add inactive class to control panel
+      if (controlPanel) controlPanel.classList.add("inactive");
       return;
     }
+
+    // Remove inactive class from control panel
+    if (controlPanel) controlPanel.classList.remove("inactive");
 
     // Enable controls and populate with selected sprite data
     if (nameSpan) nameSpan.textContent = this.selectedSprite.name;

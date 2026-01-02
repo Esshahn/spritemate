@@ -956,6 +956,11 @@ img.center {
   margin-top: 8px;
 }
 
+.window-control-panel.inactive {
+  opacity: 0.33;
+  pointer-events: none;
+}
+
 .playfield-control-row {
   display: flex;
   align-items: center;
