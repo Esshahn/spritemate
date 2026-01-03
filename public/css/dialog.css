@@ -422,28 +422,4 @@ dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
   text-transform: uppercase;
 }
 
-/* Editor window - sprite name input field */
-.dialog-content input.editor_sprite_name {
-  border: 1px solid var(--icon_outline);
-  min-width: 0;
-  line-height: 10px;
-  border-radius: 16px;
-  padding: 4px;
-  font-size: 80%;
-  margin: 2px 2px 2px 16px;
-  vertical-align: top;
-  background-color: transparent;
-  font-family: "Courier", monospace;
-  color: var(--inactive_text);
-}
 
-.dialog-content input.editor_sprite_name:hover {
-  border-color: var(--blue);
-  color: var(--active_text);
-}
-
-.dialog-content input.editor_sprite_name:focus {
-  color: var(--active_text);
-  background-color: #333333;
-  outline: 0;
-}

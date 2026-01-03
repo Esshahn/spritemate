@@ -84,14 +84,16 @@ export default class Editor extends Window_Controls {
           <img src="ui/icon-multicolor.png" title="toggle single- & multicolor (c)" class=" icon-hover" id="icon-multicolor">
           <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
           <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
-          <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
+        </div>
+        <div class="window_menu_icon_area">
+          <input type="text" id="input-sprite-name" name="" value="" title="rename sprite">
         </div>
 
         <div class="window_menu_icon_area">
-          <label class="grid-layout-label" title="grid layout">Layout:</label>
-          <input type="number" id="editor-grid-width" class="editor_sprite_name" min="1" max="8" value="${this.grid_width}" title="grid width">
-          <span class="grid-layout-separator">×</span>
-          <input type="number" id="editor-grid-height" class="editor_sprite_name" min="1" max="8" value="${this.grid_height}" title="grid height">
+          <label title="grid layout">Layout</label>
+          <input type="number" id="editor-grid-width" min="1" max="8" value="${this.grid_width}" title="grid width">
+          ×
+          <input type="number" id="editor-grid-height" min="1" max="8" value="${this.grid_height}" title="grid height">
         </div>
       </div>
       <div id="editor-canvas-container">
