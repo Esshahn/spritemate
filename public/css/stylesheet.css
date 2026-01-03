@@ -371,12 +371,64 @@ img.center {
   background: rgba(90, 90, 90, 0.5);
 }
 
-.window_menu_icon_area /* zoom icons */ {
+.window_menu_icon_area {
   margin-right: 10px;
   padding-right: 10px;
   float: left;
   border-right: 1px solid rgba(0, 0, 0, 0.3);
+  color: var(--inactive_text);
+  line-height: 25px;
 }
+
+/* Editor window - sprite name input field */
+.window_menu input {
+  border: 1px solid var(--icon_outline);
+  min-width: 40px;
+  line-height: 10px;
+  border-radius: 16px;
+  padding: 4px;
+  font-size: 80%;
+  margin: 2px 2px 2px 6px;
+  vertical-align: top;
+  background-color: transparent;
+  font-family: "Courier", monospace;
+  color: var(--inactive_text);
+}
+
+.window_menu input:hover {
+  border-color: var(--blue);
+  color: var(--active_text);
+}
+
+.window_menu input:focus {
+  color: var(--active_text);
+  background-color: #333333;
+  outline: 0;
+}
+
+
+.grid-layout-input {
+  background-color: #222;
+  color: var(--active_text);
+  border: 1px solid #444;
+  padding: 4px 6px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  border-radius: 3px;
+  width: 40px;
+  text-align: center;
+}
+
+.grid-layout-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #2a2a2a;
+}
+
+.grid-layout-input:hover {
+  border-color: #666;
+}
+
 
 .icon-right {
   float: right;
@@ -783,6 +835,29 @@ img.center {
 
 #spritesheet-border{
   min-width:0px;
+}
+
+/* --- EDITOR CANVAS --- */
+
+#editor-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+#editor-canvas {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- PREVIEW CANVAS --- */
+
+#preview-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 }
 
 /* --- ANIMATION CONTROLS --- */
