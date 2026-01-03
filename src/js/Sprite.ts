@@ -493,6 +493,7 @@ export default class Sprite {
 
   floodfill(pos): void {
     // https://stackoverflow.com/questions/22053759/multidimensional-array-fill
+
     // get target value
     let x = pos.x;
     const y = pos.y;

@@ -9,18 +9,35 @@ export default class Editor extends Window_Controls {
   overlay_canvas: CanvasRenderingContext2D;
   animation_frame_id: number | null;
   animation_offset: number;
+  grid_width: number;
+  grid_height: number;
+  active_grid_x: number;
+  active_grid_y: number;
+  grid_start_sprite: number;
 
   constructor(public window: number, public config) {
     super();
     this.config = config;
     this.grid = this.config.window_editor.grid;
     this.window = window;
+
+    // Initialize grid layout settings from config (default: 1x1 = single sprite mode)
+    this.grid_width = this.config.window_editor.grid_width ?? 1;
+    this.grid_height = this.config.window_editor.grid_height ?? 1;
+
+    // Track which grid cell is active (for visual indicator)
+    this.active_grid_x = 0;
+    this.active_grid_y = 0;
+
+    // Track the starting sprite index for the grid (stays fixed when clicking sprites)
+    this.grid_start_sprite = 0;
+
     this.canvas_element = document.createElement("canvas");
     this.zoom = this.config.window_editor.zoom;
     this.zoom_min = this.config.zoom_limits.editor.min;
     this.zoom_max = this.config.zoom_limits.editor.max;
-    this.pixels_x = this.config.sprite_x;
-    this.pixels_y = this.config.sprite_y;
+    this.pixels_x = this.config.sprite_x * this.grid_width;
+    this.pixels_y = this.config.sprite_y * this.grid_height;
     this.width = this.pixels_x * this.zoom;
     this.height = this.pixels_y * this.zoom;
 
@@ -52,6 +69,13 @@ export default class Editor extends Window_Controls {
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-editor-grid" title="toggle grid">
         </div>
 
+        <div class="window_menu_icon_area">
+          <label class="grid-layout-label" title="grid layout">Layout:</label>
+          <input type="number" id="editor-grid-width" class="grid-layout-input" min="1" max="8" value="${this.grid_width}" title="grid width">
+          <span class="grid-layout-separator">×</span>
+          <input type="number" id="editor-grid-height" class="grid-layout-input" min="1" max="8" value="${this.grid_height}" title="grid height">
+        </div>
+
         <img src="ui/icon-multicolor.png" title="toggle single- & multicolor (c)" class=" icon-hover" id="icon-multicolor">
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
@@ -72,6 +96,60 @@ export default class Editor extends Window_Controls {
 
     // Start animation loop for marching ants
     this.startAnimationLoop();
+
+    // Setup grid layout input handlers
+    this.setupGridLayoutHandlers();
+  }
+
+  setupGridLayoutHandlers(): void {
+    const widthInput = dom.sel("#editor-grid-width") as HTMLInputElement;
+    const heightInput = dom.sel("#editor-grid-height") as HTMLInputElement;
+
+    if (widthInput) {
+      widthInput.onchange = () => {
+        const newWidth = parseInt(widthInput.value) || 1;
+        this.grid_width = Math.max(1, Math.min(8, newWidth));
+        widthInput.value = this.grid_width.toString();
+        this.updateGridLayout();
+      };
+    }
+
+    if (heightInput) {
+      heightInput.onchange = () => {
+        const newHeight = parseInt(heightInput.value) || 1;
+        this.grid_height = Math.max(1, Math.min(8, newHeight));
+        heightInput.value = this.grid_height.toString();
+        this.updateGridLayout();
+      };
+    }
+  }
+
+  updateGridLayout(): void {
+    // Update canvas dimensions based on grid layout
+    this.pixels_x = this.config.sprite_x * this.grid_width;
+    this.pixels_y = this.config.sprite_y * this.grid_height;
+    this.width = this.pixels_x * this.zoom;
+    this.height = this.pixels_y * this.zoom;
+
+    // Resize canvases
+    this.canvas_element.width = this.width;
+    this.canvas_element.height = this.height;
+    this.overlay_canvas_element.width = this.width;
+    this.overlay_canvas_element.height = this.height;
+    this.syncOverlayCanvas();
+
+    // Save to config
+    this.config.window_editor.grid_width = this.grid_width;
+    this.config.window_editor.grid_height = this.grid_height;
+    const app = (window as any).app;
+    if (app && app.storage) {
+      app.storage.write(this.config);
+    }
+
+    // Trigger update
+    if (app && app.update) {
+      app.update();
+    }
   }
 
   update(all_data) {
@@ -83,28 +161,88 @@ export default class Editor extends Window_Controls {
     // set the name of the sprite as the title
     dom.val("#input-sprite-name", sprite_data.name);
 
-    // first fill the whole sprite with the background color
+    // first fill the whole canvas with the background color
     this.canvas.fillStyle = this.config.colors[all_data.colors[0]];
     this.canvas.fillRect(0, 0, this.width, this.height);
 
-    // overlay from previous sprite
-    if (all_data.current_sprite > 0) {
-      const previous_sprite = all_data.sprites[all_data.current_sprite - 1];
-      if (previous_sprite.overlay) this.display_overlay(all_data, "previous");
+    // Check if we're in grid mode (more than 1x1)
+    if (this.grid_width > 1 || this.grid_height > 1) {
+      // Grid mode: render multiple sprites
+      // Keep grid_start_sprite fixed unless we're in single sprite mode
+      this.renderGridMode(all_data);
+    } else {
+      // Single sprite mode: original behavior
+      // Update grid_start_sprite to follow current sprite in single mode
+      this.grid_start_sprite = all_data.current_sprite;
+      // overlay from previous sprite
+      if (all_data.current_sprite > 0) {
+        const previous_sprite = all_data.sprites[all_data.current_sprite - 1];
+        if (previous_sprite.overlay) this.display_overlay(all_data, "previous");
+      }
+
+      // current sprite
+      this.fill_canvas(all_data, sprite_data, 1);
+
+      // overlay from next sprite
+      if (
+        sprite_data.overlay &&
+        all_data.current_sprite < all_data.sprites.length - 1
+      )
+        this.display_overlay(all_data);
     }
-
-    // current sprite
-    this.fill_canvas(all_data, sprite_data, 1);
-
-    // overlay from next sprite
-    if (
-      sprite_data.overlay &&
-      all_data.current_sprite < all_data.sprites.length - 1
-    )
-      this.display_overlay(all_data);
 
     // grid
     if (this.grid) this.display_grid(sprite_data);
+  }
+
+  renderGridMode(all_data): void {
+    // Use the fixed grid start sprite (not current_sprite which changes when clicking)
+    const start_sprite = this.grid_start_sprite;
+
+    // Render sprites in grid layout
+    for (let grid_y = 0; grid_y < this.grid_height; grid_y++) {
+      for (let grid_x = 0; grid_x < this.grid_width; grid_x++) {
+        const sprite_index = start_sprite + (grid_y * this.grid_width) + grid_x;
+
+        // Only render if sprite exists
+        if (sprite_index < all_data.sprites.length) {
+          const sprite_data = all_data.sprites[sprite_index];
+          this.renderSpriteAtPosition(all_data, sprite_data, grid_x, grid_y);
+        }
+      }
+    }
+  }
+
+  renderSpriteAtPosition(all_data, sprite_data, grid_x: number, grid_y: number): void {
+    const x_offset = grid_x * this.config.sprite_x;
+    const y_offset = grid_y * this.config.sprite_y;
+    const x_grid_step = sprite_data.multicolor ? 2 : 1;
+
+    // Render each pixel of the sprite at the grid position
+    for (let i = 0; i < this.config.sprite_x; i += x_grid_step) {
+      for (let j = 0; j < this.config.sprite_y; j++) {
+        const array_entry = sprite_data.pixels[j][i];
+
+        // Skip transparent pixels
+        if (array_entry === 0) continue;
+
+        // Determine color based on pixel value
+        let color: number;
+        if (array_entry === 1 || !sprite_data.multicolor) {
+          color = sprite_data.color;
+        } else {
+          color = all_data.colors[array_entry];
+        }
+
+        this.canvas.fillStyle = this.config.colors[color];
+        this.canvas.fillRect(
+          (x_offset + i) * this.zoom,
+          (y_offset + j) * this.zoom,
+          x_grid_step * this.zoom,
+          this.zoom
+        );
+      }
+    }
   }
 
   display_overlay(all_data, mode = "", alpha = 0.4) {
@@ -134,32 +272,119 @@ export default class Editor extends Window_Controls {
 
   display_grid(sprite_data) {
     // show a grid
-
     this.canvas.setLineDash([1, 1]);
-    let x_grid_step = 1;
 
-    if (sprite_data.multicolor) x_grid_step = 2;
+    if (this.grid_width > 1 || this.grid_height > 1) {
+      // Grid mode: draw both pixel grid and sprite separators
+      const app = (window as any).app;
+      const all_data = app?.sprite?.get_all();
 
-    for (let i = 0; i <= this.pixels_x; i = i + x_grid_step) {
-      // adds a vertical line in the middle
-      this.canvas.strokeStyle = "#666666";
-      if (i === this.pixels_x / 2) this.canvas.strokeStyle = "#888888";
+      // Safety check - if all_data not available yet, skip grid mode drawing
+      if (!all_data || !all_data.sprites) {
+        return;
+      }
 
-      this.canvas.beginPath();
-      this.canvas.moveTo(i * this.zoom, 0);
-      this.canvas.lineTo(i * this.zoom, this.height);
-      this.canvas.stroke();
-    }
+      // First draw pixel grids for each sprite
+      for (let grid_y = 0; grid_y < this.grid_height; grid_y++) {
+        for (let grid_x = 0; grid_x < this.grid_width; grid_x++) {
+          const sprite_index = this.grid_start_sprite + (grid_y * this.grid_width) + grid_x;
 
-    for (let i = 0; i <= this.pixels_y; i++) {
-      // adds 3 horizontal lines
-      this.canvas.strokeStyle = "#666666";
-      if (i % (this.pixels_y / 3) === 0) this.canvas.strokeStyle = "#888888";
+          // Only draw grid if sprite exists
+          if (sprite_index < all_data.sprites.length) {
+            const sprite = all_data.sprites[sprite_index];
+            const x_offset = grid_x * this.config.sprite_x;
+            const y_offset = grid_y * this.config.sprite_y;
+            const x_grid_step = sprite.multicolor ? 2 : 1;
 
-      this.canvas.beginPath();
-      this.canvas.moveTo(0, i * this.zoom);
-      this.canvas.lineTo(this.width, i * this.zoom);
-      this.canvas.stroke();
+            // Vertical lines within sprite
+            for (let i = 0; i <= this.config.sprite_x; i += x_grid_step) {
+              this.canvas.strokeStyle = "#666666";
+              if (i === this.config.sprite_x / 2) this.canvas.strokeStyle = "#888888";
+
+              this.canvas.beginPath();
+              this.canvas.moveTo((x_offset + i) * this.zoom, y_offset * this.zoom);
+              this.canvas.lineTo((x_offset + i) * this.zoom, (y_offset + this.config.sprite_y) * this.zoom);
+              this.canvas.stroke();
+            }
+
+            // Horizontal lines within sprite
+            for (let j = 0; j <= this.config.sprite_y; j++) {
+              this.canvas.strokeStyle = "#666666";
+              if (j % (this.config.sprite_y / 3) === 0) this.canvas.strokeStyle = "#888888";
+
+              this.canvas.beginPath();
+              this.canvas.moveTo(x_offset * this.zoom, (y_offset + j) * this.zoom);
+              this.canvas.lineTo((x_offset + this.config.sprite_x) * this.zoom, (y_offset + j) * this.zoom);
+              this.canvas.stroke();
+            }
+          }
+        }
+      }
+
+      // Then draw bold sprite separator lines
+      this.canvas.strokeStyle = "#aaaaaa";
+      this.canvas.lineWidth = 2;
+
+      // Vertical separator lines
+      for (let grid_x = 0; grid_x <= this.grid_width; grid_x++) {
+        const x = grid_x * this.config.sprite_x * this.zoom;
+        this.canvas.beginPath();
+        this.canvas.moveTo(x, 0);
+        this.canvas.lineTo(x, this.height);
+        this.canvas.stroke();
+      }
+
+      // Horizontal separator lines
+      for (let grid_y = 0; grid_y <= this.grid_height; grid_y++) {
+        const y = grid_y * this.config.sprite_y * this.zoom;
+        this.canvas.beginPath();
+        this.canvas.moveTo(0, y);
+        this.canvas.lineTo(this.width, y);
+        this.canvas.stroke();
+      }
+
+      // Draw blue dotted border around active sprite
+      this.canvas.strokeStyle = "#4488ff";
+      this.canvas.lineWidth = 2;
+      this.canvas.setLineDash([3, 3]);
+
+      const active_x = this.active_grid_x * this.config.sprite_x * this.zoom;
+      const active_y = this.active_grid_y * this.config.sprite_y * this.zoom;
+      const active_width = this.config.sprite_x * this.zoom;
+      const active_height = this.config.sprite_y * this.zoom;
+
+      this.canvas.strokeRect(active_x, active_y, active_width, active_height);
+
+      // Reset line style and width
+      this.canvas.setLineDash([1, 1]);
+      this.canvas.lineWidth = 1;
+    } else {
+      // Single sprite mode: original grid behavior
+      let x_grid_step = 1;
+
+      if (sprite_data.multicolor) x_grid_step = 2;
+
+      for (let i = 0; i <= this.pixels_x; i = i + x_grid_step) {
+        // adds a vertical line in the middle
+        this.canvas.strokeStyle = "#666666";
+        if (i === this.pixels_x / 2) this.canvas.strokeStyle = "#888888";
+
+        this.canvas.beginPath();
+        this.canvas.moveTo(i * this.zoom, 0);
+        this.canvas.lineTo(i * this.zoom, this.height);
+        this.canvas.stroke();
+      }
+
+      for (let i = 0; i <= this.pixels_y; i++) {
+        // adds 3 horizontal lines
+        this.canvas.strokeStyle = "#666666";
+        if (i % (this.pixels_y / 3) === 0) this.canvas.strokeStyle = "#888888";
+
+        this.canvas.beginPath();
+        this.canvas.moveTo(0, i * this.zoom);
+        this.canvas.lineTo(this.width, i * this.zoom);
+        this.canvas.stroke();
+      }
     }
   }
 
@@ -185,10 +410,32 @@ export default class Editor extends Window_Controls {
 
     const x = clientX - obj.left;
     const y = clientY - obj.top;
-    // Use actual rendered size from getBoundingClientRect, not logical canvas size
-    const x_grid = Math.floor((x / obj.width) * this.config.sprite_x);
-    const y_grid = Math.floor((y / obj.height) * this.config.sprite_y);
-    return { x: x_grid, y: y_grid };
+
+    if (this.grid_width > 1 || this.grid_height > 1) {
+      // Grid mode: calculate which sprite and pixel within that sprite
+      // Use actual rendered size from getBoundingClientRect, not logical canvas size
+      const x_in_canvas = Math.floor((x / obj.width) * this.pixels_x);
+      const y_in_canvas = Math.floor((y / obj.height) * this.pixels_y);
+
+      // Calculate which grid cell was clicked
+      const grid_x = Math.floor(x_in_canvas / this.config.sprite_x);
+      const grid_y = Math.floor(y_in_canvas / this.config.sprite_y);
+
+      // Calculate pixel within the sprite
+      const x_grid = x_in_canvas % this.config.sprite_x;
+      const y_grid = y_in_canvas % this.config.sprite_y;
+
+      // Calculate the sprite index
+      const sprite_offset = (grid_y * this.grid_width) + grid_x;
+
+      return { x: x_grid, y: y_grid, sprite_offset };
+    } else {
+      // Single sprite mode: original behavior
+      // Use actual rendered size from getBoundingClientRect, not logical canvas size
+      const x_grid = Math.floor((x / obj.width) * this.config.sprite_x);
+      const y_grid = Math.floor((y / obj.height) * this.config.sprite_y);
+      return { x: x_grid, y: y_grid, sprite_offset: 0 };
+    }
   }
 
   toggle_grid() {

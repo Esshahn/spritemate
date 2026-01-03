@@ -440,13 +440,27 @@ export class App {
   private handleNavigationKeys(e: KeyboardEvent): void {
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      this.sprite.set_current_sprite(this.sprite.get_current_sprite_number() - 1);
+      const new_sprite = this.sprite.get_current_sprite_number() - 1;
+      this.sprite.set_current_sprite(new_sprite);
+      // Update grid to start from the new sprite
+      this.editor.grid_start_sprite = new_sprite;
+      this.editor.active_grid_x = 0;
+      this.editor.active_grid_y = 0;
+      // Clear selection when switching sprites
+      this.clearSelection();
       this.list.update_all(this.sprite.get_all());
       this.update();
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      this.sprite.set_current_sprite(this.sprite.get_current_sprite_number() + 1);
+      const new_sprite = this.sprite.get_current_sprite_number() + 1;
+      this.sprite.set_current_sprite(new_sprite);
+      // Update grid to start from the new sprite
+      this.editor.grid_start_sprite = new_sprite;
+      this.editor.active_grid_x = 0;
+      this.editor.active_grid_y = 0;
+      // Clear selection when switching sprites
+      this.clearSelection();
       this.list.update_all(this.sprite.get_all());
       this.update();
     }
@@ -1455,13 +1469,46 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
     // Shared handler for pointer down (mouse/touch)
     const handlePointerDown = (e: MouseEvent | TouchEvent, shiftKey: boolean) => {
+      const pixelData = this.editor.get_pixel(e);
+
+      // In grid mode, switch to the clicked sprite if needed
+      if (pixelData.sprite_offset !== undefined && (this.editor.grid_width > 1 || this.editor.grid_height > 1)) {
+        const target_sprite = this.editor.grid_start_sprite + pixelData.sprite_offset;
+        if (target_sprite < this.sprite.get_number_of_sprites()) {
+          const grid_x = pixelData.sprite_offset % this.editor.grid_width;
+          const grid_y = Math.floor(pixelData.sprite_offset / this.editor.grid_width);
+
+          // Check if we're clicking a different sprite
+          if (target_sprite !== this.sprite.get_current_sprite_number()) {
+            // Switch to the clicked sprite
+            this.sprite.set_current_sprite(target_sprite);
+            this.list.update_all(this.sprite.get_all());
+            this.editor.active_grid_x = grid_x;
+            this.editor.active_grid_y = grid_y;
+            // Clear selection when switching sprites
+            this.clearSelection();
+            this.update();
+            // Only skip drawing/erasing/filling, but allow select and move tools
+            if (this.mode !== "select" && this.mode !== "move") {
+              return;
+            }
+          }
+
+          // Same sprite, but update active grid position if needed
+          if (this.editor.active_grid_x !== grid_x || this.editor.active_grid_y !== grid_y) {
+            this.editor.active_grid_x = grid_x;
+            this.editor.active_grid_y = grid_y;
+            this.update();
+          }
+        }
+      }
+
       if (this.mode === "select") {
-        const pixel = this.editor.get_pixel(e);
         this.marquee_drawing = true;
         this.selection = {
           active: false,
-          start: pixel,
-          end: pixel,
+          start: pixelData,
+          end: pixelData,
           bounds: null
         };
         this.update();
@@ -1469,22 +1516,22 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
       }
 
       if (this.mode === "draw") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), shiftKey);
+        this.sprite.set_pixel(pixelData, shiftKey);
         this.is_drawing = true;
       }
 
       if (this.mode === "erase") {
-        this.sprite.set_pixel(this.editor.get_pixel(e), true);
+        this.sprite.set_pixel(pixelData, true);
         this.is_drawing = true;
       }
 
       if (this.mode === "fill") {
-        this.sprite.floodfill(this.editor.get_pixel(e));
+        this.sprite.floodfill(pixelData);
       }
 
       if (this.mode === "move") {
         this.move_start = true;
-        this.move_start_pos = this.editor.get_pixel(e);
+        this.move_start_pos = pixelData;
 
         // If there's an active selection, backup the selected pixels and clear the source
         if (this.selection?.active && this.selection.bounds) {
@@ -1522,6 +1569,22 @@ EEEEEEEEEEEEEEEEEEEEEE   DDDDDDDDDDDDD         IIIIIIIIII         TTTTTTTTTTT
 
       if (this.is_drawing && (this.mode === "draw" || this.mode === "erase")) {
         const newpos = this.editor.get_pixel(e);
+
+        // In grid mode, check if we've crossed into a different sprite
+        if (newpos.sprite_offset !== undefined && (this.editor.grid_width > 1 || this.editor.grid_height > 1)) {
+          const target_sprite = this.editor.grid_start_sprite + newpos.sprite_offset;
+          if (target_sprite < this.sprite.get_number_of_sprites()) {
+            // If we've moved to a different sprite, switch to it
+            if (target_sprite !== this.sprite.get_current_sprite_number()) {
+              this.sprite.set_current_sprite(target_sprite);
+              const grid_x = newpos.sprite_offset % this.editor.grid_width;
+              const grid_y = Math.floor(newpos.sprite_offset / this.editor.grid_width);
+              this.editor.active_grid_x = grid_x;
+              this.editor.active_grid_y = grid_y;
+            }
+          }
+        }
+
         // only draw if the pointer has entered a new pixel area (just for performance)
         if (newpos.x != this.oldpos.x || newpos.y != this.oldpos.y) {
           const all = this.sprite.get_all();
@@ -1748,7 +1811,12 @@ LLLLLLLLLLLLLLLLLLLLLLLL   IIIIIIIIII    SSSSSSSSSSSSSSS            TTTTTTTTTTT
 
     dom.sel("#spritelist").onclick = () => {
       if (!this.dragging) {
-        this.sprite.set_current_sprite(this.list.get_clicked_sprite());
+        const clicked_sprite = this.list.get_clicked_sprite();
+        this.sprite.set_current_sprite(clicked_sprite);
+        // Update grid to start from the clicked sprite
+        this.editor.grid_start_sprite = clicked_sprite;
+        this.editor.active_grid_x = 0;
+        this.editor.active_grid_y = 0;
         if (!this.sprite.is_multicolor() && this.sprite.is_pen_multicolor()) {
           this.sprite.set_pen(1);
         }
