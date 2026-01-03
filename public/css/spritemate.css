@@ -1,0 +1,1674 @@
+/**
+ * ============================================================================
+ * SPRITEMATE - Complete Stylesheet
+ * ============================================================================
+ *
+ * Merged and organized from dialog.css and stylesheet.css
+ * All styles for the Spritemate C64 sprite editor
+ */
+
+
+/* ============================================================================
+   1. CSS VARIABLES & ROOT STYLES
+   ============================================================================ */
+
+:root {
+  /* Brand Colors */
+  --red: #e6007e;
+  --blue: #00b9ee;
+  --blue-hover: #00a3d6;
+  --blue-active: #0090bd;
+
+  /* Text Colors */
+  --inactive_text: #aaaaaa;
+  --active_text: #ffffff;
+
+  /* UI Colors */
+  --icon_outline: #111111;
+  --bg-dark: #222;
+  --bg-darker: #1a1a1a;
+  --bg-lighter: #2a2a2a;
+  --border-color: #444;
+  --border-color-light: #666;
+  --border-color-dark: #333;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  /* Border Radius */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 32px;
+
+  /* Transitions */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.2s;
+  --transition-slow: 0.25s;
+}
+
+
+/* ============================================================================
+   2. BASE ELEMENTS & RESET
+   ============================================================================ */
+
+body,
+html,
+p,
+div {
+  font-family: "Quicksand", sans-serif;
+  margin: 0;
+}
+
+body,
+html {
+  background-color: #111111;
+  color: #33bb33;
+
+  /* Dotted pattern background */
+  background: radial-gradient(black 25%, transparent 16%) 0 0,
+    radial-gradient(black 25%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255, 255, 255, 0.1) 25%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255, 255, 255, 0.1) 25%, transparent 20%) 8px 9px;
+  background-color: #282828;
+  background-size: 16px 16px;
+
+  /* Prevent text selection on page when double clicking */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Remove focus outline from all elements */
+*:focus {
+  outline: none !important;
+}
+
+body:focus,
+html:focus {
+  outline: none !important;
+}
+
+p {
+  margin: 8px;
+  line-height: 160%;
+}
+
+a {
+  text-decoration: none;
+  color: var(--blue);
+}
+
+a:hover {
+  color: var(--red);
+}
+
+h1 {
+  font-size: 160%;
+  color: var(--blue);
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+h2 {
+  font-size: 110%;
+  color: var(--blue);
+  text-align: center;
+  margin: 0px 0px 12px 0px;
+}
+
+ol {
+  counter-reset: item;
+}
+
+ol li {
+  display: block;
+}
+
+ol li:before {
+  content: counters(item, ".") ".";
+  counter-increment: item;
+  padding-right: 16px;
+  margin-left: -20px;
+}
+
+legend {
+  font-size: 100%;
+  color: var(--blue);
+  padding: 0px 20px 0px 20px;
+}
+
+fieldset {
+  margin-bottom: 12px;
+  border-color: rgba(50, 50, 50, 1);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+fieldset button {
+  float: right;
+}
+
+fieldset p {
+  margin: 0px;
+  padding: 0px;
+}
+
+fieldset .right {
+  float: right;
+  width: 200px;
+}
+
+table {
+  width: 100%;
+}
+
+td,
+th {
+  padding: 8px;
+  margin: 4px 0px 4px 0px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #222222;
+}
+
+canvas {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  /* Pixel-perfect rendering for all browsers (matches .pixel-perfect utility) */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+
+/* ============================================================================
+   3. UTILITY CLASSES
+   ============================================================================ */
+
+.center {
+  text-align: center;
+}
+
+.spacer {
+  height: 40px;
+}
+
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Pixel-perfect rendering utility - use on canvas and pixel art elements */
+.pixel-perfect {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* Control row utility - shared layout for animation and playfield controls */
+.control-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
+  color: var(--active_text);
+  font-size: 14px;
+}
+
+/* Centered control row variant */
+.control-row-centered {
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Control row number inputs - shared styling */
+.control-row input[type="number"],
+.control-row input[type="text"] {
+  background-color: var(--bg-dark);
+  color: var(--active_text);
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  width: 80px;
+  min-width: 80px;
+}
+
+.control-row input[type="number"]:focus,
+.control-row input[type="text"]:focus {
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.control-row input[type="number"]:hover,
+.control-row input[type="text"]:hover {
+  border-color: var(--border-color-light);
+}
+
+
+/* ============================================================================
+   4. DIALOG FRAMEWORK
+   ============================================================================ */
+
+/* Dialog base element */
+dialog.spritemate-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  margin: 0;
+}
+
+dialog.spritemate-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal z-index */
+dialog.spritemate-dialog:modal {
+  z-index: 1000;
+}
+
+/* Non-modal dialogs - ensure they're visible */
+dialog.spritemate-dialog[open]:not(:modal) {
+  display: block;
+  pointer-events: none;
+}
+
+dialog.spritemate-dialog[open]:not(:modal) .dialog-wrapper {
+  pointer-events: auto;
+}
+
+/* Dialog wrapper - actual window container */
+.dialog-wrapper {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  background: #121212 url("../ui/ui-bg_gloss-wave_16_121212_500x100.png") 50% top repeat-x;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+  box-sizing: border-box;
+}
+
+/* Dialog title bar */
+.dialog-titlebar {
+  border-bottom: 1px solid #141414;
+  padding: 4px 12px;
+  cursor: move;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.dialog-title {
+  color: var(--inactive_text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Close button */
+.window-close-button {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  position: absolute;
+  left: 8px;
+  flex-shrink: 0;
+  background: var(--red);
+  border-radius: 50%;
+  transition: opacity 0.2s;
+  opacity: 0.5;
+}
+
+.window-close-button:hover {
+  opacity: 1;
+}
+
+/* Dialog content area */
+.dialog-content {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 4px;
+  color: var(--active_text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Resize handle */
+.dialog-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0%, transparent 50%, #666666 50%, #666666 100%);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.dialog-resize-handle:hover {
+  opacity: 1;
+}
+
+/* Dialog fade-in animation */
+dialog.spritemate-dialog[open] {
+  animation: dialog-fade-in 0.2s ease-out;
+}
+
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* ============================================================================
+   5. DIALOG FORM ELEMENTS
+   ============================================================================ */
+
+/* Buttons in dialogs - uses new flat button system */
+.dialog-content button {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  /* Primary button style by default */
+  background-color: var(--blue);
+  color: var(--active_text);
+  margin: var(--spacing-xs);
+}
+
+.dialog-content button:hover:not(:disabled) {
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+
+.dialog-content button:active:not(:disabled) {
+  background-color: var(--blue-active);
+  border-color: var(--blue-active);
+}
+
+.dialog-content button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dialog-content button.center {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Cancel button variant */
+.dialog-content button.button-cancel {
+  background-color: transparent;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.dialog-content button.button-cancel:hover:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.1);
+  border-color: var(--red);
+}
+
+.dialog-content button.button-cancel:active:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.2);
+  border-color: var(--red);
+}
+
+/* Button row container - centers buttons in dialogs */
+#button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Dialog form row - organized layout for form elements */
+.dialog-form-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  color: var(--active_text);
+}
+
+.dialog-form-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.dialog-form-row span {
+  color: var(--inactive_text);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.dialog-form-row input[type="number"],
+.dialog-form-row input[type="text"] {
+  background-color: var(--bg-dark);
+  color: var(--active_text);
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  width: 80px;
+}
+
+.dialog-form-row input[type="number"]:focus,
+.dialog-form-row input[type="text"]:focus {
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.dialog-form-row input[type="number"]:hover,
+.dialog-form-row input[type="text"]:hover {
+  border-color: var(--border-color-light);
+}
+
+.dialog-form-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  width: 16px;
+  height: 16px;
+}
+
+/* Input fields in dialogs */
+.dialog-content input {
+  border: 2px solid var(--blue);
+  background-color: black;
+  color: white;
+  font-size: 100%;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: normal;
+  border-radius: var(--radius-pill);
+  margin: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Default width for text inputs in dialogs (can be overridden) */
+.dialog-content input[type="text"],
+.dialog-content input[type="password"],
+.dialog-content input[type="email"] {
+  width: 260px;
+}
+
+.dialog-content input:focus {
+  background-color: var(--blue);
+}
+
+.dialog-content input.error {
+  border-color: var(--red);
+}
+
+.dialog-content input.error:focus {
+  background-color: var(--red);
+}
+
+/* Select dropdowns in dialogs - matches new flat button style */
+.dialog-content select {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  background-color: var(--blue);
+  color: var(--active_text);
+  margin: var(--spacing-xs);
+}
+
+.dialog-content select:focus {
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+
+.dialog-content select:hover {
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+
+/* Textarea in dialogs */
+.dialog-content textarea {
+  border: 2px solid var(--blue);
+  background-color: black;
+  color: var(--blue);
+  font-size: 100%;
+  font-family: 'Courier New', monospace;
+  padding: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.dialog-content textarea:focus {
+  background-color: var(--bg-darker);
+}
+
+/* Console textarea (Snapshot window) */
+.dialog-content .console-container {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+  padding-bottom: 20px;
+  overflow: hidden;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.dialog-content textarea.console {
+  color: var(--blue);
+  font-family: monospace !important;
+  font-size: 16px !important;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  resize: none;
+  box-sizing: border-box;
+  padding-bottom: 20px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+}
+
+/* Fieldsets in dialogs */
+.dialog-content fieldset {
+  border: 1px dotted var(--border-color-dark);
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.dialog-content fieldset legend {
+  color: var(--blue);
+  padding: 0 5px;
+}
+
+.dialog-content fieldset button {
+  float: right;
+}
+
+.dialog-content fieldset p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Tables in dialogs */
+.dialog-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dialog-content td,
+.dialog-content th {
+  padding: 8px;
+  margin: 4px 0;
+  text-align: left;
+}
+
+.dialog-content tr:nth-child(even) {
+  background-color: #222222;
+}
+
+/* Links in dialogs */
+.dialog-content a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.dialog-content a:hover {
+  text-decoration: underline;
+}
+
+/* Lists in dialogs */
+.dialog-content ul {
+  list-style-type: disc;
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.dialog-content ol {
+  list-style-type: decimal;
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.dialog-content li {
+  display: list-item;
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+/* Horizontal rule in dialogs */
+.dialog-content hr {
+  border: none;
+  border-top: 1px solid var(--border-color-dark);
+  margin: 40px 40px;
+}
+
+
+/* ============================================================================
+   6. WINDOW-SPECIFIC DIALOG CONTENT
+   ============================================================================ */
+
+/* List window - prevent dialog-content from scrolling, only spritelist scrolls */
+.dialog-content:has(#spritelist) {
+  overflow: hidden;
+}
+
+/* Snapshot window - console fills the entire content area */
+.dialog-content:has(#snapshot-console) {
+  overflow: hidden;
+}
+
+#window-9 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#window-9 .console-container {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Tools window - center the menu */
+.dialog-content #menu {
+  margin: 0 auto;
+}
+
+/* Palette window - center the text labels */
+.dialog-content #palette_spritecolors p {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+
+/* ============================================================================
+   7. SORTABLE / DRAG & DROP
+   ============================================================================ */
+
+.sortable-dragging {
+  opacity: 0.5;
+  cursor: move !important;
+}
+
+.sortable-placeholder {
+  background: rgba(0, 185, 238, 0.2);
+  border: 2px dashed var(--blue);
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+/* ============================================================================
+   8. WINDOW MENUS & TOOLBARS
+   ============================================================================ */
+
+.window_menu {
+  min-height: 30px;
+  padding-bottom: var(--spacing-sm);
+  /* Pixel-perfect icon rendering (matches .pixel-perfect utility) */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.window_menu_icon_area {
+  margin-right: 10px;
+  padding-right: 10px;
+  float: left;
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  color: var(--inactive_text);
+  line-height: 25px;
+}
+
+/* Window menu input fields */
+.window_menu input {
+  border: 1px solid var(--icon_outline);
+  min-width: 40px;
+  line-height: 10px;
+  border-radius: 16px;
+  padding: 4px;
+  font-size: 80%;
+  margin: 2px 2px 2px 6px;
+  vertical-align: top;
+  background-color: transparent;
+  font-family: "Courier", monospace;
+  color: var(--inactive_text);
+}
+
+.window_menu input:hover {
+  border-color: var(--blue);
+  color: var(--active_text);
+}
+
+.window_menu input:focus {
+  color: var(--active_text);
+  background-color: var(--border-color-dark);
+}
+
+/* Window control panels */
+.window-control-panel {
+  padding: 16px;
+  background-color: var(--bg-darker);
+  border-top: 1px solid var(--border-color-dark);
+  margin-top: 8px;
+}
+
+.window-control-panel.inactive {
+  opacity: 0.33;
+  pointer-events: none;
+}
+
+
+/* ============================================================================
+   9. ICONS & BUTTONS
+   ============================================================================ */
+
+/* Base button styles - shared foundation for all buttons */
+.btn {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  text-transform: none;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Primary button - solid blue background */
+.btn-primary {
+  background-color: var(--blue);
+  color: #000;
+  border-color: var(--blue);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--blue-active);
+  border-color: var(--blue-active);
+}
+
+/* Cancel/Secondary button - transparent with red border */
+.btn-cancel {
+  background-color: transparent;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.1);
+}
+
+.btn-cancel:active:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.2);
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: 0 auto;
+  transition: transform var(--transition-fast) ease, filter var(--transition-fast) ease;
+  /* Pixel-perfect icon rendering (matches .pixel-perfect utility) */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.iconset {
+  float: left;
+  padding: 1px 2px 1px 2px;
+  cursor: pointer;
+  margin: 0px 0px 0px 0px;
+}
+
+.icontext {
+  color: rgba(255, 255, 255, 1);
+  font-size: 70%;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0px;
+  position: relative;
+  top: -5px;
+  height: 8px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.icon-hover {
+  background: transparent;
+  transition: 0.25s ease background;
+  border-radius: 4px;
+}
+
+.icon-hover:hover .icon,
+.icon-hover:hover .icontext,
+.icon-active .icon,
+.icon-active .icontext {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8));
+}
+
+.icon-hover:hover {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+.icon-active {
+  background: rgba(90, 90, 90, 0.5);
+}
+
+.icon-right {
+  float: right;
+}
+
+/* Confirm dialog button */
+.confirm-button {
+  border: 2px solid var(--blue);
+  background: black;
+}
+
+.confirm-button:hover {
+  border: 2px solid var(--blue);
+  background: black;
+  color: white;
+  font-size: 100%;
+  margin: 4px;
+}
+
+.confirm-button:focus {
+  border: 2px solid var(--blue);
+  background: black;
+  color: white;
+  font-size: 100%;
+  margin: 4px;
+}
+
+
+/* ============================================================================
+   10. INPUT FIELDS & FORM CONTROLS
+   ============================================================================ */
+
+/* Menu bar input fields (sprite name, grid width/height) */
+.menu_bar_input {
+  background-color: var(--bg-dark);
+  color: var(--active_text);
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.menu_bar_input[type="text"] {
+  width: 120px;
+  text-align: left;
+}
+
+.menu_bar_input[type="number"] {
+  width: 45px;
+}
+
+.menu_bar_input:focus {
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.menu_bar_input:hover {
+  border-color: var(--border-color-light);
+}
+
+/* Grid layout controls in Editor */
+.grid-layout-label {
+  color: var(--active_text);
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.grid-layout-separator {
+  color: var(--active_text);
+  margin: 0 4px;
+  font-size: 13px;
+}
+
+.grid-layout-input {
+  background-color: #222;
+  color: var(--active_text);
+  border: 1px solid #444;
+  padding: 4px 6px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  border-radius: 3px;
+  width: 40px;
+  text-align: center;
+}
+
+.grid-layout-input:focus {
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.grid-layout-input:hover {
+  border-color: var(--border-color-light);
+}
+
+
+/* ============================================================================
+   11. MENUBAR
+   ============================================================================ */
+
+#menubar {
+  background-color: #333;
+}
+
+#menubar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#menubar li {
+  float: left;
+}
+
+#menubar li a,
+#menubar .dropbtn {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#menubar li a:hover,
+#menubar .dropdown:hover .dropbtn {
+  background-color: var(--blue);
+  color: white;
+}
+
+#menubar li.dropdown {
+  display: inline-block;
+}
+
+/* Dropdown content */
+#menubar .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  min-width: 240px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+#menubar .dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  position: relative;
+}
+
+#menubar .dropdown-content a:hover {
+  background-color: var(--blue);
+}
+
+#menubar .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Submenu styles */
+#menubar .submenu-item {
+  position: relative;
+}
+
+#menubar .submenu-item > a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+}
+
+#menubar .submenu-item > a:hover {
+  background-color: var(--blue);
+}
+
+#menubar .submenu-arrow {
+  position: absolute;
+  right: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#menubar .submenu-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background-color: #333;
+  min-width: 240px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+}
+
+#menubar .submenu-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+#menubar .submenu-content a:hover {
+  background-color: var(--blue);
+}
+
+#menubar .submenu-item:hover > .submenu-content {
+  display: block;
+}
+
+/* Hotkey documentation */
+#menubar .hotkey {
+  position: absolute;
+  right: 9px;
+  color: rgba(200, 200, 200, 0.5);
+}
+
+/* Checkmark indicator for toggleable windows */
+#menubar .has-checkmark {
+  padding-left: 40px !important;
+}
+
+#menubar .checkmark {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  line-height: 1;
+  color: white;
+  visibility: hidden;
+  font-weight: normal;
+  width: 16px;
+  display: inline-block;
+}
+
+#menubar .checkmark.visible {
+  visibility: visible;
+}
+
+/* Label documentation */
+#menubar .label {
+  padding: 4px 4px 4px 14px;
+  color: rgba(200, 200, 200, 0.5);
+}
+
+/* Menu separator line */
+#menubar hr {
+  border: none;
+  height: 1px;
+  background: rgba(200, 200, 200, 0.15);
+}
+
+/* Filename input in menubar */
+#menubar-filename {
+  float: right;
+}
+
+#menubar-filename-input {
+  background-color: #222;
+  color: var(--blue);
+  border: 1px solid #444;
+  padding: 4px 8px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+#menubar-filename-input:focus {
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+#menubar-filename-input:hover {
+  border-color: var(--border-color-light);
+}
+
+#menubar-filename-input.error {
+  border-color: #ff4444;
+  background-color: #331111;
+}
+
+
+/* ============================================================================
+   12. STATUS BAR & TOOLTIP
+   ============================================================================ */
+
+#statusbar {
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  height: 20px;
+  padding: 6px 12px 6px 12px;
+  color: var(--blue);
+  background: -webkit-linear-gradient(#181818, #111111);
+  background: -o-linear-gradient(#181818, #111111);
+  background: -moz-linear-gradient(#181818, #111111);
+  background: linear-gradient(#181818, #111111);
+  z-index: -100;
+  font-size: 110%;
+}
+
+#custom-tooltip {
+  position: fixed;
+  background: rgba(20, 20, 20, 0.95);
+  color: var(--blue);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Quicksand', sans-serif;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 185, 238, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+#custom-tooltip.visible {
+  opacity: 1;
+}
+
+
+/* ============================================================================
+   13. EDITOR WINDOW
+   ============================================================================ */
+
+#editor {
+  cursor: crosshair;
+}
+
+#editor-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+#editor-canvas {
+  position: relative;
+  display: inline-block;
+}
+
+
+/* ============================================================================
+   14. TOOLS WINDOW
+   ============================================================================ */
+
+#menu {
+  width: 54px;
+}
+
+
+/* ============================================================================
+   15. PALETTE WINDOW
+   ============================================================================ */
+
+#palette {
+  cursor: pointer;
+}
+
+#palette_spritecolors {
+  margin-top: 12px;
+  font-size: 70%;
+}
+
+#palette_all_colors {
+  clear: both;
+}
+
+.palette_color_item {
+  width: 40px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer;
+  float: left;
+}
+
+.palette_color_item_active_colors {
+  width: 40px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer;
+  margin-bottom: 2px;
+  margin-top: 8px;
+}
+
+.palette_highlight_text {
+  color: var(--blue);
+}
+
+.palette_color_item_selected {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: var(--blue);
+}
+
+
+/* ============================================================================
+   16. SPRITE LIST WINDOW
+   ============================================================================ */
+
+#spritelist {
+  margin: 0px;
+  padding: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  line-height: 0px;
+  padding-bottom: 20px;
+  max-height: calc(100vh - 200px);
+}
+
+.sprite_in_list {
+  margin: 0px;
+  padding: 0px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.sprite_in_list:hover {
+  border: 1px dotted var(--red);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.sprite_in_list_border {
+  border: 1px dotted #555555;
+  box-sizing: border-box;
+}
+
+.sprite_in_list_selected {
+  border: 1px dotted var(--blue);
+  box-sizing: border-box;
+}
+
+.sprite_in_list:active {
+  background-color: white;
+  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.6);
+}
+
+.sprite_in_list_container {
+  margin: 0px;
+  padding: 0px;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  cursor: move;
+}
+
+.sprite_info_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sprite_info_text {
+  color: var(--red);
+  font-size: 12px;
+  line-height: 12px;
+  margin: 6px;
+  font-weight: bold;
+  padding: 2px;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
+
+/* ============================================================================
+   17. PREVIEW WINDOW
+   ============================================================================ */
+
+#preview-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+
+/* ============================================================================
+   18. ANIMATION WINDOW
+   ============================================================================ */
+
+#animation-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#animation-canvas canvas {
+  padding: 8px;
+  border: 1px dotted #444444;
+}
+
+/* Animation control row uses .control-row and .control-row-centered classes */
+
+.animation-radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.animation-radio-group input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+}
+
+/* Animation buttons use .btn and .btn-primary */
+
+
+/* ============================================================================
+   19. PLAYFIELD WINDOW
+   ============================================================================ */
+
+#playfield {
+  background-color: #1a1a1a;
+  cursor: crosshair;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: 1px solid #333;
+}
+
+#playfield-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  overflow: auto;
+}
+
+.playfield-canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.playfield-selection-overlay {
+  position: absolute;
+  border: 1px dotted var(--blue);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.playfield-color-palette {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.playfield-color-square {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  /* Pixel-perfect rendering (matches .pixel-perfect utility) */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.playfield-color-square:hover {
+  border: 1px solid #888;
+}
+
+.playfield-color-selected {
+  border: 1px solid var(--blue) !important;
+}
+
+.playfield-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.playfield-toolbar-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Playfield and icon buttons - smaller variant of .btn */
+.playfield-button,
+.icon-button {
+  font-size: 13px;
+  padding: 6px 16px;
+  min-width: 80px;
+}
+
+/* Playfield control row uses .control-row base class */
+
+.playfield-control-row label {
+  min-width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playfield-sprite-name {
+  color: var(--active_text);
+}
+
+.playfield-control-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  width: 16px;
+  height: 16px;
+}
+
+.playfield-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0px,
+    rgba(0, 0, 0, 0.4) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+
+/* ============================================================================
+   20. SETTINGS WINDOW
+   ============================================================================ */
+
+.settings_colorfield {
+  max-width: 140px;
+  margin: var(--spacing-sm);
+  border: 1px dotted #888888;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm);
+  float: left;
+}
+
+.settings_colorfield input {
+  max-width: 100px;
+  padding: var(--spacing-sm) var(--spacing-sm);
+  margin: 0;
+  border: none;
+}
+
+.settings_color {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  float: left;
+}
+
+
+/* ============================================================================
+   21. ABOUT/INFO WINDOW
+   ============================================================================ */
+
+#info {
+  padding: 12px;
+  text-align: center;
+}
+
+#info fieldset {
+  border: 1px dotted #333333;
+  font-size: 120%;
+  padding: 20px 20px 20px 20px;
+  margin: 24px 0px 24px 0px;
+  overflow: auto;
+  height: 300px;
+  text-align: left;
+  color: #bbbbbb;
+}
+
+#info fieldset legend {
+  text-align: center;
+}
+
+#info fieldset p {
+  padding-bottom: 20px;
+}
+
+#info fieldset h1 {
+  font-size: 110%;
+  margin: 4px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#info fieldset h2 {
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  font-weight: bold;
+  color: white;
+}
+
+
+/* ============================================================================
+   22. EXPORT/IMPORT DIALOGS
+   ============================================================================ */
+
+#dialog-confirm {
+  visibility: hidden;
+  text-align: center;
+}
+
+
+/* ============================================================================
+   END OF STYLESHEET
+   ============================================================================ */

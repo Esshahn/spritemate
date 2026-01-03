@@ -71,10 +71,10 @@ export default class Playfield extends Window_Controls {
       </div>
       <div id="playfield-canvas-container"></div>
       <div id="playfield-control-panel" class="window-control-panel">
-        <div class="playfield-control-row">
+        <div class="control-row playfield-control-row">
           <span id="playfield-sprite-name" class="playfield-sprite-name"></span>
         </div>
-        <div class="playfield-control-row">
+        <div class="control-row playfield-control-row">
           <label>X:</label>
           <input type="number" id="playfield-sprite-x" disabled />
           <label>Y:</label>

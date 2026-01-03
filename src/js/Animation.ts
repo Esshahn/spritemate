@@ -53,21 +53,21 @@ export default class Animation extends Window_Controls {
       </div>
       <div id="animation-canvas"></div>
       <div class="window-control-panel">
-        <div class="animation-control-row">
+        <div class="control-row control-row-centered">
           Start/End:
           <input type="number" id="animation-start-sprite" min="1" value="1" />
           <input type="number" id="animation-end-sprite" min="1" value="1" />
           FPS:
           <input type="number" id="animation-fps" min="1" max="60" value="10" />
         </div>
-        <div class="animation-control-row">
+        <div class="control-row control-row-centered">
           <div class="animation-radio-group">
               <input type="radio" name="animation-mode" value="restart" checked /> Restart
               <input type="radio" name="animation-mode" value="pingpong" /> PingPong
           </div>
         </div>
-        <div class="animation-control-row">
-          <button id="animation-play-stop" class="animation-button">Play</button>
+        <div class="control-row control-row-centered">
+          <button id="animation-play-stop" class="btn btn-primary">Play</button>
         </div>
       </div>
     `;

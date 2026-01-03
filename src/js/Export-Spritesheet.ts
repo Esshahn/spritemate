@@ -13,17 +13,26 @@ export default class Export extends ExportBase {
     const template = `
     <div id="window-export">
 
-        <p id="spritesheet-info">Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.
+        <p id="spritesheet-info">
+        Export 0 sprites as a single spritesheet image. Sprites are arranged in rows with optional 1 pixel spacing.
         </p>
-        <p>
-          Rows: <input type="number" id="spritesheet-rows" name="rows" value="1" min="1">
-          <span id="spritesheet-layout"></span>
-        </p>
-        <p>
+
+        <div class="dialog-form-row">
+          <label>Rows</label>
+          <input type="number" id="spritesheet-rows" name="rows" value="1" min="1">
+          
+        </div>
+
+        <div class="dialog-form-row">
+        <div id="spritesheet-layout"></div>
+        </div>
+
+        <div class="dialog-form-row">
           <label>
-          <input type="checkbox" id="spritesheet-border" name="border">Apply a 1 pixel border
+            <input type="checkbox" id="spritesheet-border" name="border">
+            Apply a 1 pixel border
           </label>
-        </p>
+        </div>
 
       <div id="button-row">
         <button id="button-export-cancel" class="button-cancel">Cancel</button>
