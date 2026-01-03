@@ -479,6 +479,59 @@ dialog.spritemate-dialog[open] {
   margin-bottom: var(--spacing-sm);
 }
 
+/* Dialog form row - organized layout for form elements */
+.dialog-form-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  color: var(--active_text);
+}
+
+.dialog-form-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.dialog-form-row span {
+  color: var(--inactive_text);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.dialog-form-row input[type="number"],
+.dialog-form-row input[type="text"] {
+  background-color: var(--bg-dark);
+  color: var(--active_text);
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  width: 80px;
+}
+
+.dialog-form-row input[type="number"]:focus,
+.dialog-form-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.dialog-form-row input[type="number"]:hover,
+.dialog-form-row input[type="text"]:hover {
+  border-color: var(--border-color-light);
+}
+
+.dialog-form-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--blue);
+  width: 16px;
+  height: 16px;
+}
+
 /* Input fields in dialogs */
 .dialog-content input {
   border: 2px solid var(--blue);
@@ -514,27 +567,32 @@ dialog.spritemate-dialog[open] {
   background-color: var(--red);
 }
 
-/* Select dropdowns in dialogs */
+/* Select dropdowns in dialogs - matches new flat button style */
 .dialog-content select {
-  border: 2px solid var(--blue);
-  background-color: black;
-  color: white;
-  font-size: 100%;
   font-family: 'Quicksand', sans-serif;
-  padding: 8px;
-  margin: 4px 0;
-  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  background-color: var(--blue);
+  color: var(--active_text);
+  margin: var(--spacing-xs);
 }
 
 .dialog-content select:focus {
   outline: 0;
-  background-color: var(--blue);
-  color: black;
+  background-color: #00a3d6;
+  border-color: #00a3d6;
 }
 
 .dialog-content select:hover {
-  border-color: var(--blue);
+  background-color: #00a3d6;
+  border-color: #00a3d6;
 }
 
 /* Textarea in dialogs */
@@ -1749,11 +1807,6 @@ dialog.spritemate-dialog[open] {
 /* ============================================================================
    22. EXPORT/IMPORT DIALOGS
    ============================================================================ */
-
-#spritesheet-rows {
-  width: 60px;
-  border-radius: var(--radius-lg);
-}
 
 #dialog-confirm {
   visibility: hidden;
