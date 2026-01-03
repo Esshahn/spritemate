@@ -33,7 +33,9 @@ export default class Preview extends Window_Controls {
         <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-preview-y" title="double height">
         <img src="ui/icon-preview-overlay.png" class="icon-hover" id="icon-preview-overlay" title="overlay next sprite">
       </div>
-      <div id="preview-canvas"></div>
+      <div id="preview-canvas-container">
+        <div id="preview-canvas"></div>
+      </div>
     `;
 
     dom.append("#window-" + this.window, template);

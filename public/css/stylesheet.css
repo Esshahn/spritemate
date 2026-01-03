@@ -820,6 +820,29 @@ img.center {
   min-width:0px;
 }
 
+/* --- EDITOR CANVAS --- */
+
+#editor-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+#editor-canvas {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- PREVIEW CANVAS --- */
+
+#preview-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
 /* --- ANIMATION CONTROLS --- */
 
 #animation-canvas {
