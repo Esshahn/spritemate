@@ -25,6 +25,12 @@ export default class Editor extends Window_Controls {
     this.grid_width = this.config.window_editor.grid_width ?? 1;
     this.grid_height = this.config.window_editor.grid_height ?? 1;
 
+    // Auto-enable grid if loading with grid mode (>1x1)
+    if ((this.grid_width > 1 || this.grid_height > 1) && !this.grid) {
+      this.grid = true;
+      this.config.window_editor.grid = true;
+    }
+
     // Track which grid cell is active (for visual indicator)
     this.active_grid_x = 0;
     this.active_grid_y = 0;
@@ -69,17 +75,21 @@ export default class Editor extends Window_Controls {
           <img src="ui/icon-grid.png" class="icon-hover" id="icon-editor-grid" title="toggle grid">
         </div>
 
-        <div class="window_menu_icon_area">
-          <label class="grid-layout-label" title="grid layout">Layout:</label>
-          <input type="number" id="editor-grid-width" class="grid-layout-input" min="1" max="8" value="${this.grid_width}" title="grid width">
-          <span class="grid-layout-separator">×</span>
-          <input type="number" id="editor-grid-height" class="grid-layout-input" min="1" max="8" value="${this.grid_height}" title="grid height">
-        </div>
-
+        
+      <div class="window_menu_icon_area">
         <img src="ui/icon-multicolor.png" title="toggle single- & multicolor (c)" class=" icon-hover" id="icon-multicolor">
         <img src="ui/icon-flip-horizontal.png" title="flip horizontal" class="icon-hover" id="icon-flip-horizontal">
         <img src="ui/icon-flip-vertical.png" title="flip vertical" class="icon-hover" id="icon-flip-vertical">
         <input type="text" class="editor_sprite_name" class="icon-hover" id="input-sprite-name" name="" value="" title="rename sprite">
+      </div>
+
+        <div class="window_menu_icon_area">
+          <label class="grid-layout-label" title="grid layout">Layout:</label>
+          <input type="number" id="editor-grid-width" class="editor_sprite_name" min="1" max="8" value="${this.grid_width}" title="grid width">
+          <span class="grid-layout-separator">×</span>
+          <input type="number" id="editor-grid-height" class="editor_sprite_name" min="1" max="8" value="${this.grid_height}" title="grid height">
+        </div>
+
       </div>
       <div id="editor-canvas" style="position: relative; display: inline-block;"></div>
 
@@ -138,6 +148,12 @@ export default class Editor extends Window_Controls {
     this.overlay_canvas_element.height = this.height;
     this.syncOverlayCanvas();
 
+    // Auto-enable grid when switching to grid mode (>1x1)
+    if ((this.grid_width > 1 || this.grid_height > 1) && !this.grid) {
+      this.grid = true;
+      this.config.window_editor.grid = true;
+    }
+
     // Save to config
     this.config.window_editor.grid_width = this.grid_width;
     this.config.window_editor.grid_height = this.grid_height;
@@ -192,7 +208,7 @@ export default class Editor extends Window_Controls {
     }
 
     // grid
-    if (this.grid) this.display_grid(sprite_data);
+    if (this.grid) this.display_grid(sprite_data, all_data);
   }
 
   renderGridMode(all_data): void {
@@ -270,15 +286,12 @@ export default class Editor extends Window_Controls {
     return result;
   }
 
-  display_grid(sprite_data) {
+  display_grid(sprite_data, all_data?) {
     // show a grid
     this.canvas.setLineDash([1, 1]);
 
     if (this.grid_width > 1 || this.grid_height > 1) {
       // Grid mode: draw both pixel grid and sprite separators
-      const app = (window as any).app;
-      const all_data = app?.sprite?.get_all();
-
       // Safety check - if all_data not available yet, skip grid mode drawing
       if (!all_data || !all_data.sprites) {
         return;
