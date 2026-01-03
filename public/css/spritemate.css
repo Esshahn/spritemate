@@ -13,11 +13,40 @@
    ============================================================================ */
 
 :root {
+  /* Brand Colors */
   --red: #e6007e;
   --blue: #00b9ee;
-  --icon_outline: #111111;
+
+  /* Text Colors */
   --inactive_text: #aaaaaa;
   --active_text: #ffffff;
+
+  /* UI Colors */
+  --icon_outline: #111111;
+  --bg-dark: #222;
+  --bg-darker: #1a1a1a;
+  --bg-lighter: #2a2a2a;
+  --border-color: #444;
+  --border-color-light: #666;
+  --border-color-dark: #333;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  /* Border Radius */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 32px;
+
+  /* Transitions */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.2s;
+  --transition-slow: 0.25s;
 }
 
 
@@ -151,7 +180,7 @@ canvas {
   display: block;
   margin: 0px;
   padding: 0px;
-  /* Pixel-perfect rendering for all browsers */
+  /* Pixel-perfect rendering for all browsers (matches .pixel-perfect utility) */
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -176,6 +205,60 @@ canvas {
 img.center {
   display: block;
   margin: 0 auto;
+}
+
+/* Pixel-perfect rendering utility - use on canvas and pixel art elements */
+.pixel-perfect {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* Control row utility - shared layout for animation and playfield controls */
+.control-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
+  color: var(--active_text);
+  font-size: 14px;
+}
+
+/* Centered control row variant */
+.control-row-centered {
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Control row number inputs - shared styling */
+.control-row input[type="number"],
+.control-row input[type="text"] {
+  background-color: var(--bg-dark);
+  color: var(--active_text);
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  width: 80px;
+  min-width: 80px;
+}
+
+.control-row input[type="number"]:focus,
+.control-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: var(--bg-lighter);
+}
+
+.control-row input[type="number"]:hover,
+.control-row input[type="text"]:hover {
+  border-color: var(--border-color-light);
 }
 
 
@@ -327,23 +410,32 @@ dialog.spritemate-dialog[open] {
    5. DIALOG FORM ELEMENTS
    ============================================================================ */
 
-/* Buttons in dialogs */
+/* Buttons in dialogs - uses new flat button system */
 .dialog-content button {
-  border: 2px solid var(--blue);
-  background-color: black;
-  color: white;
-  font-size: 80%;
   font-family: 'Quicksand', sans-serif;
-  font-weight: normal;
-  border-radius: 32px;
-  margin: 4px;
-  padding: 8px 16px;
-  min-width: 160px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  /* Primary button style by default */
+  background-color: var(--blue);
+  color: var(--active_text);
+  margin: var(--spacing-xs);
 }
 
-.dialog-content button:hover {
-  background-color: var(--blue);
+.dialog-content button:hover:not(:disabled) {
+  background-color: #00a3d6;
+  border-color: #00a3d6;
+}
+
+.dialog-content button:active:not(:disabled) {
+  background-color: #0090bd;
+  border-color: #0090bd;
 }
 
 .dialog-content button:focus {
@@ -351,7 +443,7 @@ dialog.spritemate-dialog[open] {
 }
 
 .dialog-content button:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -360,12 +452,31 @@ dialog.spritemate-dialog[open] {
   margin: 0 auto;
 }
 
+/* Cancel button variant */
 .dialog-content button.button-cancel {
+  background-color: transparent;
+  color: var(--red);
   border-color: var(--red);
 }
 
-.dialog-content button.button-cancel:hover {
-  background-color: var(--red);
+.dialog-content button.button-cancel:hover:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.1);
+  border-color: var(--red);
+}
+
+.dialog-content button.button-cancel:active:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.2);
+  border-color: var(--red);
+}
+
+/* Button row container - centers buttons in dialogs */
+#button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
 }
 
 /* Input fields in dialogs */
@@ -376,12 +487,18 @@ dialog.spritemate-dialog[open] {
   font-size: 100%;
   font-family: 'Quicksand', sans-serif;
   font-weight: normal;
-  border-radius: 32px;
-  margin: 4px;
-  padding: 8px 16px;
-  min-width: 260px;
+  border-radius: var(--radius-pill);
+  margin: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
   text-align: center;
   box-sizing: border-box;
+}
+
+/* Default width for text inputs in dialogs (can be overridden) */
+.dialog-content input[type="text"],
+.dialog-content input[type="password"],
+.dialog-content input[type="email"] {
+  width: 260px;
 }
 
 .dialog-content input:focus {
@@ -620,8 +737,8 @@ dialog.spritemate-dialog[open] {
 
 .window_menu {
   min-height: 30px;
-  padding-bottom: 8px;
-  /* Pixel-perfect icon rendering */
+  padding-bottom: var(--spacing-sm);
+  /* Pixel-perfect icon rendering (matches .pixel-perfect utility) */
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -683,13 +800,69 @@ dialog.spritemate-dialog[open] {
    9. ICONS & BUTTONS
    ============================================================================ */
 
+/* Base button styles - shared foundation for all buttons */
+.btn {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  text-transform: none;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Primary button - solid blue background */
+.btn-primary {
+  background-color: var(--blue);
+  color: #000;
+  border-color: var(--blue);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #00a3d6;
+  border-color: #00a3d6;
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: #0090bd;
+  border-color: #0090bd;
+}
+
+/* Cancel/Secondary button - transparent with red border */
+.btn-cancel {
+  background-color: transparent;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.1);
+}
+
+.btn-cancel:active:not(:disabled) {
+  background-color: rgba(230, 0, 126, 0.2);
+}
+
 .icon {
   width: 50px;
   height: 50px;
   display: block;
   margin: 0 auto;
-  transition: transform 0.15s ease, filter 0.15s ease;
-  /* Pixel-perfect icon rendering */
+  transition: transform var(--transition-fast) ease, filter var(--transition-fast) ease;
+  /* Pixel-perfect icon rendering (matches .pixel-perfect utility) */
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -1248,11 +1421,13 @@ dialog.spritemate-dialog[open] {
   border: 1px dotted #444444;
 }
 
+/* Animation control row - extends .control-row and .control-row-centered */
 .animation-control-row {
+  /* Inherits from .control-row base class */
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  gap: 8px;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
   justify-content: center;
   width: fit-content;
   margin-left: auto;
@@ -1262,13 +1437,14 @@ dialog.spritemate-dialog[open] {
 }
 
 .animation-control-row input[type="number"] {
-  background-color: #222;
+  /* Inherits from .control-row input[type="number"] */
+  background-color: var(--bg-dark);
   color: var(--active_text);
-  border: 1px solid #444;
-  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   width: 80px;
   min-width: 80px;
 }
@@ -1276,11 +1452,11 @@ dialog.spritemate-dialog[open] {
 .animation-control-row input[type="number"]:focus {
   outline: none;
   border-color: var(--blue);
-  background-color: #2a2a2a;
+  background-color: var(--bg-lighter);
 }
 
 .animation-control-row input[type="number"]:hover {
-  border-color: #666;
+  border-color: var(--border-color-light);
 }
 
 .animation-radio-group {
@@ -1292,28 +1468,32 @@ dialog.spritemate-dialog[open] {
 .animation-radio-group input[type="radio"] {
   cursor: pointer;
   accent-color: var(--blue);
-  min-width: 0;
 }
 
+/* Animation buttons - uses new flat button system */
 .animation-button {
-  background-color: var(--blue);
-  color: #000;
-  border: none;
-  padding: 8px 24px;
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
-  font-weight: bold;
-  border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  min-width: 120px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  background-color: var(--blue);
+  color: #000;
 }
 
-.animation-button:hover {
-  background-color: var(--red);
+.animation-button:hover:not(:disabled) {
+  background-color: #00a3d6;
+  border-color: #00a3d6;
 }
 
-.animation-button:active {
-  transform: scale(0.98);
+.animation-button:active:not(:disabled) {
+  background-color: #0090bd;
+  border-color: #0090bd;
 }
 
 
@@ -1362,7 +1542,13 @@ dialog.spritemate-dialog[open] {
   cursor: pointer;
   border: 1px solid transparent;
   box-sizing: border-box;
+  /* Pixel-perfect rendering (matches .pixel-perfect utility) */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
   image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
 }
 
 .playfield-color-square:hover {
@@ -1386,35 +1572,42 @@ dialog.spritemate-dialog[open] {
   align-items: center;
 }
 
+/* Playfield and icon buttons - uses new flat button system (smaller variant) */
 .playfield-button,
 .icon-button {
-  background-color: var(--blue);
-  color: #000;
-  border: none;
-  padding: 6px 16px;
   font-family: 'Quicksand', sans-serif;
   font-size: 13px;
-  font-weight: bold;
-  border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 6px 16px;
+  min-width: 80px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+  background-color: var(--blue);
+  color: #000;
 }
 
-.playfield-button:hover,
-.icon-button:hover {
-  background-color: var(--red);
+.playfield-button:hover:not(:disabled),
+.icon-button:hover:not(:disabled) {
+  background-color: #00a3d6;
+  border-color: #00a3d6;
 }
 
-.playfield-button:active,
-.icon-button:active {
-  transform: scale(0.98);
+.playfield-button:active:not(:disabled),
+.icon-button:active:not(:disabled) {
+  background-color: #0090bd;
+  border-color: #0090bd;
 }
 
+/* Playfield control row - extends .control-row */
 .playfield-control-row {
+  /* Inherits from .control-row base class */
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  gap: 8px;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
   color: var(--active_text);
   font-size: 14px;
 }
@@ -1428,13 +1621,14 @@ dialog.spritemate-dialog[open] {
 
 .playfield-control-row input[type="text"],
 .playfield-control-row input[type="number"] {
-  background-color: #222;
+  /* Inherits from .control-row input base styles */
+  background-color: var(--bg-dark);
   color: var(--active_text);
-  border: 1px solid #444;
-  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  padding: 6px var(--spacing-sm);
   font-family: 'Quicksand', sans-serif;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   width: 80px;
   min-width: 80px;
 }
@@ -1447,12 +1641,12 @@ dialog.spritemate-dialog[open] {
 .playfield-control-row input[type="number"]:focus {
   outline: none;
   border-color: var(--blue);
-  background-color: #2a2a2a;
+  background-color: var(--bg-lighter);
 }
 
 .playfield-control-row input[type="text"]:hover,
 .playfield-control-row input[type="number"]:hover {
-  border-color: #666;
+  border-color: var(--border-color-light);
 }
 
 .playfield-control-row input[type="checkbox"] {
@@ -1485,19 +1679,17 @@ dialog.spritemate-dialog[open] {
    ============================================================================ */
 
 .settings_colorfield {
-  min-width: 0px;
   max-width: 140px;
-  margin: 8px;
+  margin: var(--spacing-sm);
   border: 1px dotted #888888;
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm);
   float: left;
 }
 
 .settings_colorfield input {
-  min-width: 0;
   max-width: 100px;
-  padding: 8px 8px;
+  padding: var(--spacing-sm) var(--spacing-sm);
   margin: 0;
   border: none;
 }
@@ -1559,13 +1751,8 @@ dialog.spritemate-dialog[open] {
    ============================================================================ */
 
 #spritesheet-rows {
-  min-width: 0px;
   width: 60px;
-  border-radius: 8px;
-}
-
-#spritesheet-border {
-  min-width: 0px;
+  border-radius: var(--radius-lg);
 }
 
 #dialog-confirm {
