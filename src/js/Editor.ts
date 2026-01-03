@@ -2,6 +2,14 @@ import { dom } from "./helper";
 import Window_Controls from "./Window_Controls";
 
 export default class Editor extends Window_Controls {
+  // Grid constants
+  private static readonly GRID_COLOR_LIGHT = "#666666";
+  private static readonly GRID_COLOR_DARK = "#888888";
+  private static readonly SEPARATOR_COLOR = "#aaaaaa";
+  private static readonly ACTIVE_BORDER_COLOR = "#4488ff";
+  private static readonly SEPARATOR_LINE_WIDTH = 2;
+  private static readonly ACTIVE_BORDER_DASH = [3, 3];
+
   grid: boolean;
   canvas_element: HTMLCanvasElement;
   canvas: any;
@@ -366,7 +374,7 @@ export default class Editor extends Window_Controls {
 
     // Vertical lines within sprite
     for (let i = 0; i <= this.config.sprite_x; i += x_grid_step) {
-      this.canvas.strokeStyle = i === this.config.sprite_x / 2 ? "#888888" : "#666666";
+      this.canvas.strokeStyle = i === this.config.sprite_x / 2 ? Editor.GRID_COLOR_DARK : Editor.GRID_COLOR_LIGHT;
       this.canvas.beginPath();
       this.canvas.moveTo((x_offset + i) * this.zoom, y_offset * this.zoom);
       this.canvas.lineTo((x_offset + i) * this.zoom, (y_offset + this.config.sprite_y) * this.zoom);
@@ -375,7 +383,7 @@ export default class Editor extends Window_Controls {
 
     // Horizontal lines within sprite
     for (let j = 0; j <= this.config.sprite_y; j++) {
-      this.canvas.strokeStyle = j % (this.config.sprite_y / 3) === 0 ? "#888888" : "#666666";
+      this.canvas.strokeStyle = j % (this.config.sprite_y / 3) === 0 ? Editor.GRID_COLOR_DARK : Editor.GRID_COLOR_LIGHT;
       this.canvas.beginPath();
       this.canvas.moveTo(x_offset * this.zoom, (y_offset + j) * this.zoom);
       this.canvas.lineTo((x_offset + this.config.sprite_x) * this.zoom, (y_offset + j) * this.zoom);
@@ -387,8 +395,8 @@ export default class Editor extends Window_Controls {
    * Draw bold separator lines between sprites
    */
   drawSpriteSeparatorLines(): void {
-    this.canvas.strokeStyle = "#aaaaaa";
-    this.canvas.lineWidth = 2;
+    this.canvas.strokeStyle = Editor.SEPARATOR_COLOR;
+    this.canvas.lineWidth = Editor.SEPARATOR_LINE_WIDTH;
 
     // Vertical separator lines
     for (let grid_x = 0; grid_x <= this.grid_width; grid_x++) {
@@ -413,9 +421,9 @@ export default class Editor extends Window_Controls {
    * Draw blue dotted border around the active sprite in grid mode
    */
   drawActiveSpriteIndicator(): void {
-    this.canvas.strokeStyle = "#4488ff";
-    this.canvas.lineWidth = 2;
-    this.canvas.setLineDash([3, 3]);
+    this.canvas.strokeStyle = Editor.ACTIVE_BORDER_COLOR;
+    this.canvas.lineWidth = Editor.SEPARATOR_LINE_WIDTH;
+    this.canvas.setLineDash(Editor.ACTIVE_BORDER_DASH);
 
     const active_x = this.active_grid_x * this.config.sprite_x * this.zoom;
     const active_y = this.active_grid_y * this.config.sprite_y * this.zoom;
@@ -437,7 +445,7 @@ export default class Editor extends Window_Controls {
 
     // Vertical lines
     for (let i = 0; i <= this.pixels_x; i += x_grid_step) {
-      this.canvas.strokeStyle = i === this.pixels_x / 2 ? "#888888" : "#666666";
+      this.canvas.strokeStyle = i === this.pixels_x / 2 ? Editor.GRID_COLOR_DARK : Editor.GRID_COLOR_LIGHT;
       this.canvas.beginPath();
       this.canvas.moveTo(i * this.zoom, 0);
       this.canvas.lineTo(i * this.zoom, this.height);
@@ -446,7 +454,7 @@ export default class Editor extends Window_Controls {
 
     // Horizontal lines
     for (let i = 0; i <= this.pixels_y; i++) {
-      this.canvas.strokeStyle = i % (this.pixels_y / 3) === 0 ? "#888888" : "#666666";
+      this.canvas.strokeStyle = i % (this.pixels_y / 3) === 0 ? Editor.GRID_COLOR_DARK : Editor.GRID_COLOR_LIGHT;
       this.canvas.beginPath();
       this.canvas.moveTo(0, i * this.zoom);
       this.canvas.lineTo(this.width, i * this.zoom);
@@ -454,25 +462,26 @@ export default class Editor extends Window_Controls {
     }
   }
 
+  /**
+   * Extract client coordinates from mouse or touch event
+   */
+  private getClientCoordinates(e): { clientX: number; clientY: number } {
+    if (e.touches && e.touches.length > 0) {
+      // Touch event
+      return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      // Touch end event
+      return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+    } else {
+      // Mouse event
+      return { clientX: e.clientX, clientY: e.clientY };
+    }
+  }
+
   // input: x,y position of the mouse/touch inside the editor window in pixels // output: x,y position in the sprite grid
   get_pixel(e) {
     const obj = this.canvas_element.getBoundingClientRect();
-
-    // Handle both mouse and touch events
-    let clientX: number, clientY: number;
-    if (e.touches && e.touches.length > 0) {
-      // Touch event
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else if (e.changedTouches && e.changedTouches.length > 0) {
-      // Touch end event
-      clientX = e.changedTouches[0].clientX;
-      clientY = e.changedTouches[0].clientY;
-    } else {
-      // Mouse event
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
+    const { clientX, clientY } = this.getClientCoordinates(e);
 
     const x = clientX - obj.left;
     const y = clientY - obj.top;
@@ -640,8 +649,10 @@ export default class Editor extends Window_Controls {
   }
 
   // Update overlay canvas size when zoom changes
-  zoom_in(): void {
-    super.zoom_in();
+  /**
+   * Update canvas sizes after zoom change
+   */
+  private updateCanvasSizes(): void {
     // Update main canvas logical size
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
@@ -652,15 +663,13 @@ export default class Editor extends Window_Controls {
     this.syncOverlayCanvas();
   }
 
+  zoom_in(): void {
+    super.zoom_in();
+    this.updateCanvasSizes();
+  }
+
   zoom_out(): void {
     super.zoom_out();
-    // Update main canvas logical size
-    this.canvas_element.width = this.width;
-    this.canvas_element.height = this.height;
-    // Update overlay canvas logical size
-    this.overlay_canvas_element.width = this.width;
-    this.overlay_canvas_element.height = this.height;
-    // Sync overlay CSS size to match main canvas rendered size
-    this.syncOverlayCanvas();
+    this.updateCanvasSizes();
   }
 }
