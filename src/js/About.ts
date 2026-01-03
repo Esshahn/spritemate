@@ -14,6 +14,15 @@ export default class About {
         <fieldset>
             <legend>Release Notes</legend>
 
+            <h1>v26.01.03</h1>
+
+            <h2>Multi Sprite Editing</h2>
+            <p>
+            Yes, it's finally here. You can now edit multiple sprites at once in the editor window. Just set the desired layout for your sprites (for example 2 by 2) and start drawing. Spritemate automatically uses the right color for each sprite. Thx to Elliot Tanner who suggested the idea a year ago but I was too lazy to implement it.
+            </p>
+
+            <hr>
+
             <h1>v26.01.02</h1>
 
             <h2>Playfield</h2>
