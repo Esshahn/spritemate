@@ -16,6 +16,8 @@
   /* Brand Colors */
   --red: #e6007e;
   --blue: #00b9ee;
+  --blue-hover: #00a3d6;
+  --blue-active: #0090bd;
 
   /* Text Colors */
   --inactive_text: #aaaaaa;
@@ -251,7 +253,6 @@ img.center {
 
 .control-row input[type="number"]:focus,
 .control-row input[type="text"]:focus {
-  outline: none;
   border-color: var(--blue);
   background-color: var(--bg-lighter);
 }
@@ -429,17 +430,13 @@ dialog.spritemate-dialog[open] {
 }
 
 .dialog-content button:hover:not(:disabled) {
-  background-color: #00a3d6;
-  border-color: #00a3d6;
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
 }
 
 .dialog-content button:active:not(:disabled) {
-  background-color: #0090bd;
-  border-color: #0090bd;
-}
-
-.dialog-content button:focus {
-  outline: none;
+  background-color: var(--blue-active);
+  border-color: var(--blue-active);
 }
 
 .dialog-content button:disabled {
@@ -515,7 +512,6 @@ dialog.spritemate-dialog[open] {
 
 .dialog-form-row input[type="number"]:focus,
 .dialog-form-row input[type="text"]:focus {
-  outline: none;
   border-color: var(--blue);
   background-color: var(--bg-lighter);
 }
@@ -555,7 +551,6 @@ dialog.spritemate-dialog[open] {
 }
 
 .dialog-content input:focus {
-  outline: 0;
   background-color: var(--blue);
 }
 
@@ -585,14 +580,13 @@ dialog.spritemate-dialog[open] {
 }
 
 .dialog-content select:focus {
-  outline: 0;
-  background-color: #00a3d6;
-  border-color: #00a3d6;
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
 }
 
 .dialog-content select:hover {
-  background-color: #00a3d6;
-  border-color: #00a3d6;
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
 }
 
 /* Textarea in dialogs */
@@ -609,8 +603,7 @@ dialog.spritemate-dialog[open] {
 }
 
 .dialog-content textarea:focus {
-  outline: 0;
-  background-color: #1a1a1a;
+  background-color: var(--bg-darker);
 }
 
 /* Console textarea (Snapshot window) */
@@ -645,20 +638,11 @@ dialog.spritemate-dialog[open] {
   background: none;
 }
 
-.dialog-content textarea.console:focus {
-  outline: none;
-}
-
 /* Fieldsets in dialogs */
 .dialog-content fieldset {
-  border: 1px dotted #333333;
+  border: 1px dotted var(--border-color-dark);
   margin: 10px 0;
   padding: 10px;
-  outline: none;
-}
-
-.dialog-content fieldset:focus {
-  outline: none;
 }
 
 .dialog-content fieldset legend {
@@ -696,15 +680,10 @@ dialog.spritemate-dialog[open] {
 .dialog-content a {
   color: var(--blue);
   text-decoration: none;
-  outline: none;
 }
 
 .dialog-content a:hover {
   text-decoration: underline;
-}
-
-.dialog-content a:focus {
-  outline: none;
 }
 
 /* Lists in dialogs */
@@ -729,7 +708,7 @@ dialog.spritemate-dialog[open] {
 /* Horizontal rule in dialogs */
 .dialog-content hr {
   border: none;
-  border-top: 1px solid #333333;
+  border-top: 1px solid var(--border-color-dark);
   margin: 40px 40px;
 }
 
@@ -836,15 +815,14 @@ dialog.spritemate-dialog[open] {
 
 .window_menu input:focus {
   color: var(--active_text);
-  background-color: #333333;
-  outline: 0;
+  background-color: var(--border-color-dark);
 }
 
 /* Window control panels */
 .window-control-panel {
   padding: 16px;
-  background-color: #1a1a1a;
-  border-top: 1px solid #333;
+  background-color: var(--bg-darker);
+  border-top: 1px solid var(--border-color-dark);
   margin-top: 8px;
 }
 
@@ -873,10 +851,6 @@ dialog.spritemate-dialog[open] {
   text-transform: none;
 }
 
-.btn:focus {
-  outline: none;
-}
-
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -890,13 +864,13 @@ dialog.spritemate-dialog[open] {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #00a3d6;
-  border-color: #00a3d6;
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
 }
 
 .btn-primary:active:not(:disabled) {
-  background-color: #0090bd;
-  border-color: #0090bd;
+  background-color: var(--blue-active);
+  border-color: var(--blue-active);
 }
 
 /* Cancel/Secondary button - transparent with red border */
@@ -1003,9 +977,9 @@ dialog.spritemate-dialog[open] {
 
 /* Menu bar input fields (sprite name, grid width/height) */
 .menu_bar_input {
-  background-color: #222;
+  background-color: var(--bg-dark);
   color: var(--active_text);
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   padding: 4px 8px;
   font-family: 'Quicksand', sans-serif;
   font-size: 13px;
@@ -1023,13 +997,12 @@ dialog.spritemate-dialog[open] {
 }
 
 .menu_bar_input:focus {
-  outline: none;
   border-color: var(--blue);
-  background-color: #2a2a2a;
+  background-color: var(--bg-lighter);
 }
 
 .menu_bar_input:hover {
-  border-color: #666;
+  border-color: var(--border-color-light);
 }
 
 /* Grid layout controls in Editor */
@@ -1058,13 +1031,12 @@ dialog.spritemate-dialog[open] {
 }
 
 .grid-layout-input:focus {
-  outline: none;
   border-color: var(--blue);
-  background-color: #2a2a2a;
+  background-color: var(--bg-lighter);
 }
 
 .grid-layout-input:hover {
-  border-color: #666;
+  border-color: var(--border-color-light);
 }
 
 
@@ -1246,13 +1218,12 @@ dialog.spritemate-dialog[open] {
 }
 
 #menubar-filename-input:focus {
-  outline: none;
   border-color: var(--blue);
-  background-color: #2a2a2a;
+  background-color: var(--bg-lighter);
 }
 
 #menubar-filename-input:hover {
-  border-color: #666;
+  border-color: var(--border-color-light);
 }
 
 #menubar-filename-input.error {
@@ -1479,43 +1450,7 @@ dialog.spritemate-dialog[open] {
   border: 1px dotted #444444;
 }
 
-/* Animation control row - extends .control-row and .control-row-centered */
-.animation-control-row {
-  /* Inherits from .control-row base class */
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-  gap: var(--spacing-sm);
-  justify-content: center;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--active_text);
-  font-size: 14px;
-}
-
-.animation-control-row input[type="number"] {
-  /* Inherits from .control-row input[type="number"] */
-  background-color: var(--bg-dark);
-  color: var(--active_text);
-  border: 1px solid var(--border-color);
-  padding: 6px var(--spacing-sm);
-  font-family: 'Quicksand', sans-serif;
-  font-size: 14px;
-  border-radius: var(--radius-md);
-  width: 80px;
-  min-width: 80px;
-}
-
-.animation-control-row input[type="number"]:focus {
-  outline: none;
-  border-color: var(--blue);
-  background-color: var(--bg-lighter);
-}
-
-.animation-control-row input[type="number"]:hover {
-  border-color: var(--border-color-light);
-}
+/* Animation control row uses .control-row and .control-row-centered classes */
 
 .animation-radio-group {
   display: flex;
@@ -1528,31 +1463,7 @@ dialog.spritemate-dialog[open] {
   accent-color: var(--blue);
 }
 
-/* Animation buttons - uses new flat button system */
-.animation-button {
-  font-family: 'Quicksand', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 2px solid var(--blue);
-  border-radius: var(--radius-sm);
-  padding: 10px 24px;
-  min-width: 120px;
-  transition: all var(--transition-fast);
-  box-sizing: border-box;
-  background-color: var(--blue);
-  color: #000;
-}
-
-.animation-button:hover:not(:disabled) {
-  background-color: #00a3d6;
-  border-color: #00a3d6;
-}
-
-.animation-button:active:not(:disabled) {
-  background-color: #0090bd;
-  border-color: #0090bd;
-}
+/* Animation buttons use .btn and .btn-primary */
 
 
 /* ============================================================================
@@ -1630,45 +1541,15 @@ dialog.spritemate-dialog[open] {
   align-items: center;
 }
 
-/* Playfield and icon buttons - uses new flat button system (smaller variant) */
+/* Playfield and icon buttons - smaller variant of .btn */
 .playfield-button,
 .icon-button {
-  font-family: 'Quicksand', sans-serif;
   font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 2px solid var(--blue);
-  border-radius: var(--radius-sm);
   padding: 6px 16px;
   min-width: 80px;
-  transition: all var(--transition-fast);
-  box-sizing: border-box;
-  background-color: var(--blue);
-  color: #000;
 }
 
-.playfield-button:hover:not(:disabled),
-.icon-button:hover:not(:disabled) {
-  background-color: #00a3d6;
-  border-color: #00a3d6;
-}
-
-.playfield-button:active:not(:disabled),
-.icon-button:active:not(:disabled) {
-  background-color: #0090bd;
-  border-color: #0090bd;
-}
-
-/* Playfield control row - extends .control-row */
-.playfield-control-row {
-  /* Inherits from .control-row base class */
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-  gap: var(--spacing-sm);
-  color: var(--active_text);
-  font-size: 14px;
-}
+/* Playfield control row uses .control-row base class */
 
 .playfield-control-row label {
   min-width: fit-content;
@@ -1677,34 +1558,8 @@ dialog.spritemate-dialog[open] {
   gap: 6px;
 }
 
-.playfield-control-row input[type="text"],
-.playfield-control-row input[type="number"] {
-  /* Inherits from .control-row input base styles */
-  background-color: var(--bg-dark);
-  color: var(--active_text);
-  border: 1px solid var(--border-color);
-  padding: 6px var(--spacing-sm);
-  font-family: 'Quicksand', sans-serif;
-  font-size: 14px;
-  border-radius: var(--radius-md);
-  width: 80px;
-  min-width: 80px;
-}
-
 .playfield-sprite-name {
   color: var(--active_text);
-}
-
-.playfield-control-row input[type="text"]:focus,
-.playfield-control-row input[type="number"]:focus {
-  outline: none;
-  border-color: var(--blue);
-  background-color: var(--bg-lighter);
-}
-
-.playfield-control-row input[type="text"]:hover,
-.playfield-control-row input[type="number"]:hover {
-  border-color: var(--border-color-light);
 }
 
 .playfield-control-row input[type="checkbox"] {
