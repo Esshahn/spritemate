@@ -8,7 +8,7 @@ export default class About {
 
     const template = `
     <div id="info">
-        <img src="logo-menu.svg" width="300px" id="logo" alt="spritemate">
+        <img src="ui/spritemate-logo.svg" width="300px" id="logo" alt="spritemate">
         <p>The Commodore 64 sprite editor</p>
 
         <fieldset>
