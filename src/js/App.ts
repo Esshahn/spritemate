@@ -803,6 +803,7 @@ export class App {
     IconStateManager.toggleFade("#icon-undo", this.sprite.can_undo());
     IconStateManager.toggleFade("#icon-redo", this.sprite.can_redo());
     IconStateManager.toggleFade("#playfield-clear-all", this.playfield.hasSpriteSelected());
+    IconStateManager.toggleFade("#icon-animation-delete", this.sprite.has_animation());
 
     // Icon image swaps (highlighted when condition is true)
     IconStateManager.toggleImage("#icon-preview-overlay", this.sprite.is_overlay(), "ui/icon-preview-overlay");
@@ -1099,10 +1100,12 @@ MMMMMMMM               MMMMMMMMEEEEEEEEEEEEEEEEEEEEEENNNNNNNN         NNNNNNN   
       // Add confirm dialog content
       const confirmContent = this.window_confirm.getDialog().getContent();
       confirmContent.innerHTML = `
-        <p>All current data will be erased. Are you sure?</p>
-        <div style="text-align: right; margin-top: 20px;">
-          <button id="confirm-ok" class="confirm-button">Ok</button>
-          <button id="confirm-cancel" class="confirm-button">Cancel</button>
+        <div class="dialog-form-row">
+        All current data will be erased. Are you sure?
+        </div>
+        <div id="button-row">
+          <button id="confirm-cancel" class="button-cancel">Cancel</button>
+          <button id="confirm-ok">Ok</button>
         </div>
       `;
 
