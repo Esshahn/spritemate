@@ -308,35 +308,37 @@ export default class Animation extends Window_Controls {
   }
 
   loadSettings(all_data) {
-    // Get the current sprite's animation settings
+    // Get the current sprite's animation settings (defaults to current sprite if no animation exists)
     const app = (window as any).app;
-    let animationSettings;
+    const animationSettings = app?.sprite
+      ? app.sprite.get_animation_settings()
+      : all_data.animation || this.getDefaultSettings(all_data.current_sprite);
 
-    if (app && app.sprite) {
-      animationSettings = app.sprite.get_animation_settings();
-    } else if (all_data.animation) {
-      animationSettings = all_data.animation;
-    } else {
-      // Default settings with current sprite
-      animationSettings = {
-        startSprite: all_data.current_sprite || 0,
-        endSprite: all_data.current_sprite || 0,
-        fps: 10,
-        mode: "restart",
-        doubleX: false,
-        doubleY: false
-      };
-    }
+    // Apply settings to instance variables
+    this.startSprite = animationSettings.startSprite ?? 0;
+    this.endSprite = animationSettings.endSprite ?? 0;
+    this.fps = animationSettings.fps ?? 10;
+    this.animationMode = animationSettings.mode ?? "restart";
+    this.doubleX = animationSettings.doubleX ?? false;
+    this.doubleY = animationSettings.doubleY ?? false;
 
-    // Load settings into instance variables
-    this.startSprite = animationSettings.startSprite || 0;
-    this.endSprite = animationSettings.endSprite || 0;
-    this.fps = animationSettings.fps || 10;
-    this.animationMode = animationSettings.mode || "restart";
-    this.doubleX = animationSettings.doubleX || false;
-    this.doubleY = animationSettings.doubleY || false;
+    // Update UI
+    this.updateUIFromSettings();
+  }
 
-    // Update UI using cached inputs
+  private getDefaultSettings(currentSprite: number) {
+    return {
+      startSprite: currentSprite || 0,
+      endSprite: currentSprite || 0,
+      fps: 10,
+      mode: "restart",
+      doubleX: false,
+      doubleY: false
+    };
+  }
+
+  private updateUIFromSettings() {
+    // Update input fields
     if (this.inputs.start) this.inputs.start.value = (this.startSprite + 1).toString();
     if (this.inputs.end) this.inputs.end.value = (this.endSprite + 1).toString();
     if (this.inputs.fps) this.inputs.fps.value = this.fps.toString();
@@ -399,26 +401,10 @@ export default class Animation extends Window_Controls {
     // Load settings from data (handles both first load and file loads)
     this.loadSettings(all_data);
 
-    // Update input constraints using cached elements
+    // Update input constraints
     const maxSprites = all_data.sprites.length.toString();
-    if (this.inputs.start) {
-      this.inputs.start.max = maxSprites;
-      // Set start sprite to current sprite if animation hasn't been defined yet
-      const currentSprite = all_data.sprites[all_data.current_sprite];
-      if (!currentSprite.animation) {
-        this.startSprite = all_data.current_sprite;
-        this.inputs.start.value = (this.startSprite + 1).toString();
-      }
-    }
-    if (this.inputs.end) {
-      this.inputs.end.max = maxSprites;
-      // Set end sprite to current sprite if animation hasn't been defined yet
-      const currentSprite = all_data.sprites[all_data.current_sprite];
-      if (!currentSprite.animation) {
-        this.endSprite = all_data.current_sprite;
-        this.inputs.end.value = (this.endSprite + 1).toString();
-      }
-    }
+    if (this.inputs.start) this.inputs.start.max = maxSprites;
+    if (this.inputs.end) this.inputs.end.max = maxSprites;
 
     // Update the current frame to the start sprite and redraw
     this.currentFrame = this.startSprite;
