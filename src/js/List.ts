@@ -138,6 +138,24 @@ export default class List extends Window_Controls {
     const canvas = c.getContext("2d", { alpha: false });
     const sprite_data = all_data.sprites[all_data.current_sprite];
     this.draw_sprite(canvas, sprite_data, all_data);
+
+    // Update animation badge for current sprite
+    const existingBadge = container.querySelector(".sprite_animation_badge");
+    if (sprite_data.animation) {
+      // Add badge if it doesn't exist
+      if (!existingBadge) {
+        const animation_badge = document.createElement("div");
+        animation_badge.className = "sprite_animation_badge";
+        animation_badge.textContent = "A";
+        animation_badge.title = "Has animation";
+        container.appendChild(animation_badge);
+      }
+    } else {
+      // Remove badge if sprite no longer has animation
+      if (existingBadge) {
+        existingBadge.remove();
+      }
+    }
   }
 
   update_all(all_data) {
@@ -187,6 +205,15 @@ export default class List extends Window_Controls {
 
         info_overlay.appendChild(sprite_info);
         sprite_container.appendChild(info_overlay);
+      }
+
+      // Add animation badge if sprite has animation data
+      if (all_data.sprites[i].animation) {
+        const animation_badge = document.createElement("div");
+        animation_badge.className = "sprite_animation_badge";
+        animation_badge.textContent = "A";
+        animation_badge.title = "Has animation";
+        sprite_container.appendChild(animation_badge);
       }
     }
 

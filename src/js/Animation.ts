@@ -50,6 +50,8 @@ export default class Animation extends Window_Controls {
         </div>
         <img src="ui/icon-preview-x2.png" class="icon-hover" id="icon-animation-x" title="double width">
         <img src="ui/icon-preview-y2.png" class="icon-hover" id="icon-animation-y" title="double height">
+
+        <img src="ui/icon-list-trash.png" class="icon-right icon-hover" id="icon-animation-delete" title="delete animation">
       </div>
       <div id="animation-canvas"></div>
       <div class="window-control-panel">
@@ -147,6 +149,14 @@ export default class Animation extends Window_Controls {
         } else {
           this.play();
         }
+      };
+    }
+
+    // Delete animation button
+    const deleteButton = dom.sel("#icon-animation-delete");
+    if (deleteButton) {
+      deleteButton.onclick = () => {
+        this.deleteAnimation();
       };
     }
 
@@ -298,15 +308,33 @@ export default class Animation extends Window_Controls {
   }
 
   loadSettings(all_data) {
-    if (!all_data.animation) return;
+    // Get the current sprite's animation settings
+    const app = (window as any).app;
+    let animationSettings;
+
+    if (app && app.sprite) {
+      animationSettings = app.sprite.get_animation_settings();
+    } else if (all_data.animation) {
+      animationSettings = all_data.animation;
+    } else {
+      // Default settings with current sprite
+      animationSettings = {
+        startSprite: all_data.current_sprite || 0,
+        endSprite: all_data.current_sprite || 0,
+        fps: 10,
+        mode: "restart",
+        doubleX: false,
+        doubleY: false
+      };
+    }
 
     // Load settings into instance variables
-    this.startSprite = all_data.animation.startSprite || 0;
-    this.endSprite = all_data.animation.endSprite || 0;
-    this.fps = all_data.animation.fps || 10;
-    this.animationMode = all_data.animation.mode || "restart";
-    this.doubleX = all_data.animation.doubleX || false;
-    this.doubleY = all_data.animation.doubleY || false;
+    this.startSprite = animationSettings.startSprite || 0;
+    this.endSprite = animationSettings.endSprite || 0;
+    this.fps = animationSettings.fps || 10;
+    this.animationMode = animationSettings.mode || "restart";
+    this.doubleX = animationSettings.doubleX || false;
+    this.doubleY = animationSettings.doubleY || false;
 
     // Update UI using cached inputs
     if (this.inputs.start) this.inputs.start.value = (this.startSprite + 1).toString();
@@ -338,6 +366,26 @@ export default class Animation extends Window_Controls {
     }
   }
 
+  deleteAnimation() {
+    // Stop animation if playing
+    if (this.isPlaying) {
+      this.stop();
+    }
+
+    // Delete the animation from the current sprite
+    const app = (window as any).app;
+    if (app && app.sprite) {
+      const currentSprite = app.sprite.get_current_sprite();
+      if (currentSprite.animation) {
+        delete currentSprite.animation;
+
+        // Trigger save and update
+        app.sprite.save_backup();
+        app.update();
+      }
+    }
+  }
+
   update(all_data, stopAnimation = false) {
     this.canvas_element.width = this.width;
     this.canvas_element.height = this.height;
@@ -353,14 +401,27 @@ export default class Animation extends Window_Controls {
 
     // Update input constraints using cached elements
     const maxSprites = all_data.sprites.length.toString();
-    if (this.inputs.start) this.inputs.start.max = maxSprites;
-    if (this.inputs.end) {
-      this.inputs.end.max = maxSprites;
-      // Initialize endSprite to last sprite if no settings were loaded
-      if (this.endSprite === 0 && all_data.sprites.length > 0 && !all_data.animation) {
-        this.endSprite = all_data.sprites.length - 1;
-        this.inputs.end.value = all_data.sprites.length.toString();
+    if (this.inputs.start) {
+      this.inputs.start.max = maxSprites;
+      // Set start sprite to current sprite if animation hasn't been defined yet
+      const currentSprite = all_data.sprites[all_data.current_sprite];
+      if (!currentSprite.animation) {
+        this.startSprite = all_data.current_sprite;
+        this.inputs.start.value = (this.startSprite + 1).toString();
       }
     }
+    if (this.inputs.end) {
+      this.inputs.end.max = maxSprites;
+      // Set end sprite to current sprite if animation hasn't been defined yet
+      const currentSprite = all_data.sprites[all_data.current_sprite];
+      if (!currentSprite.animation) {
+        this.endSprite = all_data.current_sprite;
+        this.inputs.end.value = (this.endSprite + 1).toString();
+      }
+    }
+
+    // Update the current frame to the start sprite and redraw
+    this.currentFrame = this.startSprite;
+    this.drawFrame(all_data);
   }
 }

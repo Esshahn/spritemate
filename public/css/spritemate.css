@@ -1422,6 +1422,25 @@ dialog.spritemate-dialog[open] {
      1px  1px 0 #000;
 }
 
+.sprite_animation_badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background-color: var(--blue);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  pointer-events: none;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 
 /* ============================================================================
    17. PREVIEW WINDOW
