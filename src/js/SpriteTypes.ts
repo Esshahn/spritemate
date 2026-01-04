@@ -5,6 +5,15 @@
  * used throughout the application.
  */
 
+export interface AnimationData {
+  startSprite: number;
+  endSprite: number;
+  fps: number;
+  mode: string;          // "restart" or "pingpong"
+  doubleX: boolean;
+  doubleY: boolean;
+}
+
 export interface SpriteData {
   name: string;
   color: number;           // Individual color (pen 1), palette index 0-15
@@ -13,6 +22,7 @@ export interface SpriteData {
   double_y: boolean;
   overlay: boolean;
   pixels: number[][];      // 2D array [y][x], values: 0=transparent, 1=individual, 2=mc1, 3=mc2
+  animation?: AnimationData; // Per-sprite animation settings (optional for backward compatibility)
 }
 
 export interface SpriteCollection {

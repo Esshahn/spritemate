@@ -14,6 +14,21 @@ export default class About {
         <fieldset>
             <legend>Release Notes</legend>
 
+            <h1>v26.01.04</h1>
+
+            <h2>Multiple Animations</h2>
+            <p>
+            Spritemate can now have more than just one animation. To create an animation, click on the first sprite and enter the last sprite number in the animation window. Animated sprites are now marked with a blue "A" badge in the sprite list.
+            </p>
+
+            <h2>Changes</h2>
+            <ul>
+            <li>Spritemate has improved significantly since the big AI rewrite. It was time to reflect that in the name, therefore it's officially Spritemate 2 now.</li>
+            <li>Streamlined the UI in many places</li>
+            </ul>
+
+            <hr>
+
             <h1>v26.01.03</h1>
 
             <h2>Multi Sprite Editing</h2>

@@ -388,6 +388,34 @@ export default class Sprite {
         sprites: []
       };
     }
+
+    // Migration: Convert old global animation to per-sprite animations
+    // Check if we have a global animation but sprites don't have individual animations
+    if (this.all.animation && this.all.sprites.length > 0) {
+      const hasAnyPerSpriteAnimation = this.all.sprites.some(sprite => sprite.animation);
+
+      if (!hasAnyPerSpriteAnimation) {
+        // This is an old file format - migrate the global animation
+        // Apply the global animation settings to all sprites in the animation range
+        const startIdx = this.all.animation.startSprite || 0;
+        const endIdx = this.all.animation.endSprite || 0;
+
+        for (let i = 0; i < this.all.sprites.length; i++) {
+          if (i >= startIdx && i <= endIdx) {
+            // Copy global animation to this sprite
+            this.all.sprites[i].animation = {
+              startSprite: startIdx,
+              endSprite: endIdx,
+              fps: this.all.animation.fps,
+              mode: this.all.animation.mode,
+              doubleX: this.all.animation.doubleX,
+              doubleY: this.all.animation.doubleY
+            };
+          }
+        }
+      }
+    }
+
     this.save_backup();
   }
 
@@ -401,9 +429,17 @@ export default class Sprite {
   }
 
   get_animation_settings() {
+    // Get animation settings for the current sprite
+    // Falls back to global animation for backward compatibility
+    const sprite = this.currentSprite;
+    if (sprite.animation) {
+      return sprite.animation;
+    }
+
+    // Fallback to global animation (for backward compatibility)
     return this.all.animation || {
-      startSprite: 0,
-      endSprite: 0,
+      startSprite: this.all.current_sprite,
+      endSprite: this.all.current_sprite,
       fps: 10,
       mode: "restart",
       doubleX: false,
@@ -412,6 +448,10 @@ export default class Sprite {
   }
 
   set_animation_settings(settings: any): void {
+    // Save animation settings to the current sprite
+    this.currentSprite.animation = settings;
+
+    // Also update global animation for backward compatibility
     this.all.animation = settings;
     this.save_backup();
   }
@@ -572,6 +612,10 @@ export default class Sprite {
 
   is_double_y(): boolean {
     return this.currentSprite.double_y;
+  }
+
+  has_animation(): boolean {
+    return !!this.currentSprite.animation;
   }
 
   set_sprite_name(sprite_name: string): void {
