@@ -543,12 +543,7 @@ dialog.spritemate-dialog[open] {
   box-sizing: border-box;
 }
 
-/* Default width for text inputs in dialogs (can be overridden) */
-.dialog-content input[type="text"],
-.dialog-content input[type="password"],
-.dialog-content input[type="email"] {
-  width: 260px;
-}
+
 
 .dialog-content input:focus {
   background-color: var(--blue);
