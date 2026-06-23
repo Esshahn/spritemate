@@ -115,10 +115,16 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
     let prefix = "!";
     let label_suffix = "";
 
+    let lda = "LDA";
+    let sta = "STA";
+
     if (format === "kick") {
       comment = "// ";
       prefix = ".";
       label_suffix = ":";
+
+        lda = "lda";
+        sta = "sta";
     }
 
     let data = "";
@@ -136,19 +142,19 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
 
     data +=
-      "\n\nLDA #$" +
+      "\n\n" + lda + " #$" +
       ("0" + this.savedata.colors[2].toString(16)).slice(-2) +
       " " +
       comment +
       "sprite multicolor 1";
-    data += "\nSTA $D025";
+    data += "\n" + sta + " $D025";
     data +=
-      "\nLDA #$" +
+      "\n" + lda + " #$" +
       ("0" + this.savedata.colors[3].toString(16)).slice(-2) +
       " " +
       comment +
       "sprite multicolor 2";
-    data += "\nSTA $D026";
+    data += "\n" + sta + " $D026";
     data += "\n";
 
     let byte = "";
