@@ -117,6 +117,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
 
     let lda = "LDA";
     let sta = "STA";
+    let d0 = "D0";
 
     if (format === "kick") {
       comment = "// ";
@@ -125,6 +126,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
 
         lda = "lda";
         sta = "sta";
+        d0 = "d0";
     }
 
     let data = "";
@@ -147,14 +149,14 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       " " +
       comment +
       "sprite multicolor 1";
-    data += "\n" + sta + " $D025";
+    data += "\n" + sta + " $" + d0 + "25";
     data +=
       "\n" + lda + " #$" +
       ("0" + this.savedata.colors[3].toString(16)).slice(-2) +
       " " +
       comment +
       "sprite multicolor 2";
-    data += "\n" + sta + " $D026";
+    data += "\n" + sta + " $" + d0 + "26";
     data += "\n";
 
     let byte = "";
