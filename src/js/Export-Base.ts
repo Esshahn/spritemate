@@ -129,7 +129,6 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       this.savedata.sprites.length +
       " sprites generated with spritemate on " +
       new Date().toLocaleString();
-    if (!encode_as_binary)
       data +=
         "\n" +
         comment +
@@ -213,22 +212,23 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         byte = "";
       }
 
-      if (encode_as_binary) {
-        data = data.substring(0, data.length - 1);
-      } else {
-        // finally, we add multicolor and color info for byte 64
-        let high_nibble = "0000";
-        if (is_multicolor) high_nibble = "1000";
+    // finally, we add multicolor and color info for byte 64
+    let high_nibble = "0000";
+    if (is_multicolor) high_nibble = "1000";
 
-        const low_nibble = (
-          "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
-        ).slice(-4);
+    const low_nibble = (
+        "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
+    ).slice(-4);
 
+    if (encode_as_binary) {
+        data += "\n" + prefix + "byte ";
+        data += "%" + high_nibble + low_nibble; // should be the individual color
+    }
+    else {
         const color_byte =
-          "$" +
-          ("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
+            "$" +
+            ("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
         data += color_byte; // should be the individual color
-      }
     }
 
     return data;
