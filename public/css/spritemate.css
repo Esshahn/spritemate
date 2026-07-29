@@ -1629,6 +1629,17 @@ dialog.spritemate-dialog[open] {
   float: left;
 }
 
+.settings_radio {
+  display: inline-block;
+  cursor: pointer;
+  line-height: 1.8;
+}
+
+.settings_radio input {
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
 
 /* ============================================================================
    21. ABOUT/INFO WINDOW

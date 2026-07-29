@@ -91,6 +91,11 @@ export default class Storage {
           this.config.selected_palette = this.storage.selected_palette;
         }
 
+        // Preserve assembly code case setting (if valid)
+        if (this.storage.code_case === "uppercase" || this.storage.code_case === "lowercase") {
+          this.config.code_case = this.storage.code_case;
+        }
+
         // Preserve custom palette from storage
         const customPalette = this.storage.palettes?.custom;
         if (customPalette) {
