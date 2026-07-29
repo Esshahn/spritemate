@@ -23,7 +23,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.7.4",
-    "vite": "^7.3.0"
+    "vite": "^7.3.2"
   },
   "dependencies": {
     "jszip": "^3.10.1"
