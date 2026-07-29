@@ -5,6 +5,7 @@ export default class Settings {
   tempSelectedPalette: string;
   tempColors: string[];
   tempCustomColors: string[];
+  tempCodeCase: string;
 
   constructor(public window: number, public config, public eventhandler) {
     this.config = config;
@@ -15,6 +16,7 @@ export default class Settings {
     this.tempSelectedPalette = this.config.selected_palette;
     this.tempColors = [...this.config.palettes[this.config.selected_palette].values];
     this.tempCustomColors = [...this.config.palettes.custom.values];
+    this.tempCodeCase = this.config.code_case;
 
     // Generate palette dropdown options dynamically
     const paletteOptions = Object.keys(this.config.palettes)
@@ -101,6 +103,17 @@ export default class Settings {
             </div>
         </fieldset>
 
+        <fieldset>
+            <legend>Code Case for Assembly Export</legend>
+            <label class="settings_radio">
+              <input type="radio" name="code_case" value="uppercase" id="code_case-uppercase"> Uppercase -> LDA $D020
+            </label>
+            <br/>
+            <label class="settings_radio">
+              <input type="radio" name="code_case" value="lowercase" id="code_case-lowercase"> Lowercase -> lda $d020
+            </label>
+        </fieldset>
+
         <!--
         <fieldset>
             <legend>Window settings</legend>
@@ -154,8 +167,30 @@ export default class Settings {
     this.init_inputfields(this.tempColors);
     this.selection_change();
     this.update_colors();
+    this.init_code_case();
 
     dom.sel("#button-apply").onclick = (e) => this.apply_changes();
+  }
+
+  code_case_radios(): NodeListOf<HTMLInputElement> {
+    return document.querySelectorAll(
+      `#window-${this.window} input[name="code_case"]`
+    );
+  }
+
+  init_code_case() {
+    this.code_case_radios().forEach((radio) => {
+      radio.onchange = () => {
+        if (radio.checked) this.tempCodeCase = radio.value;
+      };
+    });
+    this.update_code_case();
+  }
+
+  update_code_case() {
+    this.code_case_radios().forEach((radio) => {
+      radio.checked = radio.value === this.tempCodeCase;
+    });
   }
 
   update_colors() {
@@ -216,6 +251,7 @@ export default class Settings {
     this.config.selected_palette = this.tempSelectedPalette;
     this.config.colors = this.config.palettes[this.tempSelectedPalette].values;
     this.config.palettes.custom.values = [...this.tempCustomColors];
+    this.config.code_case = this.tempCodeCase;
 
     this.close_window();
   }
@@ -225,10 +261,12 @@ export default class Settings {
     this.tempSelectedPalette = this.config.selected_palette;
     this.tempColors = [...this.config.palettes[this.config.selected_palette].values];
     this.tempCustomColors = [...this.config.palettes.custom.values];
+    this.tempCodeCase = this.config.code_case;
 
     // Update UI to reflect saved state
     dom.val("#colorpalette", this.tempSelectedPalette);
     this.update_colors();
+    this.update_code_case();
 
     // Update input field state
     if (this.tempSelectedPalette != "custom") {

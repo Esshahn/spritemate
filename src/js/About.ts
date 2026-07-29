@@ -14,6 +14,13 @@ export default class About {
         <fieldset>
             <legend>Release Notes</legend>
 
+            <h1>v26.07.29</h1>
+
+            <h2>Code Cases for Assembly Export</h2>
+            <p>
+            Added a setting to choose between uppercase (<code>LDA $D020</code>) or lowercase (<code>lda $d020</code>) code notation when exporting sprites with assembly code (thx2 bexxx for the idea).
+            </p>
+
             <h1>v26.01.04</h1>
 
             <h2>Multiple Animations</h2>

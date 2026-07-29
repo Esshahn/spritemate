@@ -1,6 +1,6 @@
 export function get_config() {
   const config = {
-    version: "26.01.04",
+    version: "26.07.29",
     default_filename: "mysprites",
     sprite_x: 24,
     sprite_y: 21,
@@ -107,6 +107,7 @@ export function get_config() {
       },
     },
     selected_palette: "pepto",
+    code_case: "uppercase", // "uppercase" (LDA $D020) or "lowercase" (lda $d020) for assembly export
     window_tools: {
       top: 50,
       left: 20,
