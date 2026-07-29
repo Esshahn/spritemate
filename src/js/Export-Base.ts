@@ -121,6 +121,11 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       label_suffix = ":";
     }
 
+    // Cases only the code tokens (mnemonics, directives, hex operands),
+    // leaving comments and sprite-name labels in their original case.
+    const code = (s: string): string =>
+      this.config.code_case === "lowercase" ? s.toLowerCase() : s.toUpperCase();
+
     let data = "";
 
     data +=
@@ -136,19 +141,19 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
 
     data +=
-      "\n\nLDA #$" +
-      ("0" + this.savedata.colors[2].toString(16)).slice(-2) +
+      "\n\n" +
+      code("LDA #$" + ("0" + this.savedata.colors[2].toString(16)).slice(-2)) +
       " " +
       comment +
       "sprite multicolor 1";
-    data += "\nSTA $D025";
+    data += "\n" + code("STA $D025");
     data +=
-      "\nLDA #$" +
-      ("0" + this.savedata.colors[3].toString(16)).slice(-2) +
+      "\n" +
+      code("LDA #$" + ("0" + this.savedata.colors[3].toString(16)).slice(-2)) +
       " " +
       comment +
       "sprite multicolor 2";
-    data += "\nSTA $D026";
+    data += "\n" + code("STA $D026");
     data += "\n";
 
     let byte = "";
@@ -183,7 +188,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       for (let i = 0; i < spritedata.length; i = i + 8) {
         if (i % line_breaks_after === 0) {
           data = data.substring(0, data.length - 1);
-          data += "\n" + prefix + "byte ";
+          data += "\n" + code(prefix + "byte ");
         }
 
         for (let k = 0; k < 8; k = k + stepping) {
@@ -208,7 +213,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
           data += "%" + byte + ",";
         } else {
           const hex = parseInt(byte, 2).toString(16);
-          data += "$" + ("0" + hex).slice(-2) + ",";
+          data += code("$" + ("0" + hex).slice(-2)) + ",";
         }
         byte = "";
       }
@@ -227,7 +232,7 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         const color_byte =
           "$" +
           ("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
-        data += color_byte; // should be the individual color
+        data += code(color_byte); // should be the individual color
       }
     }
 
