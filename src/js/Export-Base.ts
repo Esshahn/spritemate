@@ -134,11 +134,10 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
       this.savedata.sprites.length +
       " sprites generated with spritemate on " +
       new Date().toLocaleString();
-    if (!encode_as_binary)
-      data +=
-        "\n" +
-        comment +
-        "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
+    data +=
+      "\n" +
+      comment +
+      "Byte 64 of each sprite contains multicolor (high nibble) & color (low nibble) information";
 
     data +=
       "\n\n" +
@@ -218,21 +217,23 @@ AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS   MMMMMMMM               MMMMMM
         byte = "";
       }
 
+      // Finally, add byte 64 with multicolor (high nibble) & color (low nibble)
+      // info. This keeps every sprite exactly 64 bytes long so the sprite blocks
+      // stay aligned in memory (sprite pointer * 64) for both hex and binary.
+      const high_nibble = is_multicolor ? "1000" : "0000";
+      const low_nibble = (
+        "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
+      ).slice(-4);
+      const color_bits = high_nibble + low_nibble;
+
       if (encode_as_binary) {
-        data = data.substring(0, data.length - 1);
+        // put byte 64 on its own line to keep 3 bytes (one sprite row) per line
+        data = data.substring(0, data.length - 1); // strip trailing comma
+        data += "\n" + code(prefix + "byte ") + code("%" + color_bits);
       } else {
-        // finally, we add multicolor and color info for byte 64
-        let high_nibble = "0000";
-        if (is_multicolor) high_nibble = "1000";
-
-        const low_nibble = (
-          "000" + (this.savedata.sprites[j].color >>> 0).toString(2)
-        ).slice(-4);
-
-        const color_byte =
-          "$" +
-          ("0" + parseInt(high_nibble + low_nibble, 2).toString(16)).slice(-2);
-        data += code(color_byte); // should be the individual color
+        data += code(
+          "$" + ("0" + parseInt(color_bits, 2).toString(16)).slice(-2)
+        );
       }
     }
 

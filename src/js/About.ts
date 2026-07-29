@@ -21,6 +21,13 @@ export default class About {
             Added a setting to choose between uppercase (<code>LDA $D020</code>) or lowercase (<code>lda $d020</code>) code notation when exporting sprites with assembly code (thx2 bexxx for the idea).
             </p>
 
+            <h2>Changes</h2>
+            <ul>
+            <li>
+            Fixed an issue when exporting assembly code with binary notation missing the 64th byte (thx2 bexx for the issue).
+            </li>
+            </ul>
+
             <h1>v26.01.04</h1>
 
             <h2>Multiple Animations</h2>
